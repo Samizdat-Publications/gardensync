@@ -298,8 +298,9 @@ function buildTaskTracker(allPlants) {
                 const taskId = chk.dataset.taskId;
                 completedTasks[taskId] = !completedTasks[taskId];
                 localStorage.setItem('gardensync_completed_tasks', JSON.stringify(completedTasks));
-                // Re-render
+                // Re-render schedule and update Today's Tasks dashboard
                 buildTaskTracker(allPlants);
+                if (typeof updateTodayDashboard === 'function') updateTodayDashboard();
             });
         });
 

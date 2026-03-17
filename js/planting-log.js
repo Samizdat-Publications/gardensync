@@ -297,6 +297,7 @@ function attachPlantlogCheckHandlers(container, logData, filter) {
             }
             savePlantingLogData(logData);
             renderPlantingLog(filter);
+            if (typeof updateTodayDashboard === 'function') updateTodayDashboard();
         });
     });
 }

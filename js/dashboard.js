@@ -109,7 +109,10 @@ function updateTodayDashboard() {
 
     // Build task chips
     const tasks = [];
+    // Check BOTH task-tracking stores — schedule uses gardensync_completed_tasks,
+    // planting log uses gardensync_plantlog (with {done:true} objects)
     const plantlogData = JSON.parse(localStorage.getItem('gardensync_plantlog') || '{}');
+    const completedTasksData = JSON.parse(localStorage.getItem('gardensync_completed_tasks') || '{}');
     const currentWeek = getWeekKey(today);
     const oneWeekAgo = new Date(today);
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
@@ -127,7 +130,7 @@ function updateTodayDashboard() {
         // Seed indoor
         if (dates.seedIndoor) {
             const taskId = `${plant.id}-seed-indoor`;
-            const done = plantlogData[taskId];
+            const done = plantlogData[taskId]?.done || completedTasksData[taskId];
             if (!done && dates.seedIndoor.end >= oneWeekAgo && dates.seedIndoor.start <= twoWeeksOut) {
                 const overdue = today > dates.seedIndoor.end;
                 tasks.push({
@@ -142,7 +145,7 @@ function updateTodayDashboard() {
         // Transplant
         if (dates.transplant) {
             const taskId = `${plant.id}-transplant`;
-            const done = plantlogData[taskId];
+            const done = plantlogData[taskId]?.done || completedTasksData[taskId];
             if (!done && dates.transplant.end >= oneWeekAgo && dates.transplant.start <= twoWeeksOut) {
                 const overdue = today > dates.transplant.end;
                 tasks.push({
@@ -157,7 +160,7 @@ function updateTodayDashboard() {
         // Direct sow
         if (dates.directSow) {
             const taskId = `${plant.id}-direct-sow`;
-            const done = plantlogData[taskId];
+            const done = plantlogData[taskId]?.done || completedTasksData[taskId];
             if (!done && dates.directSow.end >= oneWeekAgo && dates.directSow.start <= twoWeeksOut) {
                 const overdue = today > dates.directSow.end;
                 tasks.push({
