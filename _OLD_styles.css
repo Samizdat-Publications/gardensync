@@ -333,28 +333,16 @@ body {
 /* ==========================
    BED PLANNER LAYOUT
    ========================== */
-/* Planner tab: flex column so today-dashboard + planner-layout share vertical space */
-#tab-planner.active {
-    display: flex;
-    flex-direction: column;
-    height: calc(100vh - 120px);
-    overflow: hidden;
-}
-.today-dashboard {
-    flex-shrink: 0; /* don't shrink the tasks bar */
-}
 .planner-layout {
     display: grid;
     grid-template-columns: 240px minmax(0, 1fr) 260px;
     gap: 0;
-    flex: 1;
-    min-height: 0;
+    height: calc(100vh - 120px);
     overflow: hidden;
 }
 
 /* Plant Palette */
 .plant-palette {
-    position: relative;
     background: var(--bg-secondary);
     border-right: 1px solid var(--border);
     padding: 1rem;
@@ -625,8 +613,6 @@ body {
     display: flex;
     flex-direction: column;
     position: relative;
-    overflow: hidden;
-    min-height: 0;
 }
 .canvas-toolbar {
     display: flex;
@@ -653,63 +639,12 @@ body {
 
 .garden-viewport {
     flex: 1;
-    overflow: hidden;
+    overflow: auto;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: relative;
-    cursor: grab;
-    background: #0a0a0a;
-}
-.garden-viewport.panning {
-    cursor: grabbing;
-}
-
-/* Container Shelf */
-.container-shelf {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border);
-    flex-wrap: wrap;
-}
-.shelf-label {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    letter-spacing: 1px;
-}
-.shelf-btn {
-    font-family: var(--font-mono);
-    font-size: 0.55rem;
-    padding: 3px 8px;
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    color: var(--text-secondary);
-    cursor: pointer;
-    letter-spacing: 0.5px;
-    transition: all 0.15s ease;
-}
-.shelf-btn:hover {
-    background: var(--bg-elevated);
-    border-color: var(--emerald);
-    color: var(--emerald);
-}
-
-/* Zoom Controls */
-.zoom-controls {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    margin-left: 8px;
-}
-.zoom-level {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    color: var(--text-muted);
-    min-width: 36px;
-    text-align: center;
 }
 
 /* Stats Dashboard */
@@ -796,37 +731,23 @@ body {
     letter-spacing: 1px;
 }
 
-.garden-canvas {
-    position: relative;
-    width: 4000px;
-    height: 3000px;
-    transform-origin: 0 0;
-    /* transform set by JS: translate(X, Y) scale(Z) */
-}
-.garden-canvas::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-        repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 40px),
-        repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 40px);
-    pointer-events: none;
-    z-index: 0;
+.garden-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    max-width: 900px;
 }
 
-/* Garden Beds / Containers */
+/* Garden Beds */
 .garden-bed {
-    /* width & height set by JS via inline styles based on container type */
-    min-width: 60px;
-    min-height: 60px;
+    width: 400px;
+    height: 220px;
     background: #1a1208;
-    border: 3px solid #3d2b0f;
+    border: 2px solid #3d2b0f;
     border-radius: var(--radius-lg);
-    position: absolute;
-    overflow: visible;
+    position: relative;
+    overflow: hidden;
     box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
-    z-index: 1;
-    cursor: move;
 }
 .garden-bed::before {
     content: '';
@@ -836,379 +757,6 @@ body {
         repeating-linear-gradient(90deg, transparent, transparent 39px, #2a1f0a33 39px, #2a1f0a33 40px),
         repeating-linear-gradient(0deg, transparent, transparent 39px, #2a1f0a33 39px, #2a1f0a33 40px);
     pointer-events: none;
-    border-radius: inherit;
-}
-
-/* ---- Container type-specific visuals ---- */
-
-/* Circle containers (pots, grow bags, potato towers) */
-.garden-bed.container-circle {
-    border-radius: 50%;
-    /* center plants inside circle */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.garden-bed.container-circle::before {
-    border-radius: 50%;
-    background:
-        radial-gradient(ellipse at 35% 30%, rgba(255,255,255,0.04) 0%, transparent 60%);
-}
-
-/* Raised Bed — rounded metal tub look */
-.garden-bed.container-type-raised-bed {
-    border-width: 3px;
-    border-style: solid;
-    border-radius: 14px;
-}
-
-/* Planter Box — angular wood frame */
-.garden-bed.container-type-planter {
-    border-width: 2px;
-    border-style: solid;
-    border-radius: 2px;
-}
-
-/* Round Pot — terracotta tint, solid rim */
-.garden-bed.container-type-pot-round {
-    border-width: 4px;
-    border-style: solid;
-    box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 2px 10px rgba(107,79,46,0.35), 0 0 0 1px rgba(107,79,46,0.2);
-}
-
-/* Grow Bag — dashed border (fabric look) */
-.garden-bed.container-type-grow-bag {
-    border-width: 3px;
-    border-style: dashed;
-    box-shadow: inset 0 0 12px rgba(0,0,0,0.4), 0 0 6px rgba(90,80,70,0.25);
-}
-
-/* In-Ground Plot — dotted border (no physical frame) */
-.garden-bed.container-type-in-ground {
-    border-width: 3px;
-    border-style: dotted;
-    border-radius: 4px;
-}
-.garden-bed.container-type-in-ground::before {
-    background:
-        repeating-linear-gradient(90deg, transparent, transparent 39px, #2a200a22 39px, #2a200a22 40px),
-        repeating-linear-gradient(0deg, transparent, transparent 39px, #2a200a22 39px, #2a200a22 40px);
-}
-.garden-bed.container-type-in-ground::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    box-shadow: inset 0 0 0 4px rgba(40,60,20,0.25);
-    pointer-events: none;
-}
-
-/* Window Box — narrow, mounted planter */
-.garden-bed.container-type-window-box {
-    border-width: 2px;
-    border-style: solid;
-    border-radius: 3px;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 0 4px 6px rgba(0,0,0,0.3);
-}
-
-/* Potato Tower — stacked ring look */
-.garden-bed.container-type-potato-tower {
-    border-width: 3px;
-    border-style: solid;
-    box-shadow:
-        inset 0 0 12px rgba(0,0,0,0.4),
-        inset 0 -8px 0 rgba(122,104,64,0.4),
-        inset 0 -16px 0 rgba(122,104,64,0.2),
-        inset 0 -24px 0 rgba(122,104,64,0.1);
-}
-
-/* ============================================================
-   ENHANCED VISUAL STYLES — toggled via .enhanced-visuals on canvas
-   All rules scoped so removing the class reverts to plain look
-   ============================================================ */
-
-/* Raised Bed — corrugated galvanized metal */
-.enhanced-visuals .container-type-raised-bed {
-    border-color: #8a8a8a !important;
-    border-width: 3px;
-    box-shadow:
-        inset 0 0 30px rgba(0,0,0,0.5),
-        inset 0 1px 0 rgba(255,255,255,0.15),
-        0 0 0 1px rgba(100,100,100,0.3);
-}
-.enhanced-visuals .container-type-raised-bed::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background:
-        repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 7px,
-            rgba(255,255,255,0.04) 7px,
-            rgba(255,255,255,0.04) 8px
-        );
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* Planter Box — weathered wood planks */
-.enhanced-visuals .container-type-planter {
-    border-color: #9a7030 !important;
-    border-width: 3px;
-    border-radius: 3px;
-    box-shadow:
-        inset 0 0 20px rgba(0,0,0,0.5),
-        inset 0 1px 0 rgba(180,140,60,0.2),
-        0 2px 6px rgba(0,0,0,0.3);
-}
-.enhanced-visuals .container-type-planter::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background:
-        repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 11px,
-            rgba(154,112,48,0.12) 11px,
-            rgba(154,112,48,0.12) 12px
-        ),
-        repeating-linear-gradient(
-            90deg,
-            transparent,
-            transparent 45%,
-            rgba(154,112,48,0.06) 45%,
-            rgba(154,112,48,0.06) 46%,
-            transparent 46%
-        );
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* Round Pot — rich terracotta with rim */
-.enhanced-visuals .container-type-pot-round {
-    border-color: #c0603a !important;
-    border-width: 4px;
-    box-shadow:
-        inset 0 0 20px rgba(0,0,0,0.5),
-        inset 0 2px 0 rgba(220,140,90,0.3),
-        0 0 0 2px #a0502a,
-        0 0 0 4px rgba(160,80,42,0.3),
-        0 3px 8px rgba(0,0,0,0.3) !important;
-}
-.enhanced-visuals .container-type-pot-round::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: radial-gradient(
-        ellipse at 40% 30%,
-        rgba(220,160,100,0.08) 0%,
-        transparent 60%
-    );
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* Grow Bag — dark fabric with crosshatch texture */
-.enhanced-visuals .container-type-grow-bag {
-    border-color: #555 !important;
-    border-style: dashed;
-    border-width: 2px;
-    border-radius: 8px;
-    box-shadow:
-        inset 0 0 15px rgba(0,0,0,0.4),
-        0 1px 4px rgba(0,0,0,0.25) !important;
-}
-.enhanced-visuals .container-type-grow-bag::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background:
-        repeating-linear-gradient(
-            45deg,
-            transparent,
-            transparent 3px,
-            rgba(255,255,255,0.015) 3px,
-            rgba(255,255,255,0.015) 4px
-        ),
-        repeating-linear-gradient(
-            -45deg,
-            transparent,
-            transparent 3px,
-            rgba(255,255,255,0.015) 3px,
-            rgba(255,255,255,0.015) 4px
-        );
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* In-Ground Plot — earthy natural border */
-.enhanced-visuals .container-type-in-ground {
-    border-color: #5a6a30 !important;
-    border-style: dotted;
-    border-width: 3px;
-    box-shadow:
-        inset 0 0 25px rgba(0,0,0,0.4),
-        0 0 8px rgba(90,106,48,0.15) !important;
-}
-
-/* Potato Tower — enhanced stacked rings */
-.enhanced-visuals .container-type-potato-tower {
-    border-color: #8a7840 !important;
-    box-shadow:
-        inset 0 0 12px rgba(0,0,0,0.4),
-        inset 0 -6px 0 rgba(138,120,64,0.5),
-        inset 0 -12px 0 rgba(138,120,64,0.35),
-        inset 0 -18px 0 rgba(138,120,64,0.2),
-        inset 0 -24px 0 rgba(138,120,64,0.1),
-        0 0 0 1px rgba(138,120,64,0.3) !important;
-}
-
-/* Window Box — decorative planter */
-.enhanced-visuals .container-type-window-box {
-    border-color: #7a6a40 !important;
-    border-width: 2px;
-    box-shadow:
-        inset 0 0 10px rgba(0,0,0,0.5),
-        0 3px 6px rgba(0,0,0,0.3),
-        0 0 0 1px rgba(122,106,64,0.2) !important;
-}
-
-/* Enhanced visuals — preserve selection glow */
-.enhanced-visuals .garden-bed.selected {
-    border-color: var(--emerald) !important;
-}
-
-/* ---- Enhanced visuals: Light Theme overrides ---- */
-[data-theme="light"] .enhanced-visuals .container-type-raised-bed {
-    border-color: #999 !important;
-    box-shadow:
-        inset 0 0 15px rgba(0,0,0,0.08),
-        inset 0 1px 0 rgba(255,255,255,0.4),
-        0 0 0 1px rgba(150,150,150,0.3) !important;
-}
-[data-theme="light"] .enhanced-visuals .container-type-planter {
-    border-color: #b08840 !important;
-    box-shadow:
-        inset 0 0 12px rgba(0,0,0,0.08),
-        0 2px 4px rgba(0,0,0,0.1) !important;
-}
-[data-theme="light"] .enhanced-visuals .container-type-pot-round {
-    border-color: #d07040 !important;
-    box-shadow:
-        inset 0 0 12px rgba(0,0,0,0.08),
-        0 0 0 2px #c06030,
-        0 0 0 4px rgba(192,96,48,0.15),
-        0 2px 6px rgba(0,0,0,0.15) !important;
-}
-[data-theme="light"] .enhanced-visuals .container-type-grow-bag {
-    border-color: #888 !important;
-    box-shadow:
-        inset 0 0 10px rgba(0,0,0,0.06),
-        0 1px 3px rgba(0,0,0,0.1) !important;
-}
-/* ============================================================
-   END ENHANCED VISUAL STYLES
-   ============================================================ */
-
-/* Labels inside small containers */
-.garden-bed.container-small .bed-label {
-    font-size: 0.45rem;
-    letter-spacing: 1px;
-    max-width: calc(100% - 12px);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-.garden-bed.container-small .bed-count-badge {
-    font-size: 0.4rem;
-    padding: 0 3px;
-}
-.garden-bed.container-small .bed-dimensions {
-    font-size: 0.4rem;
-}
-/* Small + circle: tighter layout with everything centered */
-.garden-bed.container-small.container-circle .bed-label {
-    font-size: 0.4rem;
-    top: 15%;
-    max-width: 55%;
-}
-.garden-bed.container-small.container-circle .bed-count-badge {
-    font-size: 0.35rem;
-    bottom: 20%;
-}
-.garden-bed.container-small.container-circle .bed-dimensions {
-    font-size: 0.35rem;
-    bottom: 8%;
-}
-.garden-bed.container-small .bed-empty-hint {
-    font-size: 0.4rem;
-}
-.garden-bed.container-small .bed-empty-hint .hint-icon {
-    font-size: 0.7rem;
-}
-.garden-bed.container-small .bed-empty-hint .hint-text {
-    display: none;
-}
-
-/* Circle container label positioning — everything centered to avoid corner clipping */
-.garden-bed.container-circle .bed-label {
-    text-align: center;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 12%;
-    max-width: 65%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.garden-bed.container-circle .bed-count-badge {
-    left: 50%;
-    transform: translateX(-50%);
-    right: auto;
-    top: auto;
-    bottom: 16%;
-}
-.garden-bed.container-circle .bed-dimensions {
-    left: 50%;
-    transform: translateX(-50%);
-    right: auto;
-    bottom: 6%;
-}
-.garden-bed.container-circle .bed-empty-hint {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    position: absolute;
-    text-align: center;
-}
-.garden-bed.selected {
-    border-color: var(--emerald) !important;
-    box-shadow: 0 0 0 2px var(--emerald), inset 0 0 30px rgba(0,0,0,0.5);
-    z-index: 2;
-}
-/* Keyboard focus indicators */
-.garden-bed:focus-visible {
-    outline: 2px dashed var(--emerald);
-    outline-offset: 3px;
-    z-index: 3;
-}
-.garden-bed:focus:not(:focus-visible) {
-    outline: none;
-}
-.placed-plant:focus-visible {
-    outline: 2px solid #fbbf24;
-    outline-offset: 2px;
-    border-radius: 50%;
-    z-index: 10;
-}
-.placed-plant:focus:not(:focus-visible) {
-    outline: none;
 }
 .garden-bed.drag-over {
     border-color: var(--emerald);
@@ -1324,42 +872,35 @@ body {
     bottom: 4px;
     right: 6px;
     font-family: var(--font-mono);
-    font-size: 0.65rem;
+    font-size: 0.55rem;
     color: #3d2b0f;
     letter-spacing: 1px;
     cursor: pointer;
     z-index: 2;
-    padding: 2px 6px;
-    border-radius: 3px;
-    background: rgba(0,0,0,0.15);
-    transition: background 0.15s, color 0.15s;
 }
 .bed-dimensions:hover {
     color: var(--emerald);
-    background: rgba(0,0,0,0.35);
 }
 .dim-edit-row {
     position: absolute;
-    bottom: 4px;
-    right: 6px;
+    bottom: 2px;
+    right: 4px;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
     z-index: 10;
 }
 .dim-input {
-    width: 44px;
-    height: 26px;
+    width: 32px;
     background: var(--bg-primary);
     color: var(--text-primary);
-    border: 2px solid var(--emerald);
-    border-radius: 4px;
+    border: 1px solid var(--emerald);
+    border-radius: 2px;
     font-family: var(--font-mono);
-    font-size: 0.75rem;
-    padding: 3px 5px;
+    font-size: 0.6rem;
+    padding: 2px 4px;
     text-align: center;
     -moz-appearance: textfield;
-    cursor: text;
 }
 .dim-input::-webkit-outer-spin-button,
 .dim-input::-webkit-inner-spin-button {
@@ -1453,16 +994,15 @@ body {
     box-shadow: 0 0 4px rgba(220,38,38,0.2);
 }
 
-/* Spacing radius circle on hover/drag */
+/* Spacing radius circle on hover/select */
 .spacing-radius {
     position: absolute;
     border-radius: 50%;
-    border: 2.5px dashed rgba(16,185,129,0.65);
-    background: rgba(16,185,129,0.12);
+    border: 1px dashed rgba(16,185,129,0.35);
+    background: rgba(16,185,129,0.05);
     pointer-events: none;
     z-index: 2;
     transition: opacity 0.15s;
-    box-shadow: 0 0 8px rgba(16,185,129,0.15);
 }
 
 /* Companion planting lines */
@@ -1472,12 +1012,12 @@ body {
     z-index: 1;
 }
 .companion-line-good {
-    stroke: rgba(16,185,129,0.8);
-    /* stroke-width and stroke-dasharray set dynamically in JS for zoom compensation */
+    stroke: rgba(16,185,129,0.25);
+    stroke-dasharray: 4 4;
 }
 .companion-line-bad {
-    stroke: rgba(239,68,68,0.85);
-    /* stroke-width and stroke-dasharray set dynamically in JS for zoom compensation */
+    stroke: rgba(220,38,38,0.3);
+    stroke-dasharray: 4 4;
 }
 
 /* Snap-to-grid visual marker */
@@ -1560,6 +1100,40 @@ body {
     letter-spacing: 1px;
 }
 
+/* Plant Notes in Info Panel */
+.plant-notes-section {
+    margin-top: 0.75rem;
+    position: relative;
+}
+.plant-note-textarea {
+    width: 100%;
+    min-height: 3rem;
+    max-height: 6rem;
+    resize: vertical;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-left: 2px solid var(--emerald-dark);
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-top: 0.25rem;
+    box-sizing: border-box;
+}
+.plant-note-textarea:focus { border-color: var(--emerald); }
+.plant-note-textarea::placeholder { color: var(--text-muted); opacity: 0.5; }
+.plant-note-status {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.5px;
+    position: absolute;
+    right: 0;
+    bottom: -0.9rem;
+}
+
 /* Bed Details Sidebar */
 .bed-details {
     background: var(--bg-secondary);
@@ -1567,96 +1141,11 @@ body {
     padding: 1rem;
     overflow-y: auto;
     overflow-x: hidden;
-    position: relative;
-    min-width: 200px;
-}
-/* Sidebar resize handle — drag left edge to resize */
-.sidebar-resize-handle {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 5px;
-    cursor: col-resize;
-    z-index: 10;
-    background: transparent;
-    transition: background 0.15s;
-}
-.sidebar-resize-handle:hover,
-.sidebar-resize-handle.active {
-    background: var(--emerald);
-    opacity: 0.5;
-}
-body.sidebar-resizing {
-    cursor: col-resize !important;
-    user-select: none !important;
-}
-body.sidebar-resizing * {
-    cursor: col-resize !important;
-}
-/* Plant palette (left sidebar) resize handle — drag right edge */
-.palette-resize-handle {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 5px;
-    cursor: col-resize;
-    z-index: 10;
-    background: transparent;
-    transition: background 0.15s;
-}
-.palette-resize-handle:hover,
-.palette-resize-handle.active {
-    background: var(--emerald);
-    opacity: 0.5;
-}
-body.palette-resizing {
-    cursor: col-resize !important;
-    user-select: none !important;
-}
-body.palette-resizing * {
-    cursor: col-resize !important;
-}
-/* Section resize handles — horizontal bars between bed-details subsections */
-.section-resize-handle {
-    height: 7px;
-    cursor: row-resize;
-    position: relative;
-    flex-shrink: 0;
-    margin: 2px 0;
-}
-.section-resize-handle::after {
-    content: '';
-    position: absolute;
-    left: 20%;
-    right: 20%;
-    top: 50%;
-    height: 1px;
-    background: var(--border);
-    transition: background 0.15s, height 0.15s;
-}
-.section-resize-handle:hover::after,
-.section-resize-handle.active::after {
-    background: var(--emerald);
-    height: 2px;
-    top: calc(50% - 0.5px);
-}
-body.section-resizing {
-    cursor: row-resize !important;
-    user-select: none !important;
-}
-body.section-resizing * {
-    cursor: row-resize !important;
 }
 .bed-selector {
     display: flex;
     gap: 2px;
     margin-bottom: 1rem;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
 }
 .bed-tab {
     font-family: var(--font-mono);
@@ -1668,33 +1157,15 @@ body.section-resizing * {
     color: var(--text-muted);
     border: 1px solid var(--border);
     cursor: pointer;
-    flex: 0 0 auto;
-    min-width: max-content;
+    flex: 1;
     text-align: center;
     transition: all 0.15s ease;
-    white-space: nowrap;
 }
 .bed-tab:hover { color: var(--text-secondary); border-color: var(--text-muted); }
 .bed-tab.active {
     background: var(--bg-tertiary);
     color: var(--emerald);
     border-color: var(--emerald);
-}
-.bed-tab-icon { font-size: 0.85em; margin-right: 2px; }
-.bed-tab-count {
-    display: inline-block;
-    background: var(--bg-tertiary);
-    color: var(--text-muted);
-    font-size: 0.75em;
-    padding: 0 4px;
-    border-radius: 3px;
-    margin-left: 3px;
-    min-width: 14px;
-    text-align: center;
-}
-.bed-tab.active .bed-tab-count {
-    background: var(--emerald);
-    color: var(--bg-primary);
 }
 
 .bed-info { margin-bottom: 1rem; }
@@ -1721,8 +1192,7 @@ body.section-resizing * {
     display: flex;
     flex-direction: column;
     gap: 3px;
-    height: 200px;
-    min-height: 60px;
+    max-height: 200px;
     overflow-y: auto;
 }
 .bed-plant-entry {
@@ -1838,20 +1308,6 @@ body.section-resizing * {
     border-color: var(--emerald);
     z-index: 5;
 }
-/* Multi-select indicator dot */
-.placed-plant.multi-selected::after {
-    content: '';
-    position: absolute;
-    top: -3px;
-    right: -3px;
-    width: 8px;
-    height: 8px;
-    background: var(--teal);
-    border-radius: 50%;
-    border: 1px solid var(--bg-primary);
-    z-index: 6;
-    pointer-events: none;
-}
 
 /* Click-to-place mode */
 .click-place-mode .garden-bed {
@@ -1876,8 +1332,7 @@ body.section-resizing * {
     justify-content: center;
     font-size: 0.65rem;
     z-index: 6;
-    pointer-events: auto;
-    cursor: help;
+    pointer-events: none;
     transform: translate(-50%, -50%);
     animation: pulse-warning 1.5s ease-in-out infinite;
 }
@@ -1926,126 +1381,11 @@ body.section-resizing * {
     background: var(--border);
     margin: 2px 0;
 }
-.context-menu-danger {
-    color: #ef4444 !important;
-}
-.context-menu-danger:hover {
-    background: rgba(239,68,68,0.15) !important;
-}
-
-/* Move Picker Modal */
-.move-picker-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.55);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: fadeIn 0.12s ease;
-}
-.move-picker-modal {
-    background: var(--bg-secondary);
-    border: 1px solid var(--emerald-dark);
-    border-radius: 6px;
-    width: 320px;
-    max-height: 70vh;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-}
-.move-picker-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--border);
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    color: var(--emerald);
-}
-.move-picker-close {
-    background: none;
-    border: none;
+.context-menu-sublabel {
+    padding: 0.3rem 0.75rem 0.15rem;
     color: var(--text-muted);
-    font-size: 1.1rem;
-    cursor: pointer;
-    padding: 0 4px;
-    line-height: 1;
-}
-.move-picker-close:hover { color: var(--text-primary); }
-.move-picker-list {
-    overflow-y: auto;
-    max-height: calc(70vh - 48px);
-    scrollbar-width: thin;
-    scrollbar-color: var(--emerald-dark) transparent;
-}
-.move-picker-list::-webkit-scrollbar { width: 5px; }
-.move-picker-list::-webkit-scrollbar-thumb { background: var(--emerald-dark); border-radius: 3px; }
-.move-picker-item {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    width: 100%;
-    padding: 0.55rem 1rem;
-    background: none;
-    border: none;
-    border-bottom: 1px solid var(--border);
-    color: var(--text-secondary);
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    cursor: pointer;
-    text-align: left;
-    transition: background 0.1s;
-}
-.move-picker-item:hover {
-    background: rgba(16,185,129,0.1);
-    color: var(--emerald);
-}
-.move-picker-item:last-child { border-bottom: none; }
-.move-picker-icon { font-size: 1rem; flex-shrink: 0; }
-.move-picker-name { flex: 1; }
-.move-picker-count {
     font-size: 0.6rem;
-    color: var(--text-muted);
-    letter-spacing: 0.3px;
-}
-.context-menu-item.danger {
-    color: #ef4444;
-}
-.context-menu-item.danger:hover {
-    background: rgba(239,68,68,0.15);
-    color: #f87171;
-}
-
-/* Container resize handle */
-.container-resize-handle {
-    position: absolute;
-    bottom: 2px;
-    right: 2px;
-    width: 16px;
-    height: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.6rem;
-    color: rgba(255,255,255,0.3);
-    cursor: nwse-resize;
-    z-index: 5;
-    border-radius: 2px;
-    transition: color 0.15s, background 0.15s;
-    user-select: none;
-}
-.container-resize-handle:hover {
-    color: var(--emerald);
-    background: rgba(16,185,129,0.15);
-}
-/* For circles, position resize handle at bottom-right of bounding box */
-.container-circle .container-resize-handle {
-    bottom: 10%;
-    right: 10%;
+    letter-spacing: 1px;
 }
 
 /* Copy bed modal */
@@ -2067,8 +1407,7 @@ body.section-resizing * {
 }
 
 .companion-alerts {
-    height: 150px;
-    min-height: 40px;
+    max-height: 150px;
     overflow-y: auto;
 }
 /* Bed Journal */
@@ -2089,8 +1428,7 @@ body.section-resizing * {
     font-size: 0.85rem;
 }
 .journal-entries {
-    height: 200px;
-    min-height: 60px;
+    max-height: 200px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -2310,6 +1648,260 @@ body.section-resizing * {
     position: absolute;
     left: 0;
     color: var(--emerald);
+}
+
+/* ==========================
+   PLANTING LOG TAB
+   ========================== */
+.plantlog-layout {
+    padding: 1.5rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.plantlog-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+.plantlog-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.plantlog-filter-row {
+    display: flex;
+    gap: 2px;
+}
+
+/* Progress bar */
+.plantlog-progress-bar {
+    position: relative;
+    height: 28px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+.plantlog-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--emerald-dark), var(--emerald));
+    transition: width 0.4s ease;
+    width: 0%;
+}
+.plantlog-progress-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-primary);
+    z-index: 1;
+}
+
+/* Current week highlight */
+.plantlog-current-week {
+    margin-bottom: 1.5rem;
+}
+.plantlog-current-week-card {
+    background: var(--bg-secondary);
+    border: 2px solid var(--emerald);
+    padding: 1.25rem;
+}
+.plantlog-current-week-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    color: var(--emerald);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.plantlog-current-week-card .plantlog-week-hint {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    margin-bottom: 0.75rem;
+}
+
+/* Timeline weeks */
+.plantlog-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.plantlog-week {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--border);
+    overflow: hidden;
+}
+.plantlog-week.has-tasks {
+    border-left-color: var(--emerald-dark);
+}
+.plantlog-week.all-done {
+    border-left-color: var(--text-muted);
+    opacity: 0.7;
+}
+.plantlog-week.is-current {
+    border-color: var(--emerald);
+    border-left-color: var(--emerald);
+}
+.plantlog-week-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.65rem 1rem;
+    background: var(--bg-tertiary);
+    cursor: pointer;
+    user-select: none;
+}
+.plantlog-week-header:hover {
+    background: var(--bg-elevated);
+}
+.plantlog-week-title {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+}
+.plantlog-week-dates {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    margin-left: 0.75rem;
+}
+.plantlog-week-badge {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.5px;
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius);
+}
+.plantlog-week-badge.current {
+    background: rgba(16,185,129,0.2);
+    color: var(--emerald);
+}
+.plantlog-week-badge.overdue {
+    background: rgba(220,38,38,0.15);
+    color: var(--red-accent);
+}
+.plantlog-week-badge.future {
+    background: rgba(163,163,163,0.1);
+    color: var(--text-muted);
+}
+.plantlog-week-progress {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+}
+.plantlog-week-progress .done-count {
+    color: var(--emerald);
+}
+.plantlog-week-body {
+    padding: 0;
+}
+.plantlog-week-body.collapsed {
+    display: none;
+}
+
+/* Individual tasks */
+.plantlog-task {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px dotted var(--border);
+    transition: background 0.1s;
+}
+.plantlog-task:last-child {
+    border-bottom: none;
+}
+.plantlog-task:hover {
+    background: rgba(16,185,129,0.03);
+}
+.plantlog-task-check {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 2px;
+    background: var(--bg-primary);
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: var(--emerald);
+    transition: all 0.15s;
+}
+.plantlog-task-check:hover {
+    border-color: var(--emerald);
+}
+.plantlog-task-check.done {
+    background: var(--emerald-dark);
+    border-color: var(--emerald);
+}
+.plantlog-task-content {
+    flex: 1;
+}
+.plantlog-task-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+}
+.plantlog-task-title.done {
+    text-decoration: line-through;
+    color: var(--text-muted);
+}
+.plantlog-task-subtitle {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    margin-top: 0.2rem;
+}
+.plantlog-task-subtitle.done {
+    color: var(--text-muted);
+}
+.plantlog-task-date-completed {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--emerald-dark);
+    margin-top: 0.15rem;
+}
+.plantlog-task-type {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 1px;
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius);
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+.plantlog-task-type.seed-indoor { background: rgba(124,58,237,0.2); color: #a78bfa; }
+.plantlog-task-type.transplant { background: rgba(16,185,129,0.2); color: var(--emerald); }
+.plantlog-task-type.direct-sow { background: rgba(20,184,166,0.2); color: var(--teal); }
+.plantlog-task-type.harvest { background: rgba(245,158,11,0.2); color: var(--amber); }
+.plantlog-task-type.care { background: rgba(163,163,163,0.15); color: var(--text-secondary); }
+
+.plantlog-empty-week {
+    padding: 0.75rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-style: italic;
 }
 
 /* ==========================
@@ -2663,72 +2255,32 @@ body.section-resizing * {
     margin-bottom: 1rem;
 }
 
-/* Rainfall deficit calculator */
-.rainfall-deficit-card { grid-column: span 2; }
-.deficit-summary {
+/* Rain barrel */
+.rain-barrel-card { grid-column: span 2; }
+.barrel-calc {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 1fr 1fr;
     gap: 0.75rem;
-    margin-bottom: 1rem;
 }
-.deficit-stat {
+.calc-row {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
 }
-.deficit-label {
+.calc-row label {
     font-family: var(--font-mono);
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     color: var(--text-muted);
     letter-spacing: 0.5px;
 }
-.deficit-value {
+.calc-result {
     font-family: var(--font-mono);
     font-size: 1rem;
     color: var(--emerald);
     font-weight: 700;
 }
-.deficit-month-bars {
-    margin-bottom: 0.75rem;
-}
-.deficit-bars-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 6px;
-    align-items: flex-end;
-}
-.deficit-bar-col {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-}
-.deficit-bar-diff {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    font-weight: 700;
-}
-.deficit-bar-track {
-    width: 100%;
-    height: 60px;
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border);
-    position: relative;
-    display: flex;
-    align-items: flex-end;
-}
-.deficit-bar-fill {
-    width: 100%;
-    transition: height 0.3s ease;
-}
-.deficit-bar-label {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    color: var(--text-muted);
-    letter-spacing: 0.5px;
-}
-.deficit-verdict {
+.barrel-verdict {
+    grid-column: span 2;
     padding: 0.75rem;
     margin-top: 0.5rem;
     font-family: var(--font-mono);
@@ -3254,102 +2806,6 @@ body.section-resizing * {
 }
 
 /* ==========================
-   SAVE INDICATOR
-   ========================== */
-.save-indicator {
-    font-size: 0.72rem;
-    letter-spacing: 0.05em;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    opacity: 0.7;
-    transition: opacity 0.3s;
-    min-width: 60px;
-}
-.save-indicator.status-saving { opacity: 0.9; }
-.save-indicator.status-error { opacity: 1; color: var(--rust); }
-.save-dot {
-    display: inline-block;
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-.save-dot.saving {
-    background: var(--amber);
-    animation: save-pulse 1s ease-in-out infinite;
-}
-.save-dot.saved { background: var(--emerald); }
-.save-dot.error { background: var(--rust); }
-@keyframes save-pulse {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 1; }
-}
-
-/* ==========================
-   BACKUP BROWSER MODAL
-   ========================== */
-.backup-browser-modal {
-    max-width: 520px;
-    max-height: 80vh;
-    display: flex;
-    flex-direction: column;
-}
-.backup-list {
-    max-height: 400px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding-right: 4px;
-}
-.backup-loading, .backup-empty {
-    text-align: center;
-    padding: 24px;
-    opacity: 0.6;
-    font-size: 0.85rem;
-}
-.backup-entry {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 10px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    transition: border-color 0.15s;
-}
-.backup-entry:hover {
-    border-color: var(--emerald);
-}
-.backup-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-}
-.backup-date {
-    font-size: 0.82rem;
-    font-weight: 600;
-    font-family: var(--font-mono);
-}
-.backup-ago {
-    font-size: 0.7rem;
-    opacity: 0.55;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-.backup-stats {
-    font-size: 0.75rem;
-    opacity: 0.6;
-    white-space: nowrap;
-}
-.backup-restore-btn {
-    font-size: 0.7rem !important;
-    padding: 4px 10px !important;
-    flex-shrink: 0;
-}
-
-/* ==========================
    MOBILE NAV
    ========================== */
 .mobile-menu-btn {
@@ -3424,50 +2880,6 @@ body.section-resizing * {
     background: var(--bg-secondary);
 }
 
-/* ---- MOBILE BOTTOM BAR (panel toggles) ---- */
-.mobile-bottom-bar {
-    display: none; /* shown at 900px */
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    height: 56px;
-    background: var(--bg-primary);
-    border-top: 1px solid var(--border);
-    z-index: 801;
-    align-items: stretch;
-    gap: 0;
-}
-.mobile-bar-btn {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    letter-spacing: 1px;
-    padding: 6px 0;
-    transition: color 0.15s, background 0.15s;
-}
-.mobile-bar-btn:active,
-.mobile-bar-btn.active {
-    color: var(--emerald);
-    background: var(--bg-secondary);
-}
-.mobile-bar-icon {
-    font-size: 1.3rem;
-    line-height: 1;
-}
-.mobile-bar-label {
-    font-size: 0.55rem;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-}
-
 /* ==========================
    RESPONSIVE
    ========================== */
@@ -3475,121 +2887,27 @@ body.section-resizing * {
     .planner-layout {
         grid-template-columns: 200px minmax(0, 1fr) 220px;
     }
+    .garden-bed { width: 320px; height: 180px; }
 }
 @media (max-width: 900px) {
-    #tab-planner.active {
-        height: auto;
-        overflow: visible;
-    }
     .planner-layout {
         grid-template-columns: 1fr;
         height: auto;
-        overflow: visible;
     }
-    /* Hide sidebars by default — shown as overlays via JS */
     .plant-palette, .bed-details {
-        display: none;
         border: none;
+        border-bottom: 1px solid var(--border);
     }
-    /* When toggled open, show as slide-up overlay */
-    .plant-palette.mobile-open,
-    .bed-details.mobile-open {
-        display: flex;
-        flex-direction: column;
-        position: fixed;
-        left: 0; right: 0;
-        bottom: 56px; /* above bottom bar */
-        z-index: 800;
-        max-height: 65vh;
-        background: var(--bg-secondary);
-        border-top: 2px solid var(--emerald);
-        box-shadow: 0 -4px 24px rgba(0,0,0,0.5);
-        overflow-y: auto;
-        padding: 1rem;
-        animation: mobileSlideUp 0.2s ease-out;
+    .plant-palette {
+        max-height: 50vh;
     }
-    .plant-palette.mobile-open .plant-list {
-        max-height: 40vh;
+    .plant-list {
+        max-height: 30vh;
     }
-    @keyframes mobileSlideUp {
-        from { transform: translateY(30px); opacity: 0.7; }
-        to   { transform: translateY(0); opacity: 1; }
+    .garden-grid {
+        grid-template-columns: 1fr;
     }
-    /* Backdrop when panel is open */
-    .mobile-panel-backdrop {
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.5);
-        z-index: 799;
-    }
-
-    /* ---- TODAY DASHBOARD: collapsible on mobile ---- */
-    .today-dashboard {
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        margin-bottom: 0.5rem;
-    }
-    .today-header {
-        cursor: pointer;
-        padding: 0.5rem 0.75rem;
-    }
-    .today-dashboard.mobile-collapsed .today-tasks-list {
-        display: none;
-    }
-    .today-dashboard.mobile-collapsed .season-progress {
-        display: none;
-    }
-    .today-title-row::after {
-        content: '▾';
-        margin-left: auto;
-        font-size: 0.8rem;
-        color: var(--text-muted);
-        transition: transform 0.2s;
-    }
-    .today-dashboard.mobile-collapsed .today-title-row::after {
-        content: '▸';
-    }
-
-    /* ---- TOOLBAR: compact on mobile ---- */
-    .canvas-toolbar { flex-direction: column; gap: 0.3rem; padding: 0.4rem 0.5rem; }
-    .toolbar-right { flex-wrap: wrap; gap: 3px; }
-    /* Hide secondary toolbar buttons on mobile */
-    #btn-stats-toggle, #btn-grid-toggle, #btn-save,
-    #btn-load, #btn-export, #btn-print-map, #btn-share-url {
-        display: none;
-    }
-
-    /* ---- CONTAINER SHELF: horizontal scroll ---- */
-    .container-shelf {
-        overflow-x: auto;
-        flex-wrap: nowrap;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        padding: 4px 8px;
-    }
-    .container-shelf::-webkit-scrollbar { display: none; }
-
-    /* ---- CANVAS: maximize space ---- */
-    .garden-canvas-area {
-        height: calc(100vh - 56px); /* full height minus bottom bar */
-        overflow: hidden;
-    }
-    .garden-viewport {
-        height: calc(100% - 80px); /* minus toolbar + shelf */
-    }
-
-    .palette-resize-handle,
-    .sidebar-resize-handle,
-    .section-resize-handle {
-        display: none;
-    }
-    /* Show mobile bottom bar */
-    .mobile-bottom-bar { display: flex; }
-    /* Garden Buddy FAB: above bottom bar */
-    .gb-fab { bottom: 72px; right: 16px; }
-    .gb-panel { bottom: 136px; }
-    /* canvas-based layout — no grid rules needed */
+    .garden-bed { width: 100%; max-width: 400px; }
     .header-nav { display: none; }
     .mobile-menu-btn { display: flex; }
     .volunteers-grid { grid-template-columns: 1fr; }
@@ -3598,41 +2916,49 @@ body.section-resizing * {
     .harvest-form-row { flex-direction: column; }
     .harvest-entry { flex-wrap: wrap; }
     .climate-grid { grid-template-columns: 1fr; }
-    .rainfall-deficit-card { grid-column: span 1; }
-    .deficit-summary { grid-template-columns: repeat(2, 1fr); }
-    .deficit-verdict { grid-column: span 1; }
+    .rain-barrel-card { grid-column: span 1; }
+    .barrel-calc { grid-template-columns: 1fr; }
+    .barrel-verdict { grid-column: span 1; }
     .weather-current-row { grid-template-columns: 1fr; }
     .forecast-grid { grid-template-columns: repeat(4, 1fr); }
+    .plantlog-layout { padding: 1rem; }
+    .plantlog-header-bar { flex-direction: column; }
+    .plantlog-controls { align-items: flex-start; }
+    .plantlog-task { gap: 0.5rem; }
+    .plantlog-task-type { font-size: 0.5rem; padding: 0.1rem 0.35rem; }
     .schedule-layout, .climate-layout, .volunteers-layout, .visualize-layout {
         padding: 1rem;
     }
     .frost-badges { flex-wrap: wrap; }
+    .toolbar-right { flex-wrap: wrap; }
+    .canvas-toolbar { flex-direction: column; gap: 0.5rem; }
     #main-header { padding: 0.5rem 0.75rem; }
     .logo-text h1 { font-size: 1.3rem; }
     .zone-badge { font-size: 0.6rem; padding: 0.3rem 0.5rem; }
-    /* Footer */
+    /* Footer stacks vertically */
     .main-footer {
         flex-direction: column;
         gap: 0.5rem;
         text-align: center;
-        margin-bottom: 56px; /* above bottom bar */
     }
     .footer-center { flex-wrap: wrap; justify-content: center; }
 }
 
 /* ---- PHONE-SPECIFIC (iPhone 16 / Galaxy S24) ---- */
 @media (max-width: 480px) {
-    /* Canvas-based layout — containers are absolutely positioned by JS */
+    /* Garden beds must fit inside ~393px viewport */
+    .garden-bed {
+        width: calc(100vw - 2rem) !important;
+        max-width: 100% !important;
+        height: 180px;
+    }
     .garden-viewport {
-        padding: 0;
+        padding: 0.75rem;
     }
-    .container-shelf {
-        padding: 3px 6px;
-        gap: 4px;
-    }
-    .shelf-btn {
-        font-size: 0.5rem;
-        padding: 2px 5px;
+    .garden-grid {
+        gap: 12px;
+        justify-items: center;
+        width: 100%;
     }
     /* Header: compact */
     #main-header {
@@ -3678,6 +3004,9 @@ body.section-resizing * {
     .forecast-grid { grid-template-columns: repeat(3, 1fr); }
     .forecast-day:nth-child(n+7) { display: none; }
     .weather-big-value { font-size: 2rem; }
+    /* Planting log */
+    .plantlog-week-title { font-size: 0.8rem; }
+    .plantlog-week-dates { display: none; }
     /* Mobile nav buttons: bigger touch targets */
     .mobile-nav-btn { font-size: 1.1rem; padding: 0.75rem 1.5rem; }
     /* Footer: full-width buttons */
@@ -3726,6 +3055,8 @@ body.section-resizing * {
     .viz-api-row { flex-direction: column; }
     /* Schedule */
     .schedule-header-bar { flex-direction: column; gap: 0.5rem; }
+    /* Planting log controls */
+    .plantlog-filter-row { flex-wrap: wrap; gap: 2px; }
     .filter-btn { font-size: 0.6rem; padding: 0.3rem 0.5rem; }
 }
 
@@ -4223,36 +3554,6 @@ body::before {
     letter-spacing: 0.5px;
     white-space: nowrap;
 }
-/* Tasks collapse toggle */
-.tasks-toggle-btn {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    width: 22px;
-    height: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    padding: 0;
-    line-height: 1;
-    transition: all 0.15s;
-}
-.tasks-toggle-btn:hover {
-    border-color: var(--emerald);
-    color: var(--emerald);
-}
-.today-dashboard.tasks-collapsed .today-tasks-list {
-    display: none;
-}
-.today-dashboard.tasks-collapsed .season-progress {
-    display: none;
-}
-.today-dashboard.tasks-collapsed .today-header {
-    margin-bottom: 0;
-}
-
 /* Task list */
 .today-tasks-list {
     display: flex;
@@ -4350,14 +3651,6 @@ body::before {
 [data-theme="light"] .marquee-banner {
     background: var(--emerald);
     color: #fff;
-}
-[data-theme="light"] .garden-viewport {
-    background: #e8e4dc;
-}
-[data-theme="light"] .garden-canvas::before {
-    background:
-        repeating-linear-gradient(90deg, rgba(0,0,0,0.04) 0px, rgba(0,0,0,0.04) 1px, transparent 1px, transparent 40px),
-        repeating-linear-gradient(0deg, rgba(0,0,0,0.04) 0px, rgba(0,0,0,0.04) 1px, transparent 1px, transparent 40px);
 }
 [data-theme="light"] .garden-bed {
     background: #c9b896 !important;
@@ -4595,9 +3888,6 @@ textarea.form-input { resize: vertical; }
     background: rgba(168,85,247,0.2); color: #c084fc; padding: 0.1rem 0.3rem;
     border-radius: 2px; letter-spacing: 0.3px; margin-left: 0.3rem;
 }
-.seed-pkt-badge {
-    background: rgba(16,185,129,0.2); color: #6ee7b7;
-}
 .plant-item .custom-actions {
     display: none; margin-left: auto; gap: 0.2rem;
 }
@@ -4772,51 +4062,12 @@ textarea.form-input { resize: vertical; }
 .gb-send-btn:hover { background: var(--emerald-light); }
 .gb-send-btn:disabled { background: var(--bg-tertiary); color: var(--text-muted); cursor: not-allowed; }
 
-/* Attach / image upload */
-.gb-attach-btn {
-    background: transparent; border: 2px solid var(--border-color);
-    color: var(--text-secondary); width: 34px; height: 34px; border-radius: 50%;
-    font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex;
-    align-items: center; justify-content: center; flex-shrink: 0;
-    transition: all 0.15s ease;
-}
-.gb-attach-btn:hover { border-color: var(--emerald); color: var(--emerald); }
-
-/* Image preview strip */
-.gb-image-preview {
-    display: flex; align-items: center; gap: 0.4rem;
-    padding: 0.4rem 0.6rem; border-top: 1px solid var(--border-color);
-    background: var(--bg-tertiary);
-}
-.gb-image-preview.hidden { display: none; }
-.gb-image-thumb-wrap {
-    position: relative; display: inline-block;
-}
-.gb-image-thumb {
-    width: 48px; height: 48px; object-fit: cover;
-    border-radius: 6px; border: 1px solid var(--border-color);
-}
-.gb-image-remove {
-    position: absolute; top: -6px; right: -6px;
-    width: 18px; height: 18px; border-radius: 50%;
-    background: var(--danger, #e74c3c); color: white; border: none;
-    font-size: 0.65rem; cursor: pointer; display: flex;
-    align-items: center; justify-content: center; line-height: 1;
-    padding: 0;
-}
-.gb-image-remove:hover { background: #c0392b; }
-.gb-image-label {
-    font-size: 0.7rem; color: var(--text-muted);
-    font-family: var(--font-mono); overflow: hidden;
-    text-overflow: ellipsis; white-space: nowrap; max-width: 200px;
-}
-
 /* Mobile responsive */
 @media (max-width: 500px) {
     .gb-panel {
-        width: calc(100vw - 16px); height: calc(100vh - 180px);
-        bottom: 136px; right: 8px; left: 8px;
+        width: calc(100vw - 16px); height: calc(100vh - 120px);
+        bottom: 80px; right: 8px; left: 8px;
         border-radius: 12px;
     }
-    .gb-fab { bottom: 72px; right: 16px; }
+    .gb-fab { bottom: 16px; right: 16px; }
 }

@@ -1,3 +1,22 @@
 .DS_Store
 __pycache__/
 *.pyc
+
+# Personal garden saves and backups
+gardensync-backup-*.json
+Our Actual Garden*.json
+Our Ranch Garden*.json
+Personal garden*.json
+Final Garden*.json
+
+# Screenshots and images
+*.png
+*.jpg
+
+# Misc personal files
+Custom Seeds to add/
+devops_operations_dashboard.html
+
+# Environment / secrets
+.env
+.env.local

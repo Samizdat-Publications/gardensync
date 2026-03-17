@@ -1633,6 +1633,23 @@ function hideContextMenu() {
 }
 
 // ---- PLANT INFO PANEL ----
+let _plantNoteSaveTimeout = null;
+
+function getPlantNotes() {
+    try { return JSON.parse(localStorage.getItem('gardensync_plant_notes') || '{}'); }
+    catch { return {}; }
+}
+
+function savePlantNote(plantId, noteText) {
+    const notes = getPlantNotes();
+    if (noteText.trim()) {
+        notes[plantId] = noteText.trim();
+    } else {
+        delete notes[plantId];
+    }
+    localStorage.setItem('gardensync_plant_notes', JSON.stringify(notes));
+}
+
 function showPlantInfo(plantId) {
     const plant = PLANT_LIBRARY.find(p => p.id === plantId);
     if (!plant) return;
@@ -1653,14 +1670,47 @@ function showPlantInfo(plantId) {
             <div class="info-item"><span class="info-label">COMPANIONS</span><span class="info-value">${plant.companions.map(c => { const cp = PLANT_LIBRARY.find(pl=>pl.id===c); return cp ? cp.emoji + ' ' + cp.name : c; }).join(', ') || 'None specific'}</span></div>
             <div class="info-item"><span class="info-label">ENEMIES</span><span class="info-value" style="color:var(--red-accent)">${plant.enemies.map(c => { const cp = PLANT_LIBRARY.find(pl=>pl.id===c); return cp ? cp.emoji + ' ' + cp.name : c; }).join(', ') || 'None'}</span></div>
         </div>
+        <div class="plant-notes-section">
+            <label class="info-label" for="plant-note-input">YOUR NOTES</label>
+            <textarea id="plant-note-input" class="plant-note-textarea" placeholder="Add notes about ${plant.name} (pests, sources, observations...)" rows="2">${getPlantNotes()[plantId] || ''}</textarea>
+            <span id="plant-note-status" class="plant-note-status"></span>
+        </div>
     `;
 
+    // Wire up auto-save with debounce
+    const noteInput = document.getElementById('plant-note-input');
+    noteInput.addEventListener('input', () => {
+        clearTimeout(_plantNoteSaveTimeout);
+        const statusEl = document.getElementById('plant-note-status');
+        statusEl.textContent = 'typing...';
+        statusEl.style.color = 'var(--text-muted)';
+        _plantNoteSaveTimeout = setTimeout(() => {
+            savePlantNote(plantId, noteInput.value);
+            statusEl.textContent = 'saved';
+            statusEl.style.color = 'var(--emerald)';
+            setTimeout(() => { statusEl.textContent = ''; }, 1500);
+        }, 600);
+    });
+
+    function flushPendingNote() {
+        if (_plantNoteSaveTimeout) {
+            clearTimeout(_plantNoteSaveTimeout);
+            _plantNoteSaveTimeout = null;
+            const el = document.getElementById('plant-note-input');
+            if (el) savePlantNote(plantId, el.value);
+        }
+    }
+
     panel.classList.remove('hidden');
-    document.getElementById('close-info').onclick = () => panel.classList.add('hidden');
+    document.getElementById('close-info').onclick = () => {
+        flushPendingNote();
+        panel.classList.add('hidden');
+    };
 
     // Click outside to dismiss
     function dismissOnOutsideClick(e) {
         if (!panel.contains(e.target) && !e.target.closest('.placed-plant') && !e.target.closest('.context-menu')) {
+            flushPendingNote();
             panel.classList.add('hidden');
             document.removeEventListener('mousedown', dismissOnOutsideClick);
         }

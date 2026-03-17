@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GardenSync — Integration Tests (DOM Interactions)</title>
+<style>
+    body { font-family: 'Courier New', monospace; background: #1a1a2e; color: #e0e0e0; padding: 20px; }
+    h1 { color: #10b981; }
+    .suite { margin: 16px 0; padding: 12px; border-left: 3px solid #333; }
+    .suite-name { color: #60a5fa; font-weight: bold; font-size: 1.1em; margin-bottom: 8px; }
+    .pass { color: #10b981; }
+    .fail { color: #ef4444; font-weight: bold; }
+    .test-result { margin: 4px 0 4px 16px; }
+    .error-detail { color: #f87171; margin-left: 32px; font-size: 0.85em; }
+    .summary { margin-top: 20px; padding: 16px; border: 2px solid #333; font-size: 1.2em; }
+    .summary.all-pass { border-color: #10b981; }
+    .summary.has-fail { border-color: #ef4444; }
+    /* Hide the app DOM scaffold */
+    #app-scaffold { position: absolute; left: -9999px; width: 1024px; height: 768px; overflow: hidden; }
+</style>
+</head>
+<body>
+<h1>🔗 GardenSync Integration Tests</h1>
+<div id="output"></div>
+<div id="summary"></div>
+
+<!-- ============================================================
+     MINIMAL APP DOM SCAFFOLD
+     Provides the essential elements the JS modules expect.
+     Hidden off-screen so it doesn't interfere with test output.
+     ============================================================ -->
+<div id="app-scaffold">
+    <!-- HEADER -->
+    <header id="main-header">
+        <div class="logo-group"><div class="fist-icon"></div><div class="logo-text"><h1>GARDENSYNC</h1><p class="tagline">FOOD NOT BOMBS</p></div></div>
+        <nav class="header-nav">
+            <button class="nav-btn active" data-tab="planner">BED PLANNER</button>
+            <button class="nav-btn" data-tab="schedule">GROW SCHEDULE</button>
+            <button class="nav-btn" data-tab="plantlog">PLANTING LOG</button>
+            <button class="nav-btn" data-tab="harvest">HARVEST</button>
+            <button class="nav-btn" data-tab="volunteers">VOLUNTEERS</button>
+            <button class="nav-btn" data-tab="climate">CLIMATE DATA</button>
+            <button class="nav-btn" data-tab="visualize">VISUALIZE</button>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle">LIGHT</button>
+        <span class="zone-badge" id="zone-badge">ZONE 6a</span>
+        <button id="mobile-menu-btn" class="mobile-menu-btn"><span></span><span></span><span></span></button>
+    </header>
+    <nav id="mobile-nav" class="mobile-nav hidden">
+        <button class="mobile-nav-btn active" data-tab="planner">BED PLANNER</button>
+        <button class="mobile-nav-btn" data-tab="schedule">SCHEDULE</button>
+        <button class="mobile-nav-btn" data-tab="plantlog">LOG</button>
+        <button class="mobile-nav-btn" data-tab="harvest">HARVEST</button>
+        <button class="mobile-nav-btn" data-tab="volunteers">VOLUNTEERS</button>
+        <button class="mobile-nav-btn" data-tab="climate">CLIMATE</button>
+        <button class="mobile-nav-btn" data-tab="visualize">VISUALIZE</button>
+    </nav>
+    <div class="marquee-bar"><div class="marquee-track"></div></div>
+
+    <!-- TAB: PLANNER -->
+    <section id="tab-planner" class="tab-content active">
+        <div id="today-dashboard" class="today-dashboard">
+            <div class="today-header">
+                <div class="today-title-row"><h2 class="today-title">TODAY'S TASKS</h2><span id="today-date" class="today-date"></span></div>
+                <div id="season-progress" class="season-progress"><div class="season-progress-bar"><div id="season-progress-fill" class="season-progress-fill"></div></div><span id="season-progress-label" class="season-progress-label"></span></div>
+            </div>
+            <div id="today-tasks-list" class="today-tasks-list"><p class="muted-text">Loading...</p></div>
+        </div>
+        <div class="planner-layout">
+            <aside class="plant-palette">
+                <h2 class="section-title">PLANT LIBRARY</h2>
+                <input type="text" id="plant-search" class="search-input" placeholder="Search...">
+                <div class="filter-row">
+                    <button class="filter-btn active" data-filter="all">ALL</button>
+                    <button class="filter-btn" data-filter="vegetable">VEG</button>
+                    <button class="filter-btn" data-filter="fruit">FRUIT</button>
+                    <button class="filter-btn" data-filter="herb">HERB</button>
+                    <button class="filter-btn" data-filter="flower">FLOWER</button>
+                    <button id="btn-add-custom-seed" class="filter-btn accent" data-filter="custom">+ CUSTOM</button>
+                </div>
+                <div class="sort-row"><label class="sort-label">SORT:</label><select id="plant-sort" class="sort-select"><option value="name">A-Z</option></select></div>
+                <div id="plant-list" class="plant-list"></div>
+                <div class="palette-footer"><p class="helper-text">Drag or double-click to place</p><div class="shortcut-hints"></div></div>
+                <div class="palette-resize-handle"></div>
+            </aside>
+            <main class="garden-canvas-area">
+                <div class="canvas-toolbar">
+                    <div class="toolbar-left">
+                        <span class="toolbar-label">GARDEN OVERVIEW</span>
+                        <span class="toolbar-sublabel"></span>
+                        <span id="total-plant-count" class="total-plant-count"><span class="count-num">0</span> PLANTS</span>
+                    </div>
+                    <div class="toolbar-right">
+                        <button id="btn-stats-toggle" class="tool-btn">STATS</button>
+                        <button id="btn-undo" class="tool-btn disabled">UNDO</button>
+                        <button id="btn-redo" class="tool-btn disabled">REDO</button>
+                        <div class="zoom-controls">
+                            <button id="btn-zoom-out" class="tool-btn">-</button>
+                            <span id="zoom-level" class="zoom-level">100%</span>
+                            <button id="btn-zoom-in" class="tool-btn">+</button>
+                            <button id="btn-zoom-fit" class="tool-btn">FIT</button>
+                        </div>
+                        <button id="btn-grid-toggle" class="tool-btn">GRID: OFF</button>
+                        <button id="btn-auto-organize" class="tool-btn accent">AUTO-ORGANIZE</button>
+                        <button id="btn-clear-all" class="tool-btn danger">CLEAR ALL</button>
+                        <button id="btn-save" class="tool-btn">SAVE PLAN</button>
+                        <button id="btn-load" class="tool-btn">LOAD PLAN</button>
+                        <button id="btn-export" class="tool-btn accent">EXPORT PNG</button>
+                        <button id="btn-print-map" class="tool-btn">PRINT MAP</button>
+                        <button id="btn-share-url" class="tool-btn">SHARE LINK</button>
+                    </div>
+                </div>
+                <div id="water-alert-banner" class="water-alert-banner hidden"></div>
+                <div id="stats-dashboard" class="stats-dashboard hidden">
+                    <div class="stats-grid">
+                        <div class="mini-stat"><span class="mini-stat-val" id="stat-total-plants">0</span><span class="mini-stat-label">PLANTS</span></div>
+                        <div class="mini-stat"><span class="mini-stat-val" id="stat-varieties">0</span><span class="mini-stat-label">VARIETIES</span></div>
+                        <div class="mini-stat"><span class="mini-stat-val" id="stat-beds-used">0</span><span class="mini-stat-label">BEDS USED</span></div>
+                        <div class="mini-stat"><span class="mini-stat-val" id="stat-avg-coverage">0%</span><span class="mini-stat-label">AVG COV</span></div>
+                        <div class="mini-stat"><span class="mini-stat-val" id="stat-companions">0</span><span class="mini-stat-label">COMPANIONS</span></div>
+                        <div class="mini-stat"><span class="mini-stat-val" id="stat-conflicts">0</span><span class="mini-stat-label">CONFLICTS</span></div>
+                        <div class="mini-stat"><span class="mini-stat-val" id="stat-water-avg">--</span><span class="mini-stat-label">AVG WATER</span></div>
+                        <div class="mini-stat"><span class="mini-stat-val" id="stat-harvest-days">--</span><span class="mini-stat-label">FIRST HARVEST</span></div>
+                    </div>
+                </div>
+                <div id="container-shelf" class="container-shelf"><span class="shelf-label">ADD:</span></div>
+                <div id="garden-viewport" class="garden-viewport">
+                    <div id="garden-canvas" class="garden-canvas"></div>
+                </div>
+                <div id="plant-info-panel" class="plant-info-panel hidden"><button id="close-info" class="close-btn">&times;</button><div id="plant-info-content"></div></div>
+            </main>
+            <aside class="bed-details">
+                <div class="sidebar-resize-handle"></div>
+                <h2 class="section-title">BED DETAILS</h2>
+                <div id="bed-selector" class="bed-selector"></div>
+                <div class="bed-actions">
+                    <button id="btn-clear-bed" class="tool-btn small danger">CLEAR BED</button>
+                    <button id="btn-copy-bed" class="tool-btn small">COPY TO...</button>
+                    <button id="btn-bed-template" class="tool-btn small accent">TEMPLATE</button>
+                </div>
+                <div class="quick-add-row">
+                    <span class="quick-add-label">+ QUICK ADD PLANT...</span>
+                    <select id="quick-add-select" class="quick-add-select"><option value="">Choose...</option></select>
+                    <button id="btn-quick-add" class="quick-add-btn">ADD</button>
+                    <button id="btn-fill-row" class="quick-add-btn accent">FILL ROW</button>
+                </div>
+                <div class="bed-info-grid">
+                    <div class="info-pair"><span class="info-label">TYPE</span><span id="bed-type-display" class="info-value"></span></div>
+                    <div class="info-pair"><span class="info-label">PLANTS</span><span id="bed-plant-count" class="info-value">0</span></div>
+                    <div class="info-pair"><span class="info-label">COVERAGE</span><span id="bed-coverage" class="info-value">0%</span></div>
+                    <div class="info-pair"><span class="info-label">WATER NEED</span><span id="bed-water" class="info-value">--</span></div>
+                </div>
+                <h3 class="subsection-title">PLANTED</h3>
+                <div id="bed-plant-list" class="bed-plant-list"></div>
+                <div class="section-resize-handle" data-sections="planted-companion"></div>
+                <h3 class="subsection-title">COMPANION ALERTS</h3>
+                <div id="companion-alerts" class="companion-alerts"></div>
+                <div class="section-resize-handle" data-sections="companion-journal"></div>
+                <h3 class="subsection-title">BED JOURNAL</h3>
+                <div id="journal-entries" class="journal-entries"></div>
+                <div class="journal-add"><input type="text" id="journal-input" class="journal-input" placeholder="Add note..."><button id="btn-add-journal" class="journal-btn">+ ADD</button></div>
+            </aside>
+        </div>
+    </section>
+
+    <!-- TAB: SCHEDULE -->
+    <section id="tab-schedule" class="tab-content">
+        <div class="schedule-layout"><h2>GROW SCHEDULE</h2>
+            <div class="frost-badges"><div id="frost-last" class="frost-badge"></div><div id="frost-first" class="frost-badge"></div><div id="frost-season" class="frost-badge"></div></div>
+            <div id="schedule-empty" class="schedule-empty"><p>No plants placed yet.</p></div>
+            <div id="schedule-content" class="schedule-content hidden">
+                <div id="schedule-timeline" class="schedule-timeline"></div>
+                <div id="schedule-tasks" class="schedule-tasks"></div>
+                <div id="schedule-instructions" class="schedule-instructions"></div>
+            </div>
+            <div id="calendar-export-section" class="calendar-export-section"><button id="btn-export-ics" class="tool-btn accent">EXPORT .ICS</button></div>
+        </div>
+    </section>
+
+    <!-- TAB: PLANTING LOG -->
+    <section id="tab-plantlog" class="tab-content">
+        <div class="plantlog-layout">
+            <div class="plantlog-header-bar"><h2>PLANTING LOG</h2>
+                <div class="plantlog-controls"><div class="plantlog-filter-row">
+                    <button class="plantlog-filter-btn active" data-filter="all">ALL</button>
+                    <button class="plantlog-filter-btn" data-filter="pending">PENDING</button>
+                    <button class="plantlog-filter-btn" data-filter="done">DONE</button>
+                </div></div>
+            </div>
+            <div id="plantlog-list" class="plantlog-list"></div>
+        </div>
+    </section>
+
+    <!-- TAB: HARVEST -->
+    <section id="tab-harvest" class="tab-content">
+        <div class="harvest-layout">
+            <h2>HARVEST TRACKER</h2>
+            <div class="harvest-stats-row"><div class="harvest-stat-card"><span id="harvest-total-lbs" class="harvest-stat-value">0</span><span class="harvest-stat-label">TOTAL LBS</span></div></div>
+            <div class="harvest-form-row">
+                <select id="harvest-plant-select"><option value="">Choose plant...</option></select>
+                <input type="number" id="harvest-amount" placeholder="Amount" step="0.1">
+                <select id="harvest-unit"><option value="lbs">lbs</option><option value="oz">oz</option><option value="count">count</option></select>
+                <input type="date" id="harvest-date">
+                <button id="btn-add-harvest" class="tool-btn accent">LOG HARVEST</button>
+            </div>
+            <div id="harvest-log-list" class="harvest-log-list"></div>
+            <div class="harvest-goals-section">
+                <h3>SEASON GOALS</h3>
+                <div id="harvest-goals-list" class="harvest-goals-list"></div>
+                <div class="harvest-goals-form">
+                    <select id="goal-plant-select"><option value="">Plant...</option></select>
+                    <input type="number" id="goal-target" placeholder="Target lbs" step="0.1">
+                    <button id="btn-add-goal" class="tool-btn">ADD GOAL</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TAB: VOLUNTEERS -->
+    <section id="tab-volunteers" class="tab-content">
+        <div class="volunteers-layout">
+            <h2>VOLUNTEER ROSTER</h2>
+            <div class="volunteer-form">
+                <input type="text" id="vol-name" placeholder="Name"><input type="text" id="vol-role" placeholder="Role">
+                <input type="text" id="vol-phone" placeholder="Phone"><input type="text" id="vol-email" placeholder="Email">
+                <button id="btn-add-volunteer" class="tool-btn accent">ADD</button>
+            </div>
+            <div id="volunteer-list" class="volunteers-grid"></div>
+        </div>
+    </section>
+
+    <!-- TAB: CLIMATE -->
+    <section id="tab-climate" class="tab-content">
+        <div class="climate-layout">
+            <h2>CLIMATE DATA</h2>
+            <div class="climate-grid">
+                <div class="climate-card"><h3>RAINFALL</h3><canvas id="rainfall-chart" width="400" height="200"></canvas></div>
+                <div class="climate-card"><h3>TEMPERATURE</h3><canvas id="temp-chart" width="400" height="200"></canvas></div>
+                <div class="rain-barrel-card">
+                    <h3>RAIN BARREL CALCULATOR</h3>
+                    <div class="barrel-calc">
+                        <label>Roof (sqft):<input type="number" id="barrel-roof-sqft" value="1000"></label>
+                        <label>Barrel (gal):<input type="number" id="barrel-capacity" value="55"></label>
+                        <label>Count:<input type="number" id="barrel-count" value="2"></label>
+                        <button id="btn-calc-barrel" class="tool-btn accent">CALCULATE</button>
+                    </div>
+                    <div id="barrel-result" class="barrel-verdict"></div>
+                </div>
+            </div>
+            <div class="weather-section"><h3>WEATHER</h3>
+                <div class="weather-current-row"><div id="weather-current" class="weather-current"></div><div id="weather-alerts" class="weather-alerts"></div></div>
+                <div id="weather-forecast" class="forecast-grid"></div>
+                <div class="weather-config"><label>ZIP: <input type="text" id="weather-zip" value="44708" maxlength="5"></label><button id="btn-fetch-weather" class="tool-btn">REFRESH</button></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TAB: VISUALIZE -->
+    <section id="tab-visualize" class="tab-content">
+        <div class="visualize-layout"><h2>VISUALIZE</h2><canvas id="viz-canvas" width="800" height="400"></canvas><div class="viz-controls"><button id="btn-viz-sunlight" class="tool-btn active">SUNLIGHT</button></div></div>
+    </section>
+
+    <!-- MOBILE BOTTOM BAR -->
+    <div id="mobile-bottom-bar" class="mobile-bottom-bar">
+        <button id="mobile-toggle-palette" class="mobile-bar-btn"><span class="mobile-bar-icon">🌱</span><span class="mobile-bar-label">PLANTS</span></button>
+        <button id="mobile-toggle-details" class="mobile-bar-btn"><span class="mobile-bar-icon">📋</span><span class="mobile-bar-label">DETAILS</span></button>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="main-footer">
+        <div class="footer-left"><span class="footer-logo">GARDENSYNC</span><span id="save-indicator" class="save-indicator"></span></div>
+        <div class="footer-center">
+            <button id="btn-export-data" class="footer-action-btn">EXPORT DATA</button>
+            <button id="btn-import-data" class="footer-action-btn">IMPORT DATA</button>
+            <button id="btn-restore-backup" class="footer-action-btn">BACKUPS</button>
+            <button id="btn-load-demo" class="footer-action-btn demo-btn">LOAD DEMO GARDEN</button>
+        </div>
+    </footer>
+
+    <!-- GARDEN BUDDY -->
+    <button id="gb-fab" class="gb-fab">🌱</button>
+    <div id="gb-panel" class="gb-panel hidden">
+        <div class="gb-header"><span class="gb-title">GARDEN BUDDY</span><button id="gb-close" class="gb-close-btn">&times;</button></div>
+        <div id="gb-messages" class="gb-messages"></div>
+        <div class="gb-input-row"><input type="text" id="gb-input" class="gb-input" placeholder="Ask anything..."><button id="gb-send" class="gb-send-btn">SEND</button></div>
+    </div>
+
+    <!-- MODALS -->
+    <div id="custom-seed-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <h3>ADD CUSTOM SEED</h3>
+            <input id="cs-name" placeholder="Name"><input id="cs-emoji" placeholder="Emoji">
+            <select id="cs-type"><option value="vegetable">Vegetable</option><option value="herb">Herb</option><option value="fruit">Fruit</option><option value="flower">Flower</option></select>
+            <input id="cs-spacing" type="number" placeholder="Spacing"><input id="cs-days" type="number" placeholder="Days to harvest">
+            <select id="cs-water"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select>
+            <input id="cs-companions" placeholder="Companions (comma-sep)"><input id="cs-enemies" placeholder="Enemies (comma-sep)">
+            <input id="cs-sun" placeholder="Sun need"><input id="cs-notes" placeholder="Notes">
+            <div><button id="cs-save" class="tool-btn accent">SAVE</button><button id="cs-cancel" class="tool-btn">CANCEL</button></div>
+        </div>
+    </div>
+    <div id="template-modal" class="modal-overlay hidden">
+        <div class="modal-card"><h3>BED TEMPLATES</h3><div id="template-list"></div><button id="template-close" class="tool-btn">CLOSE</button></div>
+    </div>
+    <div id="copy-bed-modal" class="modal-overlay hidden">
+        <div class="modal-card"><h3>COPY TO...</h3><div id="copy-bed-targets"></div><button id="copy-bed-close" class="tool-btn">CANCEL</button></div>
+    </div>
+    <div id="backup-modal" class="modal-overlay hidden">
+        <div class="modal-card"><h3>BACKUP MANAGER</h3><div id="backup-list"></div><button id="backup-close" class="tool-btn">CLOSE</button></div>
+    </div>
+
+    <!-- Hidden file input -->
+    <input type="file" id="import-file-input" accept=".json" style="display:none">
+</div>
+
+<!-- Load ALL JS modules in correct order -->
+<script src="../js/constants.js"></script>
+<script src="../js/state.js"></script>
+<script src="../js/selection.js"></script>
+<script src="../js/navigation.js"></script>
+<script src="../js/palette.js"></script>
+<script src="../js/containers.js"></script>
+<script src="../js/canvas.js"></script>
+<script src="../js/shelf.js"></script>
+<script src="../js/placement.js"></script>
+<script src="../js/sidebar.js"></script>
+<script src="../js/custom-seeds.js"></script>
+<script src="../js/templates.js"></script>
+<script src="../js/details.js"></script>
+<script src="../js/toolbar-buttons.js"></script>
+<script src="../js/organize.js"></script>
+<script src="../js/persistence.js"></script>
+<script src="../js/backup.js"></script>
+<script src="../js/dashboard.js"></script>
+<script src="../js/export.js"></script>
+<script src="../js/schedule.js"></script>
+<script src="../js/volunteers.js"></script>
+<script src="../js/climate.js"></script>
+<script src="../js/visualizer.js"></script>
+<script src="../js/calendar.js"></script>
+<script src="../js/harvest.js"></script>
+<script src="../js/planting-log.js"></script>
+<script src="../js/weather.js"></script>
+<script src="../js/data-io.js"></script>
+<script src="../js/garden-buddy.js"></script>
+<!-- NOTE: We do NOT load init.js — we call inits selectively -->
+
+<script>
+// ========== Test Framework ==========
+let totalPass = 0, totalFail = 0;
+const outputEl = document.getElementById('output');
+const summaryEl = document.getElementById('summary');
+
+function suite(name, fn) {
+    const div = document.createElement('div');
+    div.className = 'suite';
+    div.innerHTML = `<div class="suite-name">▸ ${name}</div>`;
+    outputEl.appendChild(div);
+    window._currentSuite = div;
+    try { fn(); } catch (e) {
+        totalFail++;
+        const el = document.createElement('div');
+        el.className = 'test-result';
+        el.innerHTML = `<span class="fail">✗ SUITE ERROR: ${e.message}</span>`;
+        div.appendChild(el);
+        console.error(`Suite "${name}" error:`, e);
+    }
+}
+
+function assert(description, condition) {
+    const el = document.createElement('div');
+    el.className = 'test-result';
+    if (condition) {
+        totalPass++;
+        el.innerHTML = `<span class="pass">✓</span> ${description}`;
+    } else {
+        totalFail++;
+        el.innerHTML = `<span class="fail">✗</span> ${description}`;
+    }
+    window._currentSuite.appendChild(el);
+}
+
+function assertEqual(description, actual, expected) {
+    const pass = actual === expected;
+    const el = document.createElement('div');
+    el.className = 'test-result';
+    if (pass) {
+        totalPass++;
+        el.innerHTML = `<span class="pass">✓</span> ${description}`;
+    } else {
+        totalFail++;
+        el.innerHTML = `<span class="fail">✗</span> ${description} — expected "${expected}", got "${actual}"`;
+    }
+    window._currentSuite.appendChild(el);
+}
+
+function showSummary() {
+    const total = totalPass + totalFail;
+    const status = totalFail === 0 ? 'all-pass' : 'has-fail';
+    summaryEl.className = `summary ${status}`;
+    summaryEl.textContent = `ALL TESTS ${totalFail === 0 ? 'PASSED' : 'DONE'} — ${totalPass} passed, ${totalFail} failed, ${total} total`;
+}
+
+// ========== HELPER: Build a test container object (mirrors addNewContainer in shelf.js) ==========
+function _makeContainer(typeKey, overrides) {
+    const typeDef = CONTAINER_TYPES[typeKey];
+    const c = {
+        id: `test-${Date.now()}-${Math.random().toString(36).substr(2,5)}`,
+        type: typeKey,
+        name: typeDef.label.toUpperCase(),
+        canvasX: 40,
+        canvasY: 40,
+        plants: [],
+        notes: '',
+        volunteer: null
+    };
+    if (typeDef.shape === 'circle') {
+        c.diameter = typeDef.defaultDiameter;
+    } else {
+        c.w = typeDef.defaultW;
+        c.h = typeDef.defaultH;
+    }
+    return Object.assign(c, overrides || {});
+}
+
+// ========== HELPER: Reset state for a clean test ==========
+function resetTestState() {
+    state.containers = [];
+    state.canvasZoom = 1;
+    state.canvasOffsetX = 0;
+    state.canvasOffsetY = 0;
+    state.selectedContainer = null;
+    state.selectedPlantId = null;
+    state.volunteers = [];
+    state.harvestLog = [];
+    state.harvestGoals = [];
+    state.plantingLog = [];
+    state.customSeeds = [];
+    state.journal = {};
+    state.undoStack = [];
+    state.redoStack = [];
+    const canvas = document.getElementById('garden-canvas');
+    if (canvas) canvas.innerHTML = '';
+}
+
+// ========== INITIALIZE MODULES ==========
+localStorage.removeItem('gardensync_state');
+
+// Only init modules whose DOM scaffold we fully provide
+const coreInits = [
+    ['Navigation', initNavigation],
+    ['CustomSeeds', initCustomSeeds],
+    ['PlantPalette', initPlantPalette],
+    ['GardenContainers', initGardenBeds],
+    ['ContainerShelf', initContainerShelf],
+    ['ContainerSelector', initContainerSelector],
+    ['ToolbarButtons', initToolbarButtons],
+    ['KeyboardShortcuts', initKeyboardShortcuts],
+    ['GardenBuddy', initGardenBuddy],
+];
+
+// Non-critical inits — try them but don't count failures
+const optionalInits = [
+    ['CanvasPan', initCanvasPan],
+    ['QuickAdd', initQuickAdd],
+    ['BedTemplates', initBedTemplates],
+    ['ThemeToggle', initThemeToggle],
+    ['DataExportImport', initDataExportImport],
+];
+
+let initErrors = [];
+for (const [name, fn] of coreInits) {
+    try { fn(); }
+    catch (e) { initErrors.push(`${name}: ${e.message}`); }
+}
+for (const [name, fn] of optionalInits) {
+    try { fn(); } catch (e) { /* optional — ok if missing DOM */ }
+}
+
+suite('Module Initialization', () => {
+    assert(`All ${coreInits.length} core modules initialized`, initErrors.length === 0);
+    if (initErrors.length > 0) {
+        initErrors.forEach(err => assert(`INIT ERROR: ${err}`, false));
+    }
+});
+
+// ========== TEST SUITES ==========
+
+// --- 1. Navigation / Tab Switching ---
+suite('Tab Switching', () => {
+    // Stub render functions that need extra DOM elements
+    const stubs = {};
+    ['updateSchedule','renderPlantingLog','renderHarvestLog','renderVolunteers','drawRainfallChart','drawTempChart'].forEach(fn => {
+        stubs[fn] = window[fn];
+        window[fn] = function() {};
+    });
+
+    assert('planner tab is active by default', document.getElementById('tab-planner').classList.contains('active'));
+    assert('schedule tab is NOT active', !document.getElementById('tab-schedule').classList.contains('active'));
+
+    switchTab('schedule');
+    assert('schedule tab now active', document.getElementById('tab-schedule').classList.contains('active'));
+    assert('planner tab deactivated', !document.getElementById('tab-planner').classList.contains('active'));
+    assert('schedule nav-btn highlighted', document.querySelector('.nav-btn[data-tab="schedule"]').classList.contains('active'));
+
+    switchTab('harvest');
+    assert('harvest tab active', document.getElementById('tab-harvest').classList.contains('active'));
+    assert('schedule tab deactivated', !document.getElementById('tab-schedule').classList.contains('active'));
+
+    switchTab('planner');
+    assert('back to planner', document.getElementById('tab-planner').classList.contains('active'));
+
+    // Restore real functions
+    Object.entries(stubs).forEach(([fn, orig]) => { window[fn] = orig; });
+});
+
+// --- 2. Container CRUD ---
+suite('Container Add / Delete', () => {
+    resetTestState();
+
+    const bed = _makeContainer('raised-bed', { canvasX: 40, canvasY: 40 });
+    state.containers.push(bed);
+    addContainerToCanvas(bed);
+
+    assert('state has 1 container', state.containers.length === 1);
+    assertEqual('container type', bed.type, 'raised-bed');
+    assert('container has id', typeof bed.id === 'string' && bed.id.length > 0);
+    assert('DOM has 1 .garden-bed', document.querySelectorAll('.garden-bed').length === 1);
+
+    const pot = _makeContainer('pot-round', { canvasX: 300, canvasY: 40 });
+    state.containers.push(pot);
+    addContainerToCanvas(pot);
+    assert('state has 2 containers', state.containers.length === 2);
+    assert('DOM has 2 .garden-bed', document.querySelectorAll('.garden-bed').length === 2);
+
+    // Delete first
+    const bedId = bed.id;
+    state.containers = state.containers.filter(c => c.id !== bedId);
+    removeContainerFromCanvas(bedId);
+    assert('1 container after delete', state.containers.length === 1);
+    assert('1 .garden-bed in DOM after delete', document.querySelectorAll('.garden-bed').length === 1);
+    assert('remaining is pot', state.containers[0].type === 'pot-round');
+});
+
+// --- 3. Plant Placement ---
+suite('Plant Placement', () => {
+    resetTestState();
+
+    const bed = _makeContainer('raised-bed', { w: 4, h: 4, canvasX: 40, canvasY: 40 });
+    state.containers.push(bed);
+    addContainerToCanvas(bed);
+    state.selectedContainer = bed.id;
+
+    // placePlant signature: (containerId, plantId, x, y)
+    placePlant(bed.id, 'tomato', 100, 100);
+    assert('bed has 1 plant', bed.plants.length === 1);
+    assertEqual('plant is tomato', bed.plants[0].plantId, 'tomato');
+    assert('plant has x', typeof bed.plants[0].x === 'number');
+    assert('plant has y', typeof bed.plants[0].y === 'number');
+
+    placePlant(bed.id, 'basil', 150, 100);
+    assert('bed has 2 plants', bed.plants.length === 2);
+    assertEqual('second plant is basil', bed.plants[1].plantId, 'basil');
+});
+
+// --- 4. Undo / Redo ---
+suite('Undo / Redo', () => {
+    resetTestState();
+
+    const bed = _makeContainer('raised-bed', { w: 4, h: 4, canvasX: 40, canvasY: 40 });
+    state.containers.push(bed);
+    addContainerToCanvas(bed);
+
+    // placePlant internally calls pushUndo
+    placePlant(bed.id, 'tomato', 50, 50);
+    assert('bed has 1 plant', bed.plants.length === 1);
+    assert('undo stack >= 1', state.undoStack.length >= 1);
+
+    undo();
+    const bedAfterUndo = state.containers.find(c => c.id === bed.id);
+    assert('after undo: 0 plants', bedAfterUndo ? bedAfterUndo.plants.length === 0 : false);
+    assert('redo stack >= 1', state.redoStack.length >= 1);
+
+    redo();
+    const bedAfterRedo = state.containers.find(c => c.id === bed.id);
+    assert('after redo: 1 plant', bedAfterRedo ? bedAfterRedo.plants.length === 1 : false);
+});
+
+// --- 5. Plant Palette Rendering ---
+suite('Plant Palette Population', () => {
+    const plantListEl = document.getElementById('plant-list');
+    assert('plant-list element exists', !!plantListEl);
+    const cards = plantListEl.querySelectorAll('.plant-item-wrap');
+    assert('plant cards rendered (count > 0)', cards.length > 0);
+    assert('at least 30 plant cards', cards.length >= 30);
+
+    const tomatoCard = plantListEl.querySelector('[data-plant-id="tomato"]');
+    assert('tomato card exists', !!tomatoCard);
+    assert('tomato card contains "Tomato"', tomatoCard?.textContent?.includes('Tomato'));
+});
+
+// --- 6. Plant Search / Filter ---
+suite('Plant Search and Filter', () => {
+    const searchInput = document.getElementById('plant-search');
+    const plantList = document.getElementById('plant-list');
+    assert('search input exists', !!searchInput);
+
+    // Search for "tom"
+    searchInput.value = 'tom';
+    searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+    const visible = [...plantList.querySelectorAll('.plant-item-wrap')].filter(
+        c => c.style.display !== 'none' && !c.classList.contains('hidden')
+    );
+    assert('search "tom" shows results', visible.length >= 1);
+    assert('Tomato card visible', visible.some(c => c.textContent.includes('Tomato')));
+
+    // Clear search
+    searchInput.value = '';
+    searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+    // Filter herbs
+    const herbBtn = document.querySelector('.filter-btn[data-filter="herb"]');
+    assert('herb filter button exists', !!herbBtn);
+    if (herbBtn) {
+        herbBtn.click();
+        const herbs = [...plantList.querySelectorAll('.plant-item-wrap')].filter(
+            c => c.style.display !== 'none' && !c.classList.contains('hidden')
+        );
+        assert('herb filter: at least 1 herb card', herbs.length >= 1);
+        assert('herb filter: Basil shown', herbs.some(c => c.textContent.includes('Basil')));
+
+        // Reset
+        document.querySelector('.filter-btn[data-filter="all"]')?.click();
+    }
+});
+
+// --- 7. Container Shelf ---
+suite('Container Shelf Buttons', () => {
+    const shelf = document.getElementById('container-shelf');
+    assert('container shelf exists', !!shelf);
+    const buttons = shelf.querySelectorAll('.shelf-btn');
+    assert('7 container type buttons', buttons.length === 7);
+
+    const labels = [...buttons].map(b => b.textContent.trim());
+    assert('Raised Bed button', labels.some(l => l.includes('Raised Bed')));
+    assert('Planter Box button', labels.some(l => l.includes('Planter Box')));
+    assert('Round Pot button', labels.some(l => l.includes('Round Pot')));
+    assert('Grow Bag button', labels.some(l => l.includes('Grow Bag')));
+    assert('In-Ground Plot button', labels.some(l => l.includes('In-Ground')));
+    assert('Window Box button', labels.some(l => l.includes('Window Box')));
+    assert('Potato Tower button', labels.some(l => l.includes('Potato Tower')));
+});
+
+// --- 8. Mobile Panel Toggles ---
+suite('Mobile Panel Toggles', () => {
+    const palette = document.querySelector('.plant-palette');
+    const details = document.querySelector('.bed-details');
+    const paletteBtn = document.getElementById('mobile-toggle-palette');
+    const detailsBtn = document.getElementById('mobile-toggle-details');
+
+    // Initially closed
+    assert('palette not mobile-open', !palette.classList.contains('mobile-open'));
+    assert('details not mobile-open', !details.classList.contains('mobile-open'));
+
+    // Open palette
+    paletteBtn.click();
+    assert('palette opened', palette.classList.contains('mobile-open'));
+    assert('paletteBtn active', paletteBtn.classList.contains('active'));
+    assert('backdrop created', !!document.querySelector('.mobile-panel-backdrop'));
+
+    // Open details — should close palette
+    detailsBtn.click();
+    assert('palette closed when details opened', !palette.classList.contains('mobile-open'));
+    assert('details opened', details.classList.contains('mobile-open'));
+    assert('detailsBtn active', detailsBtn.classList.contains('active'));
+    assert('paletteBtn deactivated', !paletteBtn.classList.contains('active'));
+
+    // Close all
+    closeMobilePanels();
+    assert('all panels closed', !palette.classList.contains('mobile-open') && !details.classList.contains('mobile-open'));
+    assert('no backdrop', !document.querySelector('.mobile-panel-backdrop'));
+});
+
+// --- 9. Debounced Save ---
+suite('debouncedSave / flushSave', () => {
+    let saveCount = 0;
+    const origSave = window.saveState;
+    window.saveState = function() { saveCount++; };
+
+    for (let i = 0; i < 5; i++) debouncedSave();
+    assert('5 rapid calls: 0 immediate saves', saveCount === 0);
+
+    flushSave();
+    assert('flushSave: exactly 1 save', saveCount === 1);
+
+    flushSave();
+    assert('second flush (no pending): still 1', saveCount === 1);
+
+    saveCount = 0;
+    debouncedSave();
+    assert('single debouncedSave: no immediate save', saveCount === 0);
+    flushSave();
+    assert('flush after single call: 1 save', saveCount === 1);
+
+    window.saveState = origSave;
+});
+
+// --- 10. Targeted Container DOM Ops ---
+suite('addContainerToCanvas / removeContainerFromCanvas', () => {
+    resetTestState();
+
+    for (let i = 0; i < 3; i++) {
+        const c = _makeContainer('raised-bed', { canvasX: i * 200, canvasY: 0, name: `Test Bed ${i + 1}` });
+        state.containers.push(c);
+        addContainerToCanvas(c);
+    }
+    assert('3 in state', state.containers.length === 3);
+    assert('3 in DOM', document.querySelectorAll('.garden-bed').length === 3);
+
+    const middleId = state.containers[1].id;
+    removeContainerFromCanvas(middleId);
+    state.containers = state.containers.filter(c => c.id !== middleId);
+    assert('2 in state after remove', state.containers.length === 2);
+    assert('2 in DOM after remove', document.querySelectorAll('.garden-bed').length === 2);
+    assert('removed element gone', !document.querySelector(`.garden-bed[data-container-id="${middleId}"]`));
+
+    const newC = _makeContainer('pot-round', { canvasX: 600, canvasY: 0 });
+    state.containers.push(newC);
+    addContainerToCanvas(newC);
+    assert('3 again in state', state.containers.length === 3);
+    assert('3 again in DOM', document.querySelectorAll('.garden-bed').length === 3);
+});
+
+// --- 11. Container Selector ---
+suite('Container Selector Tabs', () => {
+    resetTestState();
+
+    const bed1 = _makeContainer('raised-bed', { name: 'Veggie Bed' });
+    const bed2 = _makeContainer('planter', { name: 'Herb Planter' });
+    state.containers.push(bed1, bed2);
+    renderAllContainers();
+    updateContainerSelector();
+
+    const selector = document.getElementById('bed-selector');
+    assert('bed-selector exists', !!selector);
+    const tabs = selector.querySelectorAll('.bed-tab');
+    assert('2 bed tabs', tabs.length === 2);
+    assert('first is Veggie Bed', tabs[0]?.textContent?.includes('Veggie'));
+    assert('second is Herb Planter', tabs[1]?.textContent?.includes('Herb'));
+});
+
+// --- 12. State Save/Load Round-trip ---
+suite('State Save/Load Round-trip', () => {
+    resetTestState();
+
+    const bed = _makeContainer('raised-bed', { name: 'Roundtrip Test', w: 6, h: 3 });
+    state.containers.push(bed);
+    addContainerToCanvas(bed);
+    placePlant(bed.id, 'tomato', 80, 80);
+    state.canvasZoom = 1.5;
+    state.canvasOffsetX = 100;
+    state.canvasOffsetY = -50;
+
+    saveState();
+    const savedData = localStorage.getItem('gardensync_state');
+    assert('state saved to localStorage', !!savedData);
+
+    const parsed = JSON.parse(savedData);
+    assert('has containers array', Array.isArray(parsed.containers));
+    assert('1 container saved', parsed.containers.length === 1);
+    assertEqual('container name', parsed.containers[0].name, 'Roundtrip Test');
+    assert('container has plants', parsed.containers[0].plants?.length >= 1);
+    assertEqual('zoom saved', parsed.canvasZoom, 1.5);
+    assertEqual('offsetX saved', parsed.canvasOffsetX, 100);
+    assertEqual('offsetY saved', parsed.canvasOffsetY, -50);
+});
+
+// --- 13. Canvas Zoom ---
+suite('Canvas Zoom Functions', () => {
+    state.canvasZoom = 1.0;
+    state.canvasOffsetX = 0;
+    state.canvasOffsetY = 0;
+
+    zoomIn();
+    assert('zoomIn increases zoom', state.canvasZoom > 1.0);
+    const z1 = state.canvasZoom;
+
+    zoomOut();
+    assert('zoomOut decreases zoom', state.canvasZoom < z1);
+
+    state.canvasZoom = 2.9;
+    zoomIn();
+    assert('zoom capped at 3', state.canvasZoom <= 3);
+
+    state.canvasZoom = 0.25;
+    zoomOut();
+    assert('zoom floor at 0.2', state.canvasZoom >= 0.2);
+});
+
+// --- 14. Today Dashboard Collapse ---
+suite('Mobile Dashboard Collapse', () => {
+    const dashboard = document.getElementById('today-dashboard');
+    assert('today-dashboard exists', !!dashboard);
+
+    dashboard.classList.add('mobile-collapsed');
+    assert('mobile-collapsed adds class', dashboard.classList.contains('mobile-collapsed'));
+    dashboard.classList.remove('mobile-collapsed');
+    assert('mobile-collapsed removes class', !dashboard.classList.contains('mobile-collapsed'));
+});
+
+// --- 15. Bottom Bar Tab Visibility ---
+suite('Mobile Bottom Bar Tab Visibility', () => {
+    const bar = document.getElementById('mobile-bottom-bar');
+    assert('bottom bar exists', !!bar);
+
+    updateMobileBottomBar('planner');
+    assert('visible on planner', bar.style.display === '');
+
+    updateMobileBottomBar('schedule');
+    assertEqual('hidden on schedule', bar.style.display, 'none');
+
+    updateMobileBottomBar('harvest');
+    assertEqual('hidden on harvest', bar.style.display, 'none');
+
+    updateMobileBottomBar('planner');
+    assert('visible again on planner', bar.style.display === '');
+});
+
+// --- 16. All 7 Container Types ---
+suite('All 7 Container Types', () => {
+    const types = ['raised-bed', 'planter', 'pot-round', 'grow-bag', 'in-ground', 'window-box', 'potato-tower'];
+    types.forEach(type => {
+        const c = _makeContainer(type);
+        assert(`${type}: has id`, !!c.id);
+        assertEqual(`${type}: type correct`, c.type, type);
+        assert(`${type}: empty plants array`, Array.isArray(c.plants) && c.plants.length === 0);
+        const typeDef = CONTAINER_TYPES[type];
+        if (typeDef.shape === 'rect') {
+            assert(`${type}: has w`, typeof c.w === 'number' && c.w > 0);
+            assert(`${type}: has h`, typeof c.h === 'number' && c.h > 0);
+        } else {
+            assert(`${type}: has diameter`, typeof c.diameter === 'number' && c.diameter > 0);
+        }
+    });
+});
+
+// --- 17. Spacing Math ---
+suite('Spacing Distance Calculation', () => {
+    resetTestState();
+
+    const bed = _makeContainer('raised-bed', { w: 4, h: 4, canvasX: 40, canvasY: 40 });
+    state.containers.push(bed);
+    addContainerToCanvas(bed);
+
+    placePlant(bed.id, 'tomato', 50, 50);
+    placePlant(bed.id, 'tomato', 55, 55); // very close
+    assert('2 tomato plants placed', bed.plants.length === 2);
+
+    const p1 = bed.plants[0], p2 = bed.plants[1];
+    const dx = p1.x - p2.x, dy = p1.y - p2.y;
+    const distPx = Math.sqrt(dx * dx + dy * dy);
+    const pxPerInch = getContainerPxPerInch(bed);
+    const distInches = distPx / pxPerInch;
+    assert(`distance ${distInches.toFixed(1)}" < tomato spacing 24"`, distInches < 24);
+});
+
+// --- 18. Companion Relationships ---
+suite('Companion and Enemy Data', () => {
+    const tomato = PLANT_LIBRARY.find(p => p.id === 'tomato');
+    const basil = PLANT_LIBRARY.find(p => p.id === 'basil');
+    assert('tomato exists', !!tomato);
+    assert('basil exists', !!basil);
+    assert('tomato companions includes basil', tomato.companions.includes('basil'));
+    assert('basil companions includes tomato', basil.companions.includes('tomato'));
+    assert('tomato has enemies array', Array.isArray(tomato.enemies));
+    assert('tomato enemies has entries', tomato.enemies.length > 0);
+});
+
+// --- 19. Schedule Functions ---
+suite('Schedule Generation', () => {
+    assert('updateSchedule function exists', typeof updateSchedule === 'function');
+    assert('getPlantDates function exists', typeof getPlantDates === 'function');
+
+    // Test getPlantDates with tomato
+    const tomato = PLANT_LIBRARY.find(p => p.id === 'tomato');
+    assert('tomato found in library', !!tomato);
+    const dates = getPlantDates(tomato);
+    assert('dates is an object', typeof dates === 'object');
+    assert('dates has harvest info', !!dates.harvestStart || !!dates.transplant || !!dates.directSow || !!dates.seedIndoor);
+
+    // Test updateSchedule doesn't crash
+    resetTestState();
+    const bed = _makeContainer('raised-bed', { w: 4, h: 4 });
+    state.containers.push(bed);
+    addContainerToCanvas(bed);
+    state.selectedContainer = bed.id;
+    bed.plants.push({ id: 'test-pl-1', plantId: 'tomato', x: 50, y: 50 });
+    try {
+        updateSchedule();
+        assert('updateSchedule runs without error', true);
+    } catch (e) {
+        assert('updateSchedule runs without error: ' + e.message, false);
+    }
+});
+
+// --- 20. validateContainer ---
+suite('validateContainer Null Guards', () => {
+    assert('validateContainer function exists', typeof validateContainer === 'function');
+
+    const valid = validateContainer({ id: 'x', type: 'raised-bed', w: 4, h: 4, plants: [], name: 'Test' });
+    assert('valid container returns object', valid !== null && typeof valid === 'object');
+
+    const nullResult = validateContainer(null);
+    assert('null returns null', nullResult === null);
+
+    const stringResult = validateContainer('bad data');
+    assert('string returns null', stringResult === null);
+
+    const missingType = validateContainer({ id: 'x', plants: [] });
+    assert('missing type gets default', missingType?.type === 'raised-bed');
+});
+
+// ========== SUMMARY ==========
+showSummary();
+</script>
+</body>
+</html>
