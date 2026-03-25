@@ -214,7 +214,7 @@ function renderJournalEntries() {
         return `
             <div class="journal-entry">
                 <span class="journal-entry-date">${dateStr}</span>
-                <span class="journal-entry-text">${e.text}</span>
+                <span class="journal-entry-text">${escapeHtml(e.text)}</span>
                 <button class="journal-entry-delete" data-entry-id="${e.id}">\u00D7</button>
             </div>
         `;

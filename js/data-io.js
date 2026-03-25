@@ -248,7 +248,7 @@ function exportAllData() {
         harvests: getHarvestData(),
         journal: getJournalData(),
         completedTasks: JSON.parse(localStorage.getItem('gardensync_completed_tasks') || '{}'),
-        geminiKey: localStorage.getItem('gardensync_gemini_key') || '',
+        // API keys intentionally excluded from exports for security
     };
 
     const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
@@ -304,7 +304,7 @@ function loadSharedPlan(encoded) {
             containers = compact.c.map((cData, i) => ({
                 id: `container-share-${i}-${Date.now()}`,
                 type: cData.t || 'raised-bed',
-                name: cData.n || `Container ${i + 1}`,
+                name: escapeHtml(cData.n || `Container ${i + 1}`),
                 canvasX: (i % 2) * 450,
                 canvasY: Math.floor(i / 2) * 280,
                 w: cData.w, h: cData.h,
@@ -319,7 +319,7 @@ function loadSharedPlan(encoded) {
         } else if (compact.v === 1 && compact.b) {
             // V1 share format - migrate
             const idList = compact.k;
-            const names = compact.n || ['Bed 1', 'Bed 2', 'Bed 3', 'Bed 4'];
+            const names = (compact.n || ['Bed 1', 'Bed 2', 'Bed 3', 'Bed 4']).map(n => escapeHtml(n));
             const sizes = compact.s || [{ w: 5, h: 10 }, { w: 5, h: 10 }, { w: 5, h: 10 }, { w: 5, h: 10 }];
             containers = compact.b.map((bed, i) => ({
                 id: `container-share-${i}-${Date.now()}`,
@@ -392,6 +392,13 @@ function importAllData(event) {
     const file = event.target.files[0];
     if (!file) return;
 
+    // Reject files over 10 MB to prevent memory exhaustion
+    if (file.size > 10 * 1024 * 1024) {
+        showToast('File too large (max 10 MB)');
+        event.target.value = '';
+        return;
+    }
+
     const reader = new FileReader();
     reader.onload = (e) => {
         try {
@@ -459,10 +466,7 @@ function importAllData(event) {
                 if (data.harvests) saveHarvestData(data.harvests);
                 if (data.journal) saveJournalData(data.journal);
                 if (data.completedTasks) localStorage.setItem('gardensync_completed_tasks', JSON.stringify(data.completedTasks));
-                if (data.geminiKey) {
-                    localStorage.setItem('gardensync_gemini_key', data.geminiKey);
-                    state.geminiKey = data.geminiKey;
-                }
+                // API keys from imports are intentionally ignored for security
 
                 renderAllContainers();
                 updateContainerSelector();

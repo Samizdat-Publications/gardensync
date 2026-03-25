@@ -82,7 +82,7 @@ function renderContainer(container, parentEl) {
     el.setAttribute('aria-label', `${typeDef.label}: ${container.name}, ${container.plants.length} plant${container.plants.length !== 1 ? 's' : ''}`);
 
     el.innerHTML = `
-        <span class="bed-label" data-container-id="${container.id}" title="Click to rename">${container.name}</span>
+        <span class="bed-label" data-container-id="${container.id}" title="Click to rename">${escapeHtml(container.name)}</span>
         <span class="bed-count-badge" style="display:none;"></span>
         <span class="bed-dimensions" data-container-id="${container.id}" title="Click to resize">${dimText}</span>
         <div class="bed-empty-hint">
@@ -427,7 +427,7 @@ function showContainerContextMenu(x, y, container) {
         ? `<button class="context-menu-item" data-action="rotate">↻ Rotate${container.vertical ? ' → landscape' : ' → portrait'}</button>`
         : '';
     menu.innerHTML = `
-        <div class="context-menu-header">${typeDef.icon} ${container.name}</div>
+        <div class="context-menu-header">${typeDef.icon} ${escapeHtml(container.name)}</div>
         <button class="context-menu-item" data-action="rename">✏️ Rename</button>
         <button class="context-menu-item" data-action="resize">📐 Resize</button>
         ${rotateBtn}

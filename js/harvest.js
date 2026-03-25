@@ -94,7 +94,7 @@ function renderHarvestLog() {
                 <div class="harvest-entry-info">
                     <div class="harvest-entry-title">${plant?.name || h.plantId || h.plant}</div>
                     <div class="harvest-entry-meta">${dateStr} &bull; Bed ${h.bed}</div>
-                    ${h.notes ? `<div class="harvest-entry-notes">${h.notes}</div>` : ''}
+                    ${h.notes ? `<div class="harvest-entry-notes">${escapeHtml(h.notes)}</div>` : ''}
                 </div>
                 <div class="harvest-entry-weight">${parseFloat(h.weight) > 0 ? parseFloat(h.weight).toFixed(1) + ' lbs' : '--'}</div>
                 <span class="harvest-entry-donated ${h.donated}">${donatedLabels[h.donated] || 'N/A'}</span>

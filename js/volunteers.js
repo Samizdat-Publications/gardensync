@@ -40,8 +40,8 @@ function renderVolunteers() {
         <div class="vol-card">
             <div class="vol-avatar">${avatars[i % avatars.length]}</div>
             <div class="vol-info">
-                <div class="vol-name">${v.name}</div>
-                <div class="vol-contact">${v.phone || 'no contact info'}</div>
+                <div class="vol-name">${escapeHtml(v.name)}</div>
+                <div class="vol-contact">${escapeHtml(v.phone) || 'no contact info'}</div>
             </div>
             <span class="vol-avail ${v.availability}">${v.availability.toUpperCase()}</span>
             <button class="vol-remove" data-vol-id="${v.id}">\u00D7</button>
@@ -60,10 +60,10 @@ function renderVolunteers() {
     const assignEl = document.getElementById('bed-assignments');
     assignEl.innerHTML = state.containers.map(c => `
         <div class="assignment-row">
-            <div class="assignment-bed-label">${c.name} ${c.plants.length > 0 ? `(${[...new Set(c.plants.map(p=>p.plantId))].map(pid => PLANT_LIBRARY.find(pl=>pl.id===pid)?.emoji || '').join(' ')})` : '(empty)'}</div>
+            <div class="assignment-bed-label">${escapeHtml(c.name)} ${c.plants.length > 0 ? `(${[...new Set(c.plants.map(p=>p.plantId))].map(pid => PLANT_LIBRARY.find(pl=>pl.id===pid)?.emoji || '').join(' ')})` : '(empty)'}</div>
             <select class="assignment-select" data-container-id="${c.id}">
                 <option value="">Unassigned</option>
-                ${state.volunteers.map(v => `<option value="${v.id}" ${c.volunteer === v.id ? 'selected' : ''}>${v.name} (${v.availability})</option>`).join('')}
+                ${state.volunteers.map(v => `<option value="${v.id}" ${c.volunteer === v.id ? 'selected' : ''}>${escapeHtml(v.name)} (${v.availability})</option>`).join('')}
             </select>
         </div>
     `).join('');

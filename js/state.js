@@ -1,5 +1,16 @@
 /* GardenSync — Application State & Undo/Redo */
 
+/** Escape HTML special characters to prevent XSS when inserting into innerHTML */
+function escapeHtml(str) {
+    if (typeof str !== 'string') return '';
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 function getContainerPixelDims(container) {
     const type = CONTAINER_TYPES[container.type];
     if (type.shape === 'circle') {

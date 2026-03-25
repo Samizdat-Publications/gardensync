@@ -558,20 +558,20 @@ async function gbCallClaude() {
 }
 
 function gbFormatAction(toolName, input, result) {
-    if (result.error) return `\u26A0 ${result.error}`;
+    if (result.error) return `\u26A0 ${escapeHtml(result.error)}`;
     switch (toolName) {
         case 'place_plant':
-            return `\u2705 Placed ${result.placed}x ${result.plantName} in ${result.bedName} (auto-spaced)`;
+            return `\u2705 Placed ${result.placed}x ${escapeHtml(result.plantName)} in ${escapeHtml(result.bedName)} (auto-spaced)`;
         case 'clear_bed':
-            return `\u{1F9F9} Cleared ${result.cleared} plants from ${result.bedName}`;
+            return `\u{1F9F9} Cleared ${result.cleared} plants from ${escapeHtml(result.bedName)}`;
         case 'apply_template':
-            return `\u2728 Applied "${result.templateName}" template to ${result.bedName}`;
+            return `\u2728 Applied "${escapeHtml(result.templateName)}" template to ${escapeHtml(result.bedName)}`;
         case 'rename_bed':
-            return `\u270F\uFE0F Renamed Bed ${input.bedIndex + 1} to "${result.newName}"`;
+            return `\u270F\uFE0F Renamed Bed ${input.bedIndex + 1} to "${escapeHtml(result.newName)}"`;
         case 'organize_bed':
-            return `\u2705 Auto-organized ${result.organized} plants in ${result.bedName} using SFG spacing`;
+            return `\u2705 Auto-organized ${result.organized} plants in ${escapeHtml(result.bedName)} using SFG spacing`;
         case 'remove_plants':
-            return `\u{1F5D1} Removed ${result.removed}x ${result.plantName} from ${result.bedName}`;
+            return `\u{1F5D1} Removed ${result.removed}x ${escapeHtml(result.plantName)} from ${escapeHtml(result.bedName)}`;
         default:
             return null;
     }

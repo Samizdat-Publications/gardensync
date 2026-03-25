@@ -185,8 +185,8 @@ function renderPlantList(plants, searchQ) {
                     <span class="pex-stat">${p.sunNeed} sun</span>
                     ${p.lowMaintenance ? '<span class="pex-stat pex-easy">easy care</span>' : ''}
                 </div>
-                ${p.seedStartInstructions ? `<p class="pex-note"><strong>SEED START:</strong> ${p.seedStartInstructions}</p>` : ''}
-                ${p.careNotes ? `<p class="pex-note"><strong>CARE:</strong> ${p.careNotes}</p>` : ''}
+                ${p.seedStartInstructions ? `<p class="pex-note"><strong>SEED START:</strong> ${escapeHtml(p.seedStartInstructions)}</p>` : ''}
+                ${p.careNotes ? `<p class="pex-note"><strong>CARE:</strong> ${escapeHtml(p.careNotes)}</p>` : ''}
                 ${scheduleHTML ? `<div class="pex-schedule">${scheduleHTML}</div>` : ''}
                 <div class="pex-relations">
                     <span class="pex-companions">FRIENDS: ${companions}</span>

@@ -1,26 +1,37 @@
 #!/usr/bin/env python3
 """
-GardenSync Gemini API Proxy Server
-Handles CORS for browser-to-Gemini API requests.
+GardenSync API Proxy Server
+Handles CORS for browser-to-API requests (Gemini + Claude).
 Run: python3 proxy.py
-Serves the app on http://localhost:8080 and proxies /api/gemini/* to Google's API.
+Serves the app on http://localhost:8080 and proxies /api/gemini/* and /api/claude/*.
 """
 
 import http.server
 import json
 import os
-import ssl
+import re
 import urllib.request
 import urllib.error
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse
 
 PORT = 8080
 GEMINI_API_BASE = "https://generativelanguage.googleapis.com"
+CLAUDE_API_BASE = "https://api.anthropic.com"
+ALLOWED_ORIGIN = f"http://localhost:{PORT}"
+MAX_BODY_SIZE = 10 * 1024 * 1024  # 10 MB
+# Only allow alphanumeric, slashes, hyphens, dots, colons, and query strings
+SAFE_PATH_RE = re.compile(r'^[a-zA-Z0-9/_\-.:?&=%+]+$')
+# Blocked file patterns for static file serving
+BLOCKED_PATHS = ('.env', '.git', '.claude/settings.json')
+ALLOWED_EXTENSIONS = ('.html', '.css', '.js', '.json', '.png', '.jpg', '.jpeg',
+                      '.gif', '.svg', '.ico', '.woff', '.woff2', '.ttf', '.webp',
+                      '.webmanifest', '.map')
+
 
 class GardenSyncHandler(http.server.SimpleHTTPRequestHandler):
     def end_headers(self):
-        # CORS headers for all responses
-        self.send_header('Access-Control-Allow-Origin', '*')
+        # CORS: restrict to localhost only
+        self.send_header('Access-Control-Allow-Origin', ALLOWED_ORIGIN)
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type, x-goog-api-key, x-api-key, anthropic-version')
         # Disable caching for dev
@@ -29,10 +40,45 @@ class GardenSyncHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Expires', '0')
         super().end_headers()
 
+    def do_GET(self):
+        """Serve static files with path restrictions"""
+        # Block sensitive files
+        path_lower = self.path.lower().split('?')[0]
+        for blocked in BLOCKED_PATHS:
+            if blocked in path_lower:
+                self.send_response(403)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"error": "Forbidden"}).encode())
+                return
+        super().do_GET()
+
     def do_OPTIONS(self):
         """Handle CORS preflight"""
         self.send_response(200)
         self.end_headers()
+
+    def _validate_proxy_path(self, path):
+        """Validate proxy path to prevent SSRF and path traversal"""
+        if '..' in path or '@' in path or '\\' in path:
+            return None
+        if not SAFE_PATH_RE.match(path):
+            return None
+        return path
+
+    def _read_body(self):
+        """Read request body with size limit"""
+        content_length = int(self.headers.get('Content-Length', 0))
+        if content_length > MAX_BODY_SIZE:
+            return None
+        return self.rfile.read(content_length)
+
+    def _send_error(self, code, message="Internal server error"):
+        """Send generic error without leaking internals"""
+        self.send_response(code)
+        self.send_header('Content-Type', 'application/json')
+        self.end_headers()
+        self.wfile.write(json.dumps({"error": {"message": message}}).encode())
 
     def do_POST(self):
         """Proxy POST requests to Gemini or Claude API"""
@@ -41,27 +87,31 @@ class GardenSyncHandler(http.server.SimpleHTTPRequestHandler):
         elif self.path.startswith('/api/claude/'):
             self.proxy_to_claude()
         else:
-            self.send_response(404)
-            self.send_header('Content-Type', 'application/json')
-            self.end_headers()
-            self.wfile.write(json.dumps({"error": "Not found"}).encode())
+            self._send_error(404, "Not found")
 
     def proxy_to_gemini(self):
         try:
-            # Build the target URL
-            # /api/gemini/v1beta/models/gemini-2.5-flash-image:generateContent
-            # -> https://generativelanguage.googleapis.com/v1beta/models/...
             gemini_path = self.path.replace('/api/gemini/', '/')
-            target_url = GEMINI_API_BASE + gemini_path
+            validated_path = self._validate_proxy_path(gemini_path)
+            if not validated_path:
+                self._send_error(400, "Invalid proxy path")
+                return
 
-            # Read the request body
-            content_length = int(self.headers.get('Content-Length', 0))
-            body = self.rfile.read(content_length)
+            target_url = GEMINI_API_BASE + validated_path
 
-            # Get the API key from the request header
+            # Verify the constructed URL still points to the intended host
+            parsed = urlparse(target_url)
+            if parsed.hostname != urlparse(GEMINI_API_BASE).hostname:
+                self._send_error(400, "Invalid proxy target")
+                return
+
+            body = self._read_body()
+            if body is None:
+                self._send_error(413, "Request body too large")
+                return
+
             api_key = self.headers.get('x-goog-api-key', '')
 
-            # Build the proxied request
             req = urllib.request.Request(
                 target_url,
                 data=body,
@@ -72,13 +122,8 @@ class GardenSyncHandler(http.server.SimpleHTTPRequestHandler):
                 method='POST'
             )
 
-            # Disable SSL verification for simplicity (dev only)
-            ctx = ssl.create_default_context()
-            ctx.check_hostname = False
-            ctx.verify_mode = ssl.CERT_NONE
-
-            # Make the request to Gemini
-            with urllib.request.urlopen(req, context=ctx, timeout=120) as resp:
+            # Use default SSL context (proper cert verification)
+            with urllib.request.urlopen(req, timeout=120) as resp:
                 response_data = resp.read()
                 self.send_response(resp.status)
                 self.send_header('Content-Type', 'application/json')
@@ -93,21 +138,30 @@ class GardenSyncHandler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(error_body.encode())
 
         except Exception as e:
-            self.send_response(500)
-            self.send_header('Content-Type', 'application/json')
-            self.end_headers()
-            error_msg = json.dumps({"error": {"message": str(e)}})
-            self.wfile.write(error_msg.encode())
+            print(f"\033[31m[ERROR]\033[0m Gemini proxy error: {e}")
+            self._send_error(500, "Proxy request failed")
 
     def proxy_to_claude(self):
         """Proxy POST requests to Anthropic Claude API"""
         try:
-            # /api/claude/v1/messages -> https://api.anthropic.com/v1/messages
             claude_path = self.path.replace('/api/claude/', '/')
-            target_url = "https://api.anthropic.com" + claude_path
+            validated_path = self._validate_proxy_path(claude_path)
+            if not validated_path:
+                self._send_error(400, "Invalid proxy path")
+                return
 
-            content_length = int(self.headers.get('Content-Length', 0))
-            body = self.rfile.read(content_length)
+            target_url = CLAUDE_API_BASE + validated_path
+
+            # Verify the constructed URL still points to the intended host
+            parsed = urlparse(target_url)
+            if parsed.hostname != urlparse(CLAUDE_API_BASE).hostname:
+                self._send_error(400, "Invalid proxy target")
+                return
+
+            body = self._read_body()
+            if body is None:
+                self._send_error(413, "Request body too large")
+                return
 
             api_key = self.headers.get('x-api-key', '')
             anthropic_version = self.headers.get('anthropic-version', '2023-06-01')
@@ -123,11 +177,8 @@ class GardenSyncHandler(http.server.SimpleHTTPRequestHandler):
                 method='POST'
             )
 
-            ctx = ssl.create_default_context()
-            ctx.check_hostname = False
-            ctx.verify_mode = ssl.CERT_NONE
-
-            with urllib.request.urlopen(req, context=ctx, timeout=120) as resp:
+            # Use default SSL context (proper cert verification)
+            with urllib.request.urlopen(req, timeout=120) as resp:
                 response_data = resp.read()
                 self.send_response(resp.status)
                 self.send_header('Content-Type', 'application/json')
@@ -142,11 +193,8 @@ class GardenSyncHandler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(error_body.encode())
 
         except Exception as e:
-            self.send_response(500)
-            self.send_header('Content-Type', 'application/json')
-            self.end_headers()
-            error_msg = json.dumps({"error": {"message": str(e)}})
-            self.wfile.write(error_msg.encode())
+            print(f"\033[31m[ERROR]\033[0m Claude proxy error: {e}")
+            self._send_error(500, "Proxy request failed")
 
     def log_message(self, format, *args):
         """Custom log with color"""
@@ -182,11 +230,12 @@ if __name__ == '__main__':
             for line in result.stdout.splitlines():
                 if f':{PORT}' in line and 'LISTENING' in line:
                     pid = line.strip().split()[-1]
-                    subprocess.run(['taskkill', '/F', '/PID', pid],
-                                   capture_output=True)
-                    print(f"Killed old process on port {PORT} (PID {pid})")
-                    import time
-                    time.sleep(1)
+                    if pid.isdigit():  # Validate PID is numeric
+                        subprocess.run(['taskkill', '/F', '/PID', pid],
+                                       capture_output=True)
+                        print(f"Killed old process on port {PORT} (PID {pid})")
+                        import time
+                        time.sleep(1)
         else:
             result = subprocess.run(['lsof', '-ti', f':{PORT}'], capture_output=True, text=True)
             if result.stdout.strip():
@@ -194,11 +243,11 @@ if __name__ == '__main__':
                     try:
                         os.kill(int(pid), signal.SIGKILL)
                         print(f"Killed old process on port {PORT} (PID {pid})")
-                    except:
+                    except Exception:
                         pass
                 import time
                 time.sleep(1)
-    except:
+    except Exception:
         pass
 
     print(f"""
@@ -211,7 +260,8 @@ if __name__ == '__main__':
 
     import socketserver
     socketserver.TCPServer.allow_reuse_address = True
-    server = http.server.HTTPServer(('', PORT), GardenSyncHandler)
+    # Bind to localhost only — not accessible from network
+    server = http.server.HTTPServer(('127.0.0.1', PORT), GardenSyncHandler)
     server.allow_reuse_address = True
     try:
         server.serve_forever()
