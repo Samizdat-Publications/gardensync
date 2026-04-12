@@ -49,6 +49,14 @@ function applyCanvasTransform() {
     if (zoomDisplay) zoomDisplay.textContent = Math.round(state.canvasZoom * 100) + '%';
     // Update companion line strokes so they stay consistent at any zoom level
     if (typeof updateCompanionLineZoom === 'function') updateCompanionLineZoom();
+    // Progressive disclosure: multi-level zoom classes
+    const wrapper = document.getElementById('garden-canvas-wrapper') || canvas.parentElement;
+    if (wrapper) {
+        // Level 1 (>=150%): show plant name labels
+        wrapper.classList.toggle('canvas-zoomed-in', state.canvasZoom >= 1.5);
+        // Level 2 (>=200%): detail mode — hide companion lines, reposition labels
+        wrapper.classList.toggle('canvas-zoomed-detail', state.canvasZoom >= 2.0);
+    }
 }
 
 // ---- RESIZABLE PANELS (mouse + touch) ----

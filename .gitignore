@@ -20,3 +20,4 @@ devops_operations_dashboard.html
 # Environment / secrets
 .env
 .env.local
+js/supabase-config.js

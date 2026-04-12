@@ -5,8 +5,7 @@
       "name": "gardensync",
       "runtimeExecutable": "py",
       "runtimeArgs": ["proxy.py"],
-      "port": 8080,
-      "cwd": "C:\\Users\\stewa\\OneDrive\\Documents\\Claude\\gardensync"
+      "port": 8080
     }
   ]
 }

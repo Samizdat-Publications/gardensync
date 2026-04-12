@@ -117,7 +117,16 @@ const DEMO_REGISTRY = [
       toast: 'Your real garden layout loaded! All 20 containers are empty — drag plants from the library to start planning.' },
     { key: 'mygarden-planted', source: () => DEMO_OUR_GARDEN_PLANTED, icon: '🍅', title: 'Our Garden (Planted)',
       desc: '20 containers • tomatoes, melons, peas, root veg & blueberries • companion groups',
-      toast: 'Your garden loaded! All plants placed as planned. Check with your fiancée and tweak as needed.' }
+      toast: 'Your garden loaded! All plants placed as planned. Check with your fiancée and tweak as needed.' },
+    { key: 'fnb-full-plan', source: () => DEMO_FNB_FULL_PLAN, icon: '📋', title: 'FNB Full Research Plan',
+      desc: '5 beds • 400-600 lbs donation yield • companion planting • detailed volunteer notes',
+      toast: 'FNB Full Research Plan loaded! 5 beds optimized for maximum food bank donations.' },
+    { key: 'fnb-easy-start', source: () => DEMO_FNB_EASY_START, icon: '🌱', title: 'FNB Easy Start',
+      desc: '5 beds • 130-225 lbs • low-maintenance crops only • perfect for new volunteers',
+      toast: 'FNB Easy Start loaded! All low-maintenance crops — plant and forget.' },
+    { key: 'fnb-max-storage', source: () => DEMO_FNB_MAX_STORAGE, icon: '🏪', title: 'FNB Max Storage',
+      desc: '5 beds • 250-400 lbs • shelf-stable pantry crops • no fridge needed',
+      toast: 'FNB Max Storage loaded! Potatoes, onions, squash & beans — stores for months.' }
 ];
 
 function loadDemoData() {

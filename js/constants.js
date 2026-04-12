@@ -927,6 +927,54 @@ let PLANT_LIBRARY = [
         careNotes: 'Ideal for meadows, sunny slopes, low-maintenance areas. Min 4 hrs sun daily. Drought resistant once established. Mix 1:2 sand to seed for even distribution. Days to bloom: 42-56.',
         lowMaintenance: true,
         seedPacket: true
+    },
+    {
+        id: 'collard-greens', name: 'Collard Greens', emoji: '\u{1F96C}', type: 'vegetable',
+        spacing: 18, daysToHarvest: 65, waterNeed: 'medium',
+        sunNeed: 'full', sowIndoors: -6, transplantAfterFrost: -3,
+        directSow: -4, harvestWeeks: 30,
+        companions: ['tomato', 'pepper', 'onion', 'dill', 'nasturtium', 'marigold', 'sweet-alyssum', 'calendula'],
+        enemies: ['strawberry', 'fennel'],
+        notes: 'Heat-tolerant brassica. Harvest outer leaves for continuous production. Sweeter after light frost.',
+        seedStartInstructions: 'Start indoors 6-8 weeks before last frost (early March). Plant 1/4" deep. Transplant out 3 weeks before last frost when seedlings have 4 true leaves.',
+        careNotes: 'Water 1-1.5" per week. Mulch to retain moisture. Side-dress with compost monthly. Watch for cabbage worms — companion plant with nasturtium/marigold.',
+        lowMaintenance: true
+    },
+    {
+        id: 'butternut-squash', name: 'Butternut Squash', emoji: '\u{1F33D}', type: 'vegetable',
+        spacing: 36, daysToHarvest: 110, waterNeed: 'medium',
+        sunNeed: 'full', sowIndoors: -3, transplantAfterFrost: 2,
+        directSow: 1, harvestWeeks: 4,
+        companions: ['nasturtium', 'green-beans', 'corn', 'marigold', 'oregano', 'borage', 'radish', 'sunflower'],
+        enemies: ['potato', 'cucumber', 'cantaloupe'],
+        notes: 'Stores 3-6 months in cool dry area. Cure 2 weeks in sun after harvest. Excellent food bank crop.',
+        seedStartInstructions: 'Start indoors 3-4 weeks before last frost (late March). Plant 1" deep. Transplant 2 weeks after last frost when soil is 65°F+.',
+        careNotes: 'Needs space — vines sprawl 8-12 ft. Water deeply at base, avoid wetting leaves. Hand-pollinate if few bees. Harvest when stem is dry and corky.',
+        lowMaintenance: false
+    },
+    {
+        id: 'sweet-alyssum', name: 'Sweet Alyssum', emoji: '\u{1F33C}', type: 'flower',
+        spacing: 8, daysToHarvest: 50, waterNeed: 'low',
+        sunNeed: 'full', sowIndoors: -6, transplantAfterFrost: -1,
+        directSow: -2, harvestWeeks: 20,
+        companions: ['tomato', 'pepper', 'kale', 'collard-greens', 'broccoli', 'cabbage', 'lettuce', 'potato'],
+        enemies: [],
+        notes: 'Living mulch & beneficial insect magnet. Low-growing carpet covers bare soil. Attracts hoverflies and parasitic wasps that eat aphids.',
+        seedStartInstructions: 'Start indoors 6 weeks before last frost (mid-March) or direct sow 2 weeks before last frost. Surface sow — needs light to germinate.',
+        careNotes: 'Almost zero maintenance. Shear back by half if it gets leggy mid-summer — rebounds in 2 weeks. Self-seeds freely.',
+        lowMaintenance: true
+    },
+    {
+        id: 'calendula', name: 'Calendula', emoji: '\u{1F33B}', type: 'flower',
+        spacing: 10, daysToHarvest: 45, waterNeed: 'low',
+        sunNeed: 'full', sowIndoors: -6, transplantAfterFrost: -2,
+        directSow: -2, harvestWeeks: 16,
+        companions: ['tomato', 'pepper', 'carrot', 'green-beans', 'strawberry', 'kale', 'cabbage', 'broccoli'],
+        enemies: [],
+        notes: 'Edible flowers. Trap crop for aphids — protects neighboring veggies. Petals make tea or salve.',
+        seedStartInstructions: 'Start indoors 6 weeks before last frost or direct sow 2 weeks before last frost. Plant 1/4" deep. Germinates best in cool soil.',
+        careNotes: 'Deadhead regularly to extend bloom season. Tolerates light frost. Self-seeds prolifically — pull volunteers where unwanted.',
+        lowMaintenance: true
     }
 ];
 
@@ -1702,6 +1750,103 @@ const DEMO_OUR_GARDEN_PLANTED = {
         "volunteers": []
     },
     "plantingLog": {}, "harvests": [], "journal": {}, "completedTasks": {}, "harvestGoal": 200
+};
+
+// ---- FNB FULL RESEARCH PLAN — 5-bed food bank donation garden ----
+const DEMO_FNB_FULL_PLAN = {
+    "version": 2, "exportDate": "2026-04-12T00:00:00.000Z",
+    "app": "GardenSync // Food Not Bombs Canton", "isDemo": true,
+    "state": {
+        "containers": [
+            { "id": "fnb-fp-bed-1", "type": "raised-bed", "name": "GREENS POWERHOUSE", "canvasX": 120, "canvasY": 40, "w": 4, "h": 8, "diameter": null,
+              "plants": _merge(_pp('kale', 6), _pp('swiss-chard', 12), _pp('collard-greens', 4), _pp('lettuce', 6), _pp('spinach', 6), _pp('parsley', 4)),
+              "notes": "BED 1 - GREENS POWERHOUSE\n\nWhy these crops: Leafy greens are the #1 most-requested item at food banks and the hardest to source commercially (short shelf life, expensive). This bed produces 3-season harvests from a single planting.\n\nKale (6): Cold-hardy superstar. Survives Zone 6a winters with row cover. Yields 1-2 lbs/plant/week once established. Cut-and-come-again for 6+ months.\nSwiss Chard (12): Heat-tolerant alternative to spinach. Rainbow varieties add color to donations. 18in spacing in grid pattern.\nCollard Greens (4): Southern staple, extremely productive. Each plant yields 1 lb/week. Sweeter after frost. Center of bed for height.\nLettuce (6): Fast 45-day crop. Succession plant every 2 weeks Apr-May, resume Aug-Sep. South edge for partial shade from taller greens.\nSpinach (6): Cool-season crop, bolt-resistant varieties. Plant early spring and fall. North edge of bed.\nParsley (4): Corners - companion to everything, deters pests. Biennial - produces 2 years.\n\nCompanion logic: All leafy greens are companions. Parsley at corners attracts beneficial insects. No enemies in this bed.\n\nPlanting calendar (Zone 6a, last frost Apr 18):\n- Mar 1: Start kale, collards, chard indoors\n- Mar 15: Direct sow spinach, lettuce outdoors (cold-hardy)\n- Apr 1: Transplant kale, collards, chard\n- Apr 15: Direct sow parsley\n- Weekly: Harvest outer leaves, never strip a plant bare\n\nVolunteer notes: Harvest Saturdays - fill bags with mixed greens. Wash and bundle for distribution same day (greens do not store).", "volunteer": null, "vertical": false },
+
+            { "id": "fnb-fp-bed-2", "type": "raised-bed", "name": "TOMATO & PEPPER HQ", "canvasX": 120, "canvasY": 400, "w": 4, "h": 8, "diameter": null,
+              "plants": _merge(_pp('tomato', 4), _pp('pepper', 4), _pp('basil', 6), _pp('marigold', 4), _pp('sweet-alyssum', 6)),
+              "notes": "BED 2 - TOMATO & PEPPER HQ\n\nWhy these crops: Tomatoes and peppers are high-value produce that food banks rarely receive fresh. One tomato plant yields 10-20 lbs/season. Peppers store 2-3 weeks refrigerated.\n\nTomato (4): 24in spacing, caged/staked. Choose determinate varieties for concentrated harvest (Roma for sauce, Better Boy for slicing). Each plant = 10-20 lbs.\nPepper (4): 18in spacing between tomatoes. Bell peppers for eating fresh, jalapenos for variety. Companions of tomatoes.\nBasil (6): Interplanted - improves tomato flavor and repels hornworms, aphids, whiteflies. Harvest regularly to prevent flowering.\nMarigold (4): Corners - trap crop for aphids, repels nematodes in soil. French marigolds (Tagetes patula) most effective.\nSweet Alyssum (6): South edge ground cover - attracts hoverflies and parasitic wasps that eat tomato hornworm eggs. Living mulch reduces soil splash.\n\nCompanion logic: Classic tomato guild. Basil + tomato is the strongest companion pair in the garden. Marigold + alyssum provide pest control without chemicals.\n\nPlanting calendar:\n- Mar 1: Start tomato and pepper seeds indoors (8 weeks before transplant)\n- Mar 15: Start basil indoors\n- Apr 1: Start sweet alyssum indoors or buy starts\n- May 1: Transplant everything after last frost\n- May 15: Plant marigold starts at corners\n- Jun-Sep: Harvest tomatoes 2-3x/week at peak\n\nVolunteer notes: Tomatoes bruise easily - use shallow boxes for transport. Peppers can accumulate in fridge for weekly batch donation.", "volunteer": null, "vertical": false },
+
+            { "id": "fnb-fp-bed-3", "type": "raised-bed", "name": "UNDERGROUND VAULT", "canvasX": 120, "canvasY": 760, "w": 4, "h": 8, "diameter": null,
+              "plants": _merge(_pp('onion', 20), _pp('carrot', 15), _pp('beet', 12), _pp('chive', 4)),
+              "notes": "BED 3 - UNDERGROUND VAULT\n\nWhy these crops: Root vegetables are the backbone of food bank storage. Onions last 2-3 months, carrots 4-5 months, beets 3-4 months in cool storage. No refrigeration needed.\n\nOnion (20): 4in spacing in rows. Sets planted early spring. Yellow storage onions last longest (2-3 months). Cure 2 weeks in shade after harvest.\nCarrot (15): 3in spacing between onion rows. Direct sow - do not transplant. Chantenay or Danvers types for heavy clay soil. Store in sand or sawdust.\nBeet (12): 4in spacing. Dual-purpose: roots store months, greens are nutritious and harvestable while roots grow. Succession plant for continuous harvest.\nChive (4): Corners - perennial companion. Repels carrot fly and aphids. Edible flowers attract pollinators. Returns every year.\n\nCompanion logic: Onion + carrot is a classic pair - onion repels carrot fly, carrot repels onion fly. Beets companion with onions. Chives at corners protect everything.\n\nPlanting calendar:\n- Mar 15: Plant onion sets as soon as soil is workable\n- Apr 1: Direct sow carrots (soil must be loose, no rocks)\n- Apr 1: Direct sow beets\n- Apr 1: Plant chive divisions at corners\n- Jul-Aug: Harvest beets as needed, cure onions\n- Sep-Oct: Pull carrots after first frost (sweetens them)\n\nVolunteer notes: Root veg is low-maintenance - the main work is weeding. Bag in paper (not plastic) for food bank distribution.", "volunteer": null, "vertical": false },
+
+            { "id": "fnb-fp-bed-4", "type": "raised-bed", "name": "CALORIE CENTRAL", "canvasX": 120, "canvasY": 1120, "w": 4, "h": 8, "diameter": null,
+              "plants": _pp('potato', 24),
+              "notes": "BED 4 - CALORIE CENTRAL\n\nWhy this crop: Potatoes are the highest-calorie crop per square foot and store 4-6 months without refrigeration. A single 4x8 bed yields 50-100 lbs - enough to feed multiple families.\n\nPotato (24): 12in spacing in rows, 3 rows across. Use certified seed potatoes (not grocery store - those are treated). Yukon Gold or Kennebec for all-purpose. Hill soil around stems as they grow.\n\nVariety strategy: Plant 1/3 early (Red Norland, ready July), 1/3 mid (Yukon Gold, ready Aug), 1/3 late (Kennebec, ready Sep) for staggered harvest.\n\nCompanion logic: Potatoes are loners - they are enemies of tomato, squash, and cucumber (share blight). This dedicated bed avoids conflicts.\n\nPlanting calendar:\n- Apr 1: Cut seed potatoes, let callous 2 days\n- Apr 5: Plant 4in deep, eyes up\n- May-Jun: Hill soil 2-3 times as plants grow\n- Jul: Harvest new potatoes from early varieties\n- Aug-Sep: Main harvest when tops die back\n- Cure 2 weeks in dark, cool area before storage\n\nVolunteer notes: Potato harvest is a great group activity - dig carefully with hands or broadfork. Brush off soil, do NOT wash before storage. Store in paper bags in cool dark area.", "volunteer": null, "vertical": false },
+
+            { "id": "fnb-fp-bed-5", "type": "raised-bed", "name": "STORAGE & PROTEIN", "canvasX": 120, "canvasY": 1480, "w": 4, "h": 8, "diameter": null,
+              "plants": _merge(_pp('butternut-squash', 2), _pp('green-beans', 18), _pp('cilantro', 2), _pp('dill', 2), _pp('oregano', 2), _pp('thyme', 2), _pp('rosemary', 2), _pp('basil', 2), _pp('nasturtium', 4), _pp('calendula', 1), _pp('borage', 1)),
+              "notes": "BED 5 - STORAGE & PROTEIN\n\nWhy these crops: Butternut squash stores 3-6 months unrefrigerated - the ultimate food bank crop. Green beans provide plant protein and can be dried for long-term storage. Herbs add nutrition and flavor to donations.\n\nButternut Squash (2): 36in spacing - vines will sprawl over bed edges. Each plant produces 4-8 squash (3-4 lbs each). Cure 2 weeks in sun after harvest.\nGreen Beans (18): Bush type, 6in spacing in center rows. Plant 2 successions (May 1 and Jun 15). Each planting yields for 3 weeks. Can be dried for winter protein.\nCilantro (2): Cool-season herb, bolts in heat. Plant spring and fall.\nDill (2): Self-seeds, attracts beneficial insects. Companion to beans.\nOregano (2): Perennial - plant once, harvest for years. Dries easily.\nThyme (2): Perennial ground cover, pest deterrent. Dries well.\nRosemary (2): Perennial, may need winter protection in Zone 6a.\nBasil (2): Annual herb, pairs with squash. Harvest before flowering.\nNasturtium (4): Corners - edible trap crop for aphids and squash bugs.\nCalendula (1): Trap crop for aphids, edible flowers.\nBorage (1): Attracts pollinators for squash (squash needs bee pollination).\n\nCompanion logic: Beans + squash is a Three Sisters pairing (minus corn). Nasturtium protects squash from vine borers. Herbs at edges create a pest-deterrent border.\n\nPlanting calendar:\n- Mar 15: Start squash indoors\n- Apr 1: Direct sow cilantro, dill\n- May 1: Transplant squash, direct sow beans, plant herb starts\n- May 15: Plant nasturtium, calendula, borage starts\n- Jun 15: Second bean planting\n- Sep-Oct: Harvest and cure squash\n\nVolunteer notes: Squash is the star donation - each fruit feeds a family for multiple meals. Bundle herb bouquets - people love getting fresh herbs with their produce.", "volunteer": null, "vertical": false }
+        ],
+        "volunteers": [
+            {"id":"fnb-vol-1","name":"Saturday Crew A","phone":"","availability":"high"},
+            {"id":"fnb-vol-2","name":"Saturday Crew B","phone":"","availability":"high"},
+            {"id":"fnb-vol-3","name":"Weekday Waterer","phone":"","availability":"low"}
+        ]
+    },
+    "plantingLog": {}, "harvests": [], "journal": {}, "completedTasks": {}, "harvestGoal": 500
+};
+
+// ---- FNB EASY START — Low-maintenance only ----
+const DEMO_FNB_EASY_START = {
+    "version": 2, "exportDate": "2026-04-12T00:00:00.000Z",
+    "app": "GardenSync // Food Not Bombs Canton", "isDemo": true,
+    "state": {
+        "containers": [
+            { "id": "fnb-es-bed-1", "type": "raised-bed", "name": "GREENS BED", "canvasX": 120, "canvasY": 40, "w": 4, "h": 8, "diameter": null,
+              "plants": _merge(_pp('kale', 8), _pp('swiss-chard', 12), _pp('parsley', 4)),
+              "notes": "BED 1 - GREENS BED (Low-Maintenance)\n\nAll low-maintenance crops - plant once, harvest for months.\n\nKale (8): The ultimate set-and-forget green. Cold-hardy, pest-resistant, produces for 6+ months. Just harvest outer leaves weekly.\nSwiss Chard (12): Heat-tolerant, drought-tolerant, beautiful. Rainbow chard adds color. Cut outer stalks, inner ones keep growing.\nParsley (4): Corners - biennial that produces 2 years. Attracts beneficial insects. Almost impossible to kill.\n\nVolunteer effort: Water once/week if no rain. Harvest outer leaves Saturdays.\nExpected yield: 80-120 lbs over the season.", "volunteer": null, "vertical": false },
+
+            { "id": "fnb-es-bed-2", "type": "raised-bed", "name": "ROOT CELLAR", "canvasX": 120, "canvasY": 400, "w": 4, "h": 8, "diameter": null,
+              "plants": _merge(_pp('onion', 15), _pp('carrot', 10), _pp('beet', 10)),
+              "notes": "BED 2 - ROOT CELLAR (Low-Maintenance)\n\nPlant in spring, mostly ignore until harvest. All store 2-5 months without refrigeration.\n\nOnion (15): Plant sets in March, harvest in August. Zero maintenance between. Stores 2-3 months.\nCarrot (10): Direct sow April, harvest September. Keep weeded until canopy fills in, then self-mulching. Stores 4-5 months in cool area.\nBeet (10): Direct sow April, harvest July-October. Dual purpose - eat greens while roots grow. Stores 3-4 months.\n\nVolunteer effort: Weed monthly until plants fill in. Water during dry spells. One big harvest day in fall.\nExpected yield: 40-60 lbs of storable produce.", "volunteer": null, "vertical": false },
+
+            { "id": "fnb-es-bed-3", "type": "raised-bed", "name": "POTATO PATCH", "canvasX": 120, "canvasY": 760, "w": 4, "h": 8, "diameter": null,
+              "plants": _pp('potato', 32),
+              "notes": "BED 3 - POTATO PATCH (Low-Maintenance)\n\nThe easiest high-calorie crop. Plant, hill twice, harvest once.\n\nPotato (32): 10in spacing, 4 rows. Use certified seed potatoes. Hill soil around stems twice (May and June). Harvest when tops die back in August-September.\n\nVolunteer effort: Hill soil twice in spring. One harvest day in late summer. Stores 4-6 months.\nExpected yield: 60-100 lbs.", "volunteer": null, "vertical": false },
+
+            { "id": "fnb-es-bed-4", "type": "raised-bed", "name": "BEAN MACHINE", "canvasX": 120, "canvasY": 1120, "w": 4, "h": 8, "diameter": null,
+              "plants": _merge(_pp('green-beans', 24), _pp('nasturtium', 4)),
+              "notes": "BED 4 - BEAN MACHINE (Low-Maintenance)\n\nBush beans are foolproof and produce fast. Nasturtium protects them.\n\nGreen Beans (24): Bush type, 6in spacing. Direct sow after last frost. Pick every 3-4 days once producing - the more you pick, the more they grow. Plant a second round in mid-June for fall harvest.\nNasturtium (4): Corners - trap crop for aphids and bean beetles. Edible flowers are a bonus donation.\n\nVolunteer effort: Water weekly. Pick beans every Saturday.\nExpected yield: 20-30 lbs per planting (40-60 total with succession).", "volunteer": null, "vertical": false },
+
+            { "id": "fnb-es-bed-5", "type": "raised-bed", "name": "GARLIC & HERBS", "canvasX": 120, "canvasY": 1480, "w": 4, "h": 8, "diameter": null,
+              "plants": _merge(_pp('garlic', 20), _pp('chive', 8), _pp('oregano', 4), _pp('basil', 6)),
+              "notes": "BED 5 - GARLIC & HERBS (Low-Maintenance)\n\nGarlic is planted in fall and ignored until summer. Herbs are perennial or self-seeding.\n\nGarlic (20): Plant cloves October, harvest July. Zero work between. Stores 6-8 months. The ultimate lazy crop.\nChive (8): Perennial - plant once, harvest forever. Divide every 3 years. Edible flowers.\nOregano (4): Perennial - spreads on its own. Dry bundles for winter donations.\nBasil (6): Annual but low-maintenance in warm weather. Pinch flower buds to keep producing.\n\nVolunteer effort: Plant garlic one Saturday in October. Harvest one Saturday in July. Herbs harvest themselves.\nExpected yield: 15-25 lbs garlic + herbs all season.", "volunteer": null, "vertical": false }
+        ],
+        "volunteers": []
+    },
+    "plantingLog": {}, "harvests": [], "journal": {}, "completedTasks": {}, "harvestGoal": 175
+};
+
+// ---- FNB MAX STORAGE — No-fridge pantry optimized ----
+const DEMO_FNB_MAX_STORAGE = {
+    "version": 2, "exportDate": "2026-04-12T00:00:00.000Z",
+    "app": "GardenSync // Food Not Bombs Canton", "isDemo": true,
+    "state": {
+        "containers": [
+            { "id": "fnb-ms-bed-1", "type": "raised-bed", "name": "POTATO BED A", "canvasX": 120, "canvasY": 40, "w": 4, "h": 8, "diameter": null,
+              "plants": _pp('potato', 32),
+              "notes": "BED 1 - POTATO BED A (Max Storage)\n\nEarly and mid-season varieties for July-August harvest.\n\nPotato (32): Plant Red Norland (early, ready July) and Yukon Gold (mid, ready August). 10in spacing, 4 rows. Hill twice. Stores 4-6 months in cool dark area.\n\nStorage instructions: Cure 2 weeks in dark at 60-70F, then store at 40-50F. Do NOT wash before storage. Paper bags or burlap sacks, not plastic.\nExpected yield: 60-100 lbs.", "volunteer": null, "vertical": false },
+
+            { "id": "fnb-ms-bed-2", "type": "raised-bed", "name": "POTATO BED B", "canvasX": 120, "canvasY": 400, "w": 4, "h": 8, "diameter": null,
+              "plants": _pp('potato', 32),
+              "notes": "BED 2 - POTATO BED B (Max Storage)\n\nLate-season varieties for September-October harvest.\n\nPotato (32): Plant Kennebec (late, ready September) and Katahdin (late, ready October). These store the longest - up to 6 months. Same spacing and hilling as Bed A.\n\nWhy two potato beds: Staggered harvest means fresh potatoes from July through October, and stored potatoes through March. That is nearly year-round calories from 2 beds.\nExpected yield: 60-100 lbs.", "volunteer": null, "vertical": false },
+
+            { "id": "fnb-ms-bed-3", "type": "raised-bed", "name": "ALLIUM FORTRESS", "canvasX": 120, "canvasY": 760, "w": 4, "h": 8, "diameter": null,
+              "plants": _merge(_pp('onion', 30), _pp('garlic', 10)),
+              "notes": "BED 3 - ALLIUM FORTRESS (Max Storage)\n\nOnions and garlic - the foundation of every kitchen. Both store 3-8 months.\n\nOnion (30): Yellow storage onions (Stuttgarter, Copra). 4in spacing, 5 rows. Plant sets in March. Cure 2-3 weeks after harvest. Stores 2-3 months in mesh bags.\nGarlic (10): Hardneck varieties for Zone 6a (Music, German Extra Hardy). Plant October, harvest July. Stores 6-8 months. Each clove becomes a full bulb.\n\nStorage instructions: Both need dry, cool, well-ventilated area. Braid or mesh bag. Never refrigerate. Check monthly for sprouting.\nExpected yield: 30-50 lbs onion, 5-10 lbs garlic.", "volunteer": null, "vertical": false },
+
+            { "id": "fnb-ms-bed-4", "type": "raised-bed", "name": "SQUASH & BEANS", "canvasX": 120, "canvasY": 1120, "w": 4, "h": 8, "diameter": null,
+              "plants": _merge(_pp('butternut-squash', 3), _pp('green-beans', 16), _pp('nasturtium', 4)),
+              "notes": "BED 4 - SQUASH & BEANS (Max Storage)\n\nButternut squash stores 3-6 months. Dried beans store indefinitely.\n\nButternut Squash (3): 36in spacing along back edge - vines sprawl over the side. Each plant = 4-8 squash (3-4 lbs each). Cure 2 weeks in sun.\nGreen Beans (16): Bush type in center rows. Let some pods dry on the vine for dried beans - stores indefinitely in jars. Fresh beans for summer donations.\nNasturtium (4): Corners - trap crop for squash bugs and vine borers. The most important companion for squash.\n\nStorage: Cured butternut in cool dry area. Dried beans in mason jars with bay leaf (deters weevils).\nExpected yield: 30-50 lbs squash, 15-25 lbs beans (fresh + dried).", "volunteer": null, "vertical": false },
+
+            { "id": "fnb-ms-bed-5", "type": "raised-bed", "name": "GREENS & CARROTS", "canvasX": 120, "canvasY": 1480, "w": 4, "h": 8, "diameter": null,
+              "plants": _merge(_pp('kale', 6), _pp('carrot', 10), _pp('beet', 10), _pp('parsley', 4)),
+              "notes": "BED 5 - GREENS & CARROTS (Max Storage)\n\nThe fresh produce bed - because even a storage-focused garden needs some greens for weekly donations.\n\nKale (6): Cut-and-come-again for 6+ months. The hardiest green - survives frost, drought, and neglect. Fresh donation every Saturday.\nCarrot (10): Stores 4-5 months in cool sand or sawdust. Leave in ground until after first frost for sweeter flavor.\nBeet (10): Stores 3-4 months. Greens are harvestable while roots grow - dual purpose.\nParsley (4): Corners - biennial, attracts beneficial insects, adds nutrition to donations.\n\nStorage: Carrots in damp sand in cool area. Beets same method.\nExpected yield: 40-60 lbs root veg + weekly kale harvests.", "volunteer": null, "vertical": false }
+        ],
+        "volunteers": []
+    },
+    "plantingLog": {}, "harvests": [], "journal": {}, "completedTasks": {}, "harvestGoal": 325
 };
 
 // ---- CANTON CLIMATE DATA ----

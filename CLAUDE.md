@@ -29,15 +29,17 @@ Key modules:
 | Module | Responsibility |
 |--------|---------------|
 | `state.js` | Global state object, undo/redo stacks |
-| `constants.js` | Plant library (37 plants), Zone 6a climate data, Canton frost dates |
+| `constants.js` | Plant library (41 plants), Zone 6a climate data, Canton frost dates, 3 FNB demo gardens |
 | `placement.js` | Click-to-place mechanics, 20px grid snapping, spacing validation |
 | `selection.js` | Plant selection, multi-select, drag |
 | `canvas.js` | Canvas-based bed rendering, companion lines |
 | `garden-buddy.js` | Claude Sonnet 4 AI chat with tool use (place_plant, clear_bed, organize_bed, etc.) |
 | `templates.js` | 7 pre-made bed layouts |
 | `custom-seeds.js` | User-added seeds with OCR photo scanning |
-| `persistence.js` | localStorage save/load for garden state |
-| `data-io.js` | JSON export/import, URL-based sharing (base64), PNG snapshots |
+| `persistence.js` | localStorage save/load, Supabase cloud sync integration |
+| `supabase-sync.js` | Cloud persistence via Supabase (auto-save, 5-min interval, page unload) |
+| `supabase-config.js` | Supabase credentials (gitignored) |
+| `data-io.js` | JSON export/import, URL-based sharing (base64), PNG snapshots, demo registry |
 | `weather.js` | Live weather from Open-Meteo API |
 | `climate.js` | Canvas-drawn climate charts (no Chart.js) |
 | `organize.js` | Square Foot Gardening auto-arrangement |
@@ -45,9 +47,10 @@ Key modules:
 ### State Management
 - Global `state` object with `beds[]` array (4 garden beds, 5'x10' each)
 - Each bed: `{id, name, width, height, plants: [{id, plantId, x, y}]}`
-- `localStorage` for persistence — no backend database
+- `localStorage` for persistence + Supabase cloud backup (stewops-dashboard project)
 - Undo/redo via `pushUndo()`/`pushRedo()` stack pattern
 - Garden Buddy conversation history in localStorage
+- Garden ID (UUID) in localStorage for cloud sync keying
 
 ### Rendering
 - All bed visualizations drawn on `<canvas>` elements

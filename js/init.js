@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ['HarvestGoals', initHarvestGoals],
         ['DataExportImport', initDataExportImport],
         ['BackupSystem', initBackupSystem],
+        ['SupabaseSync', initSupabaseSync],
         ['KeyboardShortcuts', initKeyboardShortcuts],
         ['LoadSavedState', loadSavedState],
         ['ShareURL', initShareURL],
@@ -42,6 +43,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Flush any debounced saves before page unload
     window.addEventListener('beforeunload', () => {
         if (typeof flushSave === 'function') flushSave();
+        if (typeof flushSync === 'function') flushSync();
+    });
+    // Also flush on tab hide (more reliable on mobile)
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+            if (typeof flushSave === 'function') flushSave();
+            if (typeof flushSync === 'function') flushSync();
+        }
     });
 
     console.log('[GardenSync] All init complete');

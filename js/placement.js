@@ -274,8 +274,10 @@ function drawCompanionLines(containerId, bedEl) {
 // companion line stroke-widths and dash-arrays adapt to stay ~2-3px on screen.
 function updateCompanionLineZoom() {
     var zoom = Math.max(0.2, state.canvasZoom || 1);
-    var goodStroke = Math.max(2, 2.5 / zoom);
-    var badStroke  = Math.max(2.5, 3 / zoom);
+    // Thinner lines at high zoom so they don't dominate the view
+    var baseFactor = zoom > 2 ? 0.6 : zoom > 1.5 ? 0.8 : 1;
+    var goodStroke = Math.max(1, 2.5 / zoom * baseFactor);
+    var badStroke  = Math.max(1.2, 3 / zoom * baseFactor);
     var dashOn     = Math.max(6, 8 / zoom);
     var dashOff    = Math.max(3, 4 / zoom);
     var goodDash   = dashOn + ' ' + dashOff;

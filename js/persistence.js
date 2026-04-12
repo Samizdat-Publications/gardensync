@@ -59,6 +59,10 @@ function saveState() {
     if (typeof scheduleBackup === 'function') {
         scheduleBackup();
     }
+    // Schedule debounced Supabase cloud sync
+    if (typeof scheduleSyncDebounced === 'function') {
+        scheduleSyncDebounced();
+    }
     // Notify listeners (rainfall deficit calc, etc.)
     window.dispatchEvent(new CustomEvent('gardenStateChanged'));
 }
@@ -86,7 +90,61 @@ function createDefaultGarden() {
     }
 }
 
+function applyLoadedState(validated, extras) {
+    state.containers = validated.containers;
+    state.volunteers = validated.volunteers;
+    state.canvasZoom = validated.canvasZoom;
+    state.canvasOffsetX = validated.canvasOffsetX;
+    state.canvasOffsetY = validated.canvasOffsetY;
+    if (state.containers.length > 0 && !state.selectedContainer) {
+        state.selectedContainer = state.containers[0].id;
+    }
+    if (extras) {
+        if (extras.plantingLog) savePlantingLogData(extras.plantingLog);
+        if (extras.harvests) saveHarvestData(extras.harvests);
+        if (extras.journal) saveJournalData(extras.journal);
+        if (extras.completedTasks) {
+            localStorage.setItem('gardensync_completed_tasks', JSON.stringify(extras.completedTasks));
+        }
+    }
+    renderAllContainers();
+    updateContainerSelector();
+    updateBedDetails();
+    updateToolbarSublabel();
+}
+
 function loadSavedState() {
+    // Try Supabase first (if available and online)
+    if (typeof loadFromSupabase === 'function') {
+        loadFromSupabase().then(remote => {
+            if (remote && remote.state_data) {
+                const localTs = parseInt(localStorage.getItem('gardensync_last_sync_ts') || '0');
+                const remoteTs = new Date(remote.updated_at).getTime();
+                // Use remote if it's newer than last sync, or if localStorage is empty
+                const localSaved = localStorage.getItem('gardensync_state');
+                if (!localSaved || remoteTs > localTs) {
+                    console.log('[GardenSync] Loading from Supabase (remote is newer)');
+                    const validated = validateLoadedState(remote.state_data);
+                    if (validated) {
+                        applyLoadedState(validated, remote.extras);
+                        saveState(); // cache to localStorage
+                        setTimeout(() => zoomToFit(), 100);
+                        showToast('Garden restored from cloud!');
+                        return;
+                    }
+                }
+            }
+            // Fall through to local load
+            loadSavedStateLocal();
+        }).catch(() => {
+            loadSavedStateLocal();
+        });
+        return;
+    }
+    loadSavedStateLocal();
+}
+
+function loadSavedStateLocal() {
     const saved = localStorage.getItem('gardensync_state');
     if (!saved) {
         // Try IndexedDB fallback before creating default garden

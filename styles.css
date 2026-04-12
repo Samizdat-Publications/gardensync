@@ -37,6 +37,17 @@
     --radius: 2px;
     --radius-lg: 4px;
     --radius-sm: 2px;
+
+    /* Gradients */
+    --gradient-emerald: linear-gradient(135deg, #059669, #10b981, #14b8a6);
+    --gradient-dark: linear-gradient(180deg, #0a0a0a, #000000);
+    --gradient-card: linear-gradient(145deg, #0f0f0f, #0a0a0a);
+    --gradient-accent-subtle: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(20,184,166,0.04));
+
+    /* Glow presets */
+    --glow-emerald-sm: 0 0 8px rgba(16,185,129,0.3);
+    --glow-emerald-md: 0 0 16px rgba(16,185,129,0.25), 0 0 4px rgba(16,185,129,0.4);
+    --glow-emerald-lg: 0 0 24px rgba(16,185,129,0.2), 0 0 8px rgba(16,185,129,0.35), 0 0 2px rgba(16,185,129,0.5);
 }
 
 /* Light theme — outdoor tablet readability */
@@ -65,7 +76,7 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { font-size: 14px; }
+html { font-size: 16px; }
 
 body {
     background: var(--bg-primary);
@@ -146,11 +157,11 @@ body {
     border-color: var(--border);
 }
 .nav-btn.active {
-    color: var(--emerald);
+    color: var(--emerald-glow);
     border-color: var(--emerald);
-    background: var(--bg-tertiary);
-    box-shadow: 0 2px 0 var(--emerald), 0 0 12px rgba(16,185,129,0.15);
-    text-shadow: 0 0 8px rgba(16,185,129,0.3);
+    background: linear-gradient(180deg, rgba(16,185,129,0.12), var(--bg-tertiary));
+    box-shadow: 0 2px 0 var(--emerald), var(--glow-emerald-md);
+    text-shadow: 0 0 12px rgba(16,185,129,0.5);
 }
 
 .zone-badge {
@@ -252,8 +263,8 @@ body {
     font-family: var(--font-mono);
     font-size: 0.7rem;
     font-weight: 700;
-    letter-spacing: 1px;
-    padding: 0.45rem 0.85rem;
+    letter-spacing: 0.5px;
+    padding: 0.25rem 0.5rem;
     background: var(--bg-tertiary);
     color: var(--text-secondary);
     border: 1px solid var(--border);
@@ -311,7 +322,7 @@ body {
 }
 .filter-btn {
     font-family: var(--font-mono);
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 1px;
     padding: 0.3rem 0.6rem;
@@ -395,7 +406,7 @@ body {
 }
 .plant-item .plant-type-badge {
     font-family: var(--font-mono);
-    font-size: 0.55rem;
+    font-size: 0.65rem;
     padding: 0.15rem 0.35rem;
     background: var(--bg-primary);
     color: var(--text-muted);
@@ -409,7 +420,7 @@ body {
 
 /* Plant expand icon */
 .plant-expand-icon {
-    font-size: 0.55rem;
+    font-size: 0.65rem;
     color: var(--text-muted);
     margin-left: 0.25rem;
     transition: transform 0.2s;
@@ -432,7 +443,7 @@ body {
 }
 .pex-stat {
     font-family: var(--font-mono);
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     padding: 0.15rem 0.4rem;
     background: var(--bg-tertiary);
     border: 1px solid var(--border);
@@ -447,7 +458,7 @@ body {
 }
 .pex-note strong {
     color: var(--text-primary);
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     letter-spacing: 1px;
     font-family: var(--font-mono);
 }
@@ -459,7 +470,7 @@ body {
 }
 .pex-sched-item {
     font-family: var(--font-mono);
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     padding: 0.15rem 0.4rem;
     background: rgba(16,185,129,0.08);
     border: 1px solid var(--emerald-dark);
@@ -475,7 +486,7 @@ body {
 }
 .pex-companions { color: var(--emerald); }
 .pex-enemies { color: var(--red-accent); }
-.pex-companions strong, .pex-enemies strong { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 1px; }
+.pex-companions strong, .pex-enemies strong { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 1px; }
 
 /* Sort row */
 .sort-row {
@@ -486,14 +497,14 @@ body {
 }
 .sort-label {
     font-family: var(--font-mono);
-    font-size: 0.55rem;
+    font-size: 0.65rem;
     color: var(--text-muted);
     letter-spacing: 1px;
     white-space: nowrap;
 }
 .sort-select {
     font-family: var(--font-mono);
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     background: var(--bg-primary);
     border: 1px solid var(--border);
     color: var(--text-secondary);
@@ -632,9 +643,10 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 1rem;
+    padding: 0.3rem 0.75rem;
     background: var(--bg-secondary);
     border-bottom: 1px solid var(--border);
+    gap: 0.5rem;
 }
 .toolbar-label {
     font-family: var(--font-mono);
@@ -649,7 +661,17 @@ body {
     color: var(--text-muted);
     margin-left: 0.75rem;
 }
-.toolbar-right { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+.toolbar-right {
+    display: flex;
+    gap: 3px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.toolbar-right .tool-btn {
+    font-size: 0.62rem;
+    padding: 0.2rem 0.4rem;
+    letter-spacing: 0.3px;
+}
 
 .garden-viewport {
     flex: 1;
@@ -666,23 +688,23 @@ body {
 .container-shelf {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
+    gap: 4px;
+    padding: 2px 10px;
     background: var(--bg-secondary);
     border-bottom: 1px solid var(--border);
     flex-wrap: wrap;
 }
 .shelf-label {
     font-family: var(--font-mono);
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     font-weight: 700;
     color: var(--text-muted);
     letter-spacing: 1px;
 }
 .shelf-btn {
     font-family: var(--font-mono);
-    font-size: 0.55rem;
-    padding: 3px 8px;
+    font-size: 0.6rem;
+    padding: 2px 7px;
     background: var(--bg-tertiary);
     border: 1px solid var(--border);
     border-radius: 3px;
@@ -1118,7 +1140,7 @@ body {
 
 /* Labels inside small containers */
 .garden-bed.container-small .bed-label {
-    font-size: 0.45rem;
+    font-size: 0.55rem;
     letter-spacing: 1px;
     max-width: calc(100% - 12px);
     overflow: hidden;
@@ -1126,28 +1148,28 @@ body {
     white-space: nowrap;
 }
 .garden-bed.container-small .bed-count-badge {
-    font-size: 0.4rem;
+    font-size: 0.5rem;
     padding: 0 3px;
 }
 .garden-bed.container-small .bed-dimensions {
-    font-size: 0.4rem;
+    font-size: 0.5rem;
 }
 /* Small + circle: tighter layout with everything centered */
 .garden-bed.container-small.container-circle .bed-label {
-    font-size: 0.4rem;
+    font-size: 0.5rem;
     top: 15%;
     max-width: 55%;
 }
 .garden-bed.container-small.container-circle .bed-count-badge {
-    font-size: 0.35rem;
+    font-size: 0.45rem;
     bottom: 20%;
 }
 .garden-bed.container-small.container-circle .bed-dimensions {
-    font-size: 0.35rem;
+    font-size: 0.45rem;
     bottom: 8%;
 }
 .garden-bed.container-small .bed-empty-hint {
-    font-size: 0.4rem;
+    font-size: 0.5rem;
 }
 .garden-bed.container-small .bed-empty-hint .hint-icon {
     font-size: 0.7rem;
@@ -1189,7 +1211,7 @@ body {
 }
 .garden-bed.selected {
     border-color: var(--emerald) !important;
-    box-shadow: 0 0 0 2px var(--emerald), inset 0 0 30px rgba(0,0,0,0.5);
+    box-shadow: 0 0 0 2px var(--emerald), 0 0 20px rgba(16,185,129,0.15), inset 0 0 30px rgba(0,0,0,0.5);
     z-index: 2;
 }
 /* Keyboard focus indicators */
@@ -1427,16 +1449,17 @@ body {
     font-size: 1.3rem;
     cursor: move;
     border-radius: 50%;
-    background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(255,255,255,0.1);
-    transition: box-shadow 0.15s;
+    background: radial-gradient(circle at 30% 30%, rgba(30,30,30,0.6), rgba(0,0,0,0.5));
+    border: 1.5px solid rgba(255,255,255,0.12);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
     z-index: 3;
     user-select: none;
 }
 .placed-plant:hover {
-    box-shadow: 0 0 10px rgba(16,185,129,0.4);
+    box-shadow: var(--glow-emerald-md);
     border-color: var(--emerald);
     z-index: 4;
+    transform: scale(1.1);
 }
 
 /* Water need color-coding ring on placed plants */
@@ -1499,7 +1522,7 @@ body {
     background: var(--bg-primary);
     color: var(--text-primary);
     font-family: var(--font-mono);
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     padding: 0.2rem 0.5rem;
     white-space: nowrap;
     border: 1px solid var(--border);
@@ -1507,8 +1530,22 @@ body {
     opacity: 0;
     transition: opacity 0.15s;
     margin-bottom: 4px;
+    border-radius: var(--radius);
 }
 .placed-plant:hover .plant-tooltip { opacity: 1; }
+/* Zoomed-in: subtler companion lines, no permanent name labels */
+.canvas-zoomed-in .companion-line-good,
+.canvas-zoomed-in .companion-line-bad {
+    opacity: 0.5;
+}
+.canvas-zoomed-detail .companion-line-good,
+.canvas-zoomed-detail .companion-line-bad {
+    opacity: 0.35;
+}
+/* Never show name labels permanently — hover only */
+.canvas-zoomed-in .placed-plant .plant-tooltip {
+    opacity: 0;
+}
 
 /* Plant Info Panel */
 .plant-info-panel {
@@ -1522,6 +1559,7 @@ body {
     z-index: 20;
     max-height: 40%;
     overflow-y: auto;
+    font-size: 0.9rem;
     transition: transform 0.25s ease-out, opacity 0.25s ease-out;
     transform: translateY(0);
 }
@@ -1544,19 +1582,19 @@ body {
 }
 .info-label {
     font-family: var(--font-mono);
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
     letter-spacing: 1px;
     text-transform: uppercase;
 }
 .info-value {
-    font-size: 0.95rem;
+    font-size: 1.05rem;
     color: var(--text-primary);
     margin-top: 0.15rem;
 }
 .info-title {
     font-family: var(--font-display);
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     letter-spacing: 1px;
 }
 
@@ -1660,7 +1698,7 @@ body.section-resizing * {
 }
 .bed-tab {
     font-family: var(--font-mono);
-    font-size: 0.65rem;
+    font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 1px;
     padding: 0.35rem 0.6rem;
@@ -1745,7 +1783,7 @@ body.section-resizing * {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
 }
 .bed-plant-entry .qty-controls {
     display: flex;
@@ -1776,7 +1814,7 @@ body.section-resizing * {
 }
 .bed-plant-entry .qty-value {
     font-family: var(--font-mono);
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
     min-width: 14px;
     text-align: center;
@@ -1801,7 +1839,7 @@ body.section-resizing * {
     margin: 0.5rem 0;
 }
 .tool-btn.small {
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     padding: 0.25rem 0.5rem;
     letter-spacing: 0.5px;
 }
@@ -1817,7 +1855,7 @@ body.section-resizing * {
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     font-family: var(--font-mono);
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     padding: 0.25rem 0.4rem;
     letter-spacing: 0.3px;
 }
@@ -3208,13 +3246,22 @@ body.section-resizing * {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 1.5rem;
+    padding: 0.45rem 1rem;
     background: var(--bg-secondary);
     border-top: 1px solid var(--border);
     font-family: var(--font-mono);
     font-size: 0.65rem;
     color: var(--text-muted);
     letter-spacing: 1px;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    min-height: 0;
+}
+.footer-left {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 .footer-logo {
     color: var(--emerald);
@@ -3222,22 +3269,26 @@ body.section-resizing * {
 }
 .footer-sep {
     color: var(--text-muted);
-    margin: 0 0.5rem;
+    margin: 0 0.3rem;
 }
 .footer-center {
     display: flex;
-    gap: 4px;
+    gap: 3px;
+    flex-wrap: wrap;
+    align-items: center;
 }
 .footer-action-btn {
     font-family: var(--font-mono);
     font-size: 0.6rem;
-    letter-spacing: 1px;
-    padding: 0.3rem 0.6rem;
+    letter-spacing: 0.5px;
+    padding: 0.25rem 0.5rem;
     background: transparent;
     color: var(--text-muted);
     border: 1px solid var(--border);
     cursor: pointer;
     transition: all 0.15s;
+    line-height: 1.2;
+    white-space: nowrap;
 }
 .footer-action-btn:hover {
     color: var(--emerald);
@@ -3251,6 +3302,12 @@ body.section-resizing * {
     background: var(--amber-muted);
     color: #fff;
     border-color: var(--amber);
+}
+.footer-right {
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-size: 0.55rem;
+    opacity: 0.6;
 }
 
 /* ==========================
@@ -4819,4 +4876,426 @@ textarea.form-input { resize: vertical; }
         border-radius: 12px;
     }
     .gb-fab { bottom: 72px; right: 16px; }
+}
+
+/* ============================================
+   ELEVATED PUNK — Visual Polish Layer
+   ============================================ */
+
+/* --- Header gradient accent line --- */
+.header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--emerald), var(--teal), var(--emerald), transparent);
+    opacity: 0.6;
+}
+
+/* --- Section title gradient underline --- */
+.section-title::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 2px;
+    background: var(--gradient-emerald);
+    margin-top: 4px;
+    border-radius: 1px;
+    transition: width 0.3s ease;
+}
+.section-title:hover::after {
+    width: 80px;
+}
+
+/* --- Card hover lift --- */
+.bg-card, [class*="card"], .plant-info-panel, .confirm-modal {
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+/* --- Toast upgrade with gradient --- */
+.toast-notification {
+    background: linear-gradient(135deg, var(--emerald), var(--teal));
+    box-shadow: 0 4px 20px rgba(16,185,129,0.3), 0 0 40px rgba(16,185,129,0.1);
+    border-left: 4px solid rgba(0,0,0,0.3);
+    border-radius: var(--radius);
+}
+
+/* --- Drag ghost glow upgrade --- */
+.drag-ghost {
+    filter: drop-shadow(0 0 12px rgba(16,185,129,0.5)) drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+}
+
+/* --- Bed drag-over glow upgrade --- */
+.garden-bed.drag-over {
+    box-shadow: inset 0 0 30px rgba(16, 185, 129, 0.15), var(--glow-emerald-lg);
+}
+
+/* --- Active highlight pulse upgrade --- */
+@keyframes bed-glow-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.5), 0 0 15px rgba(16,185,129,0.2); }
+    50% { box-shadow: 0 0 0 6px rgba(16,185,129,0.15), 0 0 25px rgba(16,185,129,0.15); }
+    100% { box-shadow: 0 0 0 0 rgba(16,185,129,0), 0 0 15px rgba(16,185,129,0); }
+}
+.garden-bed.active-highlight {
+    animation: bed-glow-pulse 0.8s ease-out;
+}
+
+/* --- Smooth page transitions for tab content --- */
+@keyframes content-reveal {
+    0% { opacity: 0; transform: translateY(8px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+.tab-content-area > *:not([style*="display: none"]) {
+    animation: content-reveal 0.3s ease-out;
+}
+
+/* --- Zone badge glow --- */
+.zone-badge {
+    text-shadow: 0 0 8px rgba(16,185,129,0.4);
+    box-shadow: inset 0 0 12px rgba(16,185,129,0.08);
+}
+
+/* --- Button press effect --- */
+.tool-btn:active {
+    transform: scale(0.96);
+    transition: transform 0.05s;
+}
+.tool-btn.accent:hover {
+    box-shadow: var(--glow-emerald-sm);
+}
+
+/* --- Scrollbar styling --- */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* --- Spacing radius glow upgrade --- */
+.spacing-radius {
+    box-shadow: 0 0 12px rgba(16,185,129,0.2), inset 0 0 8px rgba(16,185,129,0.08);
+}
+
+/* --- Companion line glow --- */
+.companion-line-good {
+    filter: drop-shadow(0 0 3px rgba(16,185,129,0.4));
+}
+.companion-line-bad {
+    filter: drop-shadow(0 0 3px rgba(239,68,68,0.4));
+}
+
+/* --- Save/sync indicator polish --- */
+#cloud-sync-indicator {
+    transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+/* --- Plant selected glow upgrade --- */
+.placed-plant.selected {
+    box-shadow: 0 0 0 3px var(--emerald), var(--glow-emerald-md) !important;
+}
+
+/* --- Focus visible glow for accessibility --- */
+.nav-btn:focus-visible,
+.tool-btn:focus-visible {
+    outline: 2px solid var(--emerald);
+    outline-offset: 2px;
+    box-shadow: var(--glow-emerald-sm);
+}
+
+/* --- Smooth canvas transform --- */
+#garden-canvas-wrapper {
+    transition: transform 0.15s ease-out;
+}
+
+/* ============================================
+   ELEVATED PUNK — Phase 2: Animations & Depth
+   ============================================ */
+
+/* --- Staggered plant library load --- */
+@keyframes plant-slide-in {
+    0% { opacity: 0; transform: translateX(-12px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+.plant-item {
+    animation: plant-slide-in 0.25s ease-out both;
+}
+.plant-item:nth-child(2) { animation-delay: 0.03s; }
+.plant-item:nth-child(3) { animation-delay: 0.06s; }
+.plant-item:nth-child(4) { animation-delay: 0.09s; }
+.plant-item:nth-child(5) { animation-delay: 0.12s; }
+.plant-item:nth-child(6) { animation-delay: 0.15s; }
+.plant-item:nth-child(7) { animation-delay: 0.18s; }
+.plant-item:nth-child(8) { animation-delay: 0.21s; }
+
+/* --- Plant expand panel smooth reveal --- */
+.plant-expand-panel {
+    animation: content-reveal 0.2s ease-out;
+}
+
+/* --- Nav tab ink-spread effect --- */
+.nav-btn {
+    position: relative;
+    overflow: hidden;
+}
+.nav-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(16,185,129,0.15), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.nav-btn:hover::before {
+    opacity: 1;
+}
+
+/* --- Garden bed gradient overlay for depth --- */
+.garden-bed {
+    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.garden-bed:hover:not(.selected) {
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.3), 0 0 12px rgba(16,185,129,0.08);
+    border-color: rgba(16,185,129,0.4);
+}
+
+/* --- Bed tab active indicator slide --- */
+.bed-tab {
+    position: relative;
+    overflow: hidden;
+}
+.bed-tab::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--emerald);
+    transition: width 0.2s ease, left 0.2s ease;
+}
+.bed-tab.active::after {
+    width: 100%;
+    left: 0;
+}
+
+/* --- Placed plant hover glow ring --- */
+.placed-plant {
+    transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.placed-plant:hover {
+    box-shadow: 0 0 0 2px rgba(16,185,129,0.25), 0 0 10px rgba(16,185,129,0.15);
+}
+
+/* --- Stats dashboard counter pop-in --- */
+@keyframes stat-pop {
+    0% { transform: scale(0.8); opacity: 0; }
+    60% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+}
+.stats-dashboard .mini-stat {
+    animation: stat-pop 0.3s ease-out both;
+}
+.stats-dashboard .mini-stat:nth-child(2) { animation-delay: 0.08s; }
+.stats-dashboard .mini-stat:nth-child(3) { animation-delay: 0.16s; }
+.stats-dashboard .mini-stat:nth-child(4) { animation-delay: 0.24s; }
+
+/* --- Filter button group — active state gradient --- */
+.filter-btn.active {
+    background: linear-gradient(180deg, rgba(16,185,129,0.15), var(--bg-tertiary));
+    box-shadow: 0 1px 0 var(--emerald);
+    text-shadow: 0 0 8px rgba(16,185,129,0.3);
+}
+
+/* --- Tool button ripple-like hover --- */
+.tool-btn {
+    position: relative;
+    overflow: hidden;
+}
+.tool-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), transparent);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+.tool-btn:hover::after {
+    opacity: 1;
+}
+
+/* --- Subsection title glow on hover --- */
+.subsection-title {
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+.subsection-title:hover {
+    color: var(--text-secondary);
+    text-shadow: 0 0 6px rgba(16,185,129,0.15);
+}
+
+/* --- Today's Tasks banner gradient --- */
+.today-tasks-bar {
+    background: linear-gradient(135deg, rgba(16,185,129,0.06), rgba(20,184,166,0.03), transparent) !important;
+    border-bottom: 1px solid rgba(16,185,129,0.15);
+}
+
+/* --- Plant palette sidebar gradient fade at bottom --- */
+.plant-palette {
+    position: relative;
+}
+.plant-palette::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background: linear-gradient(transparent, var(--bg-secondary));
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* --- Bed details stat rows — subtle emerald accent on hover --- */
+.stat-row {
+    transition: background 0.15s ease, padding-left 0.15s ease;
+    border-radius: 2px;
+}
+.stat-row:hover {
+    background: rgba(16,185,129,0.04);
+    padding-left: 4px;
+}
+
+/* --- Bed plant entry hover slide --- */
+.bed-plant-entry {
+    transition: border-left-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+}
+.bed-plant-entry:hover {
+    border-left-color: var(--emerald);
+    background: rgba(16,185,129,0.06);
+    transform: translateX(2px);
+}
+
+/* --- Container shelf button shine on hover --- */
+.shelf-btn {
+    position: relative;
+    overflow: hidden;
+}
+.shelf-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(16,185,129,0.12), transparent);
+    transition: left 0.4s ease;
+}
+.shelf-btn:hover::before {
+    left: 100%;
+}
+
+/* --- Modal backdrop blur --- */
+.confirm-modal-overlay,
+.modal-overlay {
+    backdrop-filter: blur(4px);
+}
+
+/* --- Demo button special glow --- */
+.footer-action-btn.demo-btn {
+    position: relative;
+}
+.footer-action-btn.demo-btn::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(245,158,11,0.15), transparent);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+.footer-action-btn.demo-btn:hover::after {
+    opacity: 1;
+}
+
+/* --- Floating action button pulse (Garden Buddy) --- */
+@keyframes fab-breathe {
+    0%, 100% { box-shadow: 0 4px 20px rgba(16,185,129,0.3); }
+    50% { box-shadow: 0 4px 30px rgba(16,185,129,0.5), 0 0 40px rgba(16,185,129,0.15); }
+}
+.gb-fab {
+    animation: fab-breathe 3s ease-in-out infinite;
+}
+
+/* --- Header logo shimmer --- */
+@keyframes logo-shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+.logo-text h1 .accent {
+    background: linear-gradient(90deg, var(--emerald) 0%, var(--teal) 25%, #a7f3d0 50%, var(--teal) 75%, var(--emerald) 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: logo-shimmer 8s linear infinite;
+}
+
+/* --- Zoom level indicator glow at extremes --- */
+.zoom-level {
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+/* --- Bed details sidebar gradient top edge --- */
+.bed-details::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--emerald), transparent);
+    opacity: 0.3;
+    z-index: 1;
+}
+
+/* --- Today's Tasks overdue items glow --- */
+.today-task-item.overdue {
+    border-left-color: var(--red-accent);
+    box-shadow: inset 3px 0 8px rgba(239,68,68,0.1);
+}
+
+/* --- Marquee ticker gradient mask edges --- */
+.marquee-banner {
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 5%, black 95%, transparent);
+    mask-image: linear-gradient(90deg, transparent, black 5%, black 95%, transparent);
+}
+
+/* --- Quick add dropdown glow --- */
+.quick-add-select:focus {
+    box-shadow: var(--glow-emerald-sm);
+}
+
+/* --- Search input focus glow --- */
+.search-input:focus {
+    box-shadow: 0 0 0 1px var(--emerald-dark), var(--glow-emerald-sm);
+}
+
+/* --- Water alert banner pulse --- */
+@keyframes water-pulse {
+    0%, 100% { border-left-color: var(--amber); }
+    50% { border-left-color: var(--red-accent); }
+}
+.water-alert-banner:not(.hidden) {
+    animation: water-pulse 2s ease-in-out infinite;
 }
