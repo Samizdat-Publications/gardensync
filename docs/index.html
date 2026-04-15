@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GardenSync - Community Garden Bed Planner | Food Not Bombs Canton</title>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --emerald: #00e68a;
+      --teal: #00bfa5;
+      --orange: #ff6b35;
+      --dark-bg: #0a0f0a;
+      --light-bg: #f5f5f5;
+      --text-dark: #0a0f0a;
+      --text-light: #f5f5f5;
+      --accent-glow: rgba(0, 230, 138, 0.6);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Barlow Condensed', sans-serif;
+      background: linear-gradient(135deg, #0a0f0a 0%, #1a1f1a 50%, #0a0f0a 100%);
+      color: var(--text-light);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* Scanline overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 230, 138, 0.03),
+        rgba(0, 230, 138, 0.03) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* Sticky Navigation */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(10, 15, 10, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid var(--emerald);
+      padding: 1.2rem 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      animation: slideDown 0.6s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    nav a {
+      color: var(--text-light);
+      text-decoration: none;
+      font-family: 'Anton', sans-serif;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--emerald);
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover {
+      color: var(--emerald);
+      text-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(0, 230, 138, 0.1) 0%, rgba(0, 191, 165, 0.05) 100%);
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0, 230, 138, 0.2) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      animation: fadeInUp 1s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero h1 {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(3rem, 8vw, 7rem);
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      margin: 0;
+      color: var(--emerald);
+      text-shadow:
+        0 0 20px var(--accent-glow),
+        0 0 40px var(--accent-glow),
+        2px 2px 0 var(--teal),
+        4px 4px 0 var(--orange);
+      line-height: 1;
+      animation: glitch 0.3s ease-in-out 2s;
+    }
+
+    @keyframes glitch {
+      0%, 100% { text-shadow: 0 0 20px var(--accent-glow), 2px 2px 0 var(--teal), 4px 4px 0 var(--orange); }
+      20% { text-shadow: -2px 0 20px var(--orange), 4px 4px 0 var(--teal); }
+      40% { text-shadow: 2px -2px 20px var(--teal), -2px 2px 0 var(--orange); }
+      60% { text-shadow: 0 0 20px var(--accent-glow), 2px 2px 0 var(--teal), 4px 4px 0 var(--orange); }
+    }
+
+    .hero .fist {
+      font-size: clamp(2rem, 5vw, 4rem);
+      margin: 0.5rem 0;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .hero .tagline {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+      color: var(--teal);
+      margin: 1.5rem 0;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .hero .feature-tags {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .feature-tag {
+      background: rgba(0, 230, 138, 0.15);
+      border: 2px solid var(--emerald);
+      color: var(--emerald);
+      padding: 0.6rem 1.2rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+
+    .feature-tag:hover {
+      background: var(--emerald);
+      color: var(--dark-bg);
+      box-shadow: 0 0 20px var(--accent-glow);
+      transform: scale(1.05);
+    }
+
+    /* Sections */
+    section {
+      padding: 6rem 2rem;
+      position: relative;
+    }
+
+    section h2 {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 2rem;
+      color: var(--emerald);
+      text-shadow: 0 0 15px var(--accent-glow);
+      position: relative;
+    }
+
+    section h2::before {
+      content: '//';
+      margin-right: 1rem;
+      color: var(--orange);
+    }
+
+    /* About Section */
+    #about {
+      background: rgba(0, 230, 138, 0.03);
+    }
+
+    .about-text {
+      max-width: 800px;
+      margin: 0 auto;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--text-light);
+    }
+
+    /* Gardens Section */
+    #gardens {
+      background: rgba(0, 191, 165, 0.05);
+    }
+
+    .garden-tabs {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .garden-tab {
+      background: transparent;
+      border: 2px solid var(--teal);
+      color: var(--teal);
+      padding: 0.8rem 1.5rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .garden-tab.active {
+      background: var(--teal);
+      color: var(--dark-bg);
+      box-shadow: 0 0 20px rgba(0, 191, 165, 0.5);
+    }
+
+    .garden-tab:hover {
+      border-color: var(--emerald);
+      color: var(--emerald);
+    }
+
+    .garden-content {
+      display: none;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    .garden-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .garden-image {
+      max-width: 100%;
+      height: auto;
+      border: 3px solid var(--emerald);
+      margin-bottom: 2rem;
+      box-shadow: 0 0 30px rgba(0, 230, 138, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .garden-image:hover {
+      box-shadow: 0 0 50px rgba(0, 230, 138, 0.6);
+      transform: scale(1.02);
+    }
+
+    .garden-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .stat-card {
+      background: rgba(0, 230, 138, 0.1);
+      border: 2px solid var(--emerald);
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      background: rgba(0, 230, 138, 0.2);
+      box-shadow: 0 0 20px var(--accent-glow);
+      transform: translateY(-5px);
+    }
+
+    .stat-card h3 {
+      font-family: 'Anton', sans-serif;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-card .value {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.8rem;
+      color: var(--emerald);
+      font-weight: bold;
+    }
+
+    /* Bed Gallery */
+    #beds {
+      background: rgba(0, 230, 138, 0.02);
+    }
+
+    .bed-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .bed-card {
+      background: rgba(0, 230, 138, 0.08);
+      border: 2px solid var(--teal);
+      overflow: hidden;
+      transition: all 0.4s ease;
+      cursor: pointer;
+      opacity: 0;
+      animation: slideInCard 0.6s ease-out forwards;
+    }
+
+    @keyframes slideInCard {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .bed-card:nth-child(1) { animation-delay: 0.1s; }
+    .bed-card:nth-child(2) { animation-delay: 0.2s; }
+    .bed-card:nth-child(3) { animation-delay: 0.3s; }
+    .bed-card:nth-child(4) { animation-delay: 0.4s; }
+    .bed-card:nth-child(5) { animation-delay: 0.5s; }
+
+    .bed-card:hover {
+      border-color: var(--emerald);
+      box-shadow: 0 0 30px var(--accent-glow);
+      transform: translateY(-10px);
+    }
+
+    .bed-image {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      background: var(--dark-bg);
+    }
+
+    .bed-info {
+      padding: 1.5rem;
+    }
+
+    .bed-info h3 {
+      font-family: 'Anton', sans-serif;
+      color: var(--emerald);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      font-size: 1rem;
+    }
+
+    .bed-info p {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    /* Comparison Section */
+    #comparison {
+      background: rgba(0, 191, 165, 0.03);
+    }
+
+    .comparison-image {
+      max-width: 100%;
+      height: auto;
+      border: 3px solid var(--orange);
+      margin: 2rem auto;
+      display: block;
+      box-shadow: 0 0 30px rgba(255, 107, 53, 0.3);
+    }
+
+    /* Features Section */
+    #features {
+      background: rgba(0, 230, 138, 0.02);
+    }
+
+    .features-grid-image {
+      max-width: 100%;
+      height: auto;
+      border: 3px solid var(--teal);
+      margin: 2rem 0;
+      box-shadow: 0 0 30px rgba(0, 191, 165, 0.3);
+    }
+
+    .features-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .feature-item {
+      background: rgba(0, 230, 138, 0.1);
+      border-left: 4px solid var(--emerald);
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      opacity: 0;
+      animation: slideInFeature 0.6s ease-out forwards;
+    }
+
+    @keyframes slideInFeature {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .feature-item:nth-child(1) { animation-delay: 0.1s; }
+    .feature-item:nth-child(2) { animation-delay: 0.2s; }
+    .feature-item:nth-child(3) { animation-delay: 0.3s; }
+    .feature-item:nth-child(4) { animation-delay: 0.4s; }
+    .feature-item:nth-child(5) { animation-delay: 0.5s; }
+    .feature-item:nth-child(6) { animation-delay: 0.6s; }
+
+    .feature-item:hover {
+      background: rgba(0, 230, 138, 0.2);
+      border-left-color: var(--orange);
+      transform: translateX(10px);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .feature-item h3 {
+      font-family: 'Anton', sans-serif;
+      color: var(--teal);
+      margin-bottom: 0.7rem;
+      text-transform: uppercase;
+      font-size: 0.95rem;
+    }
+
+    .feature-item p {
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    /* Tech Stack Section */
+    #tech {
+      background: rgba(0, 191, 165, 0.05);
+    }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .tech-item {
+      background: rgba(0, 230, 138, 0.1);
+      border: 2px solid var(--emerald);
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .tech-item:hover {
+      background: rgba(0, 230, 138, 0.2);
+      box-shadow: 0 0 20px var(--accent-glow);
+      transform: scale(1.05);
+    }
+
+    .tech-item h3 {
+      font-family: 'Space Mono', monospace;
+      color: var(--orange);
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .tech-item p {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    /* CTA Section */
+    #cta {
+      background: linear-gradient(135deg, rgba(0, 230, 138, 0.15) 0%, rgba(0, 191, 165, 0.1) 100%);
+      text-align: center;
+    }
+
+    .cta-content {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      padding: 1rem 2rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      background: var(--emerald);
+      color: var(--dark-bg);
+      border: 2px solid var(--emerald);
+    }
+
+    .btn-primary:hover {
+      background: transparent;
+      color: var(--emerald);
+      box-shadow: 0 0 20px var(--accent-glow);
+      transform: scale(1.05);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--teal);
+      border: 2px solid var(--teal);
+    }
+
+    .btn-secondary:hover {
+      background: var(--teal);
+      color: var(--dark-bg);
+      box-shadow: 0 0 20px rgba(0, 191, 165, 0.5);
+      transform: scale(1.05);
+    }
+
+    /* Footer */
+    footer {
+      background: rgba(0, 0, 0, 0.5);
+      border-top: 2px solid var(--emerald);
+      padding: 3rem 2rem;
+      text-align: center;
+      margin-top: 4rem;
+    }
+
+    footer p {
+      margin: 0.8rem 0;
+      font-size: 0.9rem;
+    }
+
+    .footer-accent {
+      color: var(--emerald);
+      font-weight: bold;
+    }
+
+    .footer-emoji {
+      font-size: 1.5rem;
+      margin: 1rem 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav {
+        padding: 1rem;
+        gap: 0.8rem;
+      }
+
+      nav a {
+        font-size: 0.7rem;
+      }
+
+      .hero h1 {
+        text-shadow:
+          0 0 15px var(--accent-glow),
+          1px 1px 0 var(--teal),
+          2px 2px 0 var(--orange);
+      }
+
+      .bed-gallery {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .btn {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+
+    /* Intersection Observer for scroll animations */
+    [data-scroll] {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    [data-scroll].visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <a href="#about">What Is It</a>
+    <a href="#gardens">FNB Gardens</a>
+    <a href="#beds">Bed Gallery</a>
+    <a href="#comparison">Comparison</a>
+    <a href="#features">Features</a>
+    <a href="#tech">Tech</a>
+    <a href="#cta">Get Started</a>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>GARDENSYNC</h1>
+      <div class="fist">✊</div>
+      <p class="tagline">Community Garden Bed Planner // Food Not Bombs Canton, OH</p>
+      <div class="feature-tags">
+        <span class="feature-tag">Drag & Drop</span>
+        <span class="feature-tag">AI Buddy</span>
+        <span class="feature-tag">Companion Plants</span>
+        <span class="feature-tag">Zone 6a Ready</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about">
+    <h2>What Is GardenSync?</h2>
+    <div class="about-text">
+      <p>GardenSync is an interactive, community-first garden bed planner designed for Food Not Bombs Canton, OH. Drag and drop plants onto 5x10 foot beds with real companion planting rules, AI-powered Garden Buddy chat assistant, harvest tracking, and season-aware scheduling for Zone 6a.</p>
+      <p style="margin-top: 1.5rem;">No corporate ag. No monoculture. Just honest gardening tools built for mutual aid, food sovereignty, and radical abundance. Open source. Free. Anarchist-coded.</p>
+    </div>
+  </section>
+
+  <!-- FNB Gardens Section -->
+  <section id="gardens">
+    <h2>FNB Research Gardens</h2>
+    <p style="text-align: center; max-width: 700px; margin: 0 auto 3rem;">Three research-backed demo gardens for Food Not Bombs Canton. Each plan optimizes for different goals: maximum yield, easy start for new gardeners, and year-round storage.</p>
+
+    <div class="garden-tabs">
+      <button class="garden-tab active" data-tab="full">Full Research Plan</button>
+      <button class="garden-tab" data-tab="easy">Easy Start</button>
+      <button class="garden-tab" data-tab="storage">Max Storage</button>
+    </div>
+
+    <!-- Full Plan -->
+    <div class="garden-content active" data-content="full">
+      <img src="../screenshots/fnb-full-research-plan-overview.png" alt="Full Research Plan - 5 bed overview" class="garden-image">
+      <div class="garden-stats">
+        <div class="stat-card">
+          <h3>Beds</h3>
+          <div class="value">5</div>
+        </div>
+        <div class="stat-card">
+          <h3>Size</h3>
+          <div class="value">5x10 ft</div>
+        </div>
+        <div class="stat-card">
+          <h3>Research</h3>
+          <div class="value">Deep</div>
+        </div>
+        <div class="stat-card">
+          <h3>Goal</h3>
+          <div class="value">Yield</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Easy Start -->
+    <div class="garden-content" data-content="easy">
+      <img src="../screenshots/fnb-easy-start-overview.png" alt="Easy Start Plan - 5 bed overview" class="garden-image">
+      <div class="garden-stats">
+        <div class="stat-card">
+          <h3>Beds</h3>
+          <div class="value">5</div>
+        </div>
+        <div class="stat-card">
+          <h3>Complexity</h3>
+          <div class="value">Low</div>
+        </div>
+        <div class="stat-card">
+          <h3>Best For</h3>
+          <div class="value">Beginners</div>
+        </div>
+        <div class="stat-card">
+          <h3>Plants</h3>
+          <div class="value">20+</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Max Storage -->
+    <div class="garden-content" data-content="storage">
+      <img src="../screenshots/fnb-max-storage-overview.png" alt="Max Storage Plan - 5 bed overview" class="garden-image">
+      <div class="garden-stats">
+        <div class="stat-card">
+          <h3>Storage Focus</h3>
+          <div class="value">Root Crops</div>
+        </div>
+        <div class="stat-card">
+          <h3>Preserves</h3>
+          <div class="value">Winter</div>
+        </div>
+        <div class="stat-card">
+          <h3>Shelf Life</h3>
+          <div class="value">Months</div>
+        </div>
+        <div class="stat-card">
+          <h3>Beds</h3>
+          <div class="value">5</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bed Gallery -->
+  <section id="beds">
+    <h2>Bed Closeups from Full Plan</h2>
+    <div class="bed-gallery">
+      <div class="bed-card">
+        <img src="../screenshots/full-plan-bed1-greens-powerhouse.png" alt="Bed 1 - Greens Powerhouse" class="bed-image">
+        <div class="bed-info">
+          <h3>Greens Powerhouse</h3>
+          <p>Kale, swiss chard, collard greens, lettuce, spinach, parsley. #1 food bank request — 3-season harvests from a single planting.</p>
+        </div>
+      </div>
+
+      <div class="bed-card">
+        <img src="../screenshots/full-plan-bed2-tomato-pepper-hq.png" alt="Bed 2 - Tomato & Pepper HQ" class="bed-image">
+        <div class="bed-info">
+          <h3>Tomato & Pepper HQ</h3>
+          <p>Classic companion guild — tomatoes, peppers, basil, marigold, sweet alyssum. One plant yields 10-20 lbs.</p>
+        </div>
+      </div>
+
+      <div class="bed-card">
+        <img src="../screenshots/full-plan-bed3-underground-vault.png" alt="Bed 3 - Underground Vault" class="bed-image">
+        <div class="bed-info">
+          <h3>Underground Vault</h3>
+          <p>Onion, carrot, beet, chive. Root vegetables store 2-5 months without refrigeration — food bank storage backbone.</p>
+        </div>
+      </div>
+
+      <div class="bed-card">
+        <img src="../screenshots/full-plan-bed4-calorie-central.png" alt="Bed 4 - Calorie Central" class="bed-image">
+        <div class="bed-info">
+          <h3>Calorie Central</h3>
+          <p>24 potatoes — highest calorie crop per sqft. Stores 4-6 months. One bed yields 50-100 lbs for multiple families.</p>
+        </div>
+      </div>
+
+      <div class="bed-card">
+        <img src="../screenshots/full-plan-bed5-storage-protein.png" alt="Bed 5 - Storage & Protein" class="bed-image">
+        <div class="bed-info">
+          <h3>Storage & Protein</h3>
+          <p>Butternut squash (3-6 month storage), green beans (plant protein), 7 cooking herbs for on-site meal prep.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison Section -->
+  <section id="comparison">
+    <h2>Plan Comparison</h2>
+    <p style="text-align: center; max-width: 800px; margin: 0 auto 2rem;">See how the three FNB plans stack up across complexity, yield, storage, and beginner-friendliness.</p>
+    <img src="../screenshots/fnb-plan-comparison.png" alt="Plan Comparison Table" class="comparison-image">
+  </section>
+
+  <!-- Features Section -->
+  <section id="features">
+    <h2>Features</h2>
+    <img src="../screenshots/features-grid.png" alt="GardenSync Features Grid" class="features-grid-image">
+
+    <div class="features-list">
+      <div class="feature-item" data-scroll>
+        <h3>Drag & Drop</h3>
+        <p>Click to place, drag to move, 20px grid snapping. Design your garden visually in minutes.</p>
+      </div>
+
+      <div class="feature-item" data-scroll>
+        <h3>Companion Plants</h3>
+        <p>41-plant library with real companion/enemy rules. See companion connection lines on canvas.</p>
+      </div>
+
+      <div class="feature-item" data-scroll>
+        <h3>Garden Buddy AI</h3>
+        <p>Claude Sonnet AI assistant with tool use. Ask questions, get plant advice, auto-arrange beds.</p>
+      </div>
+
+      <div class="feature-item" data-scroll>
+        <h3>Zone 6a Ready</h3>
+        <p>Canton, OH climate data. Frost dates, season calendars, and crop-specific growing timelines.</p>
+      </div>
+
+      <div class="feature-item" data-scroll>
+        <h3>Cloud Sync</h3>
+        <p>Local storage + Supabase cloud backup. Auto-saves every 5 minutes. Share gardens via URL.</p>
+      </div>
+
+      <div class="feature-item" data-scroll>
+        <h3>Harvest Tracking</h3>
+        <p>Log harvests, view yields, plan for next season. Build garden knowledge over time.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech Stack Section -->
+  <section id="tech">
+    <h2>Tech Stack</h2>
+    <p style="text-align: center; max-width: 700px; margin: 0 auto 2rem;">Built with open tools. No corporate surveillance. No tracking. Just honest code.</p>
+
+    <div class="tech-grid">
+      <div class="tech-item">
+        <h3>Vanilla JS</h3>
+        <p>No framework. No webpack. ~30 modular JS files. Fast and lightweight.</p>
+      </div>
+
+      <div class="tech-item">
+        <h3>Canvas Rendering</h3>
+        <p>Beds, plants, companion lines, and climate charts drawn on canvas. Smooth and performant.</p>
+      </div>
+
+      <div class="tech-item">
+        <h3>Claude Sonnet 4</h3>
+        <p>Garden Buddy AI with tool use. Real knowledge, real conversations about your garden.</p>
+      </div>
+
+      <div class="tech-item">
+        <h3>Supabase</h3>
+        <p>Open source PostgRES backend. Cloud sync, garden persistence, no AWS lock-in.</p>
+      </div>
+
+      <div class="tech-item">
+        <h3>Open Meteo API</h3>
+        <p>Free weather data. No API keys required. Privacy-respecting real-time forecasts.</p>
+      </div>
+
+      <div class="tech-item">
+        <h3>Anarchist Code</h3>
+        <p>MIT licensed. View source. Fork. Modify. Share. Food not bombs spirit in the code.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section id="cta">
+    <div class="cta-content">
+      <h2>Get Started</h2>
+      <p>Ready to plan your community garden? Download GardenSync, explore the FNB demos, and start designing your beds.</p>
+      <div class="cta-buttons">
+        <a href="https://github.com/your-repo/gardensync" class="btn btn-primary">View on GitHub</a>
+        <a href="../" class="btn btn-secondary">Launch App</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p class="footer-emoji">🌱 ✊ 🥬</p>
+    <p><span class="footer-accent">GardenSync</span> — Community Garden Bed Planner</p>
+    <p>Built with love for <span class="footer-accent">Food Not Bombs Canton, OH</span></p>
+    <p>Zone 6a. Open Source. Free. Mutual Aid.</p>
+    <p style="margin-top: 1.5rem; font-size: 0.85rem; opacity: 0.8;">© 2026 GardenSync Contributors | MIT License</p>
+  </footer>
+
+  <script>
+    // Tab switching for garden plans
+    const tabs = document.querySelectorAll('.garden-tab');
+    const contents = document.querySelectorAll('.garden-content');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabName = tab.getAttribute('data-tab');
+
+        // Remove active class from all tabs and contents
+        tabs.forEach(t => t.classList.remove('active'));
+        contents.forEach(c => c.classList.remove('active'));
+
+        // Add active class to clicked tab and corresponding content
+        tab.classList.add('active');
+        document.querySelector(`[data-content="${tabName}"]`).classList.add('active');
+      });
+    });
+
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    // Observe all scroll elements
+    document.querySelectorAll('[data-scroll]').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Smooth scroll for nav links
+    document.querySelectorAll('nav a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Add parallax effect on scroll
+    window.addEventListener('scroll', () => {
+      const scrolled = window.pageYOffset;
+      const hero = document.querySelector('.hero::before');
+      if (hero) {
+        // Subtle effect already in keyframe animation
+      }
+    });
+  </script>
+</body>
+</html>
