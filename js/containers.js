@@ -100,8 +100,26 @@ function renderContainer(container, parentEl) {
     const resizeHandle = document.createElement('div');
     resizeHandle.className = 'container-resize-handle';
     resizeHandle.title = 'Drag to resize';
-    resizeHandle.innerHTML = '⤡';
+    resizeHandle.textContent = '⤡';
     el.appendChild(resizeHandle);
+
+    // Wind gust overlay (tweak-living) + heatmap overlay (tweak-heatmap) — behavior gated by body.tweak-*-on
+    const windGust = document.createElement('div');
+    windGust.className = 'wind-gust';
+    const gustSeed = (container.id || '').split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+    windGust.style.setProperty('--wind-delay', ((gustSeed % 70) / 10).toFixed(2) + 's');
+    el.appendChild(windGust);
+
+    const heatmap = document.createElement('div');
+    heatmap.className = 'heatmap-overlay';
+    heatmap.style.setProperty('--pool-a-x', (20 + (gustSeed * 7) % 50) + '%');
+    heatmap.style.setProperty('--pool-a-y', (25 + (gustSeed * 3) % 40) + '%');
+    heatmap.style.setProperty('--pool-b-x', (60 + (gustSeed * 11) % 30) + '%');
+    heatmap.style.setProperty('--pool-b-y', (55 + (gustSeed * 5) % 30) + '%');
+    const sunArc = document.createElement('div');
+    sunArc.className = 'sun-arc';
+    heatmap.appendChild(sunArc);
+    el.appendChild(heatmap);
 
     // Resize drag handler (mouse + touch)
     // Free-drag: user drags to set visual width/height. Orientation auto-adjusts.
