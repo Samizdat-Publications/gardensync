@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ['BackupSystem', initBackupSystem],
         ['SupabaseSync', initSupabaseSync],
         ['KeyboardShortcuts', initKeyboardShortcuts],
+        ['Tweaks', initTweaks],
         ['LoadSavedState', loadSavedState],
         ['ShareURL', initShareURL],
         ['Weather', initWeather],

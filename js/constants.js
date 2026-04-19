@@ -1922,3 +1922,8 @@ const CONTAINER_TYPES = {
 // ---- CANVAS SCALE ----
 const CANVAS_PX_PER_FOOT = 40;
 
+// ---- GRID + PROXIMITY (used by placement + companion network) ----
+const GRID_CELL_PX = 20;
+const PROXIMITY_MAX_CELLS = 3.5;
+const PROXIMITY_MAX_PX = GRID_CELL_PX * PROXIMITY_MAX_CELLS; // 70
+

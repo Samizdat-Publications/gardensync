@@ -23,6 +23,9 @@ function placePlant(containerId, plantId, x, y) {
     container.plants.push(placement);
 
     renderPlacedPlants(containerId); // includes updateSpacingWarnings()
+    if (typeof triggerBloom === 'function') {
+        triggerBloom(x + 18, y + 18, document.querySelector('.garden-bed[data-container-id="' + containerId + '"]'));
+    }
     updateBedDetails();
     saveState();
 }
@@ -207,6 +210,7 @@ function renderPlacedPlants(containerId) {
     });
 
     updateSpacingWarnings(containerId);
+    if (typeof applyLivingClass === 'function') applyLivingClass(containerId);
 }
 
 // ---- COMPANION ID MATCHING (prefix-aware for variety IDs) ----
@@ -228,6 +232,11 @@ function matchesCompanionId(plantId, companionList) {
 function drawCompanionLines(containerId, bedEl) {
     const container = getContainer(containerId);
     if (!container) return;
+
+    // Global gates: master toggle + tweak
+    if (state.companionNetworkOn === false) return;
+    if (state.tweaks && state.tweaks.companionAlways === false) return;
+
     const plants = container.plants;
     if (plants.length < 2) return;
 
@@ -243,23 +252,36 @@ function drawCompanionLines(containerId, bedEl) {
     svg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;';
     svg.setAttribute('viewBox', `0 0 ${bedEl.offsetWidth} ${bedEl.offsetHeight}`);
 
+    var maxPx = (typeof PROXIMITY_MAX_PX !== 'undefined') ? PROXIMITY_MAX_PX : 70;
+
     for (let i = 0; i < plants.length; i++) {
         for (let j = i + 1; j < plants.length; j++) {
             const p1 = PLANT_LIBRARY.find(p => p.id === plants[i].plantId);
             const p2 = PLANT_LIBRARY.find(p => p.id === plants[j].plantId);
             if (!p1 || !p2) continue;
 
+            // Proximity gate — only connect nearby plants
+            const dx = (plants[i].x + 18) - (plants[j].x + 18);
+            const dy = (plants[i].y + 18) - (plants[j].y + 18);
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist > maxPx) continue;
+
             const isCompanion = matchesCompanionId(p2.id, p1.companions) || matchesCompanionId(p1.id, p2.companions);
             const isEnemy = matchesCompanionId(p2.id, p1.enemies) || matchesCompanionId(p1.id, p2.enemies);
 
             if (isCompanion || isEnemy) {
+                // Foe wins if both
+                const asFoe = isEnemy;
                 const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
                 line.setAttribute('x1', plants[i].x + 18);
                 line.setAttribute('y1', plants[i].y + 18);
                 line.setAttribute('x2', plants[j].x + 18);
                 line.setAttribute('y2', plants[j].y + 18);
-                line.setAttribute('class', isCompanion ? 'companion-line-good' : 'companion-line-bad');
-                line.setAttribute('stroke-width', isCompanion ? goodStroke : badStroke);
+                const cls = asFoe
+                    ? 'companion-line-bad thread-persistent thread-foe'
+                    : 'companion-line-good thread-persistent thread-friend';
+                line.setAttribute('class', cls);
+                line.setAttribute('stroke-width', asFoe ? badStroke : goodStroke);
                 line.setAttribute('stroke-dasharray', dashOn + ' ' + dashOff);
                 svg.appendChild(line);
             }
@@ -267,6 +289,17 @@ function drawCompanionLines(containerId, bedEl) {
     }
 
     bedEl.appendChild(svg);
+}
+
+// ---- REDRAW ALL COMPANION NETWORKS ----
+// Called when the master toggle or companionAlways tweak changes, so every
+// currently-rendered bed refreshes its SVG overlay in place.
+function redrawAllCompanionNetworks() {
+    document.querySelectorAll('.garden-bed[data-container-id]').forEach(function(bedEl){
+        bedEl.querySelectorAll('.companion-svg').forEach(function(svg){ svg.remove(); });
+        var containerId = bedEl.getAttribute('data-container-id');
+        if (containerId) drawCompanionLines(containerId, bedEl);
+    });
 }
 
 // ---- UPDATE COMPANION LINE STROKES ON ZOOM ----

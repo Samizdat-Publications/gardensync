@@ -46,6 +46,41 @@ function initToolbarButtons() {
         document.getElementById('btn-grid-toggle').classList.toggle('accent', gridOn);
     });
 
+    // Companions toggle — master switch for the persistent companion network.
+    // Mirrored to state.tweaks.companionAlways (they're linked per design doc).
+    const companionsBtn = document.getElementById('btn-companions-toggle');
+    if (companionsBtn) {
+        const refreshCompanionsBtn = () => {
+            const on = state.companionNetworkOn !== false;
+            companionsBtn.textContent = '';
+            const led = document.createElement('span');
+            led.className = 'led';
+            companionsBtn.appendChild(led);
+            companionsBtn.appendChild(document.createTextNode(on ? 'COMPANIONS: ON' : 'COMPANIONS: OFF'));
+            companionsBtn.classList.toggle('on', on);
+        };
+        refreshCompanionsBtn();
+        companionsBtn.addEventListener('click', () => {
+            const next = !(state.companionNetworkOn !== false);
+            state.companionNetworkOn = next;
+            if (state.tweaks) state.tweaks.companionAlways = next;
+            try {
+                localStorage.setItem('gardensync.companionNetworkOn', next ? 'true' : 'false');
+                localStorage.setItem('gardensync.tweaks.companionAlways', next ? 'true' : 'false');
+            } catch (e) {}
+            document.body.classList.toggle('tweak-companionAlways-on', next);
+            refreshCompanionsBtn();
+            if (typeof redrawAllCompanionNetworks === 'function') redrawAllCompanionNetworks();
+            // Keep tweaks panel in sync if it's open
+            const row = document.querySelector('.tweak-row[data-key="companionAlways"]');
+            if (row) {
+                row.classList.toggle('on', next);
+                const sw = row.querySelector('.tweak-switch');
+                if (sw) sw.classList.toggle('on', next);
+            }
+        });
+    }
+
     // Auto-organize
     document.getElementById('btn-auto-organize').addEventListener('click', () => {
         const container = getSelectedContainer();

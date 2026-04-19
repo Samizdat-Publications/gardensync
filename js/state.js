@@ -56,6 +56,29 @@ const state = {
     clickPlaceMode: null,
     selectedPlacements: [],
     _infoPanelDismiss: null,
+    companionNetworkOn: (function(){
+        var v = localStorage.getItem('gardensync.companionNetworkOn');
+        return v === null ? true : v === 'true';
+    })(),
+    tweaks: (function(){
+        var defaults = {
+            bloom: true,
+            living: true,
+            timeline: false,
+            companion: true,
+            companionAlways: true,
+            heatmap: false,
+            harvestBurst: true,
+            tickerStats: true,
+            pageTurn: true,
+        };
+        var out = {};
+        Object.keys(defaults).forEach(function(k){
+            var v = localStorage.getItem('gardensync.tweaks.' + k);
+            out[k] = v === null ? defaults[k] : v === 'true';
+        });
+        return out;
+    })(),
 };
 
 // ---- CONTAINER HELPERS ----
