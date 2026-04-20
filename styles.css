@@ -5577,3 +5577,55 @@ body.tweak-living-on .wind-gust {
     90%  {              opacity: 0.9; }
     100% { left: calc(100% + 4px); opacity: 0; }
 }
+
+/* ===== STAGE 2b — PALETTE HOVER THREADS =======================
+   Hovering a plant in the Plant Library highlights its placed
+   friends (emerald outline) and foes (pulsing red outline) across
+   every bed. When the hovered plant is already placed, dashed
+   hover-threads connect those instances to their companions.
+   Gated by state.tweaks.companion (independent of companionAlways). */
+.placed-plant.hover-friend {
+    outline: 2px solid var(--emerald, #10b981);
+    outline-offset: 2px;
+    filter: drop-shadow(0 0 8px rgba(52,211,153,0.85));
+    z-index: 6;
+}
+.placed-plant.hover-foe {
+    outline: 2px solid var(--red-accent, #ef4444);
+    outline-offset: 2px;
+    animation: foe-pulse 1.2s ease-in-out infinite;
+    z-index: 6;
+}
+/* Override LIVING sway when hovering a foe so foe-pulse wins. */
+body.tweak-living-on .placed-plant.living.hover-foe:not(.selected) {
+    animation: foe-pulse 1.2s ease-in-out infinite;
+}
+@keyframes foe-pulse {
+    0%, 100% {
+        filter: drop-shadow(0 0 2px rgba(239,68,68,0.45));
+        outline-color: rgba(239,68,68,0.65);
+    }
+    50% {
+        filter: drop-shadow(0 0 12px rgba(239,68,68,0.95));
+        outline-color: rgba(239,68,68,1);
+    }
+}
+
+/* hover-threads overlay — same SVG pattern as persistent threads
+   but thicker / faster dashes so they pop above the persistent layer. */
+.hover-threads-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 4;
+}
+.hover-threads-svg .thread-hover {
+    opacity: 0.95;
+    filter: drop-shadow(0 0 3px currentColor);
+    animation: thread-dash 2s linear infinite;
+}
+.hover-threads-svg .thread-hover.thread-foe {
+    animation-duration: 1.2s;
+}

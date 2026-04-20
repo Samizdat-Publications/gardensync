@@ -211,6 +211,8 @@ function renderPlacedPlants(containerId) {
 
     updateSpacingWarnings(containerId);
     if (typeof applyLivingClass === 'function') applyLivingClass(containerId);
+    if (typeof applyPaletteHoverHighlights === 'function' && state.hoveredPaletteId) applyPaletteHoverHighlights();
+    if (typeof applyGrowthStages === 'function') applyGrowthStages();
 }
 
 // ---- COMPANION ID MATCHING (prefix-aware for variety IDs) ----
@@ -301,6 +303,88 @@ function redrawAllCompanionNetworks() {
         if (containerId) drawCompanionLines(containerId, bedEl);
     });
 }
+
+// ---- PALETTE HOVER HIGHLIGHTS (stage 2b) ----
+// When the user hovers a plant in the Plant Library, highlight placed
+// friend/foe instances across every bed + draw temporary dashed threads
+// between the hovered plant's own placed instances and its companions.
+// Gated by state.tweaks.companion (independent of companionAlways).
+function clearPaletteHoverHighlights() {
+    document.querySelectorAll('.placed-plant.hover-friend, .placed-plant.hover-foe')
+        .forEach(function(el){ el.classList.remove('hover-friend', 'hover-foe'); });
+    document.querySelectorAll('.hover-threads-svg').forEach(function(s){ s.remove(); });
+}
+
+function applyPaletteHoverHighlights() {
+    clearPaletteHoverHighlights();
+
+    var id = state.hoveredPaletteId;
+    if (!id) return;
+    if (!(state.tweaks && state.tweaks.companion)) return;
+
+    var hovered = PLANT_LIBRARY.find(function(p){ return p.id === id; });
+    if (!hovered) return;
+    var friendIds = hovered.companions || [];
+    var foeIds    = hovered.enemies    || [];
+
+    var zoom = Math.max(0.2, state.canvasZoom || 1);
+    var stroke = Math.max(2.5, 3 / zoom);
+    var dashOn = Math.max(5, 7 / zoom);
+    var dashOff = Math.max(3, 4 / zoom);
+
+    document.querySelectorAll('.garden-bed[data-container-id]').forEach(function(bedEl){
+        var containerId = bedEl.getAttribute('data-container-id');
+        var container = getContainer(containerId);
+        if (!container) return;
+
+        // Find all hovered-plant instances already in this bed (for thread anchors).
+        var anchors = container.plants.filter(function(p){ return p.plantId === id; });
+
+        // Highlight placed instances + collect friend/foe points for thread drawing.
+        var friendPts = [];
+        var foePts = [];
+        container.plants.forEach(function(p){
+            var isFriend = friendIds.indexOf(p.plantId) !== -1;
+            var isFoe    = foeIds.indexOf(p.plantId) !== -1;
+            if (!isFriend && !isFoe) return;
+            var el = bedEl.querySelector('.placed-plant[data-placement-id="' + p.id + '"]');
+            if (el) el.classList.add(isFoe ? 'hover-foe' : 'hover-friend');
+            var pt = { x: p.x + 18, y: p.y + 18 };
+            if (isFoe) foePts.push(pt); else friendPts.push(pt);
+        });
+
+        if (anchors.length === 0) return; // no thread anchors → class-highlight only
+        if (friendPts.length === 0 && foePts.length === 0) return;
+
+        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.classList.add('hover-threads-svg');
+        svg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:4;';
+        svg.setAttribute('viewBox', '0 0 ' + bedEl.offsetWidth + ' ' + bedEl.offsetHeight);
+
+        anchors.forEach(function(a){
+            var ax = a.x + 18, ay = a.y + 18;
+            friendPts.forEach(function(fp){ _appendHoverThread(svg, ax, ay, fp.x, fp.y, 'friend', stroke, dashOn, dashOff); });
+            foePts.forEach(function(fp){   _appendHoverThread(svg, ax, ay, fp.x, fp.y, 'foe',    stroke, dashOn, dashOff); });
+        });
+
+        bedEl.appendChild(svg);
+    });
+}
+
+function _appendHoverThread(svg, x1, y1, x2, y2, kind, stroke, dashOn, dashOff) {
+    var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', x1);
+    line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2);
+    line.setAttribute('y2', y2);
+    line.setAttribute('class', 'thread-hover thread-' + kind);
+    line.setAttribute('stroke-width', stroke);
+    line.setAttribute('stroke-dasharray', dashOn + ' ' + dashOff);
+    svg.appendChild(line);
+}
+
+window.applyPaletteHoverHighlights = applyPaletteHoverHighlights;
+window.clearPaletteHoverHighlights = clearPaletteHoverHighlights;
 
 // ---- UPDATE COMPANION LINE STROKES ON ZOOM ----
 // Called from applyCanvasTransform() so that when zoom changes, existing

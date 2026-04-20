@@ -201,6 +201,9 @@ function renderPlantList(plants, searchQ) {
 
     container.querySelectorAll('.plant-item').forEach(item => {
         item.addEventListener('dragstart', (e) => {
+            // Clear palette hover highlights before drag so they don't collide with indicator badges
+            state.hoveredPaletteId = null;
+            if (typeof clearPaletteHoverHighlights === 'function') clearPaletteHoverHighlights();
             state.dragData = { plantId: item.dataset.plantId, source: 'palette' };
             e.dataTransfer.setData('text/plain', item.dataset.plantId);
             e.dataTransfer.effectAllowed = 'copy';
@@ -251,6 +254,18 @@ function renderPlantList(plants, searchQ) {
                 item.classList.add('click-place-active');
                 enterClickPlaceMode(item.dataset.plantId);
             }
+        });
+
+        // Palette hover → highlight placed friend/foe instances + draw hover-thread
+        // overlay across beds. Fires immediately (the hover-card setTimeout only
+        // gates the info card, not the companion highlights).
+        item.addEventListener('mouseenter', () => {
+            state.hoveredPaletteId = item.dataset.plantId;
+            if (typeof applyPaletteHoverHighlights === 'function') applyPaletteHoverHighlights();
+        });
+        item.addEventListener('mouseleave', () => {
+            state.hoveredPaletteId = null;
+            if (typeof clearPaletteHoverHighlights === 'function') clearPaletteHoverHighlights();
         });
 
         // Hover card on mouseenter
