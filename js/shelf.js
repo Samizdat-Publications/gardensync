@@ -4,15 +4,86 @@ function initContainerShelf() {
     const shelf = document.getElementById('container-shelf');
     if (!shelf) return;
 
+    // Replace the 7-button bar with a single "+ ADD CONTAINER" dropdown
+    // picker — same visual pattern as the FILE menu. The 7 type choices
+    // live inside the popup so they stop competing for top-level real estate.
+    shelf.replaceChildren();
+    const wrap = document.createElement('div');
+    wrap.className = 'menu-wrap';
+    wrap.id = 'container-menu';
+
+    const trigger = document.createElement('button');
+    trigger.id = 'btn-container-menu';
+    trigger.className = 'tool-btn accent menu-trigger';
+    trigger.textContent = '+ ADD CONTAINER';
+    trigger.setAttribute('aria-haspopup', 'menu');
+    trigger.setAttribute('aria-expanded', 'false');
+    trigger.setAttribute('aria-controls', 'container-menu-popup');
+    trigger.setAttribute('title', 'Add a new garden container');
+    wrap.appendChild(trigger);
+
+    const popup = document.createElement('div');
+    popup.id = 'container-menu-popup';
+    popup.className = 'menu-popup';
+    popup.setAttribute('role', 'menu');
+    popup.setAttribute('aria-labelledby', 'btn-container-menu');
+
     Object.entries(CONTAINER_TYPES).forEach(([typeKey, typeDef]) => {
-        const btn = document.createElement('button');
-        btn.className = 'shelf-btn';
-        btn.textContent = `${typeDef.icon} ${typeDef.label}`;
-        btn.title = typeDef.description;
-        btn.addEventListener('click', () => {
+        const item = document.createElement('button');
+        item.className = 'menu-item';
+        item.setAttribute('role', 'menuitem');
+        item.setAttribute('title', typeDef.description || '');
+
+        const icon = document.createElement('span');
+        icon.className = 'menu-icon';
+        icon.setAttribute('aria-hidden', 'true');
+        icon.textContent = typeDef.icon || '';
+        item.appendChild(icon);
+
+        item.appendChild(document.createTextNode(typeDef.label));
+
+        item.addEventListener('click', () => {
             addNewContainer(typeKey);
         });
-        shelf.appendChild(btn);
+        popup.appendChild(item);
+    });
+    wrap.appendChild(popup);
+    shelf.appendChild(wrap);
+
+    // Wire menu open/close (mirrors menus.js _initMenu — kept inline so this
+    // stays a one-shot init even if menus.js loads later).
+    function close() {
+        wrap.classList.remove('open');
+        trigger.setAttribute('aria-expanded', 'false');
+        document.removeEventListener('click', _onOutside, true);
+        document.removeEventListener('keydown', _onEsc, true);
+    }
+    function _onOutside(e) { if (!wrap.contains(e.target)) close(); }
+    function _onEsc(e) { if (e.key === 'Escape') { close(); trigger.focus(); } }
+
+    trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (wrap.classList.contains('open')) {
+            close();
+        } else {
+            // Close any other open menus
+            document.querySelectorAll('.menu-wrap.open').forEach(w => {
+                if (w !== wrap) {
+                    w.classList.remove('open');
+                    const t = w.querySelector('.menu-trigger');
+                    if (t) t.setAttribute('aria-expanded', 'false');
+                }
+            });
+            wrap.classList.add('open');
+            trigger.setAttribute('aria-expanded', 'true');
+            setTimeout(() => {
+                document.addEventListener('click', _onOutside, true);
+                document.addEventListener('keydown', _onEsc, true);
+            }, 0);
+        }
+    });
+    popup.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', () => setTimeout(close, 0));
     });
 }
 

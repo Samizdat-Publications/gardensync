@@ -10,17 +10,6 @@
           }
         ]
       }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "prompt",
-            "prompt": "If the file just edited is styles.css or any .css file, remind the user to verify CSS custom properties are using the existing :root variables and not introducing hardcoded colors. No action needed for non-CSS files."
-          }
-        ]
-      }
     ]
   }
 }

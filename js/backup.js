@@ -221,27 +221,55 @@ function loadLatestBackup() {
 }
 
 // ---- SAVE INDICATOR UI ----
-function updateSaveIndicator(status) {
+// Debounced: only show "Saving…" if a save is still in flight after 600ms.
+// "Saved" auto-fades after 2s. Errors stick. This kills the flicker on
+// every state change while keeping the indicator useful when a save genuinely
+// takes a while (Supabase round-trip, large garden, etc.).
+let _saveIndicatorTimer = null;
+let _saveIndicatorClearTimer = null;
+function _setSaveIndicator(html, statusClass) {
     const el = document.getElementById('save-indicator');
     if (!el) return;
-
     el.className = 'save-indicator';
-    switch (status) {
-        case 'saving':
-            el.innerHTML = '<span class="save-dot saving"></span> Saving…';
-            el.classList.add('status-saving');
-            break;
-        case 'saved':
-            el.innerHTML = '<span class="save-dot saved"></span> Saved';
-            el.classList.add('status-saved');
-            break;
-        case 'error':
-            el.innerHTML = '<span class="save-dot error"></span> Backup failed';
-            el.classList.add('status-error');
-            break;
-        default:
-            el.innerHTML = '';
+    if (statusClass) el.classList.add(statusClass);
+    if (html) {
+        el.replaceChildren();
+        // Build dot + text safely (no innerHTML)
+        const m = html.match(/^<span class="save-dot ([^"]+)"><\/span>\s*(.+)$/);
+        if (m) {
+            const dot = document.createElement('span');
+            dot.className = 'save-dot ' + m[1];
+            el.appendChild(dot);
+            el.appendChild(document.createTextNode(' ' + m[2]));
+        } else {
+            el.textContent = html;
+        }
+    } else {
+        el.replaceChildren();
     }
+}
+function updateSaveIndicator(status) {
+    if (_saveIndicatorTimer) { clearTimeout(_saveIndicatorTimer); _saveIndicatorTimer = null; }
+    if (_saveIndicatorClearTimer) { clearTimeout(_saveIndicatorClearTimer); _saveIndicatorClearTimer = null; }
+
+    if (status === 'saving') {
+        // Only show if save is still in flight after 600ms
+        _saveIndicatorTimer = setTimeout(() => {
+            _setSaveIndicator('<span class="save-dot saving"></span> Saving…', 'status-saving');
+        }, 600);
+        return;
+    }
+    if (status === 'saved') {
+        _setSaveIndicator('<span class="save-dot saved"></span> Saved', 'status-saved');
+        // Fade after 2s
+        _saveIndicatorClearTimer = setTimeout(() => _setSaveIndicator('', null), 2000);
+        return;
+    }
+    if (status === 'error') {
+        _setSaveIndicator('<span class="save-dot error"></span> Backup failed', 'status-error');
+        return;
+    }
+    _setSaveIndicator('', null);
 }
 
 // ---- BACKUP BROWSER MODAL ----

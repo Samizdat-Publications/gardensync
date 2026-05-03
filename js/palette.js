@@ -56,7 +56,7 @@ function matchPlantSearch(plant, q) {
 function getFilteredSortedPlants() {
     const searchQ = (document.getElementById('plant-search')?.value || '').toLowerCase();
     const activeFilter = document.querySelector('.filter-btn[data-filter].active')?.dataset.filter || 'all';
-    const sortBy = document.getElementById('plant-sort')?.value || 'name';
+    const sortBy = document.getElementById('plant-sort')?.value || 'in-season';
 
     let plants = [...PLANT_LIBRARY];
 
@@ -67,8 +67,16 @@ function getFilteredSortedPlants() {
     // Filter by search (supports name, type, and trait keywords)
     if (searchQ) plants = plants.filter(p => matchPlantSearch(p, searchQ));
 
-    // Sort
+    // Sort. 'in-season' groups by season-relevance (in season > soon > off),
+    // then alphabetically within each group — what gardeners actually want
+    // when planning today vs. searching by name.
+    const seasonRank = { 'in-season': 0, 'upcoming': 1, 'off-season': 2 };
     const sorters = {
+        'in-season': (a, b) => {
+            const ra = seasonRank[getPlantSeasonBadge(a).cls] ?? 3;
+            const rb = seasonRank[getPlantSeasonBadge(b).cls] ?? 3;
+            return ra - rb || a.name.localeCompare(b.name);
+        },
         'name': (a, b) => a.name.localeCompare(b.name),
         'name-desc': (a, b) => b.name.localeCompare(a.name),
         'spacing': (a, b) => a.spacing - b.spacing,

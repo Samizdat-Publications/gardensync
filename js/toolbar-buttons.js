@@ -42,7 +42,8 @@ function initToolbarButtons() {
         document.querySelectorAll('.garden-bed').forEach(bed => {
             bed.classList.toggle('show-grid', gridOn);
         });
-        document.getElementById('btn-grid-toggle').textContent = gridOn ? 'GRID: ON' : 'GRID: OFF';
+        // Single label "GRID" — .accent class lights it emerald when on, dim when off
+        document.getElementById('btn-grid-toggle').textContent = 'GRID';
         document.getElementById('btn-grid-toggle').classList.toggle('accent', gridOn);
     });
 
@@ -55,9 +56,12 @@ function initToolbarButtons() {
             companionsBtn.textContent = '';
             const led = document.createElement('span');
             led.className = 'led';
+            led.setAttribute('aria-hidden', 'true');
             companionsBtn.appendChild(led);
-            companionsBtn.appendChild(document.createTextNode(on ? 'COMPANIONS: ON' : 'COMPANIONS: OFF'));
+            // Single label "COMPANIONS" — the LED dot indicates state (lit when on).
+            companionsBtn.appendChild(document.createTextNode('COMPANIONS'));
             companionsBtn.classList.toggle('on', on);
+            companionsBtn.setAttribute('aria-pressed', String(on));
         };
         refreshCompanionsBtn();
         companionsBtn.addEventListener('click', () => {

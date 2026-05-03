@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=5.4">
+    <link rel="stylesheet" href="styles.css?v=5.9">
 </head>
 <body>
     <!-- HEADER -->
@@ -84,7 +84,7 @@
         <div id="today-dashboard" class="today-dashboard">
             <div class="today-header">
                 <div class="today-title-row">
-                    <h2 class="today-title">&#x1F4CB; TODAY'S TASKS</h2>
+                    <h2 class="today-title"><span aria-hidden="true">&#x1F4CB;</span> TODAY'S TASKS</h2>
                     <span id="today-date" class="today-date"></span>
                     <button id="btn-toggle-tasks" class="tasks-toggle-btn" title="Collapse/expand tasks">&#x25BE;</button>
                 </div>
@@ -98,10 +98,13 @@
             </div>
         </div>
         <div class="planner-layout">
-            <!-- PLANT PALETTE -->
+            <!-- PLANT PALETTE (drawer-pattern: tab on right edge collapses/expands) -->
             <aside class="plant-palette">
-                <h2 class="section-title"><span class="title-icon">&#x1F331;</span> PLANT LIBRARY</h2>
-                <input type="text" id="plant-search" class="search-input" placeholder="Search: name, low water, easy, companion to tomato...">
+                <button class="drawer-tab" id="plant-palette-drawer-tab" aria-label="Toggle plant library panel" aria-expanded="true">
+                    <span class="arrow" aria-hidden="true">&#x25C0;</span> PLANT LIBRARY
+                </button>
+                <h2 class="section-title"><span class="title-icon" aria-hidden="true">&#x1F331;</span> PLANT LIBRARY</h2>
+                <input type="text" id="plant-search" class="search-input" aria-label="Search plant library" placeholder="Search: name, low water, easy, companion to tomato...">
                 <div class="filter-row">
                     <button class="filter-btn active" data-filter="all">ALL</button>
                     <button class="filter-btn" data-filter="vegetable">VEG</button>
@@ -113,6 +116,7 @@
                 <div class="sort-row">
                     <label class="sort-label">SORT:</label>
                     <select id="plant-sort" class="sort-select">
+                        <option value="in-season">IN SEASON FIRST</option>
                         <option value="name">A-Z</option>
                         <option value="name-desc">Z-A</option>
                         <option value="spacing">SPACING &#x2191;</option>
@@ -145,23 +149,42 @@
                     </div>
                     <div class="toolbar-right">
                         <button id="btn-stats-toggle" class="tool-btn" title="Toggle garden stats">STATS</button>
-                        <button id="btn-undo" class="tool-btn disabled" title="Undo (Ctrl+Z)">UNDO</button>
-                        <button id="btn-redo" class="tool-btn disabled" title="Redo (Ctrl+Y)">REDO</button>
-                        <div class="zoom-controls">
-                            <button id="btn-zoom-out" class="tool-btn" title="Zoom out (Ctrl+-)">−</button>
-                            <span id="zoom-level" class="zoom-level">100%</span>
-                            <button id="btn-zoom-in" class="tool-btn" title="Zoom in (Ctrl++)">+</button>
-                            <button id="btn-zoom-fit" class="tool-btn" title="Fit all containers">FIT</button>
+                        <button id="btn-undo" class="tool-btn disabled" aria-label="Undo last action" title="Undo (Ctrl+Z)">UNDO</button>
+                        <button id="btn-redo" class="tool-btn disabled" aria-label="Redo last undone action" title="Redo (Ctrl+Y)">REDO</button>
+                        <div class="zoom-controls" role="group" aria-label="Zoom controls">
+                            <button id="btn-zoom-out" class="tool-btn" aria-label="Zoom out" title="Zoom out (Ctrl+-)">−</button>
+                            <span id="zoom-level" class="zoom-level" aria-live="polite">100%</span>
+                            <button id="btn-zoom-in" class="tool-btn" aria-label="Zoom in" title="Zoom in (Ctrl++)">+</button>
+                            <button id="btn-zoom-fit" class="tool-btn" aria-label="Fit all containers in view" title="Fit all containers">FIT</button>
                         </div>
-                        <button id="btn-grid-toggle" class="tool-btn">GRID: OFF</button>
-                        <button id="btn-companions-toggle" class="tool-btn companion-toggle on"><span class="led"></span>COMPANIONS: ON</button>
-                        <button id="btn-auto-organize" class="tool-btn accent">AUTO-ORGANIZE</button>
-                        <button id="btn-clear-all" class="tool-btn danger">CLEAR ALL</button>
-                        <button id="btn-save" class="tool-btn">SAVE PLAN</button>
-                        <button id="btn-load" class="tool-btn">LOAD PLAN</button>
-                        <button id="btn-export" class="tool-btn accent">EXPORT PNG</button>
-                        <button id="btn-print-map" class="tool-btn">PRINT MAP</button>
-                        <button id="btn-share-url" class="tool-btn" title="Share garden plan via link">SHARE LINK</button>
+                        <button id="btn-grid-toggle" class="tool-btn" aria-pressed="false" title="Toggle 1-foot snap grid overlay">GRID</button>
+                        <button id="btn-companions-toggle" class="tool-btn companion-toggle on" aria-pressed="true" title="Toggle the persistent companion network overlay"><span class="led" aria-hidden="true"></span>COMPANIONS</button>
+                        <button id="btn-auto-organize" class="tool-btn accent" title="Tidy up plant positions in the selected bed using Square-Foot-Gardening grid layout. Existing positions WILL be overwritten — undo with Ctrl+Z.">AUTO-ORGANIZE</button>
+                        <!-- /distill: file actions consolidated into a single FILE menu -->
+                        <div class="menu-wrap" id="file-menu">
+                            <button id="btn-file-menu" class="tool-btn menu-trigger" aria-haspopup="menu" aria-expanded="false" aria-controls="file-menu-popup" title="Save, load, export, share, manage garden">FILE</button>
+                            <div id="file-menu-popup" class="menu-popup" role="menu" aria-labelledby="btn-file-menu">
+                                <div class="menu-section-label">Plan</div>
+                                <button id="btn-save" class="menu-item" role="menuitem"><span class="menu-icon" aria-hidden="true">💾</span>Save Plan<span class="menu-shortcut">Ctrl+S</span></button>
+                                <button id="btn-load" class="menu-item" role="menuitem"><span class="menu-icon" aria-hidden="true">📂</span>Load Plan</button>
+                                <button id="btn-export" class="menu-item" role="menuitem"><span class="menu-icon" aria-hidden="true">🖼️</span>Export PNG</button>
+                                <button id="btn-print-map" class="menu-item" role="menuitem"><span class="menu-icon" aria-hidden="true">🖨️</span>Print Map</button>
+                                <button id="btn-share-url" class="menu-item" role="menuitem"><span class="menu-icon" aria-hidden="true">🔗</span>Share Link</button>
+                                <div class="menu-divider" role="separator"></div>
+                                <div class="menu-section-label">Data</div>
+                                <button id="btn-export-data" class="menu-item" role="menuitem"><span class="menu-icon" aria-hidden="true">📤</span>Export All Data</button>
+                                <button id="btn-import-data" class="menu-item" role="menuitem"><span class="menu-icon" aria-hidden="true">📥</span>Import Data</button>
+                                <button id="btn-restore-backup" class="menu-item" role="menuitem"><span class="menu-icon" aria-hidden="true">💼</span>Backups</button>
+                                <div class="menu-divider" role="separator"></div>
+                                <div class="menu-section-label">Garden</div>
+                                <button id="btn-new-garden" class="menu-item" role="menuitem"><span class="menu-icon" aria-hidden="true">🌱</span>New Garden</button>
+                                <button id="btn-load-demo" class="menu-item demo-btn" role="menuitem"><span class="menu-icon" aria-hidden="true">🌿</span>Load Demo Garden</button>
+                                <a href="guide.html" class="menu-item" role="menuitem" target="_blank"><span class="menu-icon" aria-hidden="true">📖</span>User Guide</a>
+                                <div class="menu-divider" role="separator"></div>
+                                <div class="menu-section-label">Danger Zone</div>
+                                <button id="btn-clear-all" class="menu-item danger" role="menuitem"><span class="menu-icon" aria-hidden="true">⚠️</span>Clear All Plants</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- Watering Alert Banner -->
@@ -180,8 +203,7 @@
                     </div>
                 </div>
                 <div id="container-shelf" class="container-shelf">
-                    <span class="shelf-label">ADD:</span>
-                    <!-- JS will populate container type buttons -->
+                    <!-- JS populates a single "+ ADD CONTAINER" dropdown menu here -->
                 </div>
                 <div id="garden-viewport" class="garden-viewport">
                     <div id="garden-canvas" class="garden-canvas">
@@ -195,10 +217,13 @@
                 </div>
             </main>
 
-            <!-- BED DETAILS SIDEBAR -->
+            <!-- BED DETAILS SIDEBAR (drawer-pattern: tab on left edge collapses/expands) -->
             <aside class="bed-details">
+                <button class="drawer-tab" id="bed-details-drawer-tab" aria-label="Toggle bed details panel" aria-expanded="true">
+                    <span class="arrow" aria-hidden="true">&#x25B6;</span> BED DETAILS
+                </button>
                 <div class="sidebar-resize-handle"></div>
-                <h2 class="section-title"><span class="title-icon">&#x1F4CB;</span> BED DETAILS</h2>
+                <h2 class="section-title"><span class="title-icon" aria-hidden="true">&#x1F4CB;</span> BED DETAILS</h2>
                 <div id="bed-selector" class="bed-selector">
                     <button class="bed-tab active" data-bed="0">BED 1</button>
                     <button class="bed-tab" data-bed="1">BED 2</button>
@@ -243,10 +268,10 @@
                     <p class="muted-text">Place plants to see companion tips</p>
                 </div>
                 <div class="section-resize-handle" data-sections="companion-journal"></div>
-                <h3 class="subsection-title">&#x1F4DD; BED JOURNAL</h3>
+                <h3 class="subsection-title"><span aria-hidden="true">&#x1F4DD;</span> BED JOURNAL</h3>
                 <div class="bed-journal">
                     <div class="journal-input-row">
-                        <input type="text" id="journal-entry-input" class="text-input" placeholder="Add a note for this bed...">
+                        <input type="text" id="journal-entry-input" class="text-input" aria-label="Add bed journal note" placeholder="Add a note for this bed...">
                         <button id="btn-add-journal" class="tool-btn accent">+</button>
                     </div>
                     <div id="journal-entries" class="journal-entries">
@@ -261,7 +286,7 @@
     <section id="tab-schedule" class="tab-content">
         <div class="schedule-layout">
             <div class="schedule-header-bar">
-                <h2 class="section-title"><span class="title-icon">&#x1F4C5;</span> GROW SCHEDULE &mdash; CANTON, OH</h2>
+                <h2 class="section-title"><span class="title-icon" aria-hidden="true">&#x1F4C5;</span> GROW SCHEDULE &mdash; CANTON, OH</h2>
                 <div class="frost-badges">
                     <div class="frost-badge">
                         <span class="frost-label">LAST FROST</span>
@@ -297,7 +322,7 @@
         <div class="harvest-layout">
             <div class="harvest-header-bar">
                 <div>
-                    <h2 class="section-title"><span class="title-icon">&#x1F33E;</span> HARVEST LOG</h2>
+                    <h2 class="section-title"><span class="title-icon" aria-hidden="true">&#x1F33E;</span> HARVEST LOG</h2>
                     <p class="section-intro">Track what you pick, how much you grow, and how much food goes out to the community. Every pound counts for mutual aid.</p>
                 </div>
             </div>
@@ -344,17 +369,17 @@
                         </div>
                         <div class="harvest-field">
                             <label>WEIGHT (lbs)</label>
-                            <input type="number" id="harvest-weight" class="text-input" placeholder="0.0" step="0.1" min="0">
+                            <input type="number" id="harvest-weight" class="text-input" aria-label="Harvest weight in pounds" placeholder="0.0" step="0.1" min="0">
                         </div>
                         <div class="harvest-field">
                             <label>DATE</label>
-                            <input type="date" id="harvest-date" class="text-input">
+                            <input type="date" id="harvest-date" class="text-input" aria-label="Harvest date">
                         </div>
                     </div>
                     <div class="harvest-form-row">
                         <div class="harvest-field" style="flex:2;">
                             <label>NOTES (optional)</label>
-                            <input type="text" id="harvest-notes" class="text-input" placeholder="e.g. First tomato pick of the season!">
+                            <input type="text" id="harvest-notes" class="text-input" aria-label="Harvest notes" placeholder="e.g. First tomato pick of the season!">
                         </div>
                         <div class="harvest-field">
                             <label>DONATED TO FNB?</label>
@@ -371,9 +396,9 @@
 
             <!-- Harvest Goals -->
             <div class="harvest-goals-card">
-                <h3 class="subsection-title" style="margin-top:0;">&#x1F3AF; HARVEST GOALS</h3>
+                <h3 class="subsection-title" style="margin-top:0;"><span aria-hidden="true">&#x1F3AF;</span> HARVEST GOALS</h3>
                 <div class="harvest-goals-form">
-                    <input type="number" id="harvest-goal-weight" class="text-input" placeholder="Target lbs" min="0" step="1" style="width:100px;">
+                    <input type="number" id="harvest-goal-weight" class="text-input" aria-label="Harvest goal target weight in pounds" placeholder="Target lbs" min="0" step="1" style="width:100px;">
                     <button id="btn-set-goal" class="tool-btn accent">SET SEASON GOAL</button>
                     <span id="goal-display" class="goal-display"></span>
                 </div>
@@ -415,15 +440,15 @@
     <!-- ==================== TAB: VOLUNTEERS ==================== -->
     <section id="tab-volunteers" class="tab-content">
         <div class="volunteers-layout">
-            <h2 class="section-title"><span class="title-icon">&#x270A;</span> VOLUNTEER COLLECTIVE</h2>
+            <h2 class="section-title"><span class="title-icon" aria-hidden="true">&#x270A;</span> VOLUNTEER COLLECTIVE</h2>
             <p class="section-intro">Manage your crew of 5 volunteers and assign bed responsibilities. Built for spotty availability &mdash; because mutual aid runs on real life, not corporate schedules.</p>
             <div class="volunteers-grid">
                 <div class="vol-management">
                     <h3 class="subsection-title">THE CREW</h3>
                     <div id="volunteer-list" class="volunteer-list"></div>
                     <div class="add-volunteer-form">
-                        <input type="text" id="vol-name" class="text-input" placeholder="Name">
-                        <input type="text" id="vol-phone" class="text-input" placeholder="Phone/Contact">
+                        <input type="text" id="vol-name" class="text-input" aria-label="Volunteer name" placeholder="Name">
+                        <input type="text" id="vol-phone" class="text-input" aria-label="Volunteer phone or contact" placeholder="Phone/Contact">
                         <select id="vol-availability" class="select-input">
                             <option value="high">HIGH AVAILABILITY</option>
                             <option value="medium" selected>MEDIUM AVAILABILITY</option>
@@ -450,7 +475,7 @@
     <!-- ==================== TAB: CLIMATE ==================== -->
     <section id="tab-climate" class="tab-content">
         <div class="climate-layout">
-            <h2 class="section-title"><span class="title-icon">&#x1F327;</span> CANTON CLIMATE DATA</h2>
+            <h2 class="section-title"><span class="title-icon" aria-hidden="true">&#x1F327;</span> CANTON CLIMATE DATA</h2>
             <p class="section-intro">Canton, OH sits in USDA Zone 6a with a humid continental climate (K&ouml;ppen Dfa). Annual precipitation ~42&Prime;. Here's what you need to know for low-maintenance gardening.</p>
 
             <!-- LIVE WEATHER DASHBOARD -->
@@ -477,7 +502,7 @@
                     </div>
                 </div>
                 <div class="climate-card rainfall-deficit-card">
-                    <h3>&#x1F4A7; RAINFALL vs PLANT NEEDS</h3>
+                    <h3><span aria-hidden="true">&#x1F4A7;</span> RAINFALL vs PLANT NEEDS</h3>
                     <p class="card-note" style="margin-bottom:0.75rem;">Compares Canton monthly rainfall to what your planted garden actually needs. Based on your current containers &amp; plant water requirements.</p>
                     <div class="deficit-summary">
                         <div class="deficit-stat">
@@ -521,12 +546,12 @@
     <!-- ==================== TAB: VISUALIZE ==================== -->
     <section id="tab-visualize" class="tab-content">
         <div class="visualize-layout">
-            <h2 class="section-title"><span class="title-icon">&#x1F3A8;</span> GARDEN VISUALIZER</h2>
+            <h2 class="section-title"><span class="title-icon" aria-hidden="true">&#x1F3A8;</span> GARDEN VISUALIZER</h2>
             <p class="section-intro">Generate AI mockup images of your garden layout using Google Gemini. See what your beds will look like before you plant.</p>
             <div class="viz-config">
                 <div class="viz-api-row">
                     <label>GEMINI API KEY</label>
-                    <input type="password" id="gemini-key" class="text-input" placeholder="Enter your Google Gemini API key">
+                    <input type="password" id="gemini-key" class="text-input" aria-label="Google Gemini API key" placeholder="Enter your Google Gemini API key">
                     <button id="btn-save-key" class="tool-btn">SAVE KEY</button>
                 </div>
                 <div class="viz-bed-select">
@@ -564,7 +589,7 @@
     <div id="preset-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <button id="close-preset-modal" class="close-btn">&times;</button>
-            <h2 class="section-title" style="margin-bottom:0.5rem;"><span class="title-icon">&#x1F33F;</span> LOAD GARDEN PLAN</h2>
+            <h2 class="section-title" style="margin-bottom:0.5rem;"><span class="title-icon" aria-hidden="true">&#x1F33F;</span> LOAD GARDEN PLAN</h2>
             <p style="color:var(--text-secondary);margin-bottom:1.25rem;font-size:0.9rem;">Choose a preset garden layout or load your saved plan.</p>
             <div id="preset-list" class="preset-list"></div>
             <div style="margin-top:1rem;padding-top:1rem;border-top:1px dashed var(--border);">
@@ -585,35 +610,30 @@
         </button>
     </div>
 
-    <!-- FOOTER -->
-    <footer class="main-footer">
+    <!-- FOOTER (slim — actions consolidated into the toolbar FILE menu) -->
+    <footer class="main-footer compact">
         <div class="footer-left">
-            <span class="footer-logo">&#x270A; GARDENSYNC</span>
-            <span class="footer-sep">//</span>
+            <span class="footer-logo" aria-hidden="true">&#x270A;</span>
+            <span class="footer-logo-text">GARDENSYNC</span>
+            <span class="footer-sep" aria-hidden="true">//</span>
             <span>Food Not Bombs Canton</span>
-            <span class="footer-sep">//</span>
-            <span id="save-indicator" class="save-indicator"></span>
-        </div>
-        <div class="footer-center">
-            <button id="btn-export-data" class="footer-action-btn">EXPORT DATA</button>
-            <button id="btn-import-data" class="footer-action-btn">IMPORT DATA</button>
-            <button id="btn-restore-backup" class="footer-action-btn">&#x1F4BE; BACKUPS</button>
-            <button id="btn-new-garden" class="footer-action-btn">&#x1F331; NEW GARDEN</button>
-            <button id="btn-visual-style" class="footer-action-btn">&#x1F3A8; STYLED</button>
-            <button id="btn-load-demo" class="footer-action-btn demo-btn">&#x1F33F; LOAD DEMO GARDEN</button>
-            <a href="guide.html" class="footer-action-btn" target="_blank" style="text-decoration:none;">&#x1F4D6; USER GUIDE</a>
-            <input type="file" id="import-file-input" accept=".json" style="display:none;">
+            <span class="footer-sep" aria-hidden="true">//</span>
+            <span id="save-indicator" class="save-indicator" aria-live="polite"></span>
         </div>
         <div class="footer-right">
             <span>NO COPYRIGHT &mdash; NO GODS NO MASTERS &mdash; SHARE FREELY</span>
         </div>
+        <!-- Hidden file input is required for IMPORT DATA — keep it out of layout -->
+        <input type="file" id="import-file-input" accept=".json" style="display:none;" aria-hidden="true">
+        <!-- STYLED button retained for legacy event handler binding; hidden via .compact -->
+        <button id="btn-visual-style" class="footer-action-btn" hidden aria-hidden="true">STYLED</button>
     </footer>
 
     <!-- Custom Seed Modal -->
     <div id="custom-seed-modal" class="modal-overlay hidden">
         <div class="modal-content custom-seed-modal">
             <div class="modal-header">
-                <h3 class="modal-title">&#x1F331; ADD CUSTOM SEED</h3>
+                <h3 class="modal-title"><span aria-hidden="true">&#x1F331;</span> ADD CUSTOM SEED</h3>
                 <button class="modal-close" id="custom-seed-close">&times;</button>
             </div>
             <div class="modal-tabs">
@@ -738,7 +758,7 @@
             </div>
         </div>
         <div class="gb-key-row" id="gb-key-row">
-            <input type="password" id="gb-claude-key" class="gb-key-input" placeholder="Claude API key">
+            <input type="password" id="gb-claude-key" class="gb-key-input" aria-label="Claude API key for Garden Buddy" placeholder="Claude API key">
             <button id="gb-save-key" class="gb-key-btn">SAVE</button>
         </div>
         <div id="gb-messages" class="gb-messages"></div>
@@ -756,37 +776,39 @@
     <script src="js/state.js?v=5.0"></script>
     <script src="js/selection.js?v=5.0"></script>
     <!-- UI structure -->
-    <script src="js/navigation.js?v=5.0"></script>
+    <script src="js/navigation.js?v=5.1"></script>
     <script src="js/palette.js?v=5.0"></script>
-    <script src="js/containers.js?v=5.0"></script>
+    <script src="js/containers.js?v=5.2"></script>
     <script src="js/canvas.js?v=5.1"></script>
-    <script src="js/shelf.js?v=5.1"></script>
-    <script src="js/placement.js?v=5.4"></script>
+    <script src="js/shelf.js?v=5.2"></script>
+    <script src="js/placement.js?v=5.5"></script>
     <script src="js/sidebar.js?v=5.0"></script>
     <script src="js/custom-seeds.js?v=5.0"></script>
     <script src="js/templates.js?v=5.0"></script>
     <script src="js/details.js?v=5.0"></script>
-    <script src="js/toolbar-buttons.js?v=5.0"></script>
+    <script src="js/toolbar-buttons.js?v=5.1"></script>
     <script src="js/organize.js?v=5.0"></script>
     <!-- Persistence & dashboard -->
     <script src="js/persistence.js?v=5.3"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="js/supabase-config.js?v=1.0"></script>
     <script src="js/supabase-sync.js?v=1.0"></script>
-    <script src="js/backup.js?v=5.0"></script>
-    <script src="js/dashboard.js?v=5.0"></script>
+    <script src="js/backup.js?v=5.1"></script>
+    <script src="js/dashboard.js?v=5.1"></script>
     <script src="js/export.js?v=5.0"></script>
     <!-- Feature tabs -->
     <script src="js/schedule.js?v=5.0"></script>
     <script src="js/volunteers.js?v=5.2"></script>
     <script src="js/climate.js?v=5.2"></script>
     <script src="js/visualizer.js?v=5.2"></script>
-    <script src="js/harvest.js?v=5.0"></script>
+    <script src="js/harvest.js?v=5.1"></script>
     <script src="js/weather.js?v=5.0"></script>
     <script src="js/data-io.js?v=5.2"></script>
     <script src="js/garden-buddy.js?v=5.0"></script>
-    <script src="js/tweaks.js?v=1.0"></script>
+    <script src="js/tweaks.js?v=1.2"></script>
+    <script src="js/timeline.js?v=1.1"></script>
+    <script src="js/menus.js?v=1.1"></script>
     <!-- Init orchestrator (must be last) -->
-    <script src="js/init.js?v=5.2"></script>
+    <script src="js/init.js?v=5.4"></script>
 </body>
 </html>

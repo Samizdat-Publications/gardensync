@@ -169,6 +169,14 @@ function renderPlacedPlants(containerId) {
                 if (!hasMoved) {
                     // Click without drag
                     state.undoStack.pop(); // Remove unused undo snapshot
+                    // Stage 2d — harvest-burst: clicking a ripe plant yoinks it
+                    var placedEl = bedEl.querySelector('.placed-plant[data-placement-id="' + placement.id + '"]');
+                    if (state.tweaks && state.tweaks.harvestBurst && !isShift &&
+                        placedEl && placedEl.getAttribute('data-stage') === 'harvest' &&
+                        typeof harvestPlant === 'function') {
+                        harvestPlant(placement, bedEl, containerId);
+                        return;
+                    }
                     if (!isShift) {
                         // Regular click: select just this plant, show info
                         selectPlacement(containerId, placement.id, false);

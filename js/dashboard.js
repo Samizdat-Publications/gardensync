@@ -54,7 +54,20 @@ function updateStatsDashboard() {
         if (days.length > 0) minDays = Math.min(...days) + 'd';
     }
 
-    const el = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
+    const el = (id, val) => {
+        const e = document.getElementById(id);
+        if (!e) return;
+        // Stage 2f — slot-machine digit ticker. Falls back to plain
+        // textContent when the tweak is off or the value isn't ticker-friendly.
+        if (state.tweaks && state.tweaks.tickerStats) {
+            renderTickerDigits(e, val);
+        } else {
+            // Clear any leftover ticker columns when toggled off mid-session.
+            if (e.querySelector('.ticker-col')) e.replaceChildren();
+            e.textContent = val;
+            e.dataset.tickerVal = String(val);
+        }
+    };
     el('stat-total-plants', totalPlants);
     el('stat-varieties', varieties);
     el('stat-beds-used', containersUsed + '/' + totalContainers);
@@ -63,6 +76,68 @@ function updateStatsDashboard() {
     el('stat-conflicts', conflicts);
     el('stat-water-avg', waterLabels[Math.round(avgWater)] || '--');
     el('stat-harvest-days', minDays);
+}
+
+/* Stage 2f — render a value as digit columns that animate vertically.
+   Each digit (0-9) is a vertical strip; transform: translateY shifts to
+   the active digit. Non-digit characters render as static spans so we
+   can still show e.g. "12/20" or "85%" or "MEDIUM". */
+function renderTickerDigits(el, val) {
+    const newStr = String(val);
+    if (el.dataset.tickerVal === newStr && el.querySelector('.ticker-col')) {
+        // Same value, already rendered as ticker — nothing to do.
+        return;
+    }
+    const prevStr = el.dataset.tickerVal || '';
+    el.dataset.tickerVal = newStr;
+    // Rebuild children if structure changed (length or placement of non-digits).
+    const sameShape = prevStr.length === newStr.length &&
+        prevStr.split('').every((c, i) => /\d/.test(c) === /\d/.test(newStr[i]));
+    if (!sameShape || !el.querySelector('.ticker-col')) {
+        el.replaceChildren();
+        for (let i = 0; i < newStr.length; i++) {
+            const c = newStr[i];
+            if (/\d/.test(c)) {
+                const col = document.createElement('span');
+                col.className = 'ticker-col';
+                const strip = document.createElement('span');
+                strip.className = 'ticker-strip';
+                for (let d = 0; d < 10; d++) {
+                    const cell = document.createElement('span');
+                    cell.className = 'ticker-cell';
+                    cell.textContent = String(d);
+                    strip.appendChild(cell);
+                }
+                col.appendChild(strip);
+                el.appendChild(col);
+            } else {
+                const sep = document.createElement('span');
+                sep.className = 'ticker-sep';
+                sep.textContent = c;
+                el.appendChild(sep);
+            }
+        }
+    }
+    // Slide each strip to its target digit.
+    let digitIdx = 0;
+    for (let i = 0; i < newStr.length; i++) {
+        const c = newStr[i];
+        if (!/\d/.test(c)) continue;
+        const cols = el.querySelectorAll('.ticker-col');
+        const strip = cols[digitIdx] && cols[digitIdx].querySelector('.ticker-strip');
+        if (strip) strip.style.transform = 'translateY(-' + (parseInt(c, 10) * 10) + '%)';
+        // Update non-digit separator content too in case the value shape held but characters changed.
+        digitIdx++;
+    }
+    // Update separators (they may have changed text).
+    let sepIdx = 0;
+    for (let i = 0; i < newStr.length; i++) {
+        const c = newStr[i];
+        if (/\d/.test(c)) continue;
+        const seps = el.querySelectorAll('.ticker-sep');
+        if (seps[sepIdx]) seps[sepIdx].textContent = c;
+        sepIdx++;
+    }
 }
 
 // ---- TODAY'S TASKS DASHBOARD ----

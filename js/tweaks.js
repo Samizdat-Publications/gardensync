@@ -54,6 +54,73 @@ function triggerBloom(x, y, bedEl) {
     setTimeout(() => { if (b.parentNode) b.parentNode.removeChild(b); }, 600);
 }
 
+/* ---- STAGE 2d — harvest yoink + confetti ----
+   Clicking a ripe plant yoinks it from the bed with a scale-pop animation
+   and emits a burst of crop-emoji confetti. Also writes a harvest entry
+   via harvestPlantDirect() and pops a toast.
+   The click interceptor lives in placement.js:onUp, gated by
+   state.tweaks.harvestBurst + placedEl.dataset.stage === 'harvest'. */
+
+function triggerConfettiBurst(x, y, bedEl, emoji) {
+    if (!bedEl) return;
+    const layer = document.createElement('div');
+    layer.className = 'confetti-layer';
+    layer.style.left = x + 'px';
+    layer.style.top = y + 'px';
+    const N = 10;
+    for (let i = 0; i < N; i++) {
+        const piece = document.createElement('span');
+        piece.className = 'confetti-particle';
+        const angle = (Math.PI * 2 * i / N) + (Math.random() - 0.5) * 0.6;
+        const dist = 36 + Math.random() * 38;
+        piece.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+        piece.style.setProperty('--dy', (Math.sin(angle) * dist - 22) + 'px');
+        piece.style.setProperty('--rot', (Math.random() * 540 - 270) + 'deg');
+        piece.style.setProperty('--delay', (Math.random() * 0.08).toFixed(3) + 's');
+        piece.textContent = emoji || '\u{1F33F}';
+        layer.appendChild(piece);
+    }
+    bedEl.appendChild(layer);
+    setTimeout(() => { if (layer.parentNode) layer.parentNode.removeChild(layer); }, 1100);
+}
+
+function harvestPlant(placement, bedEl, containerId) {
+    if (!placement || !bedEl || !containerId) return;
+    const container = (typeof getContainer === 'function') ? getContainer(containerId) : null;
+    if (!container) return;
+    const plant = PLANT_LIBRARY.find(p => p.id === placement.plantId);
+    if (!plant) return;
+
+    // Drop any multi-select state pointing at this placement before mutating —
+    // otherwise selectedPlacements will hold a stale ID after the plant is removed.
+    if (typeof clearSelection === 'function') clearSelection();
+
+    const placedEl = bedEl.querySelector('.placed-plant[data-placement-id="' + placement.id + '"]');
+    const cx = (placement.x || 0) + 18;
+    const cy = (placement.y || 0) + 18;
+
+    // Visual yoink first, then mutate state after the animation.
+    if (placedEl) placedEl.classList.add('yoink');
+    triggerConfettiBurst(cx, cy, bedEl, plant.emoji);
+
+    if (typeof pushUndo === 'function') pushUndo();
+
+    setTimeout(() => {
+        // Remove plant from container state.
+        container.plants = container.plants.filter(p => p.id !== placement.id);
+        if (typeof renderPlacedPlants === 'function') renderPlacedPlants(containerId);
+        if (typeof updateBedDetails === 'function') updateBedDetails();
+        if (typeof updateStatsDashboard === 'function') updateStatsDashboard();
+        if (typeof saveState === 'function') saveState();
+
+        // Log harvest entry.
+        if (typeof harvestPlantDirect === 'function') {
+            harvestPlantDirect(plant.id, 0, container.name, 'auto: harvest-burst', 'no');
+        }
+        tweaksSafeToast(plant.emoji + ' HARVESTED ' + plant.name.toUpperCase());
+    }, 540);
+}
+
 function applyTweakBodyClasses() {
     TWEAK_KEYS.forEach(k => {
         document.body.classList.toggle('tweak-' + k + '-on', !!(state.tweaks && state.tweaks[k]));
@@ -73,13 +140,31 @@ function setTweak(key, on) {
         if (sw) sw.classList.toggle('on', !!on);
     }
 
+    // Subsystem dispatch — wire each tweak to the live behavior it gates.
     if (key === 'companionAlways') {
         if (typeof redrawAllCompanionNetworks === 'function') redrawAllCompanionNetworks();
     }
+    if (key === 'companion') {
+        // If turning off mid-hover, drop any palette-hover highlights.
+        if (!on && typeof clearPaletteHoverHighlights === 'function') clearPaletteHoverHighlights();
+    }
     if (key === 'living') applyLivingClass();
-
-    // TODO: wire timeline, heatmap, harvestBurst (stage), tickerStats, pageTurn
-    // once those subsystems land. For now they only flip body classes + persist.
+    if (key === 'timeline') {
+        if (on) {
+            if (typeof showTimelineScrubber === 'function') showTimelineScrubber();
+        } else {
+            if (typeof hideTimelineScrubber === 'function') hideTimelineScrubber();
+        }
+        if (typeof applyGrowthStages === 'function') applyGrowthStages();
+    }
+    if (key === 'tickerStats') {
+        // Force a fresh stat render; the dashboard uses textContent when off
+        // and digit columns when on.
+        if (typeof updateStatsDashboard === 'function') updateStatsDashboard();
+    }
+    // heatmap: pure CSS effect via body.tweak-heatmap-on (no JS needed).
+    // harvestBurst: handled inline in placement.js click interceptor.
+    // pageTurn: handled inline in navigation.js switchTab wrapper.
 
     tweaksSafeToast(key.toUpperCase() + ': ' + (on ? 'ON' : 'OFF'));
 }
@@ -112,7 +197,7 @@ function buildTweaksPanel() {
 
     const header = _makeEl('div', 'tweaks-header');
     header.appendChild(_makeEl('span', null, 'TWEAKS'));
-    const closeBtn = _makeEl('button', 'tweaks-close', '\u00D7');
+    const closeBtn = _makeEl('button', 'tweaks-close', '×');
     closeBtn.setAttribute('aria-label', 'Close tweaks');
     header.appendChild(closeBtn);
     panel.appendChild(header);
@@ -180,7 +265,7 @@ function closeTweaksPanel() {
 
 function initTweaks() {
     if (!document.getElementById('tweaks-gear')) {
-        const gear = _makeEl('button', 'tweaks-gear', '\u2699');
+        const gear = _makeEl('button', 'tweaks-gear', '⚙');
         gear.id = 'tweaks-gear';
         gear.setAttribute('aria-label', 'Open tweaks panel');
         gear.addEventListener('click', openTweaksPanel);
@@ -197,3 +282,5 @@ window.applyLivingClass = applyLivingClass;
 window.triggerBloom = triggerBloom;
 window.openTweaksPanel = openTweaksPanel;
 window.closeTweaksPanel = closeTweaksPanel;
+window.harvestPlant = harvestPlant;
+window.triggerConfettiBurst = triggerConfettiBurst;
