@@ -17,6 +17,9 @@ Final Garden*.json
 Custom Seeds to add/
 devops_operations_dashboard.html
 
+# Claude session handoff docs (per-worktree, not project-tracked)
+whats-next.md
+
 # Environment / secrets
 .env
 .env.local
