@@ -56,6 +56,37 @@ const state = {
     clickPlaceMode: null,
     selectedPlacements: [],
     _infoPanelDismiss: null,
+    companionNetworkOn: (function(){
+        var v = localStorage.getItem('gardensync.companionNetworkOn');
+        return v === null ? true : v === 'true';
+    })(),
+    hoveredPaletteId: null,
+    seasonDay: (function(){
+        var v = localStorage.getItem('gardensync.seasonDay');
+        if (v !== null && !isNaN(parseInt(v))) return Math.max(0, Math.min(365, parseInt(v)));
+        var now = new Date();
+        var start = new Date(now.getFullYear(), 0, 0);
+        return Math.floor((now - start) / 86400000);
+    })(),
+    tweaks: (function(){
+        var defaults = {
+            bloom: true,
+            living: true,
+            timeline: false,
+            companion: true,
+            companionAlways: true,
+            heatmap: false,
+            harvestBurst: true,
+            tickerStats: true,
+            pageTurn: true,
+        };
+        var out = {};
+        Object.keys(defaults).forEach(function(k){
+            var v = localStorage.getItem('gardensync.tweaks.' + k);
+            out[k] = v === null ? defaults[k] : v === 'true';
+        });
+        return out;
+    })(),
 };
 
 // ---- CONTAINER HELPERS ----

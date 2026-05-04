@@ -23,6 +23,9 @@ function placePlant(containerId, plantId, x, y) {
     container.plants.push(placement);
 
     renderPlacedPlants(containerId); // includes updateSpacingWarnings()
+    if (typeof triggerBloom === 'function') {
+        triggerBloom(x + 18, y + 18, document.querySelector('.garden-bed[data-container-id="' + containerId + '"]'));
+    }
     updateBedDetails();
     saveState();
 }
@@ -166,6 +169,14 @@ function renderPlacedPlants(containerId) {
                 if (!hasMoved) {
                     // Click without drag
                     state.undoStack.pop(); // Remove unused undo snapshot
+                    // Stage 2d — harvest-burst: clicking a ripe plant yoinks it
+                    var placedEl = bedEl.querySelector('.placed-plant[data-placement-id="' + placement.id + '"]');
+                    if (state.tweaks && state.tweaks.harvestBurst && !isShift &&
+                        placedEl && placedEl.getAttribute('data-stage') === 'harvest' &&
+                        typeof harvestPlant === 'function') {
+                        harvestPlant(placement, bedEl, containerId);
+                        return;
+                    }
                     if (!isShift) {
                         // Regular click: select just this plant, show info
                         selectPlacement(containerId, placement.id, false);
@@ -207,6 +218,9 @@ function renderPlacedPlants(containerId) {
     });
 
     updateSpacingWarnings(containerId);
+    if (typeof applyLivingClass === 'function') applyLivingClass(containerId);
+    if (typeof applyPaletteHoverHighlights === 'function' && state.hoveredPaletteId) applyPaletteHoverHighlights();
+    if (typeof applyGrowthStages === 'function') applyGrowthStages();
 }
 
 // ---- COMPANION ID MATCHING (prefix-aware for variety IDs) ----
@@ -228,6 +242,11 @@ function matchesCompanionId(plantId, companionList) {
 function drawCompanionLines(containerId, bedEl) {
     const container = getContainer(containerId);
     if (!container) return;
+
+    // Global gates: master toggle + tweak
+    if (state.companionNetworkOn === false) return;
+    if (state.tweaks && state.tweaks.companionAlways === false) return;
+
     const plants = container.plants;
     if (plants.length < 2) return;
 
@@ -243,23 +262,36 @@ function drawCompanionLines(containerId, bedEl) {
     svg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;';
     svg.setAttribute('viewBox', `0 0 ${bedEl.offsetWidth} ${bedEl.offsetHeight}`);
 
+    var maxPx = (typeof PROXIMITY_MAX_PX !== 'undefined') ? PROXIMITY_MAX_PX : 70;
+
     for (let i = 0; i < plants.length; i++) {
         for (let j = i + 1; j < plants.length; j++) {
             const p1 = PLANT_LIBRARY.find(p => p.id === plants[i].plantId);
             const p2 = PLANT_LIBRARY.find(p => p.id === plants[j].plantId);
             if (!p1 || !p2) continue;
 
+            // Proximity gate — only connect nearby plants
+            const dx = (plants[i].x + 18) - (plants[j].x + 18);
+            const dy = (plants[i].y + 18) - (plants[j].y + 18);
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist > maxPx) continue;
+
             const isCompanion = matchesCompanionId(p2.id, p1.companions) || matchesCompanionId(p1.id, p2.companions);
             const isEnemy = matchesCompanionId(p2.id, p1.enemies) || matchesCompanionId(p1.id, p2.enemies);
 
             if (isCompanion || isEnemy) {
+                // Foe wins if both
+                const asFoe = isEnemy;
                 const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
                 line.setAttribute('x1', plants[i].x + 18);
                 line.setAttribute('y1', plants[i].y + 18);
                 line.setAttribute('x2', plants[j].x + 18);
                 line.setAttribute('y2', plants[j].y + 18);
-                line.setAttribute('class', isCompanion ? 'companion-line-good' : 'companion-line-bad');
-                line.setAttribute('stroke-width', isCompanion ? goodStroke : badStroke);
+                const cls = asFoe
+                    ? 'companion-line-bad thread-persistent thread-foe'
+                    : 'companion-line-good thread-persistent thread-friend';
+                line.setAttribute('class', cls);
+                line.setAttribute('stroke-width', asFoe ? badStroke : goodStroke);
                 line.setAttribute('stroke-dasharray', dashOn + ' ' + dashOff);
                 svg.appendChild(line);
             }
@@ -268,6 +300,99 @@ function drawCompanionLines(containerId, bedEl) {
 
     bedEl.appendChild(svg);
 }
+
+// ---- REDRAW ALL COMPANION NETWORKS ----
+// Called when the master toggle or companionAlways tweak changes, so every
+// currently-rendered bed refreshes its SVG overlay in place.
+function redrawAllCompanionNetworks() {
+    document.querySelectorAll('.garden-bed[data-container-id]').forEach(function(bedEl){
+        bedEl.querySelectorAll('.companion-svg').forEach(function(svg){ svg.remove(); });
+        var containerId = bedEl.getAttribute('data-container-id');
+        if (containerId) drawCompanionLines(containerId, bedEl);
+    });
+}
+
+// ---- PALETTE HOVER HIGHLIGHTS (stage 2b) ----
+// When the user hovers a plant in the Plant Library, highlight placed
+// friend/foe instances across every bed + draw temporary dashed threads
+// between the hovered plant's own placed instances and its companions.
+// Gated by state.tweaks.companion (independent of companionAlways).
+function clearPaletteHoverHighlights() {
+    document.querySelectorAll('.placed-plant.hover-friend, .placed-plant.hover-foe')
+        .forEach(function(el){ el.classList.remove('hover-friend', 'hover-foe'); });
+    document.querySelectorAll('.hover-threads-svg').forEach(function(s){ s.remove(); });
+}
+
+function applyPaletteHoverHighlights() {
+    clearPaletteHoverHighlights();
+
+    var id = state.hoveredPaletteId;
+    if (!id) return;
+    if (!(state.tweaks && state.tweaks.companion)) return;
+
+    var hovered = PLANT_LIBRARY.find(function(p){ return p.id === id; });
+    if (!hovered) return;
+    var friendIds = hovered.companions || [];
+    var foeIds    = hovered.enemies    || [];
+
+    var zoom = Math.max(0.2, state.canvasZoom || 1);
+    var stroke = Math.max(2.5, 3 / zoom);
+    var dashOn = Math.max(5, 7 / zoom);
+    var dashOff = Math.max(3, 4 / zoom);
+
+    document.querySelectorAll('.garden-bed[data-container-id]').forEach(function(bedEl){
+        var containerId = bedEl.getAttribute('data-container-id');
+        var container = getContainer(containerId);
+        if (!container) return;
+
+        // Find all hovered-plant instances already in this bed (for thread anchors).
+        var anchors = container.plants.filter(function(p){ return p.plantId === id; });
+
+        // Highlight placed instances + collect friend/foe points for thread drawing.
+        var friendPts = [];
+        var foePts = [];
+        container.plants.forEach(function(p){
+            var isFriend = friendIds.indexOf(p.plantId) !== -1;
+            var isFoe    = foeIds.indexOf(p.plantId) !== -1;
+            if (!isFriend && !isFoe) return;
+            var el = bedEl.querySelector('.placed-plant[data-placement-id="' + p.id + '"]');
+            if (el) el.classList.add(isFoe ? 'hover-foe' : 'hover-friend');
+            var pt = { x: p.x + 18, y: p.y + 18 };
+            if (isFoe) foePts.push(pt); else friendPts.push(pt);
+        });
+
+        if (anchors.length === 0) return; // no thread anchors → class-highlight only
+        if (friendPts.length === 0 && foePts.length === 0) return;
+
+        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.classList.add('hover-threads-svg');
+        svg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:4;';
+        svg.setAttribute('viewBox', '0 0 ' + bedEl.offsetWidth + ' ' + bedEl.offsetHeight);
+
+        anchors.forEach(function(a){
+            var ax = a.x + 18, ay = a.y + 18;
+            friendPts.forEach(function(fp){ _appendHoverThread(svg, ax, ay, fp.x, fp.y, 'friend', stroke, dashOn, dashOff); });
+            foePts.forEach(function(fp){   _appendHoverThread(svg, ax, ay, fp.x, fp.y, 'foe',    stroke, dashOn, dashOff); });
+        });
+
+        bedEl.appendChild(svg);
+    });
+}
+
+function _appendHoverThread(svg, x1, y1, x2, y2, kind, stroke, dashOn, dashOff) {
+    var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', x1);
+    line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2);
+    line.setAttribute('y2', y2);
+    line.setAttribute('class', 'thread-hover thread-' + kind);
+    line.setAttribute('stroke-width', stroke);
+    line.setAttribute('stroke-dasharray', dashOn + ' ' + dashOff);
+    svg.appendChild(line);
+}
+
+window.applyPaletteHoverHighlights = applyPaletteHoverHighlights;
+window.clearPaletteHoverHighlights = clearPaletteHoverHighlights;
 
 // ---- UPDATE COMPANION LINE STROKES ON ZOOM ----
 // Called from applyCanvasTransform() so that when zoom changes, existing

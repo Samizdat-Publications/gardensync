@@ -22,6 +22,32 @@ function saveHarvestData(data) {
     localStorage.setItem('gardensync_harvests', JSON.stringify(data));
 }
 
+/**
+ * Append a harvest entry directly (used by stage 2d harvest-burst yoink and
+ * any other code path that needs to log a harvest without the form UI).
+ * Re-renders the harvest log if it's currently mounted.
+ */
+function harvestPlantDirect(plantId, weight, bed, notes, donated) {
+    if (!plantId) return;
+    const harvests = getHarvestData();
+    harvests.unshift({
+        id: Date.now() + Math.floor(Math.random() * 1000),
+        plantId: plantId,
+        bed: bed || '',
+        weight: parseFloat(weight) || 0,
+        date: new Date().toISOString().slice(0, 10),
+        notes: notes || '',
+        donated: donated || 'no',
+        timestamp: new Date().toISOString()
+    });
+    saveHarvestData(harvests);
+    if (document.getElementById('harvest-entries')) {
+        try { renderHarvestLog(); } catch (e) { /* tab not mounted yet */ }
+    }
+}
+
+window.harvestPlantDirect = harvestPlantDirect;
+
 function logHarvest() {
     const plantId = document.getElementById('harvest-plant').value;
     const bed = document.getElementById('harvest-bed').value;

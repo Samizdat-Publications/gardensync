@@ -261,8 +261,12 @@ if __name__ == '__main__':
     import socketserver
     socketserver.TCPServer.allow_reuse_address = True
     # Bind to localhost only — not accessible from network
-    server = http.server.HTTPServer(('127.0.0.1', PORT), GardenSyncHandler)
+    # ThreadingHTTPServer so a stuck/aborted client connection doesn't block
+    # other requests (single-threaded HTTPServer hung when browser refreshes
+    # piled up half-aborted requests).
+    server = http.server.ThreadingHTTPServer(('127.0.0.1', PORT), GardenSyncHandler)
     server.allow_reuse_address = True
+    server.daemon_threads = True
     try:
         server.serve_forever()
     except KeyboardInterrupt:

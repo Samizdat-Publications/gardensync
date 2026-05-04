@@ -1,13 +1,14 @@
 /* GardenSync — Navigation & Tab Switching */
 
 // ---- NAVIGATION ----
-function switchTab(tabName) {
+function _doSwitchTab(tabName) {
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll(`.nav-btn[data-tab="${tabName}"]`).forEach(b => b.classList.add('active'));
     document.querySelectorAll(`.mobile-nav-btn[data-tab="${tabName}"]`).forEach(b => b.classList.add('active'));
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.getElementById(`tab-${tabName}`).classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active', 'page-out', 'page-in'));
+    const next = document.getElementById(`tab-${tabName}`);
+    if (next) next.classList.add('active');
     if (tabName === 'schedule') updateSchedule();
     if (tabName === 'plantlog') renderPlantingLog('all');
     if (tabName === 'harvest') renderHarvestLog();
@@ -17,6 +18,31 @@ function switchTab(tabName) {
     closeMobilePanels();
     // Show/hide mobile bottom bar (only on planner tab)
     updateMobileBottomBar(tabName);
+    return next;
+}
+
+function switchTab(tabName) {
+    // Stage 2g — page-turn 3D transition. When the tweak is off, behave
+    // exactly as before (instant swap). When on, fade the outgoing tab
+    // first, then swap and fade the incoming tab in.
+    if (!(state && state.tweaks && state.tweaks.pageTurn)) {
+        _doSwitchTab(tabName);
+        return;
+    }
+    const current = document.querySelector('.tab-content.active');
+    if (!current || current.id === `tab-${tabName}`) {
+        _doSwitchTab(tabName);
+        return;
+    }
+    current.classList.add('page-out');
+    setTimeout(() => {
+        current.classList.remove('page-out');
+        const next = _doSwitchTab(tabName);
+        if (next) {
+            next.classList.add('page-in');
+            setTimeout(() => next.classList.remove('page-in'), 360);
+        }
+    }, 280);
 }
 
 function initNavigation() {

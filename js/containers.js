@@ -1,5 +1,18 @@
 /* GardenSync — Garden Containers (CRUD, Rendering, Context Menu) */
 
+// IntersectionObserver to pause CSS animations on beds that are offscreen.
+// Beds get a `.offscreen` class when they leave the viewport; CSS pauses
+// wind-gust, heatmap, and per-plant sway animations for those beds. Cuts
+// CPU/GPU when the user has lots of beds and only some are visible.
+const _bedVisibilityObserver = (typeof IntersectionObserver !== 'undefined')
+    ? new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            e.target.classList.toggle('offscreen', !e.isIntersecting);
+        });
+    }, { root: null, rootMargin: '120px', threshold: 0 })
+    : null;
+
+
 // ---- GARDEN BEDS (now container-based) ----
 function initGardenBeds() {
     // This now delegates to renderAllContainers
@@ -73,6 +86,10 @@ function renderContainer(container, parentEl) {
     el.style.height = displayH + 'px';
     el.style.left = (container.canvasX || 0) + 'px';
     el.style.top = (container.canvasY || 0) + 'px';
+    // CSS var for the wind-gust transform-based sweep — the gust translates
+    // across this many px to cross the bed. Updated on every render so that
+    // a resize keeps the sweep distance correct.
+    el.style.setProperty('--bed-width', displayW + 'px');
     el.style.background = typeDef.soilColor || '#1a1208';
     el.style.borderColor = typeDef.borderColor || '#3d2b0f';
 
@@ -100,8 +117,22 @@ function renderContainer(container, parentEl) {
     const resizeHandle = document.createElement('div');
     resizeHandle.className = 'container-resize-handle';
     resizeHandle.title = 'Drag to resize';
-    resizeHandle.innerHTML = '⤡';
+    resizeHandle.textContent = '⤡';
     el.appendChild(resizeHandle);
+
+    // Heatmap overlay (tweak-heatmap) — visible only when body.tweak-heatmap-on
+    // (Wind-gust was removed — it was decorative noise, not functional state.)
+    const seed = (container.id || '').split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+    const heatmap = document.createElement('div');
+    heatmap.className = 'heatmap-overlay';
+    heatmap.style.setProperty('--pool-a-x', (20 + (seed * 7) % 50) + '%');
+    heatmap.style.setProperty('--pool-a-y', (25 + (seed * 3) % 40) + '%');
+    heatmap.style.setProperty('--pool-b-x', (60 + (seed * 11) % 30) + '%');
+    heatmap.style.setProperty('--pool-b-y', (55 + (seed * 5) % 30) + '%');
+    const sunArc = document.createElement('div');
+    sunArc.className = 'sun-arc';
+    heatmap.appendChild(sunArc);
+    el.appendChild(heatmap);
 
     // Resize drag handler (mouse + touch)
     // Free-drag: user drags to set visual width/height. Orientation auto-adjusts.
@@ -173,6 +204,7 @@ function renderContainer(container, parentEl) {
                 const dh = Math.max(50, newDims.height);
                 currentEl.style.width = dw + 'px';
                 currentEl.style.height = dh + 'px';
+                currentEl.style.setProperty('--bed-width', dw + 'px');
                 // Update dimension label — show in visual order
                 const dimLabel2 = currentEl.querySelector('.bed-dimensions');
                 if (dimLabel2) {
@@ -411,6 +443,10 @@ function renderContainer(container, parentEl) {
     });
 
     parentEl.appendChild(el);
+
+    // Register this bed with the offscreen-visibility observer so CSS can
+    // pause its animations when it scrolls/zooms out of view.
+    if (_bedVisibilityObserver) _bedVisibilityObserver.observe(el);
 
     // Render plants inside
     renderPlacedPlants(container.id);

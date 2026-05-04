@@ -42,9 +42,48 @@ function initToolbarButtons() {
         document.querySelectorAll('.garden-bed').forEach(bed => {
             bed.classList.toggle('show-grid', gridOn);
         });
-        document.getElementById('btn-grid-toggle').textContent = gridOn ? 'GRID: ON' : 'GRID: OFF';
+        // Single label "GRID" — .accent class lights it emerald when on, dim when off
+        document.getElementById('btn-grid-toggle').textContent = 'GRID';
         document.getElementById('btn-grid-toggle').classList.toggle('accent', gridOn);
     });
+
+    // Companions toggle — master switch for the persistent companion network.
+    // Mirrored to state.tweaks.companionAlways (they're linked per design doc).
+    const companionsBtn = document.getElementById('btn-companions-toggle');
+    if (companionsBtn) {
+        const refreshCompanionsBtn = () => {
+            const on = state.companionNetworkOn !== false;
+            companionsBtn.textContent = '';
+            const led = document.createElement('span');
+            led.className = 'led';
+            led.setAttribute('aria-hidden', 'true');
+            companionsBtn.appendChild(led);
+            // Single label "COMPANIONS" — the LED dot indicates state (lit when on).
+            companionsBtn.appendChild(document.createTextNode('COMPANIONS'));
+            companionsBtn.classList.toggle('on', on);
+            companionsBtn.setAttribute('aria-pressed', String(on));
+        };
+        refreshCompanionsBtn();
+        companionsBtn.addEventListener('click', () => {
+            const next = !(state.companionNetworkOn !== false);
+            state.companionNetworkOn = next;
+            if (state.tweaks) state.tweaks.companionAlways = next;
+            try {
+                localStorage.setItem('gardensync.companionNetworkOn', next ? 'true' : 'false');
+                localStorage.setItem('gardensync.tweaks.companionAlways', next ? 'true' : 'false');
+            } catch (e) {}
+            document.body.classList.toggle('tweak-companionAlways-on', next);
+            refreshCompanionsBtn();
+            if (typeof redrawAllCompanionNetworks === 'function') redrawAllCompanionNetworks();
+            // Keep tweaks panel in sync if it's open
+            const row = document.querySelector('.tweak-row[data-key="companionAlways"]');
+            if (row) {
+                row.classList.toggle('on', next);
+                const sw = row.querySelector('.tweak-switch');
+                if (sw) sw.classList.toggle('on', next);
+            }
+        });
+    }
 
     // Auto-organize
     document.getElementById('btn-auto-organize').addEventListener('click', () => {

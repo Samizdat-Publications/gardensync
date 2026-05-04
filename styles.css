@@ -38,16 +38,26 @@
     --radius-lg: 4px;
     --radius-sm: 2px;
 
+    /* RGB triplets — for use with rgba(var(--*-rgb), opacity) so accents
+       can carry alpha while still respecting the design tokens. /polish
+       pass replaced inline rgba literals in stages 2c-2g with these. */
+    --emerald-rgb: 16, 185, 129;
+    --emerald-glow-rgb: 52, 211, 153;
+    --emerald-dark-rgb: 5, 150, 105;
+    --amber-rgb: 245, 158, 11;
+    --blue-rgb: 96, 165, 250;
+    --red-rgb: 239, 68, 68;
+
     /* Gradients */
     --gradient-emerald: linear-gradient(135deg, #059669, #10b981, #14b8a6);
     --gradient-dark: linear-gradient(180deg, #0a0a0a, #000000);
     --gradient-card: linear-gradient(145deg, #0f0f0f, #0a0a0a);
-    --gradient-accent-subtle: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(20,184,166,0.04));
+    --gradient-accent-subtle: linear-gradient(135deg, rgba(var(--emerald-rgb),0.08), rgba(20,184,166,0.04));
 
     /* Glow presets */
-    --glow-emerald-sm: 0 0 8px rgba(16,185,129,0.3);
-    --glow-emerald-md: 0 0 16px rgba(16,185,129,0.25), 0 0 4px rgba(16,185,129,0.4);
-    --glow-emerald-lg: 0 0 24px rgba(16,185,129,0.2), 0 0 8px rgba(16,185,129,0.35), 0 0 2px rgba(16,185,129,0.5);
+    --glow-emerald-sm: 0 0 8px rgba(var(--emerald-rgb),0.3);
+    --glow-emerald-md: 0 0 16px rgba(var(--emerald-rgb),0.25), 0 0 4px rgba(var(--emerald-rgb),0.4);
+    --glow-emerald-lg: 0 0 24px rgba(var(--emerald-rgb),0.2), 0 0 8px rgba(var(--emerald-rgb),0.35), 0 0 2px rgba(var(--emerald-rgb),0.5);
 }
 
 /* Light theme — outdoor tablet readability */
@@ -72,6 +82,14 @@
 
     --border: #d4cfc7;
     --border-accent: #05966933;
+
+    /* Light-theme RGB triplets — keep our rgba(var(--*-rgb), opacity) calls
+       in sync with the light palette so accent washes don't drift. */
+    --emerald-rgb: 5, 150, 105;
+    --emerald-glow-rgb: 16, 185, 129;
+    --emerald-dark-rgb: 4, 120, 87;
+    /* amber/blue/red kept the same hue across themes — they're functional
+       (warning/info/error) not branded. */
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -120,8 +138,11 @@ body {
 
 .logo-text h1 {
     font-family: var(--font-display);
-    font-size: 1.8rem;
-    letter-spacing: 3px;
+    /* Shrunk from 1.8rem — header brand should be a marker, not the loudest
+       thing on the page. Functional labels (tool buttons, bed labels, stats)
+       need the breathing room more than the wordmark does. */
+    font-size: 1.15rem;
+    letter-spacing: 2.5px;
     line-height: 1;
     color: var(--text-primary);
 }
@@ -159,9 +180,9 @@ body {
 .nav-btn.active {
     color: var(--emerald-glow);
     border-color: var(--emerald);
-    background: linear-gradient(180deg, rgba(16,185,129,0.12), var(--bg-tertiary));
+    background: linear-gradient(180deg, rgba(var(--emerald-rgb),0.12), var(--bg-tertiary));
     box-shadow: 0 2px 0 var(--emerald), var(--glow-emerald-md);
-    text-shadow: 0 0 12px rgba(16,185,129,0.5);
+    text-shadow: 0 0 12px rgba(var(--emerald-rgb),0.5);
 }
 
 .zone-badge {
@@ -261,7 +282,8 @@ body {
 
 .tool-btn {
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    /* Bumped from 0.7rem — tool labels were sub-10px on most viewports. */
+    font-size: 0.78rem;
     font-weight: 700;
     letter-spacing: 0.5px;
     padding: 0.25rem 0.5rem;
@@ -472,7 +494,7 @@ body {
     font-family: var(--font-mono);
     font-size: 0.7rem;
     padding: 0.15rem 0.4rem;
-    background: rgba(16,185,129,0.08);
+    background: rgba(var(--emerald-rgb),0.08);
     border: 1px solid var(--emerald-dark);
     color: var(--emerald);
     letter-spacing: 0.5px;
@@ -519,7 +541,7 @@ body {
 
 /* Search highlight */
 .search-match {
-    background: rgba(16,185,129,0.25);
+    background: rgba(var(--emerald-rgb),0.25);
     color: var(--emerald-glow);
     border-radius: 1px;
     padding: 0 1px;
@@ -583,14 +605,14 @@ body {
     font-weight: 700;
 }
 .season-badge.in-season {
-    background: rgba(16,185,129,0.2);
+    background: rgba(var(--emerald-rgb),0.2);
     color: var(--emerald);
-    border: 1px solid rgba(16,185,129,0.3);
+    border: 1px solid rgba(var(--emerald-rgb),0.3);
 }
 .season-badge.upcoming {
-    background: rgba(245,158,11,0.15);
+    background: rgba(var(--amber-rgb),0.15);
     color: var(--amber);
-    border: 1px solid rgba(245,158,11,0.2);
+    border: 1px solid rgba(var(--amber-rgb),0.2);
 }
 .season-badge.off-season {
     background: rgba(82,82,82,0.15);
@@ -668,8 +690,10 @@ body {
     align-items: center;
 }
 .toolbar-right .tool-btn {
-    font-size: 0.62rem;
-    padding: 0.2rem 0.4rem;
+    /* Bumped from 0.62rem (~10px) — was the squinty number live audit caught.
+       Padding kept tight so we don't blow up button height. */
+    font-size: 0.74rem;
+    padding: 0.25rem 0.5rem;
     letter-spacing: 0.3px;
 }
 
@@ -764,7 +788,9 @@ body {
 .mini-stat-label {
     display: block;
     font-family: var(--font-mono);
-    font-size: 0.45rem;
+    /* Bumped from 0.45rem (~7px) — was unreadable at typical viewing distance.
+       0.62rem ~10px which is still small but legible. */
+    font-size: 0.62rem;
     color: var(--text-muted);
     letter-spacing: 1px;
     margin-top: 1px;
@@ -1211,7 +1237,7 @@ body {
 }
 .garden-bed.selected {
     border-color: var(--emerald) !important;
-    box-shadow: 0 0 0 2px var(--emerald), 0 0 20px rgba(16,185,129,0.15), inset 0 0 30px rgba(0,0,0,0.5);
+    box-shadow: 0 0 0 2px var(--emerald), 0 0 20px rgba(var(--emerald-rgb),0.15), inset 0 0 30px rgba(0,0,0,0.5);
     z-index: 2;
 }
 /* Keyboard focus indicators */
@@ -1243,22 +1269,22 @@ body {
 .garden-bed.coverage-low {
     background: #1a150a;
     border-color: #3d2e10;
-    box-shadow: inset 0 0 30px rgba(0,0,0,0.45), inset 0 0 50px rgba(16,185,129,0.02);
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.45), inset 0 0 50px rgba(var(--emerald-rgb),0.02);
 }
 .garden-bed.coverage-med {
     background: #181a0c;
     border-color: #3a3d12;
-    box-shadow: inset 0 0 28px rgba(0,0,0,0.35), inset 0 0 60px rgba(16,185,129,0.05);
+    box-shadow: inset 0 0 28px rgba(0,0,0,0.35), inset 0 0 60px rgba(var(--emerald-rgb),0.05);
 }
 .garden-bed.coverage-high {
     background: #161d0d;
     border-color: #344513;
-    box-shadow: inset 0 0 24px rgba(0,0,0,0.3), inset 0 0 60px rgba(16,185,129,0.09);
+    box-shadow: inset 0 0 24px rgba(0,0,0,0.3), inset 0 0 60px rgba(var(--emerald-rgb),0.09);
 }
 .garden-bed.coverage-full {
     background: #142010;
     border-color: #2d5015;
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.25), inset 0 0 60px rgba(16,185,129,0.13);
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.25), inset 0 0 60px rgba(var(--emerald-rgb),0.13);
 }
 /* Companion placement indicators */
 .companion-badge {
@@ -1293,7 +1319,10 @@ body {
     top: 4px;
     left: 6px;
     font-family: var(--font-mono);
-    font-size: 0.6rem;
+    /* Bumped from 0.6rem — bed labels need to be readable on canvas at 100%
+       zoom. The bed itself can be tiny at low zoom but the label should
+       carry. */
+    font-size: 0.78rem;
     font-weight: 700;
     color: #5c4a2a;
     letter-spacing: 2px;
@@ -1305,7 +1334,7 @@ body {
 }
 .bed-label:hover {
     color: var(--emerald);
-    background: rgba(16,185,129,0.1);
+    background: rgba(var(--emerald-rgb),0.1);
 }
 .bed-label-input {
     position: absolute;
@@ -1335,7 +1364,7 @@ body {
     color: var(--emerald);
     background: rgba(0,0,0,0.6);
     padding: 1px 5px;
-    border: 1px solid rgba(16,185,129,0.3);
+    border: 1px solid rgba(var(--emerald-rgb),0.3);
     border-radius: 2px;
     z-index: 2;
     letter-spacing: 0.5px;
@@ -1422,7 +1451,7 @@ body {
     transition: background 0.15s;
 }
 .template-option:hover {
-    background: rgba(16,185,129,0.12);
+    background: rgba(var(--emerald-rgb),0.12);
 }
 .template-option:last-child { border-bottom: none; }
 .template-name {
@@ -1464,12 +1493,12 @@ body {
 
 /* Water need color-coding ring on placed plants */
 .placed-plant[data-water="low"] {
-    border-color: rgba(16,185,129,0.4);
-    box-shadow: 0 0 4px rgba(16,185,129,0.2);
+    border-color: rgba(var(--emerald-rgb),0.4);
+    box-shadow: 0 0 4px rgba(var(--emerald-rgb),0.2);
 }
 .placed-plant[data-water="medium"] {
-    border-color: rgba(245,158,11,0.4);
-    box-shadow: 0 0 4px rgba(245,158,11,0.2);
+    border-color: rgba(var(--amber-rgb),0.4);
+    box-shadow: 0 0 4px rgba(var(--amber-rgb),0.2);
 }
 .placed-plant[data-water="high"] {
     border-color: rgba(220,38,38,0.4);
@@ -1480,12 +1509,12 @@ body {
 .spacing-radius {
     position: absolute;
     border-radius: 50%;
-    border: 2.5px dashed rgba(16,185,129,0.65);
-    background: rgba(16,185,129,0.12);
+    border: 2.5px dashed rgba(var(--emerald-rgb),0.65);
+    background: rgba(var(--emerald-rgb),0.12);
     pointer-events: none;
     z-index: 2;
     transition: opacity 0.15s;
-    box-shadow: 0 0 8px rgba(16,185,129,0.15);
+    box-shadow: 0 0 8px rgba(var(--emerald-rgb),0.15);
 }
 
 /* Companion planting lines */
@@ -1495,11 +1524,11 @@ body {
     z-index: 1;
 }
 .companion-line-good {
-    stroke: rgba(16,185,129,0.8);
+    stroke: rgba(var(--emerald-rgb),0.8);
     /* stroke-width and stroke-dasharray set dynamically in JS for zoom compensation */
 }
 .companion-line-bad {
-    stroke: rgba(239,68,68,0.85);
+    stroke: rgba(var(--red-rgb),0.85);
     /* stroke-width and stroke-dasharray set dynamically in JS for zoom compensation */
 }
 
@@ -1509,8 +1538,8 @@ body {
     position: absolute;
     inset: 0;
     background:
-        repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(16,185,129,0.06) 19px, rgba(16,185,129,0.06) 20px),
-        repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(16,185,129,0.06) 19px, rgba(16,185,129,0.06) 20px);
+        repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(var(--emerald-rgb),0.06) 19px, rgba(var(--emerald-rgb),0.06) 20px),
+        repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(var(--emerald-rgb),0.06) 19px, rgba(var(--emerald-rgb),0.06) 20px);
     pointer-events: none;
     z-index: 1;
 }
@@ -1872,12 +1901,13 @@ body.section-resizing * {
 
 /* Plant selection */
 .placed-plant.selected {
-    box-shadow: 0 0 0 2px var(--emerald), 0 0 15px rgba(16,185,129,0.5);
+    box-shadow: 0 0 0 2px var(--emerald), 0 0 15px rgba(var(--emerald-rgb),0.5);
     border-color: var(--emerald);
     z-index: 5;
 }
-/* Multi-select indicator dot */
-.placed-plant.multi-selected::after {
+/* Multi-select indicator dot — uses ::before so it doesn't collide with the
+   timeline harvest-stage amber ::after dot (both elements stack independently). */
+.placed-plant.multi-selected::before {
     content: '';
     position: absolute;
     top: -3px;
@@ -1896,12 +1926,12 @@ body.section-resizing * {
     cursor: crosshair;
 }
 .click-place-target {
-    box-shadow: inset 0 0 20px rgba(16,185,129,0.15);
+    box-shadow: inset 0 0 20px rgba(var(--emerald-rgb),0.15);
 }
 .plant-item.click-place-active {
     background: var(--emerald-dark) !important;
     border-color: var(--emerald) !important;
-    box-shadow: 0 0 10px rgba(16,185,129,0.3);
+    box-shadow: 0 0 10px rgba(var(--emerald-rgb),0.3);
 }
 
 /* Spacing warning */
@@ -1968,7 +1998,7 @@ body.section-resizing * {
     color: #ef4444 !important;
 }
 .context-menu-danger:hover {
-    background: rgba(239,68,68,0.15) !important;
+    background: rgba(var(--red-rgb),0.15) !important;
 }
 
 /* Move Picker Modal */
@@ -2039,7 +2069,7 @@ body.section-resizing * {
     transition: background 0.1s;
 }
 .move-picker-item:hover {
-    background: rgba(16,185,129,0.1);
+    background: rgba(var(--emerald-rgb),0.1);
     color: var(--emerald);
 }
 .move-picker-item:last-child { border-bottom: none; }
@@ -2054,7 +2084,7 @@ body.section-resizing * {
     color: #ef4444;
 }
 .context-menu-item.danger:hover {
-    background: rgba(239,68,68,0.15);
+    background: rgba(var(--red-rgb),0.15);
     color: #f87171;
 }
 
@@ -2078,7 +2108,7 @@ body.section-resizing * {
 }
 .container-resize-handle:hover {
     color: var(--emerald);
-    background: rgba(16,185,129,0.15);
+    background: rgba(var(--emerald-rgb),0.15);
 }
 /* For circles, position resize handle at bottom-right of bounding box */
 .container-circle .container-resize-handle {
@@ -2176,7 +2206,7 @@ body.section-resizing * {
     margin-bottom: 3px;
     border-left: 2px solid;
 }
-.companion-good { border-color: var(--emerald); color: var(--emerald); background: rgba(16,185,129,0.05); }
+.companion-good { border-color: var(--emerald); color: var(--emerald); background: rgba(var(--emerald-rgb),0.05); }
 .companion-bad { border-color: var(--red-accent); color: var(--red-accent); background: rgba(220,38,38,0.05); }
 
 /* ==========================
@@ -2497,11 +2527,11 @@ body.section-resizing * {
     border-radius: var(--radius);
 }
 .harvest-entry-donated.yes {
-    background: rgba(16,185,129,0.15);
+    background: rgba(var(--emerald-rgb),0.15);
     color: var(--emerald);
 }
 .harvest-entry-donated.partial {
-    background: rgba(245,158,11,0.15);
+    background: rgba(var(--amber-rgb),0.15);
     color: var(--amber);
 }
 .harvest-entry-donated.no {
@@ -2582,8 +2612,8 @@ body.section-resizing * {
     padding: 0.15rem 0.4rem;
     border-radius: var(--radius);
 }
-.vol-avail.high { background: rgba(16,185,129,0.15); color: var(--emerald); }
-.vol-avail.medium { background: rgba(245,158,11,0.15); color: var(--amber); }
+.vol-avail.high { background: rgba(var(--emerald-rgb),0.15); color: var(--emerald); }
+.vol-avail.medium { background: rgba(var(--amber-rgb),0.15); color: var(--amber); }
 .vol-avail.low { background: rgba(220,38,38,0.15); color: var(--red-accent); }
 .vol-remove {
     background: none;
@@ -3705,8 +3735,9 @@ body.section-resizing * {
     .canvas-toolbar { padding: 0.4rem 0.5rem; }
     .toolbar-sublabel { display: none; }
     .tool-btn {
-        font-size: 0.55rem;
-        padding: 0.35rem 0.5rem;
+        /* Bumped from 0.55rem on mobile — was unreadable + untappable. */
+        font-size: 0.72rem;
+        padding: 0.45rem 0.6rem;
         letter-spacing: 0.5px;
     }
     /* Hide desktop-only things */
@@ -3723,7 +3754,7 @@ body.section-resizing * {
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
     .mini-stat { padding: 0.25rem 0.35rem; }
     .mini-stat-val { font-size: 1rem; }
-    .mini-stat-label { font-size: 0.45rem; }
+    .mini-stat-label { font-size: 0.6rem; /* bumped from 0.45 */ }
     /* Harvest stats cards */
     .harvest-stats-row { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
     .harvest-stat-card { padding: 0.5rem; }
@@ -3794,8 +3825,8 @@ body.section-resizing * {
     position: absolute;
     inset: 0;
     background:
-        repeating-linear-gradient(90deg, transparent, transparent calc(100% / 10 - 1px), rgba(16,185,129,0.25) calc(100% / 10 - 1px), rgba(16,185,129,0.25) calc(100% / 10)),
-        repeating-linear-gradient(0deg, transparent, transparent calc(100% / 5 - 1px), rgba(16,185,129,0.25) calc(100% / 5 - 1px), rgba(16,185,129,0.25) calc(100% / 5));
+        repeating-linear-gradient(90deg, transparent, transparent calc(100% / 10 - 1px), rgba(var(--emerald-rgb),0.25) calc(100% / 10 - 1px), rgba(var(--emerald-rgb),0.25) calc(100% / 10)),
+        repeating-linear-gradient(0deg, transparent, transparent calc(100% / 5 - 1px), rgba(var(--emerald-rgb),0.25) calc(100% / 5 - 1px), rgba(var(--emerald-rgb),0.25) calc(100% / 5));
     pointer-events: none;
     z-index: 1;
 }
@@ -3853,7 +3884,7 @@ body.section-resizing * {
     transition: background 0.1s;
 }
 .sched-task-item:last-child { border-bottom: none; }
-.sched-task-item:hover { background: rgba(16,185,129,0.03); }
+.sched-task-item:hover { background: rgba(var(--emerald-rgb),0.03); }
 
 .sched-task-check {
     width: 18px;
@@ -3911,9 +3942,9 @@ body.section-resizing * {
     margin-top: 2px;
 }
 .sched-task-type.seed-indoor { background: rgba(124,58,237,0.2); color: #a78bfa; }
-.sched-task-type.transplant { background: rgba(16,185,129,0.2); color: var(--emerald); }
+.sched-task-type.transplant { background: rgba(var(--emerald-rgb),0.2); color: var(--emerald); }
 .sched-task-type.direct-sow { background: rgba(20,184,166,0.2); color: var(--teal); }
-.sched-task-type.harvest { background: rgba(245,158,11,0.2); color: var(--amber); }
+.sched-task-type.harvest { background: rgba(var(--amber-rgb),0.2); color: var(--amber); }
 
 /* ==========================
    MODAL
@@ -4061,9 +4092,9 @@ body.section-resizing * {
 
 /* Bed highlight pulse when selected in sidebar */
 @keyframes bed-pulse {
-    0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
-    70% { box-shadow: 0 0 0 8px rgba(16,185,129,0); }
-    100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+    0% { box-shadow: 0 0 0 0 rgba(var(--emerald-rgb),0.4); }
+    70% { box-shadow: 0 0 0 8px rgba(var(--emerald-rgb),0); }
+    100% { box-shadow: 0 0 0 0 rgba(var(--emerald-rgb),0); }
 }
 .garden-bed.active-highlight {
     border-color: var(--emerald) !important;
@@ -4160,7 +4191,7 @@ body.section-resizing * {
     z-index: 10001;
     font-size: 2rem;
     opacity: 0.85;
-    filter: drop-shadow(0 2px 8px rgba(16,185,129,0.4));
+    filter: drop-shadow(0 2px 8px rgba(var(--emerald-rgb),0.4));
     transition: none;
 }
 
@@ -4353,7 +4384,7 @@ body::before {
 }
 .today-task-chip.chip-overdue {
     border-color: var(--red-accent);
-    background: rgba(239,68,68,0.08);
+    background: rgba(var(--red-rgb),0.08);
 }
 .today-task-chip.chip-overdue .chip-label {
     color: var(--red-accent);
@@ -4545,7 +4576,7 @@ body::before {
 }
 .modal-header {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0.75rem 1rem; border-bottom: 1px solid rgba(16,185,129,0.2);
+    padding: 0.75rem 1rem; border-bottom: 1px solid rgba(var(--emerald-rgb),0.2);
 }
 .modal-title {
     font-family: var(--font-display); font-size: 1rem;
@@ -4557,7 +4588,7 @@ body::before {
 }
 .modal-close:hover { color: var(--text-primary); }
 .modal-tabs {
-    display: flex; gap: 0; border-bottom: 1px solid rgba(16,185,129,0.15);
+    display: flex; gap: 0; border-bottom: 1px solid rgba(var(--emerald-rgb),0.15);
 }
 .modal-tab {
     flex: 1; padding: 0.5rem; background: none; border: none;
@@ -4575,17 +4606,17 @@ body::before {
 .modal-footer {
     display: flex; align-items: center; justify-content: flex-end;
     gap: 0.5rem; padding: 0.6rem 1rem;
-    border-top: 1px solid rgba(16,185,129,0.15);
+    border-top: 1px solid rgba(var(--emerald-rgb),0.15);
 }
 
 /* Photo upload */
 .photo-upload-area {
-    border: 2px dashed rgba(16,185,129,0.3); border-radius: 6px;
+    border: 2px dashed rgba(var(--emerald-rgb),0.3); border-radius: 6px;
     padding: 1.5rem; text-align: center; margin-bottom: 0.75rem;
     transition: border-color 0.2s; min-height: 120px;
     display: flex; align-items: center; justify-content: center;
 }
-.photo-upload-area.drag-active { border-color: var(--emerald); background: rgba(16,185,129,0.05); }
+.photo-upload-area.drag-active { border-color: var(--emerald); background: rgba(var(--emerald-rgb),0.05); }
 .upload-prompt { color: var(--text-muted); }
 .upload-icon { font-size: 2rem; display: block; margin-bottom: 0.4rem; }
 .upload-prompt p { font-family: var(--font-mono); font-size: 0.7rem; margin: 0.3rem 0; }
@@ -4598,7 +4629,7 @@ body::before {
 .photo-preview { position: relative; }
 .photo-preview img {
     width: 100%; max-height: 250px; object-fit: contain;
-    border-radius: 4px; border: 1px solid rgba(16,185,129,0.2);
+    border-radius: 4px; border: 1px solid rgba(var(--emerald-rgb),0.2);
 }
 .photo-preview .tool-btn {
     position: absolute; top: 0.3rem; right: 0.3rem;
@@ -4607,7 +4638,7 @@ body::before {
 /* OCR */
 .ocr-status { margin: 0.5rem 0; }
 .ocr-progress-bar {
-    height: 4px; background: rgba(16,185,129,0.15); border-radius: 2px;
+    height: 4px; background: rgba(var(--emerald-rgb),0.15); border-radius: 2px;
     overflow: hidden; margin-bottom: 0.3rem;
 }
 .ocr-progress-fill {
@@ -4620,7 +4651,7 @@ body::before {
 .ocr-raw { margin: 0.6rem 0; }
 .ocr-raw textarea {
     width: 100%; background: var(--bg-primary); color: var(--text-secondary);
-    border: 1px solid rgba(16,185,129,0.2); border-radius: 4px;
+    border: 1px solid rgba(var(--emerald-rgb),0.2); border-radius: 4px;
     font-family: var(--font-mono); font-size: 0.65rem; padding: 0.4rem;
     resize: vertical;
 }
@@ -4637,7 +4668,7 @@ body::before {
 }
 .form-input {
     background: var(--bg-primary); color: var(--text-primary);
-    border: 1px solid rgba(16,185,129,0.2); border-radius: 3px;
+    border: 1px solid rgba(var(--emerald-rgb),0.2); border-radius: 3px;
     font-family: var(--font-mono); font-size: 0.7rem;
     padding: 0.35rem 0.5rem; outline: none; transition: border-color 0.2s;
 }
@@ -4653,7 +4684,7 @@ textarea.form-input { resize: vertical; }
     border-radius: 2px; letter-spacing: 0.3px; margin-left: 0.3rem;
 }
 .seed-pkt-badge {
-    background: rgba(16,185,129,0.2); color: #6ee7b7;
+    background: rgba(var(--emerald-rgb),0.2); color: #6ee7b7;
 }
 .plant-item .custom-actions {
     display: none; margin-left: auto; gap: 0.2rem;
@@ -4671,13 +4702,13 @@ textarea.form-input { resize: vertical; }
     width: 56px; height: 56px; border-radius: 50%;
     background: var(--emerald); border: 2px solid var(--emerald-dark);
     color: white; font-size: 1.5rem; cursor: pointer;
-    box-shadow: 0 4px 20px rgba(16,185,129,0.4);
+    box-shadow: 0 4px 20px rgba(var(--emerald-rgb),0.4);
     transition: transform 0.2s, box-shadow 0.2s;
     display: flex; align-items: center; justify-content: center;
 }
 .gb-fab:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 28px rgba(16,185,129,0.6);
+    box-shadow: 0 6px 28px rgba(var(--emerald-rgb),0.6);
 }
 .gb-fab.active {
     background: var(--bg-tertiary); border-color: var(--border);
@@ -4782,7 +4813,7 @@ textarea.form-input { resize: vertical; }
 
 .gb-msg-action {
     align-self: center; text-align: center;
-    background: rgba(16,185,129,0.1); border: 1px dashed var(--emerald-dark);
+    background: rgba(var(--emerald-rgb),0.1); border: 1px dashed var(--emerald-dark);
     color: var(--emerald-light); padding: 0.3rem 0.6rem;
     border-radius: 6px; font-family: var(--font-mono); font-size: 0.65rem;
     letter-spacing: 0.3px; max-width: 100%;
@@ -4917,14 +4948,14 @@ textarea.form-input { resize: vertical; }
 /* --- Toast upgrade with gradient --- */
 .toast-notification {
     background: linear-gradient(135deg, var(--emerald), var(--teal));
-    box-shadow: 0 4px 20px rgba(16,185,129,0.3), 0 0 40px rgba(16,185,129,0.1);
+    box-shadow: 0 4px 20px rgba(var(--emerald-rgb),0.3), 0 0 40px rgba(var(--emerald-rgb),0.1);
     border-left: 4px solid rgba(0,0,0,0.3);
     border-radius: var(--radius);
 }
 
 /* --- Drag ghost glow upgrade --- */
 .drag-ghost {
-    filter: drop-shadow(0 0 12px rgba(16,185,129,0.5)) drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+    filter: drop-shadow(0 0 12px rgba(var(--emerald-rgb),0.5)) drop-shadow(0 4px 8px rgba(0,0,0,0.4));
 }
 
 /* --- Bed drag-over glow upgrade --- */
@@ -4934,9 +4965,9 @@ textarea.form-input { resize: vertical; }
 
 /* --- Active highlight pulse upgrade --- */
 @keyframes bed-glow-pulse {
-    0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.5), 0 0 15px rgba(16,185,129,0.2); }
-    50% { box-shadow: 0 0 0 6px rgba(16,185,129,0.15), 0 0 25px rgba(16,185,129,0.15); }
-    100% { box-shadow: 0 0 0 0 rgba(16,185,129,0), 0 0 15px rgba(16,185,129,0); }
+    0% { box-shadow: 0 0 0 0 rgba(var(--emerald-rgb),0.5), 0 0 15px rgba(var(--emerald-rgb),0.2); }
+    50% { box-shadow: 0 0 0 6px rgba(var(--emerald-rgb),0.15), 0 0 25px rgba(var(--emerald-rgb),0.15); }
+    100% { box-shadow: 0 0 0 0 rgba(var(--emerald-rgb),0), 0 0 15px rgba(var(--emerald-rgb),0); }
 }
 .garden-bed.active-highlight {
     animation: bed-glow-pulse 0.8s ease-out;
@@ -4953,8 +4984,8 @@ textarea.form-input { resize: vertical; }
 
 /* --- Zone badge glow --- */
 .zone-badge {
-    text-shadow: 0 0 8px rgba(16,185,129,0.4);
-    box-shadow: inset 0 0 12px rgba(16,185,129,0.08);
+    text-shadow: 0 0 8px rgba(var(--emerald-rgb),0.4);
+    box-shadow: inset 0 0 12px rgba(var(--emerald-rgb),0.08);
 }
 
 /* --- Button press effect --- */
@@ -4984,15 +5015,15 @@ textarea.form-input { resize: vertical; }
 
 /* --- Spacing radius glow upgrade --- */
 .spacing-radius {
-    box-shadow: 0 0 12px rgba(16,185,129,0.2), inset 0 0 8px rgba(16,185,129,0.08);
+    box-shadow: 0 0 12px rgba(var(--emerald-rgb),0.2), inset 0 0 8px rgba(var(--emerald-rgb),0.08);
 }
 
 /* --- Companion line glow --- */
 .companion-line-good {
-    filter: drop-shadow(0 0 3px rgba(16,185,129,0.4));
+    filter: drop-shadow(0 0 3px rgba(var(--emerald-rgb),0.4));
 }
 .companion-line-bad {
-    filter: drop-shadow(0 0 3px rgba(239,68,68,0.4));
+    filter: drop-shadow(0 0 3px rgba(var(--red-rgb),0.4));
 }
 
 /* --- Save/sync indicator polish --- */
@@ -5052,7 +5083,7 @@ textarea.form-input { resize: vertical; }
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at center, rgba(16,185,129,0.15), transparent 70%);
+    background: radial-gradient(circle at center, rgba(var(--emerald-rgb),0.15), transparent 70%);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -5065,8 +5096,8 @@ textarea.form-input { resize: vertical; }
     transition: box-shadow 0.25s ease, border-color 0.25s ease;
 }
 .garden-bed:hover:not(.selected) {
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.3), 0 0 12px rgba(16,185,129,0.08);
-    border-color: rgba(16,185,129,0.4);
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.3), 0 0 12px rgba(var(--emerald-rgb),0.08);
+    border-color: rgba(var(--emerald-rgb),0.4);
 }
 
 /* --- Bed tab active indicator slide --- */
@@ -5094,7 +5125,7 @@ textarea.form-input { resize: vertical; }
     transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 .placed-plant:hover {
-    box-shadow: 0 0 0 2px rgba(16,185,129,0.25), 0 0 10px rgba(16,185,129,0.15);
+    box-shadow: 0 0 0 2px rgba(var(--emerald-rgb),0.25), 0 0 10px rgba(var(--emerald-rgb),0.15);
 }
 
 /* --- Stats dashboard counter pop-in --- */
@@ -5112,9 +5143,9 @@ textarea.form-input { resize: vertical; }
 
 /* --- Filter button group — active state gradient --- */
 .filter-btn.active {
-    background: linear-gradient(180deg, rgba(16,185,129,0.15), var(--bg-tertiary));
+    background: linear-gradient(180deg, rgba(var(--emerald-rgb),0.15), var(--bg-tertiary));
     box-shadow: 0 1px 0 var(--emerald);
-    text-shadow: 0 0 8px rgba(16,185,129,0.3);
+    text-shadow: 0 0 8px rgba(var(--emerald-rgb),0.3);
 }
 
 /* --- Tool button ripple-like hover --- */
@@ -5140,13 +5171,13 @@ textarea.form-input { resize: vertical; }
 }
 .subsection-title:hover {
     color: var(--text-secondary);
-    text-shadow: 0 0 6px rgba(16,185,129,0.15);
+    text-shadow: 0 0 6px rgba(var(--emerald-rgb),0.15);
 }
 
 /* --- Today's Tasks banner gradient --- */
 .today-tasks-bar {
-    background: linear-gradient(135deg, rgba(16,185,129,0.06), rgba(20,184,166,0.03), transparent) !important;
-    border-bottom: 1px solid rgba(16,185,129,0.15);
+    background: linear-gradient(135deg, rgba(var(--emerald-rgb),0.06), rgba(20,184,166,0.03), transparent) !important;
+    border-bottom: 1px solid rgba(var(--emerald-rgb),0.15);
 }
 
 /* --- Plant palette sidebar gradient fade at bottom --- */
@@ -5171,7 +5202,7 @@ textarea.form-input { resize: vertical; }
     border-radius: 2px;
 }
 .stat-row:hover {
-    background: rgba(16,185,129,0.04);
+    background: rgba(var(--emerald-rgb),0.04);
     padding-left: 4px;
 }
 
@@ -5181,7 +5212,7 @@ textarea.form-input { resize: vertical; }
 }
 .bed-plant-entry:hover {
     border-left-color: var(--emerald);
-    background: rgba(16,185,129,0.06);
+    background: rgba(var(--emerald-rgb),0.06);
     transform: translateX(2px);
 }
 
@@ -5197,7 +5228,7 @@ textarea.form-input { resize: vertical; }
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(16,185,129,0.12), transparent);
+    background: linear-gradient(90deg, transparent, rgba(var(--emerald-rgb),0.12), transparent);
     transition: left 0.4s ease;
 }
 .shelf-btn:hover::before {
@@ -5219,7 +5250,7 @@ textarea.form-input { resize: vertical; }
     position: absolute;
     inset: -1px;
     border-radius: inherit;
-    background: linear-gradient(135deg, rgba(245,158,11,0.15), transparent);
+    background: linear-gradient(135deg, rgba(var(--amber-rgb),0.15), transparent);
     z-index: -1;
     opacity: 0;
     transition: opacity 0.2s ease;
@@ -5230,8 +5261,8 @@ textarea.form-input { resize: vertical; }
 
 /* --- Floating action button pulse (Garden Buddy) --- */
 @keyframes fab-breathe {
-    0%, 100% { box-shadow: 0 4px 20px rgba(16,185,129,0.3); }
-    50% { box-shadow: 0 4px 30px rgba(16,185,129,0.5), 0 0 40px rgba(16,185,129,0.15); }
+    0%, 100% { box-shadow: 0 4px 20px rgba(var(--emerald-rgb),0.3); }
+    50% { box-shadow: 0 4px 30px rgba(var(--emerald-rgb),0.5), 0 0 40px rgba(var(--emerald-rgb),0.15); }
 }
 .gb-fab {
     animation: fab-breathe 3s ease-in-out infinite;
@@ -5272,7 +5303,7 @@ textarea.form-input { resize: vertical; }
 /* --- Today's Tasks overdue items glow --- */
 .today-task-item.overdue {
     border-left-color: var(--red-accent);
-    box-shadow: inset 3px 0 8px rgba(239,68,68,0.1);
+    box-shadow: inset 3px 0 8px rgba(var(--red-rgb),0.1);
 }
 
 /* --- Marquee ticker gradient mask edges --- */
@@ -5298,4 +5329,967 @@ textarea.form-input { resize: vertical; }
 }
 .water-alert-banner:not(.hidden) {
     animation: water-pulse 2s ease-in-out infinite;
+}
+
+/* =======================================================================
+   COMPANION NETWORK — persistent threads (friend/foe)
+   ======================================================================= */
+.thread-persistent {
+    stroke-dasharray: 6 4;
+    opacity: 0.75;
+    animation: thread-dash 3s linear infinite;
+    filter: drop-shadow(0 0 1.5px currentColor);
+}
+.thread-persistent.thread-foe { opacity: 0.9; }
+.thread-friend { stroke: var(--emerald, #10b981); }
+.thread-foe    { stroke: var(--red-accent, #ef4444); }
+@keyframes thread-dash { to { stroke-dashoffset: -20; } }
+
+/* === COMPANIONS toolbar toggle with LED === */
+.tool-btn.companion-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.tool-btn.companion-toggle .led {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #333;
+    box-shadow: inset 0 0 2px rgba(0,0,0,0.8);
+    display: inline-block;
+}
+.tool-btn.companion-toggle.on {
+    color: var(--emerald, #10b981);
+    border-color: var(--emerald, #10b981);
+    background: rgba(var(--emerald-rgb),0.08);
+}
+.tool-btn.companion-toggle.on .led {
+    background: #34d399;
+    box-shadow: 0 0 6px #34d399, 0 0 12px rgba(var(--emerald-rgb),0.6);
+    animation: led-pulse 1.8s ease-in-out infinite;
+}
+@keyframes led-pulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.55; }
+}
+
+/* === LIVING / idle sway — selected plants never sway ===
+   Sway includes scale(var(--stage-scale, 1)) so growth-stage scaling from
+   the TIMELINE tweak survives. Without this, sway's transform overrides
+   the data-stage transform and growth scaling silently disappears when
+   both LIVING and TIMELINE are on (the MAX preset). */
+body.tweak-living-on .placed-plant.living:not(.selected) {
+    animation: sway var(--sway-dur, 3.5s) ease-in-out infinite;
+    animation-delay: var(--sway-delay, 0s);
+    transform-origin: 50% 90%;
+}
+@keyframes sway {
+    0%, 100% { transform: rotate(-3deg) translateY(0)  scale(var(--stage-scale, 1)); }
+    50%      { transform: rotate(3deg)  translateY(-1px) scale(var(--stage-scale, 1)); }
+}
+
+/* Reserved: ripe glow for timeline harvest stage */
+@keyframes ripe-glow {
+    0%, 100% { filter: drop-shadow(0 0 0 rgba(var(--amber-rgb),0)) brightness(1); }
+    50%      { filter: drop-shadow(0 0 8px rgba(var(--amber-rgb),0.9)) brightness(1.2); }
+}
+
+/* === BLOOM burst === */
+.bloom-burst {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 20;
+    transform: translate(-50%, -50%) scale(0);
+    background: radial-gradient(circle, rgba(var(--emerald-rgb),0.85) 0%, rgba(var(--emerald-rgb),0.3) 40%, transparent 70%);
+    animation: bloom-pop 0.6s ease-out forwards;
+}
+@keyframes bloom-pop {
+    0%   { transform: translate(-50%,-50%) scale(0);   opacity: 1; }
+    60%  { transform: translate(-50%,-50%) scale(1.4); opacity: 0.6; }
+    100% { transform: translate(-50%,-50%) scale(2);   opacity: 0; }
+}
+
+/* === TWEAKS gear + panel === */
+.tweaks-gear {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--bg-secondary, #1a1a1a);
+    color: var(--emerald, #10b981);
+    border: 2px solid var(--emerald, #10b981);
+    box-shadow: 0 0 18px rgba(var(--emerald-rgb),0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 299;
+    transition: transform 0.2s;
+}
+.tweaks-gear:hover { transform: rotate(60deg); }
+.tweaks-gear.hidden { display: none; }
+
+.tweaks-panel {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    width: 340px;
+    max-height: 75vh;
+    background: var(--bg-secondary, #141414);
+    border: 2px solid var(--emerald, #10b981);
+    box-shadow: 0 0 40px rgba(var(--emerald-rgb),0.3);
+    z-index: 300;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 6px;
+    animation: panel-in 0.3s ease-out;
+}
+.tweaks-panel.hidden { display: none; }
+@keyframes panel-in {
+    0%   { transform: translateY(20px) scale(0.95); opacity: 0; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+.tweaks-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0.85rem;
+    font-family: var(--font-display, 'Anton', sans-serif);
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+    color: var(--emerald, #10b981);
+    background: linear-gradient(180deg, rgba(var(--emerald-rgb),0.15), transparent);
+    border-bottom: 1px solid var(--border, #2a2a2a);
+}
+.tweaks-close {
+    background: transparent;
+    border: 1px solid var(--border, #2a2a2a);
+    color: var(--text-muted, #888);
+    cursor: pointer;
+    font-size: 1rem;
+    width: 24px;
+    height: 24px;
+    line-height: 1;
+}
+.tweaks-close:hover {
+    color: var(--red-accent, #ef4444);
+    border-color: var(--red-accent, #ef4444);
+}
+.tweaks-sub {
+    font-family: var(--font-mono, 'Space Mono', monospace);
+    font-size: 0.7rem;
+    color: var(--text-muted, #888);
+    padding: 0.5rem 0.85rem;
+    border-bottom: 1px dashed var(--border, #2a2a2a);
+}
+.tweaks-presets {
+    display: flex;
+    gap: 4px;
+    padding: 0.55rem 0.85rem;
+    border-bottom: 1px dashed var(--border, #2a2a2a);
+}
+.tweak-preset {
+    flex: 1;
+    font-family: var(--font-mono, 'Space Mono', monospace);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 0.4rem;
+    background: var(--bg-tertiary, #222);
+    color: var(--text-secondary, #ccc);
+    border: 1px solid var(--border, #2a2a2a);
+    cursor: pointer;
+}
+.tweak-preset:hover {
+    color: var(--text-primary, #fff);
+    border-color: var(--text-muted, #888);
+}
+.tweaks-list {
+    overflow-y: auto;
+    flex: 1;
+    padding: 0.35rem 0;
+}
+.tweak-row {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 0.55rem 0.85rem;
+    border-bottom: 1px dashed var(--border, #2a2a2a);
+    cursor: pointer;
+}
+.tweak-row:hover { background: rgba(var(--emerald-rgb),0.04); }
+.tweak-row.on    { background: rgba(var(--emerald-rgb),0.06); }
+.tweak-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.tweak-title {
+    font-family: var(--font-mono, 'Space Mono', monospace);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--text-primary, #fff);
+}
+.tweak-desc {
+    font-family: var(--font-mono, 'Space Mono', monospace);
+    font-size: 0.68rem;
+    color: var(--text-muted, #888);
+    line-height: 1.4;
+}
+.tweak-switch {
+    width: 34px;
+    height: 18px;
+    background: var(--bg-dark, #0a0a0a);
+    border: 1px solid var(--border, #2a2a2a);
+    border-radius: 999px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    padding: 0;
+}
+.tweak-switch .knob {
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    width: 14px;
+    height: 14px;
+    background: var(--text-muted, #888);
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+.tweak-switch.on {
+    background: rgba(var(--emerald-rgb),0.25);
+    border-color: var(--emerald, #10b981);
+}
+.tweak-switch.on .knob {
+    left: 17px;
+    background: var(--emerald-glow, #34d399);
+    box-shadow: 0 0 8px var(--emerald-glow, #34d399);
+}
+
+/* Wind-gust was removed — it was decorative scanline noise, not state.
+   NOTE: do NOT add `.garden-bed { position: relative; }` here — the base
+   rule at styles.css line ~847 already sets `position: absolute`, which is
+   required for canvas-coordinate positioning via inline top/left. The old
+   `position: relative;` override here broke bed dragging. */
+
+/* Pause animations for beds that are offscreen — the .offscreen class is
+   added by an IntersectionObserver in containers.js. Cuts CPU/GPU cost
+   when many beds exist and only some are visible. */
+.garden-bed.offscreen .heatmap-overlay,
+.garden-bed.offscreen .placed-plant.living {
+    animation-play-state: paused !important;
+}
+
+/* ===== Soil texture — interim layered gradients to give beds visual
+   depth so they read as filled-with-dirt rather than flat dark blocks.
+   Cheap and CSS-only; no images. Will likely be replaced when the user
+   does a Claude-design pass for proper dirt textures. */
+.garden-bed::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    /* Multi-layer:
+       1. Coarse speckle from offset radial gradients ("clods of dirt").
+       2. Soft brown wash to break up the flat soil color.
+       3. Vignette inset shadow at edges for depth. */
+    background:
+        radial-gradient(ellipse 8% 6% at 18% 22%, rgba(120,82,45,0.18), transparent 70%),
+        radial-gradient(ellipse 6% 5% at 62% 14%, rgba(90,60,32,0.22), transparent 70%),
+        radial-gradient(ellipse 10% 7% at 78% 56%, rgba(110,76,42,0.16), transparent 70%),
+        radial-gradient(ellipse 7% 6% at 32% 78%, rgba(80,54,28,0.20), transparent 70%),
+        radial-gradient(ellipse 9% 7% at 88% 88%, rgba(100,68,38,0.14), transparent 70%),
+        radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(0,0,0,0.45) 100%);
+    z-index: 0;
+    mix-blend-mode: overlay;
+    opacity: 0.85;
+}
+[data-theme="light"] .garden-bed::after {
+    /* Lighter wash on the warm-paper light theme so the texture doesn't
+       look like grime over a beige bed. */
+    background:
+        radial-gradient(ellipse 8% 6% at 18% 22%, rgba(110,72,38,0.10), transparent 70%),
+        radial-gradient(ellipse 6% 5% at 62% 14%, rgba(90,60,28,0.12), transparent 70%),
+        radial-gradient(ellipse 10% 7% at 78% 56%, rgba(100,68,34,0.09), transparent 70%),
+        radial-gradient(ellipse 7% 6% at 32% 78%, rgba(80,54,24,0.11), transparent 70%),
+        radial-gradient(ellipse 9% 7% at 88% 88%, rgba(95,64,30,0.08), transparent 70%),
+        radial-gradient(ellipse at 50% 50%, transparent 60%, rgba(0,0,0,0.20) 100%);
+    opacity: 0.75;
+}
+
+/* ===== STAGE 2b — PALETTE HOVER THREADS =======================
+   Hovering a plant in the Plant Library highlights its placed
+   friends (emerald outline) and foes (pulsing red outline) across
+   every bed. When the hovered plant is already placed, dashed
+   hover-threads connect those instances to their companions.
+   Gated by state.tweaks.companion (independent of companionAlways). */
+.placed-plant.hover-friend {
+    outline: 2px solid var(--emerald, #10b981);
+    outline-offset: 2px;
+    filter: drop-shadow(0 0 8px rgba(var(--emerald-glow-rgb),0.85));
+    z-index: 6;
+}
+.placed-plant.hover-foe {
+    outline: 2px solid var(--red-accent, #ef4444);
+    outline-offset: 2px;
+    animation: foe-pulse 1.2s ease-in-out infinite;
+    z-index: 6;
+}
+/* Override LIVING sway when hovering a foe so foe-pulse wins. */
+body.tweak-living-on .placed-plant.living.hover-foe:not(.selected) {
+    animation: foe-pulse 1.2s ease-in-out infinite;
+}
+@keyframes foe-pulse {
+    0%, 100% {
+        filter: drop-shadow(0 0 2px rgba(var(--red-rgb),0.45));
+        outline-color: rgba(var(--red-rgb),0.65);
+    }
+    50% {
+        filter: drop-shadow(0 0 12px rgba(var(--red-rgb),0.95));
+        outline-color: rgba(var(--red-rgb),1);
+    }
+}
+
+/* hover-threads overlay — same SVG pattern as persistent threads
+   but thicker / faster dashes so they pop above the persistent layer. */
+.hover-threads-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 4;
+}
+.hover-threads-svg .thread-hover {
+    opacity: 0.95;
+    filter: drop-shadow(0 0 3px currentColor);
+    animation: thread-dash 2s linear infinite;
+}
+.hover-threads-svg .thread-hover.thread-foe {
+    animation-duration: 1.2s;
+}
+
+/* ===== STAGE 2c — TIMELINE SCRUBBER + GROWTH STAGES ==========
+   Hidden by default; revealed when body.tweak-timeline-on. The
+   scrubber lives directly under the planner toolbar and writes
+   state.seasonDay (0-365) on input. Plants render with a per-stage
+   transform/opacity, with 'harvest' adding an amber pulse + dot. */
+.timeline-scrubber {
+    display: none;
+    margin: 6px 0 8px 0;
+    padding: 8px 12px;
+    background: linear-gradient(180deg, var(--bg-secondary, #0e1612) 0%, rgba(var(--emerald-rgb),0.04) 100%);
+    border: 1px solid var(--emerald, #10b981);
+    border-radius: 4px;
+    font-family: 'Space Mono', monospace;
+    box-shadow: 0 0 14px rgba(var(--emerald-rgb),0.18);
+    position: relative;
+    z-index: 5;
+}
+body.tweak-timeline-on .timeline-scrubber {
+    display: block;
+}
+.timeline-scrubber.hidden { display: none !important; }
+.timeline-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+.timeline-title {
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 0.08em;
+    color: var(--emerald, #10b981);
+    font-size: 0.95rem;
+}
+.timeline-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--text-primary, #e0e6e3);
+    background: rgba(var(--emerald-rgb),0.08);
+    padding: 2px 8px;
+    border-radius: 2px;
+    border: 1px solid rgba(var(--emerald-rgb),0.3);
+}
+.timeline-today-btn {
+    margin-left: auto;
+    background: transparent;
+    border: 1px solid var(--emerald, #10b981);
+    color: var(--emerald, #10b981);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    padding: 3px 9px;
+    cursor: pointer;
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+}
+.timeline-today-btn:hover {
+    background: rgba(var(--emerald-rgb),0.12);
+    box-shadow: 0 0 8px rgba(var(--emerald-rgb),0.4);
+}
+.timeline-track-wrap {
+    position: relative;
+    height: 38px;
+    padding-top: 4px;
+}
+.timeline-range {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    height: 18px;
+    margin: 0;
+    cursor: pointer;
+    position: relative;
+    z-index: 3;
+}
+.timeline-range::-webkit-slider-runnable-track {
+    height: 4px;
+    background: linear-gradient(90deg,
+        rgba(var(--blue-rgb),0.55) 0%,
+        rgba(var(--blue-rgb),0.55) 25%,
+        rgba(var(--emerald-rgb),0.55) 30%,
+        rgba(var(--emerald-rgb),0.55) 75%,
+        rgba(var(--amber-rgb),0.55) 80%,
+        rgba(var(--blue-rgb),0.55) 100%);
+    border-radius: 2px;
+}
+.timeline-range::-moz-range-track {
+    height: 4px;
+    background: linear-gradient(90deg,
+        rgba(var(--blue-rgb),0.55) 0%,
+        rgba(var(--blue-rgb),0.55) 25%,
+        rgba(var(--emerald-rgb),0.55) 30%,
+        rgba(var(--emerald-rgb),0.55) 75%,
+        rgba(var(--amber-rgb),0.55) 80%,
+        rgba(var(--blue-rgb),0.55) 100%);
+    border-radius: 2px;
+}
+.timeline-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--emerald-glow, #34d399);
+    border: 2px solid var(--emerald, #10b981);
+    margin-top: -5px;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(var(--emerald-glow-rgb),0.7);
+}
+.timeline-range::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--emerald-glow, #34d399);
+    border: 2px solid var(--emerald, #10b981);
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(var(--emerald-glow-rgb),0.7);
+}
+.timeline-ticks {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 14px;
+    pointer-events: none;
+}
+.timeline-tick {
+    position: absolute;
+    transform: translateX(-50%);
+    font-size: 0.55rem;
+    color: rgba(224,230,227,0.45);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.04em;
+}
+.timeline-frost {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    font-size: 0.5rem;
+    color: rgba(var(--blue-rgb),0.85);
+    font-family: 'Space Mono', monospace;
+    pointer-events: none;
+    letter-spacing: 0.03em;
+}
+.timeline-frost::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    width: 1px;
+    height: 14px;
+    background: rgba(var(--blue-rgb),0.55);
+}
+.timeline-frost-fall { color: rgba(var(--amber-rgb),0.85); }
+.timeline-frost-fall::before { background: rgba(var(--amber-rgb),0.55); }
+
+/* Growth-stage transforms — only apply when timeline tweak is on.
+   Stages set the --stage-scale CSS var; the actual `transform: scale()` is
+   applied via this rule (when not swaying) AND inside the sway keyframes
+   (when LIVING is also on). This keeps growth scaling visible under MAX. */
+body.tweak-timeline-on .placed-plant {
+    transition: transform 360ms cubic-bezier(.22,.61,.36,1), opacity 360ms ease;
+    transform-origin: 50% 80%;
+    transform: scale(var(--stage-scale, 1));
+}
+body.tweak-timeline-on .placed-plant[data-stage="seed"]    { --stage-scale: 0.35; opacity: 0.5; }
+body.tweak-timeline-on .placed-plant[data-stage="sprout"]  { --stage-scale: 0.55; opacity: 0.78; }
+body.tweak-timeline-on .placed-plant[data-stage="leaf"]    { --stage-scale: 0.80; opacity: 0.92; }
+body.tweak-timeline-on .placed-plant[data-stage="mature"]  { --stage-scale: 1.0;  opacity: 1; }
+body.tweak-timeline-on .placed-plant[data-stage="harvest"] {
+    --stage-scale: 1.05;
+    opacity: 1;
+    animation: ripe-glow 1.6s ease-in-out infinite;
+}
+body.tweak-timeline-on .placed-plant[data-stage="harvest"]::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--amber, #f59e0b);
+    box-shadow: 0 0 6px rgba(var(--amber-rgb),0.85);
+    pointer-events: none;
+}
+@keyframes ripe-glow {
+    0%, 100% { filter: drop-shadow(0 0 0 rgba(var(--amber-rgb),0)) brightness(1); }
+    50%      { filter: drop-shadow(0 0 8px rgba(var(--amber-rgb),0.9)) brightness(1.18); }
+}
+
+/* ===== STAGE 2d — HARVEST YOINK + CONFETTI ===================
+   Click a harvest-stage plant -> .yoink class triggers a 540ms
+   scale-pop + fly-up while .confetti-layer spawns 10 emoji pieces. */
+.placed-plant.yoink {
+    pointer-events: none;
+    animation: plant-yoink 540ms cubic-bezier(.36,.07,.19,.97) forwards !important;
+    z-index: 8;
+}
+@keyframes plant-yoink {
+    0%   { transform: scale(1) translateY(0); opacity: 1; }
+    35%  { transform: scale(1.4) translateY(-6px); opacity: 1; filter: drop-shadow(0 0 14px rgba(var(--amber-rgb),0.9)); }
+    100% { transform: scale(0) translateY(-26px); opacity: 0; }
+}
+.confetti-layer {
+    position: absolute;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    z-index: 9;
+}
+.confetti-particle {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 1.05rem;
+    transform: translate(-50%, -50%);
+    animation: confetti-fly 900ms cubic-bezier(.18,.62,.36,1) forwards;
+    animation-delay: var(--delay, 0s);
+    will-change: transform, opacity;
+}
+@keyframes confetti-fly {
+    0%   { transform: translate(-50%, -50%) rotate(0deg) scale(0.6); opacity: 0; }
+    20%  { opacity: 1; }
+    100% {
+        transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy) + 28px))
+                   rotate(var(--rot)) scale(1);
+        opacity: 0;
+    }
+}
+
+/* ===== STAGE 2e — HEATMAP OVERLAY ============================
+   The .heatmap-overlay div is injected into every bed by
+   containers.js. Hidden by default; visible on body.tweak-heatmap-on.
+   Two ::before / ::after radial gradients = breathing moisture pools.
+   The .sun-arc child = an amber radial that crosses L→R every 12s. */
+.heatmap-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    mix-blend-mode: screen;
+    overflow: hidden;
+    transition: opacity 280ms ease;
+}
+body.tweak-heatmap-on .heatmap-overlay {
+    opacity: 1;
+}
+.heatmap-overlay::before,
+.heatmap-overlay::after {
+    content: '';
+    position: absolute;
+    width: 60%;
+    height: 60%;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(6px);
+}
+.heatmap-overlay::before {
+    left: var(--pool-a-x, 25%);
+    top:  var(--pool-a-y, 30%);
+    background: radial-gradient(closest-side, rgba(var(--blue-rgb),0.55), rgba(var(--blue-rgb),0) 70%);
+    animation: heatmap-breath-a 4s ease-in-out infinite;
+}
+.heatmap-overlay::after {
+    left: var(--pool-b-x, 65%);
+    top:  var(--pool-b-y, 55%);
+    background: radial-gradient(closest-side, rgba(var(--blue-rgb),0.45), rgba(var(--blue-rgb),0) 70%);
+    animation: heatmap-breath-b 6s ease-in-out infinite;
+}
+@keyframes heatmap-breath-a {
+    0%, 100% { transform: translate(-50%, -50%) scale(0.85); opacity: 0.55; }
+    50%      { transform: translate(-50%, -50%) scale(1.1);  opacity: 0.9;  }
+}
+@keyframes heatmap-breath-b {
+    0%, 100% { transform: translate(-50%, -50%) scale(1.1);  opacity: 0.85; }
+    50%      { transform: translate(-50%, -50%) scale(0.85); opacity: 0.45; }
+}
+.sun-arc {
+    position: absolute;
+    top: 8%;
+    left: 0;
+    width: 14%;
+    height: 14%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(var(--amber-rgb),0.85), rgba(var(--amber-rgb),0) 70%);
+    filter: blur(4px);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    animation: sun-arc-cross 12s linear infinite;
+}
+@keyframes sun-arc-cross {
+    0%   { left: 0%;   top: 30%; opacity: 0; }
+    8%   {              top: 18%; opacity: 1; }
+    50%  {              top: 5%;  opacity: 1; }
+    92%  {              top: 18%; opacity: 1; }
+    100% { left: 100%; top: 30%; opacity: 0; }
+}
+
+/* ===== STAGE 2f — TICKER STATS ===============================
+   When body.tweak-ticker-stats-on (or via JS gate), stat numbers
+   render as digit columns that translateY to land on the right
+   digit. Non-digit characters render as static separators. */
+.stat-value {
+    /* Be a flex row so digit columns line up on the baseline. */
+    display: inline-flex;
+    align-items: baseline;
+    line-height: 1;
+}
+.ticker-col {
+    display: inline-block;
+    overflow: hidden;
+    width: 0.62em;
+    height: 1em;
+    line-height: 1;
+    vertical-align: baseline;
+    position: relative;
+}
+.ticker-strip {
+    display: flex;
+    flex-direction: column;
+    transition: transform 480ms cubic-bezier(.22,.61,.36,1);
+    transform: translateY(0);
+}
+.ticker-cell {
+    display: block;
+    height: 1em;
+    line-height: 1;
+    text-align: center;
+}
+.ticker-sep {
+    display: inline-block;
+    line-height: 1;
+}
+
+/* ===== /HARDEN + /DISTILL =====================================
+   Toolbar dropdown menus (FILE ▾, + CONTAINER ▾), drawer-pattern
+   sidebar, touch-target normalization, danger-zone confirmation. */
+
+/* --- Touch target floor — primary interactive controls ≥32px high
+   (WCAG 2.5.8 AA) so they're tappable on tablets/phones. */
+.tool-btn,
+.filter-btn,
+.footer-action-btn {
+    min-height: 32px;
+}
+.tool-btn.compact-icon,
+.zoom-controls .tool-btn {
+    min-width: 32px;
+}
+
+/* --- Dropdown menu component (FILE ▾, + CONTAINER ▾) --- */
+.menu-wrap {
+    position: relative;
+    display: inline-block;
+}
+.menu-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.menu-trigger::after {
+    content: '\25BE'; /* ▾ */
+    font-size: 0.75em;
+    line-height: 1;
+    margin-left: 2px;
+    transition: transform 0.15s ease;
+}
+.menu-wrap.open .menu-trigger::after {
+    transform: rotate(180deg);
+}
+.menu-popup {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    min-width: 220px;
+}
+/* Container picker sits on the LEFT side of the shelf, so its popup should
+   align left (not right) so it doesn't extend off the canvas viewport. */
+#container-menu .menu-popup {
+    right: auto;
+    left: 0;
+    background: var(--bg-secondary, #0e1612);
+    border: 1px solid var(--emerald, #10b981);
+    border-radius: 3px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.6), 0 0 12px rgba(var(--emerald-rgb),0.18);
+    padding: 4px 0;
+    z-index: 50;
+    font-family: var(--font-mono);
+    display: none;
+}
+.menu-wrap.open .menu-popup {
+    display: block;
+    animation: menu-pop-in 140ms cubic-bezier(.22,.61,.36,1);
+}
+@keyframes menu-pop-in {
+    from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    background: none;
+    border: 0;
+    padding: 8px 14px;
+    color: var(--text-primary, #e0e6e3);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.4px;
+    text-align: left;
+    cursor: pointer;
+    text-decoration: none;
+    text-transform: uppercase;
+    min-height: 36px;
+}
+.menu-item:hover,
+.menu-item:focus-visible {
+    background: rgba(var(--emerald-rgb),0.12);
+    color: var(--emerald-glow, #34d399);
+    outline: none;
+}
+.menu-item .menu-icon {
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+    opacity: 0.85;
+}
+.menu-item .menu-shortcut {
+    margin-left: auto;
+    font-size: 0.7em;
+    opacity: 0.5;
+    letter-spacing: 0.5px;
+}
+.menu-divider {
+    height: 1px;
+    background: var(--border, #2a3530);
+    margin: 4px 0;
+}
+.menu-section-label {
+    padding: 6px 14px 2px;
+    font-size: 0.6rem;
+    color: var(--text-muted, #7a8983);
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+}
+.menu-item.danger {
+    color: var(--red-accent, #ef4444);
+}
+.menu-item.danger:hover,
+.menu-item.danger:focus-visible {
+    background: rgba(var(--red-rgb),0.15);
+    color: #ff6b6b;
+}
+
+/* --- Compact zoom segmented control --- */
+.zoom-controls {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--border, #2a3530);
+    border-radius: 2px;
+    overflow: hidden;
+}
+.zoom-controls .tool-btn {
+    border: none;
+    border-radius: 0;
+    margin: 0;
+    padding: 0 8px;
+    min-width: 30px;
+}
+.zoom-controls .tool-btn + .tool-btn {
+    border-left: 1px solid var(--border, #2a3530);
+}
+.zoom-controls .zoom-level {
+    padding: 0 8px;
+    min-width: 48px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-muted, #7a8983);
+    border-left: 1px solid var(--border, #2a3530);
+    border-right: 1px solid var(--border, #2a3530);
+    background: var(--bg-tertiary, #131a17);
+    line-height: 1.9;
+}
+
+/* --- Sidebar drawer pattern (both panels) --- */
+.bed-details,
+.plant-palette {
+    transition: transform 280ms cubic-bezier(.22,.61,.36,1), opacity 220ms ease;
+    position: relative; /* drawer-tab anchor */
+}
+.bed-details.drawer-collapsed {
+    transform: translateX(calc(100% - 28px));
+}
+.bed-details.drawer-collapsed > *:not(.drawer-tab) {
+    opacity: 0.15;
+    pointer-events: none;
+}
+.plant-palette.drawer-collapsed {
+    transform: translateX(calc(-100% + 28px));
+}
+.plant-palette.drawer-collapsed > *:not(.drawer-tab) {
+    opacity: 0.15;
+    pointer-events: none;
+}
+.drawer-tab {
+    position: absolute;
+    top: 50%;
+    width: 28px;
+    height: 80px;
+    background: var(--bg-secondary, #0e1612);
+    border: 1px solid var(--emerald, #10b981);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--emerald, #10b981);
+    font-family: var(--font-mono);
+    writing-mode: vertical-lr;
+    font-size: 0.6rem;
+    letter-spacing: 1.2px;
+    z-index: 5;
+}
+.bed-details .drawer-tab {
+    left: 0;
+    transform: translate(-100%, -50%);
+    transform-origin: 0 50%;
+    border-right: 0;
+    border-radius: 4px 0 0 4px;
+}
+.plant-palette .drawer-tab {
+    right: 0;
+    transform: translate(100%, -50%);
+    transform-origin: 100% 50%;
+    border-left: 0;
+    border-radius: 0 4px 4px 0;
+    writing-mode: vertical-rl;
+}
+.drawer-tab:hover {
+    background: rgba(var(--emerald-rgb),0.12);
+    color: var(--emerald-glow, #34d399);
+}
+.drawer-tab .arrow {
+    writing-mode: horizontal-tb;
+    margin-bottom: 4px;
+    font-size: 0.85rem;
+}
+.bed-details.drawer-collapsed .drawer-tab .arrow,
+.plant-palette.drawer-collapsed .drawer-tab .arrow {
+    transform: rotate(180deg);
+}
+
+/* --- Compact slim footer (no center toolbar) --- */
+.main-footer.compact .footer-center {
+    display: none;
+}
+
+/* --- Restore focus-visible where outline:none was used in raw state --- */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+    outline: 2px solid var(--emerald, #10b981);
+    outline-offset: 2px;
+}
+
+/* --- Confirmation modal "type CLEAR to confirm" --- */
+.danger-confirm-input {
+    width: 100%;
+    padding: 8px 10px;
+    background: var(--bg-tertiary, #131a17);
+    border: 1px solid var(--red-muted, #991b1b);
+    color: var(--red-accent, #ef4444);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin: 12px 0;
+    text-align: center;
+}
+.danger-confirm-input:focus {
+    outline: none;
+    border-color: var(--red-accent, #ef4444);
+    box-shadow: 0 0 12px rgba(var(--red-rgb),0.3);
+}
+
+/* ===== STAGE 2g — PAGE-TURN 3D TAB TRANSITION ================
+   Wrapped in navigation.js switchTab. Outgoing tab fades + skews
+   off; incoming tab fades + skews in. Perspective on parent so the
+   3D rotation reads correctly. */
+body.tweak-page-turn-on {
+    perspective: 1200px;
+}
+.tab-content.page-out {
+    animation: page-out 280ms cubic-bezier(.4,.0,.2,1) forwards;
+    transform-origin: 50% 50%;
+}
+.tab-content.page-in {
+    animation: page-in 360ms cubic-bezier(.2,.7,.3,1) forwards;
+    transform-origin: 50% 50%;
+}
+@keyframes page-out {
+    0%   { transform: translateX(0)    skewX(0)    rotateY(0deg);  opacity: 1; filter: hue-rotate(0deg); }
+    100% { transform: translateX(-4%)  skewX(-2deg) rotateY(-8deg); opacity: 0; filter: hue-rotate(15deg); }
+}
+@keyframes page-in {
+    0%   { transform: translateX(4%)   skewX(2deg)  rotateY(8deg);  opacity: 0; filter: hue-rotate(-15deg); }
+    50%  {                                                          filter: hue-rotate(8deg); }
+    100% { transform: translateX(0)    skewX(0)     rotateY(0deg);  opacity: 1; filter: hue-rotate(0deg); }
 }
