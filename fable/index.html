@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GardenSync — A Quiet Almanac</title>
+<meta name="description" content="A calm garden bed planner for Food Not Bombs Canton, Ohio. Zone 6a.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Karla:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>🌱</text></svg>">
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="masthead">
+  <div class="wordmark">
+    <svg class="sprig" viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M16 28 C16 20 16 14 16 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M16 14 C12 12 9 12 6 13 C8 8 12 7 16 9 Z" fill="currentColor" opacity=".85"/>
+      <path d="M16 11 C20 9 23 9 26 10 C24 5 20 4 16 6 Z" fill="currentColor" opacity=".6"/>
+    </svg>
+    <div>
+      <h1>GardenSync</h1>
+      <p class="tagline">A quiet almanac · Food Not Bombs · Canton, Ohio · Zone 6a</p>
+    </div>
+  </div>
+  <div class="masthead-tools">
+    <span id="weather-chip" class="weather-chip" hidden></span>
+    <button id="btn-undo" class="tool-btn" title="Undo (Ctrl+Z)">↶ Undo</button>
+    <div class="menu-wrap">
+      <button id="btn-plans" class="tool-btn">Plans ▾</button>
+      <div id="plans-menu" class="menu" hidden>
+        <button data-plan="fnb-easy">FNB Easy Start — five beds, low-keep crops</button>
+        <button data-plan="blank">Blank slate — three empty beds</button>
+      </div>
+    </div>
+    <button id="btn-export" class="tool-btn" title="Download garden as JSON">Save file</button>
+    <button id="btn-import" class="tool-btn" title="Open a garden JSON file">Open file</button>
+    <input type="file" id="import-input" accept=".json,application/json" hidden>
+  </div>
+</header>
+
+<section class="season-band" aria-label="Season ribbon">
+  <svg id="ribbon" viewBox="0 0 1100 70" preserveAspectRatio="xMidYMid meet"></svg>
+  <div class="season-caption">
+    <span id="view-date-label"></span>
+    <button id="btn-today" class="linklike" hidden>return to today</button>
+  </div>
+</section>
+
+<main class="trifold">
+
+  <aside class="seed-drawer" aria-label="Seed drawer">
+    <div class="drawer-head">
+      <h2>Seed drawer</h2>
+      <input id="seed-search" type="search" placeholder="find a seed…" autocomplete="off">
+    </div>
+    <div id="drawer-groups" class="drawer-groups"></div>
+  </aside>
+
+  <section class="garden" aria-label="Garden beds">
+    <div id="planting-note" class="planting-note" hidden></div>
+    <div id="beds" class="beds"></div>
+    <div class="add-bed-row">
+      <span class="add-label">new bed —</span>
+      <button class="add-bed" data-size="8x4">8′ × 4′</button>
+      <button class="add-bed" data-size="10x5">10′ × 5′</button>
+      <button class="add-bed" data-size="4x4">4′ × 4′</button>
+    </div>
+  </section>
+
+  <aside class="almanac" aria-label="Almanac">
+    <div id="almanac-body" class="almanac-body"></div>
+    <div class="ask-wrap">
+      <button id="ask-toggle" class="ask-toggle">✳ Ask the almanac</button>
+      <div id="ask-panel" class="ask-panel" hidden>
+        <div id="ask-messages" class="ask-messages">
+          <p class="ask-hint">Ask anything about your garden — what to plant where, what's struggling, what's for dinner in August.</p>
+        </div>
+        <form id="ask-form" class="ask-form">
+          <input id="ask-input" type="text" placeholder="ask quietly…" autocomplete="off">
+          <button type="submit">send</button>
+        </form>
+      </div>
+    </div>
+  </aside>
+
+</main>
+
+<div id="whisper" class="whisper" hidden></div>
+
+<script src="plants.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
