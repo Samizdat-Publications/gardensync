@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FNB Canton — Spring Amendment Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c1410;
+  --bg-elevated: #141f1a;
+  --bg-card: #1a2720;
+  --border: #2a3d33;
+  --border-strong: #3d5847;
+  --emerald: #10b981;
+  --emerald-bright: #34d399;
+  --teal: #14b8a6;
+  --amber: #f59e0b;
+  --red: #ef4444;
+  --text: #e8f1ec;
+  --text-dim: #9eb5a7;
+  --text-mute: #6b8477;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+}
+
+body {
+  background-image:
+    radial-gradient(ellipse 60% 40% at 20% 0%, rgba(16,185,129,0.12), transparent),
+    radial-gradient(ellipse 50% 30% at 100% 100%, rgba(20,184,166,0.08), transparent);
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
+}
+
+/* ───── HEADER ───── */
+.hero {
+  border: 2px solid var(--emerald);
+  border-radius: 4px;
+  padding: 28px 28px 24px;
+  margin-bottom: 28px;
+  background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(20,184,166,0.04));
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: repeating-linear-gradient(90deg, var(--emerald) 0 12px, transparent 12px 20px);
+}
+.kicker {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--emerald-bright);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+h1 {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(36px, 6vw, 58px);
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  color: var(--text);
+}
+h1 .accent { color: var(--emerald-bright); }
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 32px;
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  color: var(--text-dim);
+  padding-top: 12px;
+  border-top: 1px dashed var(--border-strong);
+}
+.hero-meta span strong {
+  color: var(--emerald-bright);
+  font-weight: 700;
+}
+
+/* ───── SECTIONS ───── */
+h2 {
+  font-family: 'Anton', sans-serif;
+  font-size: 32px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 44px 0 16px;
+  padding-left: 12px;
+  border-left: 4px solid var(--emerald);
+}
+h3 {
+  font-family: 'Anton', sans-serif;
+  font-size: 20px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 20px 0 10px;
+  color: var(--emerald-bright);
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 20px 22px;
+  margin-bottom: 16px;
+}
+
+/* ───── MATH TABLE ───── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+}
+th, td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+th {
+  color: var(--emerald-bright);
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  border-bottom: 2px solid var(--emerald);
+}
+td.num { text-align: right; font-weight: 700; color: var(--text); }
+tr:last-child td { border-bottom: none; }
+tr.total td {
+  border-top: 2px solid var(--emerald);
+  color: var(--emerald-bright);
+  font-weight: 700;
+  padding-top: 14px;
+}
+
+/* ───── STORE STOPS / SHOPPING LIST ───── */
+.stop {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin-bottom: 18px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.stop.complete {
+  border-color: var(--border);
+  opacity: 0.65;
+}
+.stop-header {
+  padding: 16px 22px 14px;
+  background: linear-gradient(90deg, rgba(16,185,129,0.14), transparent 70%);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: "num name progress" "num addr progress";
+  column-gap: 18px;
+  row-gap: 2px;
+  align-items: baseline;
+}
+.stop-num {
+  grid-area: num;
+  font-family: 'Anton', sans-serif;
+  font-size: 56px;
+  line-height: 0.85;
+  color: var(--text);
+  align-self: center;
+}
+.stop-name {
+  grid-area: name;
+  font-family: 'Anton', sans-serif;
+  font-size: 24px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  line-height: 1.1;
+}
+.stop-addr {
+  grid-area: addr;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  color: var(--text-dim);
+  letter-spacing: 0.03em;
+}
+.stop-progress {
+  grid-area: progress;
+  align-self: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  white-space: nowrap;
+}
+.stop-progress.done {
+  color: var(--emerald-bright);
+  border-color: var(--emerald);
+  background: rgba(16,185,129,0.08);
+}
+.stop-items {
+  padding: 4px 22px 14px;
+}
+@media (max-width: 520px) {
+  .stop-header {
+    grid-template-columns: auto 1fr;
+    grid-template-areas: "num name" "num addr" "progress progress";
+    row-gap: 4px;
+  }
+  .stop-num { font-size: 44px; }
+  .stop-progress { justify-self: start; margin-top: 4px; }
+}
+
+.item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  column-gap: 14px;
+  align-items: start;
+  padding: 14px 4px;
+  border-bottom: 1px dashed var(--border);
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.2s;
+}
+.item:last-child { border-bottom: none; }
+.item input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--border-strong);
+  border-radius: 3px;
+  background: var(--bg);
+  cursor: pointer;
+  margin: 2px 0 0;
+  position: relative;
+  transition: all 0.15s;
+  grid-row: 1 / span 2;
+}
+.item input[type="checkbox"]:hover { border-color: var(--emerald); }
+.item input[type="checkbox"]:checked {
+  background: var(--emerald);
+  border-color: var(--emerald);
+}
+.item input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--bg);
+  font-weight: 700;
+  font-size: 18px;
+  font-family: sans-serif;
+  line-height: 1;
+}
+.item-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+  align-self: center;
+}
+.item-price {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  color: var(--emerald-bright);
+  font-weight: 700;
+  white-space: nowrap;
+  grid-row: 1 / span 2;
+  align-self: center;
+  padding-left: 8px;
+}
+.item-detail {
+  grid-column: 2;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 6px;
+  line-height: 1.5;
+}
+.item.done { opacity: 0.45; }
+.item.done .item-title { text-decoration: line-through; }
+@media (max-width: 480px) {
+  .item { grid-template-columns: auto 1fr; }
+  .item-price {
+    grid-column: 2;
+    grid-row: auto;
+    padding-left: 0;
+    margin-top: 4px;
+    font-size: 14px;
+  }
+  .item-detail { margin-top: 4px; }
+}
+
+/* ───── BADGES — 3 variants only: FAST / SLOW / OPTIONAL ───── */
+.badge {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 3px;
+  margin-left: 6px;
+  vertical-align: 2px;
+  line-height: 1.2;
+}
+.badge-fast     { background: var(--amber); color: #1a1207; }
+.badge-slow     { background: var(--teal); color: #041a17; }
+.badge-optional { background: transparent; color: var(--text-dim); border: 1px solid var(--border-strong); }
+
+/* ───── APPLICATION PLAN / TIMELINE ───── */
+.timeline { position: relative; padding-left: 28px; margin-top: 16px; }
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 8px; top: 8px; bottom: 8px;
+  width: 2px;
+  background: var(--border-strong);
+}
+.tl-item {
+  position: relative;
+  padding: 0 0 24px 0;
+}
+.tl-item::before {
+  content: "";
+  position: absolute;
+  left: -24px;
+  top: 6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 3px solid var(--emerald);
+}
+.tl-item.weekend::before { background: var(--amber); border-color: var(--amber); }
+.tl-date {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  color: var(--emerald-bright);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+.tl-title {
+  font-family: 'Anton', sans-serif;
+  font-size: 20px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.tl-body { color: var(--text-dim); font-size: 16px; }
+.tl-body ul { margin: 6px 0; padding-left: 22px; }
+.tl-body li { margin-bottom: 4px; }
+.tl-body strong { color: var(--text); }
+
+/* ───── PROGRESS BAR ───── */
+.progress-wrap {
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  padding: 8px 0 12px;
+  z-index: 10;
+  margin: -8px 0 20px;
+  border-bottom: 1px solid var(--border);
+}
+.progress-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+.progress-label strong { color: var(--emerald-bright); }
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-elevated);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--emerald), var(--teal));
+  transition: width 0.3s;
+  width: 0%;
+}
+
+/* ───── CALLOUTS ───── */
+.callout {
+  border-left: 4px solid var(--amber);
+  background: rgba(245, 158, 11, 0.08);
+  padding: 12px 16px;
+  margin: 12px 0;
+  border-radius: 0 4px 4px 0;
+  font-size: 15px;
+}
+.callout strong { color: var(--amber); }
+.callout.green {
+  border-left-color: var(--emerald);
+  background: rgba(16, 185, 129, 0.08);
+}
+.callout.green strong { color: var(--emerald-bright); }
+
+/* ───── BED GRID VISUAL ───── */
+.beds {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin: 14px 0;
+}
+.bed {
+  aspect-ratio: 1 / 2;
+  background: linear-gradient(180deg, #3d2817 0%, #5a3c22 100%);
+  border: 2px solid #2a1a0a;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Anton', sans-serif;
+  color: rgba(255,255,255,0.6);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  position: relative;
+}
+.bed::after {
+  content: "4×8";
+  position: absolute;
+  bottom: 4px;
+  right: 6px;
+  font-size: 10px;
+  font-family: 'Space Mono', monospace;
+  opacity: 0.6;
+}
+
+/* ───── BUTTONS ───── */
+.btn-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 16px 0 0;
+}
+button.btn {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 10px 16px;
+  background: transparent;
+  color: var(--emerald-bright);
+  border: 1px solid var(--emerald);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+button.btn:hover { background: var(--emerald); color: var(--bg); }
+button.btn.danger { color: var(--red); border-color: var(--red); }
+button.btn.danger:hover { background: var(--red); color: #fff; }
+
+/* ───── PRINT ───── */
+@media print {
+  body { background: white; color: black; }
+  .progress-wrap, .btn-row { display: none; }
+  h1, h2, h3, .stop-name, .tl-title { color: black !important; }
+  .hero, .card, .stop { border-color: #333 !important; background: white !important; }
+  .item-price, .badge-fast, .badge-slow, .badge-optional { color: #333 !important; background: transparent !important; border: 1px solid #999 !important; }
+  .stop-progress { color: #333 !important; border-color: #999 !important; background: transparent !important; }
+  .kicker, .stop-addr, .item-detail, .hero-meta, .tl-date { color: #666 !important; }
+}
+
+footer {
+  margin-top: 60px;
+  padding-top: 20px;
+  border-top: 1px dashed var(--border);
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--text-mute);
+  text-align: center;
+  letter-spacing: 0.1em;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ───── HERO ───── -->
+  <div class="hero">
+    <div class="kicker">■ Food Not Bombs Canton · Spring 2026</div>
+    <h1>Bed <span class="accent">Amendment</span><br>& Shopping Plan</h1>
+    <div class="hero-meta">
+      <span>START: <strong>570 Niemans Ave, East Canton OH</strong></span>
+      <span>DATE: <strong>Sat Apr 18 – Sun Apr 19, 2026</strong></span>
+      <span>ZONE: <strong>6a · Last Frost ~May 8</strong></span>
+    </div>
+  </div>
+
+  <!-- ───── PROGRESS ───── -->
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>SHOPPING PROGRESS</span>
+      <span><strong id="progress-count">0 / 0</strong> ITEMS</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+
+  <!-- ───── THE MATH ───── -->
+  <h2>The Math</h2>
+  <div class="card">
+    <div class="beds">
+      <div class="bed">1</div>
+      <div class="bed">2</div>
+      <div class="bed">3</div>
+      <div class="bed">4</div>
+      <div class="bed">5</div>
+    </div>
+    <p style="margin:14px 0 4px;">5 beds &times; 4 ft &times; 8 ft = <strong style="color:var(--emerald-bright)">160 sq ft total</strong></p>
+    <p style="margin:0 0 14px;color:var(--text-dim);font-size:15px;">Amending the top 1.5" average &rarr; <strong style="color:var(--text)">~20 cu ft of blend</strong> needed</p>
+
+    <h3>Blend Recipe</h3>
+    <table>
+      <thead><tr><th>Component</th><th>Ratio</th><th style="text-align:right">Total Volume</th><th style="text-align:right">Per 4&times;8 Bed</th></tr></thead>
+      <tbody>
+        <tr><td>Screened compost (bulk)</td><td>65%</td><td class="num">13 cu ft</td><td class="num">2.6 cu ft</td></tr>
+        <tr><td>Perlite (4 cu ft bag)</td><td>20%</td><td class="num">4 cu ft</td><td class="num">0.8 cu ft</td></tr>
+        <tr><td>Espoma Garden-tone 4-6-6</td><td>—</td><td class="num">~7.5 lb</td><td class="num">1.5 lb (3 cups)</td></tr>
+        <tr><td>Blood meal 12-0-0 (fast N)</td><td>—</td><td class="num">~2.5 lb</td><td class="num">½ cup</td></tr>
+        <tr><td>Bone meal 2-14-0 (slow P)</td><td>—</td><td class="num">~2.5 lb</td><td class="num">½ cup</td></tr>
+        <tr><td>Kelp meal 1-0-2 (K + micros)</td><td>—</td><td class="num">~1.25 lb</td><td class="num">¼ cup</td></tr>
+        <tr class="total"><td colspan="2">Plus water-soluble feed at planting</td><td colspan="2" style="text-align:right">1 tbsp Miracle-Gro / gal water</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout green">
+      <strong>SKIP THE POUNDS OF VERMICULITE.</strong> You're top-dressing established beds, not filling them. Perlite works better (Ohio clay-loam needs drainage, not more water retention) and is ~½ the price. Kept the blend heavy on compost + nutrients — that's what old beds are hungry for.
+    </div>
+  </div>
+
+  <!-- ───── SHOPPING LIST BY STOP ───── -->
+  <h2>Shopping Route</h2>
+  <p style="color:var(--text-dim);margin:-8px 0 18px;">Check items as you pick them up. Progress saves automatically.</p>
+
+  <!-- STOP 1: Lowe's Alliance -->
+  <div class="stop" data-stop="1">
+    <div class="stop-header">
+      <span class="stop-num">01</span>
+      <span class="stop-name">Lowe's Alliance</span>
+      <span class="stop-addr">2595 W State St · ~8 mi · 15 min</span>
+      <span class="stop-progress" data-stop-progress="1">0 / 4</span>
+    </div>
+    <div class="stop-items">
+      <label class="item">
+        <input type="checkbox" data-id="lowes-perlite" data-stop="1">
+        <div class="item-title">Viagrow Perlite 4 cu ft bag</div>
+        <div class="item-detail">If the 4 cu ft bag isn't stocked, grab 2× Miracle-Gro 8 qt bags instead (~$8 each). Ask garden-center staff.</div>
+        <div class="item-price">~$36</div>
+      </label>
+
+      <label class="item">
+        <input type="checkbox" data-id="lowes-blood" data-stop="1">
+        <div class="item-title">Jobe's Organics Blood Meal 3 lb (12-0-0) <span class="badge badge-fast">Fast</span></div>
+        <div class="item-detail">Instant nitrogen release. For leafy greens + early growth.</div>
+        <div class="item-price">~$12</div>
+      </label>
+
+      <label class="item">
+        <input type="checkbox" data-id="lowes-bone" data-stop="1">
+        <div class="item-title">Jobe's Organics Bone Meal 3 lb (2-14-0) <span class="badge badge-slow">Slow</span></div>
+        <div class="item-detail">Phosphorus for roots + flowering. Breaks down over the season.</div>
+        <div class="item-price">~$12</div>
+      </label>
+
+      <label class="item">
+        <input type="checkbox" data-id="lowes-mg" data-stop="1">
+        <div class="item-title">Miracle-Gro All-Purpose 1.5 lb (24-8-16) <span class="badge badge-fast">Fast</span></div>
+        <div class="item-detail">Water-soluble. Mix 1 tbsp per gallon when you water in the amendments this weekend. Also use when transplanting seedlings.</div>
+        <div class="item-price">~$10</div>
+      </label>
+    </div>
+  </div>
+
+  <!-- STOP 2: Tractor Supply Alliance -->
+  <div class="stop" data-stop="2">
+    <div class="stop-header">
+      <span class="stop-num">02</span>
+      <span class="stop-name">Tractor Supply Alliance</span>
+      <span class="stop-addr">Just up W State St from Lowe's · &lt;1 mi</span>
+      <span class="stop-progress" data-stop-progress="2">0 / 2</span>
+    </div>
+    <div class="stop-items">
+      <label class="item">
+        <input type="checkbox" data-id="ts-garden-tone" data-stop="2">
+        <div class="item-title">Espoma Garden-Tone 18 lb (4-6-6 organic) <span class="badge badge-slow">Slow</span></div>
+        <div class="item-detail">Workhorse slow-release for vegetables. Covers 180–360 sq ft — one bag covers all 5 beds with leftover for side-dressing in June.</div>
+        <div class="item-price">~$28</div>
+      </label>
+
+      <label class="item">
+        <input type="checkbox" data-id="ts-perlite-backup" data-stop="2">
+        <div class="item-title">Viagrow Perlite 4 cu ft <span class="badge badge-optional">Backup</span></div>
+        <div class="item-detail">Only if Lowe's is out. TSC stocks the same Viagrow line — skip if you already got it at Stop 01.</div>
+        <div class="item-price">~$36</div>
+      </label>
+    </div>
+  </div>
+
+  <!-- STOP 3: Compost -->
+  <div class="stop" data-stop="3">
+    <div class="stop-header">
+      <span class="stop-num">03</span>
+      <span class="stop-name">Compost — ½ Yard</span>
+      <span class="stop-addr">Fiancée's nursery first · backups below</span>
+      <span class="stop-progress" data-stop-progress="3">0 / 4</span>
+    </div>
+    <div class="stop-items">
+      <label class="item">
+        <input type="checkbox" data-id="compost-primary" data-stop="3">
+        <div class="item-title">½ cubic yard composted soil — fiancée's nursery</div>
+        <div class="item-detail">Half-price score. ~13 cu ft needed. Bring a pickup truck or bed liner + tarp. Call ahead to confirm pickup size and whether they can load. Ask what it's composted from (leaf, manure, mushroom — all work).</div>
+        <div class="item-price">TBD</div>
+      </label>
+
+      <label class="item">
+        <input type="checkbox" data-id="compost-backup-1" data-stop="3">
+        <div class="item-title">Canton Topsoil Inc. — screened compost <span class="badge badge-optional">Backup</span></div>
+        <div class="item-detail">Est. 1985. Call for same-day estimate. ½ yd = $12–15.</div>
+        <div class="item-price">~$25/yd</div>
+      </label>
+
+      <label class="item">
+        <input type="checkbox" data-id="compost-backup-2" data-stop="3">
+        <div class="item-title">Mr. Mulch Canton — topsoil/compost <span class="badge badge-optional">Backup</span></div>
+        <div class="item-detail">4540 Lesh St NE. Priced by cubic yard. Has a pre-mixed raised-bed blend option if you want to skip the DIY.</div>
+        <div class="item-price">$20–40/yd</div>
+      </label>
+
+      <label class="item">
+        <input type="checkbox" data-id="compost-bagged" data-stop="3">
+        <div class="item-title">14× 1 cu ft bags compost <span class="badge badge-optional">Backup</span></div>
+        <div class="item-detail">Lowe's or Home Depot only if no bulk source works out — 3–5× more expensive than bulk.</div>
+        <div class="item-price">~$85</div>
+      </label>
+    </div>
+  </div>
+
+  <!-- STOP 4: Kelp -->
+  <div class="stop" data-stop="4">
+    <div class="stop-header">
+      <span class="stop-num">04</span>
+      <span class="stop-name">Kelp Meal</span>
+      <span class="stop-addr">Petitti Louisville · 5828 Columbus Rd NE · ~6 mi</span>
+      <span class="stop-progress" data-stop-progress="4">0 / 2</span>
+    </div>
+    <div class="stop-items">
+      <label class="item">
+        <input type="checkbox" data-id="kelp-petitti" data-stop="4">
+        <div class="item-title">Espoma Kelp Meal 4 lb — Petitti Garden Center <span class="badge badge-slow">Slow</span></div>
+        <div class="item-detail">~6 mi from Niemans Ave. Carries the full Espoma organic line. Ask about piecemeal perlite / manure while you're there if you want a custom blend option.</div>
+        <div class="item-price">varies</div>
+      </label>
+
+      <label class="item">
+        <input type="checkbox" data-id="kelp-amazon" data-stop="4">
+        <div class="item-title">Down To Earth Kelp Meal 5 lb (1-0.2-2) — Amazon <span class="badge badge-optional">Backup</span></div>
+        <div class="item-detail">Order tonight, arrives in time for second-round feeding in ~2 weeks. Kelp isn't essential for this weekend — you can apply it later.</div>
+        <div class="item-price">~$28</div>
+      </label>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn" onclick="window.print()">■ PRINT LIST</button>
+    <button class="btn danger" onclick="resetAll()">⟲ RESET CHECKBOXES</button>
+  </div>
+
+  <!-- ───── APPLICATION PLAN ───── -->
+  <h2>Application Plan</h2>
+
+  <div class="card">
+    <h3>First — A Note About The Clover</h3>
+    <p style="color:var(--text-dim);margin-top:8px;">From the photo, those beds are full of <strong style="color:var(--text)">chickweed and clover</strong> — that's a <em>good thing</em>. Don't pull it all out. Clover is a nitrogen fixer and chickweed is decent green manure. <strong style="color:var(--emerald-bright)">Chop it in with a hoe or shovel</strong> before you add amendments. Free organic matter + nitrogen boost. Remove only the dandelions and any tough perennial weeds (quack grass, thistle).</p>
+  </div>
+
+  <div class="timeline">
+
+    <div class="tl-item weekend">
+      <div class="tl-date">◆ SATURDAY · APR 18 — PREP &amp; SHOP</div>
+      <div class="tl-title">Morning: Shopping Run</div>
+      <div class="tl-body">
+        <strong>Route order (all from Niemans Ave):</strong>
+        <ul>
+          <li>Lowe's Alliance (15 min east)</li>
+          <li>Tractor Supply Alliance (next door)</li>
+          <li>Petitti Louisville for kelp (15 min back west)</li>
+          <li>Compost pickup — fiancée's nursery or Canton Topsoil</li>
+        </ul>
+        <strong>Est. total drive time:</strong> ~90 min. <strong>Est. cash out:</strong> $100–135 (less with the half-price compost score).
+      </div>
+    </div>
+
+    <div class="tl-item weekend">
+      <div class="tl-date">◆ SATURDAY · APR 18 — AFTERNOON</div>
+      <div class="tl-title">Prep The Beds</div>
+      <div class="tl-body">
+        <ul>
+          <li><strong>Chop in the clover/chickweed.</strong> Hoe or shovel — turn the green stuff into the top 2–3". Let it wilt 30+ min before covering.</li>
+          <li><strong>Remove dandelions</strong> (tap root and all) and any woody perennials.</li>
+          <li><strong>Break up any soil crust</strong> with a rake. Don't deep-till — you want to preserve soil structure.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item weekend">
+      <div class="tl-date">◆ SUNDAY · APR 19 — AMEND DAY</div>
+      <div class="tl-title">Mix &amp; Apply (All 5 Beds)</div>
+      <div class="tl-body">
+        <strong>Per-bed recipe (mix in wheelbarrow first):</strong>
+        <ul>
+          <li>2.6 cu ft compost (~⅓ of a contractor's wheelbarrow)</li>
+          <li>0.8 cu ft perlite (~6 heaping shovelfuls)</li>
+          <li>3 cups (1.5 lb) Espoma Garden-tone</li>
+          <li>½ cup blood meal</li>
+          <li>½ cup bone meal</li>
+          <li>¼ cup kelp meal (if you have it — otherwise add next weekend)</li>
+        </ul>
+        <strong>Apply:</strong> Spread blend across the bed, rake into top 1–2". Don't bury deep.<br>
+        <strong>Water in:</strong> 2 gallons of Miracle-Gro solution per bed (1 tbsp per gallon). This kicks the microbes awake and starts dissolving the granular nutrients.
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">NEXT · APR 26 – MAY 3</div>
+      <div class="tl-title">Cool-Season Planting</div>
+      <div class="tl-body">
+        Direct-sow peas, spinach, lettuce, radish, carrots, beets, kale. Transplant brassicas (broccoli, cabbage) if you have starts. <strong>Don't add more fertilizer yet</strong> — you just loaded the beds. Water with plain water.
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">MAY 10 – MAY 17 (AFTER FROST)</div>
+      <div class="tl-title">Warm-Season Transplants</div>
+      <div class="tl-body">
+        Tomatoes, peppers, squash, beans, cucumbers go in. <strong>Drop a pinch of bone meal in each planting hole</strong> for root development. Water in each transplant with 1 gal Miracle-Gro solution.
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">EARLY JUNE</div>
+      <div class="tl-title">First Side-Dress</div>
+      <div class="tl-body">
+        Sprinkle 1 cup Garden-tone around the base of each heavy-feeder (tomatoes, peppers, squash, corn). Scratch in lightly, water. Foliar-spray kelp meal tea (¼ cup kelp in 2 gal water, steep 24 hr, strain) — micronutrient boost.
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">JULY · FLOWERING / FRUITING</div>
+      <div class="tl-title">Bloom-Time Push</div>
+      <div class="tl-body">
+        As plants flower and set fruit, they need more P and K. <strong>Second Garden-tone side-dress</strong> (another 1 cup per plant). The bone meal you added in April is still breaking down — now it's releasing when plants need it most. Foliar kelp again if you have it.
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">AUGUST</div>
+      <div class="tl-title">Final Boost &amp; Succession</div>
+      <div class="tl-body">
+        Last Garden-tone side-dress for late-season heavy feeders. Start fall crops in empty bed space (kale, radish, lettuce, spinach). Keep watering — August drought stress is what usually ends the season early in Canton.
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">OCTOBER · BED CLOSE-OUT</div>
+      <div class="tl-title">Cover Crop</div>
+      <div class="tl-body">
+        After harvest, broadcast crimson clover or winter rye across any empty beds. It'll sprout in fall, survive winter, and chop in next March — same trick you're using this weekend, but planned this time. No fertilizer needed to close out.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ───── BUDGET ───── -->
+  <h2>Budget</h2>
+  <div class="card">
+    <table>
+      <thead><tr><th>Line Item</th><th style="text-align:right">If Bulk Compost Works</th><th style="text-align:right">Worst Case (Bagged)</th></tr></thead>
+      <tbody>
+        <tr><td>Perlite 4 cu ft</td><td class="num">$36</td><td class="num">$36</td></tr>
+        <tr><td>Compost ½ yd</td><td class="num">$12–15 (or free/half-price)</td><td class="num">$85</td></tr>
+        <tr><td>Espoma Garden-tone 18 lb</td><td class="num">$28</td><td class="num">$28</td></tr>
+        <tr><td>Blood meal 3 lb</td><td class="num">$12</td><td class="num">$12</td></tr>
+        <tr><td>Bone meal 3 lb</td><td class="num">$12</td><td class="num">$12</td></tr>
+        <tr><td>Kelp meal 4–5 lb</td><td class="num">$25–28</td><td class="num">$28</td></tr>
+        <tr><td>Miracle-Gro 1.5 lb</td><td class="num">$10</td><td class="num">$10</td></tr>
+        <tr class="total"><td>TOTAL</td><td class="num">$135 – $141</td><td class="num">$211</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    ■ FNB CANTON · GARDEN PLANNING · GENERATED <span id="gen-date"></span> ·
+    PRINT THIS, TAKE IT TO THE STORE, CHECK BOXES AS YOU GO ■
+  </footer>
+
+</div>
+
+<script>
+// ───── Checkbox persistence + progress ─────
+const STORAGE_KEY = 'fnb-amendment-plan-2026';
+const checkboxes = document.querySelectorAll('.item input[type="checkbox"]');
+
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    checkboxes.forEach(cb => {
+      if (saved[cb.dataset.id]) {
+        cb.checked = true;
+        cb.closest('.item').classList.add('done');
+      }
+    });
+  } catch (e) {}
+}
+
+function saveState() {
+  const state = {};
+  checkboxes.forEach(cb => { state[cb.dataset.id] = cb.checked; });
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+
+function updateProgress() {
+  const total = checkboxes.length;
+  const done  = [...checkboxes].filter(c => c.checked).length;
+  document.getElementById('progress-count').textContent = done + ' / ' + total;
+  document.getElementById('progress-fill').style.width = (total ? (done / total * 100) : 0) + '%';
+
+  // Per-stop counters + complete state
+  document.querySelectorAll('.stop[data-stop]').forEach(stop => {
+    const id = stop.dataset.stop;
+    const boxes = stop.querySelectorAll('input[type="checkbox"][data-stop="' + id + '"]');
+    const stopDone = [...boxes].filter(c => c.checked).length;
+    const stopTotal = boxes.length;
+    const counter = stop.querySelector('[data-stop-progress="' + id + '"]');
+    if (counter) {
+      counter.textContent = stopDone + ' / ' + stopTotal;
+      counter.classList.toggle('done', stopDone === stopTotal && stopTotal > 0);
+    }
+    stop.classList.toggle('complete', stopDone === stopTotal && stopTotal > 0);
+  });
+}
+
+checkboxes.forEach(cb => {
+  cb.addEventListener('change', () => {
+    cb.closest('.item').classList.toggle('done', cb.checked);
+    saveState();
+    updateProgress();
+  });
+});
+
+function resetAll() {
+  if (!confirm('Reset all checkboxes?')) return;
+  checkboxes.forEach(cb => {
+    cb.checked = false;
+    cb.closest('.item').classList.remove('done');
+  });
+  saveState();
+  updateProgress();
+}
+
+// Gen date
+document.getElementById('gen-date').textContent =
+  new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase();
+
+loadState();
+updateProgress();
+</script>
+</body>
+</html>

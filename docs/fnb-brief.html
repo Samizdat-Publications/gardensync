@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GardenSync — FNB Demo Garden Marketing Brief</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --accent: #00e68a; --teal: #00bfa5; --orange: #ff6b35; --bg: #0a0f0a; --card: #111; --text: #e0e0e0; --muted: #888; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'Barlow Condensed',sans-serif; max-width:1100px; margin:0 auto; padding:40px 30px; }
+h1 { font-family:'Anton',sans-serif; color:var(--accent); font-size:48px; letter-spacing:4px; text-transform:uppercase; margin-bottom:8px; }
+h2 { font-family:'Anton',sans-serif; color:var(--accent); font-size:32px; letter-spacing:2px; margin:48px 0 16px; border-bottom:2px solid rgba(0,230,138,0.3); padding-bottom:8px; }
+h3 { font-family:'Anton',sans-serif; color:var(--teal); font-size:22px; letter-spacing:1px; margin:24px 0 8px; }
+p { line-height:1.7; margin-bottom:12px; font-size:16px; }
+.mono { font-family:'Space Mono',monospace; font-size:13px; color:var(--muted); letter-spacing:1px; }
+img { max-width:100%; border-radius:10px; border:1px solid rgba(0,230,138,0.15); margin:16px 0; }
+.stat-row { display:flex; gap:20px; flex-wrap:wrap; margin:20px 0; }
+.stat { background:linear-gradient(135deg,#1a2e1a,#0d1f0d); border:1px solid rgba(0,230,138,0.25); border-radius:10px; padding:16px 24px; text-align:center; min-width:130px; }
+.stat-val { font-family:'Anton',sans-serif; font-size:36px; color:var(--accent); }
+.stat-label { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+.card { background:var(--card); border:1px solid rgba(0,230,138,0.12); border-radius:12px; padding:24px; margin:16px 0; }
+.bed-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; margin:16px 0; }
+.bed-grid img { width:100%; height:auto; }
+.bed-grid .caption { font-family:'Space Mono',monospace; font-size:11px; color:var(--muted); text-align:center; margin-top:4px; }
+.highlight { color:var(--accent); font-weight:700; }
+.orange { color:var(--orange); }
+table { width:100%; border-collapse:collapse; margin:16px 0; font-size:14px; }
+th { font-family:'Space Mono',monospace; color:var(--accent); text-align:left; padding:10px; border-bottom:2px solid var(--accent); background:rgba(0,230,138,0.05); font-size:12px; letter-spacing:1px; }
+td { padding:10px; border-bottom:1px solid rgba(255,255,255,0.05); }
+.divider { border:none; border-top:1px dashed rgba(0,230,138,0.2); margin:40px 0; }
+@media print { body { background:#fff; color:#111; } h1,h2,h3,.stat-val,.highlight { color:#005e6e; } .stat { border-color:#005e6e; background:#f0f8f8; } }
+</style>
+</head>
+<body>
+
+<h1>&#x270A; GARDENSYNC</h1>
+<p class="mono">MARKETING BRIEF &middot; FNB DEMO GARDEN SHOWCASE &middot; APRIL 2026</p>
+<p class="mono">PREPARED FOR: Food Not Bombs Canton &middot; Community Partners &middot; Potential Volunteers</p>
+
+<hr class="divider">
+
+<h2>EXECUTIVE SUMMARY</h2>
+<p>GardenSync is a free, open-source community garden planner built specifically for <span class="highlight">Food Not Bombs Canton, OH</span>. It features three research-backed garden plans optimized for food bank donations from 5 raised beds (4'×8' each, 160 sqft total) in USDA Zone 6a.</p>
+<p>The app includes an AI-powered Garden Buddy (Claude Sonnet 4), companion planting intelligence, harvest tracking, volunteer management, and cloud sync — all in a zero-dependency vanilla JavaScript application with a punk/anarchist aesthetic.</p>
+
+<div class="stat-row">
+  <div class="stat"><div class="stat-val">3</div><div class="stat-label">FNB Plans</div></div>
+  <div class="stat"><div class="stat-val">600</div><div class="stat-label">Max lbs/year</div></div>
+  <div class="stat"><div class="stat-val">41</div><div class="stat-label">Plants in Library</div></div>
+  <div class="stat"><div class="stat-val">7</div><div class="stat-label">Demo Gardens</div></div>
+  <div class="stat"><div class="stat-val">0</div><div class="stat-label">Cost</div></div>
+</div>
+
+<img src="hero-banner.png" alt="GardenSync Hero Banner">
+
+<hr class="divider">
+
+<h2>FNB FULL RESEARCH PLAN</h2>
+<p class="mono">5 BEDS &middot; 400-600 LBS &middot; 22 CROP TYPES &middot; FULL COMPANION PLANTING &middot; 3 VOLUNTEER CREWS</p>
+<p>The flagship plan. Research-backed crop selection optimized for: harvest window tolerance (no daily picking required), food bank shelf life (60%+ no-fridge), and yield per square foot. Key exclusion: zucchini (#1 unwanted food bank donation + vine borer magnet), corn (poor sqft yield), cucumbers (daily harvest needed).</p>
+
+<img src="fnb-full-research-plan-overview.png" alt="FNB Full Research Plan Overview">
+
+<h3>BED-BY-BED BREAKDOWN</h3>
+<div class="bed-grid">
+  <div><img src="full-plan-bed1-greens-powerhouse.png" alt="Bed 1"><div class="caption">BED 1: GREENS POWERHOUSE<br>Kale, Chard, Collards, Lettuce, Spinach, Parsley</div></div>
+  <div><img src="full-plan-bed2-tomato-pepper-hq.png" alt="Bed 2"><div class="caption">BED 2: TOMATO & PEPPER HQ<br>Tomato, Pepper, Basil, Marigold, Alyssum</div></div>
+  <div><img src="full-plan-bed3-underground-vault.png" alt="Bed 3"><div class="caption">BED 3: UNDERGROUND VAULT<br>Onion, Carrot, Beet, Chive</div></div>
+  <div><img src="full-plan-bed4-calorie-central.png" alt="Bed 4"><div class="caption">BED 4: CALORIE CENTRAL<br>24 Potatoes (50-100 lbs)</div></div>
+  <div><img src="full-plan-bed5-storage-protein.png" alt="Bed 5"><div class="caption">BED 5: STORAGE & PROTEIN<br>Squash, Beans, 7 Cooking Herbs</div></div>
+</div>
+
+<div class="card">
+  <h3>KEY RESEARCH FINDINGS</h3>
+  <table>
+    <tr><th>BED</th><th>PRIMARY FUNCTION</th><th>EST. YIELD</th><th>STORAGE</th></tr>
+    <tr><td>1 - Greens Powerhouse</td><td>Weekly fresh donations (leafy greens = #1 food bank request)</td><td>80-120 lbs</td><td>Fresh only (same-day)</td></tr>
+    <tr><td>2 - Tomato & Pepper HQ</td><td>High-value fresh produce rarely donated</td><td>60-100 lbs</td><td>1-3 weeks (peppers refrigerated)</td></tr>
+    <tr><td>3 - Underground Vault</td><td>Long-term root vegetable storage</td><td>40-70 lbs</td><td>2-5 months (no fridge)</td></tr>
+    <tr><td>4 - Calorie Central</td><td>Maximum calories per sqft</td><td>50-100 lbs</td><td>4-6 months (no fridge)</td></tr>
+    <tr><td>5 - Storage & Protein</td><td>Winter squash + dried beans + meal herbs</td><td>40-70 lbs</td><td>3-6 months (no fridge)</td></tr>
+  </table>
+</div>
+
+<hr class="divider">
+
+<h2>FNB EASY START</h2>
+<p class="mono">5 BEDS &middot; 130-225 LBS &middot; 12 CROP TYPES &middot; 100% LOW-MAINTENANCE</p>
+<p>Designed for <span class="highlight">first-year community gardens</span> with unreliable volunteer schedules. Every crop in this plan is rated low-maintenance — plant once, water occasionally, harvest when ready. No staking, no daily picking, no fussy succession planting.</p>
+
+<img src="fnb-easy-start-overview.png" alt="FNB Easy Start Overview">
+
+<div class="card">
+  <h3>WHY EASY START?</h3>
+  <p>Most community garden projects fail in Year 1 due to volunteer burnout from high-maintenance crops. Easy Start eliminates that risk:</p>
+  <table>
+    <tr><th>BED</th><th>CROPS</th><th>VOLUNTEER EFFORT</th><th>YIELD</th></tr>
+    <tr><td>Greens Bed</td><td>Kale, Chard, Parsley</td><td>Water weekly. Harvest outer leaves.</td><td>80-120 lbs</td></tr>
+    <tr><td>Root Cellar</td><td>Onion, Carrot, Beet</td><td>Weed monthly. One harvest day.</td><td>40-60 lbs</td></tr>
+    <tr><td>Potato Patch</td><td>Potato (32)</td><td>Hill twice. One harvest day.</td><td>60-100 lbs</td></tr>
+    <tr><td>Bean Machine</td><td>Green Beans, Nasturtium</td><td>Water weekly. Pick Saturdays.</td><td>40-60 lbs</td></tr>
+    <tr><td>Garlic & Herbs</td><td>Garlic, Chive, Oregano, Basil</td><td>Plant Oct. Harvest Jul. Herbs forever.</td><td>15-25 lbs</td></tr>
+  </table>
+</div>
+
+<hr class="divider">
+
+<h2>FNB MAX STORAGE</h2>
+<p class="mono">5 BEDS &middot; 250-400 LBS &middot; 9 CROP TYPES &middot; 70%+ SHELF-STABLE</p>
+<p>Optimized for <span class="highlight">no-fridge pantry distribution</span>. When your food bank doesn't have cold storage, this is your plan. Potatoes, onions, garlic, squash, and dried beans — crops that store 3-8 months in a cool dark room.</p>
+
+<img src="fnb-max-storage-overview.png" alt="FNB Max Storage Overview">
+
+<div class="card">
+  <h3>STORAGE CAPACITY</h3>
+  <p>Two full potato beds provide staggered harvests from July through October, with stored potatoes lasting through March. Combined with alliums and squash, this plan provides <span class="orange">nearly year-round food security from 160 sqft</span>.</p>
+  <table>
+    <tr><th>CROP</th><th>HARVEST</th><th>STORAGE LIFE</th><th>STORAGE METHOD</th></tr>
+    <tr><td>Potato (64 plants)</td><td>Jul-Oct (staggered)</td><td>4-6 months</td><td>Paper bags, cool dark area</td></tr>
+    <tr><td>Onion (30)</td><td>August</td><td>2-3 months</td><td>Mesh bags, ventilated</td></tr>
+    <tr><td>Garlic (10)</td><td>July</td><td>6-8 months</td><td>Braided or mesh, room temp</td></tr>
+    <tr><td>Butternut Squash (3)</td><td>Sep-Oct</td><td>3-6 months</td><td>Cured, room temp</td></tr>
+    <tr><td>Dried Beans</td><td>Aug-Sep</td><td>Indefinite</td><td>Mason jars + bay leaf</td></tr>
+  </table>
+</div>
+
+<hr class="divider">
+
+<h2>PLAN COMPARISON</h2>
+<img src="fnb-plan-comparison.png" alt="FNB Plan Comparison Table">
+
+<hr class="divider">
+
+<h2>GARDENSYNC FEATURES</h2>
+<img src="features-grid.png" alt="GardenSync Features Grid">
+
+<div class="card">
+  <h3>CORE CAPABILITIES</h3>
+  <table>
+    <tr><th>FEATURE</th><th>DESCRIPTION</th></tr>
+    <tr><td>Interactive Planner</td><td>Click-to-place plants on 20px Square Foot Gardening grid. Raised beds, pots, planters, grow bags.</td></tr>
+    <tr><td>Companion Planting</td><td>41-plant library with visual green/red connection lines showing companion and enemy relationships.</td></tr>
+    <tr><td>Garden Buddy AI</td><td>Claude Sonnet 4-powered chat. Place plants by voice command, auto-organize beds, get planting advice.</td></tr>
+    <tr><td>Planting Calendar</td><td>Zone 6a frost dates (Apr 18 last, Oct 28 first). Seed start, transplant, and harvest windows.</td></tr>
+    <tr><td>Harvest Tracking</td><td>Log yields by weight. Set season goals (500 lbs for FNB). Track which beds perform best.</td></tr>
+    <tr><td>Volunteer Management</td><td>Assign crews to beds. Track availability. Bed-specific care instructions per rotation.</td></tr>
+    <tr><td>7 Demo Gardens</td><td>3 FNB research plans + beginner, salsa/pizza, and 2 personal garden layouts.</td></tr>
+    <tr><td>Cloud Sync</td><td>Supabase persistence. Auto-save every 5 minutes. Share gardens via URL.</td></tr>
+    <tr><td>Live Weather</td><td>Open-Meteo API for Canton, OH. 7-day forecast. Frost alerts.</td></tr>
+    <tr><td>Custom Seeds</td><td>Add your own varieties. Photo OCR scanning for seed packets.</td></tr>
+  </table>
+</div>
+
+<hr class="divider">
+
+<h2>TECH STACK</h2>
+<div class="card">
+  <table>
+    <tr><th>LAYER</th><th>TECH</th></tr>
+    <tr><td>Frontend</td><td>Vanilla HTML/CSS/JS — no framework, no bundler, 30 modular scripts</td></tr>
+    <tr><td>Rendering</td><td>HTML5 Canvas — beds, charts, climate data all drawn programmatically</td></tr>
+    <tr><td>AI</td><td>Claude Sonnet 4 via Anthropic API — tool-based chat (10 garden tools)</td></tr>
+    <tr><td>Backend</td><td>Supabase (PostgreSQL) — cloud persistence, auto-sync</td></tr>
+    <tr><td>Weather</td><td>Open-Meteo API — free, no key required</td></tr>
+    <tr><td>Hosting</td><td>GitHub Pages (static) — zero cost</td></tr>
+    <tr><td>Design</td><td>Punk/anarchist aesthetic — Anton, Space Mono, Barlow Condensed, emerald/teal</td></tr>
+  </table>
+</div>
+
+<hr class="divider">
+
+<h2>LINKS & RESOURCES</h2>
+<div class="card">
+  <p><span class="highlight">GitHub:</span> <a href="https://github.com/Samizdat-Publications/gardensync" style="color:var(--accent);">github.com/Samizdat-Publications/gardensync</a></p>
+  <p><span class="highlight">Live Demo:</span> <a href="https://samizdat-publications.github.io/gardensync/" style="color:var(--accent);">samizdat-publications.github.io/gardensync</a></p>
+  <p><span class="highlight">Location:</span> Canton, OH (USDA Zone 6a)</p>
+  <p><span class="highlight">License:</span> Open Source</p>
+  <p><span class="highlight">Contact:</span> Food Not Bombs Canton</p>
+</div>
+
+<p class="mono" style="margin-top:40px;text-align:center;opacity:0.5;">
+  GARDENSYNC &middot; BUILT FOR COMMUNITY ACTION, NOT CORPORATE GARDENS &middot; &#x270A;
+</p>
+
+</body>
+</html>

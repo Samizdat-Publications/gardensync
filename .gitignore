@@ -24,3 +24,9 @@ whats-next.md
 .env
 .env.local
 js/supabase-config.js
+
+# Local-only artifacts
+node_modules/
+*.zip
+Gardensync (redesign 1/
+.claude/worktrees/
