@@ -151,6 +151,7 @@ const LS_KEY = 'gardensync-almanac-v1';
 
 const state = {
   beds: [],                 // {id, name, w, h, kind, notes, caretaker, plants:[{uid,pid,c,r}]}
+  harvests: [],             // {date:'YYYY-MM-DD', pid, lbs} — what actually came in
   viewDoy: todayDoy(),
   armed: null,              // plant id from the drawer
   sel: null,                // {bedId, uid}
@@ -191,7 +192,7 @@ let saveTimer = null;
 function save() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
-    try { localStorage.setItem(LS_KEY, JSON.stringify({ app:'gardensync-almanac', version:2, beds: state.beds })); }
+    try { localStorage.setItem(LS_KEY, JSON.stringify({ app:'gardensync-almanac', version:2, beds: state.beds, harvests: state.harvests })); }
     catch (e) { /* storage full or unavailable — the garden lives on in memory */ }
   }, 350);
 }
@@ -824,6 +825,8 @@ function renderAlmanac() {
   const lbs = Math.round(total);
   const bags = Math.round(total / 10);
   const pct = Math.min(100, Math.round(total / HARVEST_GOAL * 100));
+  const picked = Math.round(state.harvests.reduce((n, h) => n + (+h.lbs || 0), 0) * 10) / 10;
+  const pickedPct = Math.min(100, Math.round(picked / HARVEST_GOAL * 100));
 
   el.innerHTML = `
     <h2>The garden on ${fmtDoy(state.viewDoy)}</h2>
@@ -847,11 +850,12 @@ function renderAlmanac() {
     })()}
     <div class="alm-section">harvest outlook</div>
     <p class="plant-notes" style="margin:4px 0 6px">
-      ≈ <strong>${lbs} lbs</strong> this season — about <strong>${bags} grocery bags</strong> for neighbors.
+      ${picked > 0 ? `<strong>${picked} lbs</strong> brought in so far · ` : ''}≈ <strong>${lbs} lbs</strong> expected this season — about <strong>${bags} grocery bags</strong> for neighbors.
     </p>
-    <div class="goal-bar" title="${lbs} of ${HARVEST_GOAL} lb season goal">
-      <div class="goal-fill" style="width:${pct}%"></div>
-      <span class="goal-label">${pct}% of the ${HARVEST_GOAL} lb goal</span>
+    <div class="goal-bar" title="${picked} lbs picked, ≈${lbs} lbs projected, of the ${HARVEST_GOAL} lb goal">
+      <div class="goal-fill proj" style="width:${pct}%"></div>
+      <div class="goal-fill" style="width:${pickedPct}%"></div>
+      <span class="goal-label">${picked > 0 ? `${pickedPct}% picked · ` : ''}${pct}% of ${HARVEST_GOAL} lbs in sight</span>
     </div>
     <div class="year-strip">${outlookSvg(byMonth)}</div>
     <div class="alm-section">around this date</div>
@@ -954,6 +958,15 @@ function plantPage(pid) {
     ${mates(p.enemies, true)}
     <details class="howto"><summary>Seed starting</summary><p>${escapeHtml(p.seedStart || '—')}</p></details>
     <details class="howto"><summary>Care through the season</summary><p>${escapeHtml(p.care || '—')}</p></details>
+    ${planted ? (() => {
+      const sum = Math.round(state.harvests.filter(h => h.pid === p.id).reduce((n, h) => n + (+h.lbs || 0), 0) * 10) / 10;
+      return `<div class="alm-section">harvest log</div>
+      <form class="log-form" id="log-form">
+        <input type="number" min="0" step="0.5" inputmode="decimal" placeholder="lbs" id="log-lbs" required>
+        <button type="submit">Log a pick</button>
+      </form>
+      ${sum > 0 ? `<p class="plant-notes" style="font-size:12px;margin-top:6px">${sum} lbs of ${escapeHtml(p.name)} brought in so far this season.</p>` : ''}`;
+    })() : ''}
     <div class="alm-actions">
       ${planted
         ? `<button class="alm-btn danger" id="alm-remove">Remove plant</button>
@@ -964,6 +977,16 @@ function plantPage(pid) {
 
 function wireAlmanac(el) {
   el.querySelector('#alm-close')?.addEventListener('click', disarm);
+  el.querySelector('#log-form')?.addEventListener('submit', e => {
+    e.preventDefault();
+    const lbs = +el.querySelector('#log-lbs').value;
+    if (!(lbs > 0)) return;
+    const pid = bedById(state.sel.bedId)?.plants.find(pl => pl.uid === state.sel.uid)?.pid;
+    if (!pid) return;
+    state.harvests.push({ date: new Date().toISOString().slice(0, 10), pid, lbs });
+    save(); renderAlmanac();
+    whisper(`${lbs} lbs of ${PLANT_BY_ID[pid].name} toward the table. Well picked.`);
+  });
   el.querySelector('#alm-remove')?.addEventListener('click', () => {
     const bed = bedById(state.sel.bedId);
     if (!bed) return;
@@ -1147,7 +1170,7 @@ function setupTools() {
 
   /* export */
   document.getElementById('btn-export').addEventListener('click', () => {
-    const blob = new Blob([JSON.stringify({ app:'gardensync-almanac', version:2, exported:new Date().toISOString(), beds: state.beds }, null, 2)], { type:'application/json' });
+    const blob = new Blob([JSON.stringify({ app:'gardensync-almanac', version:2, exported:new Date().toISOString(), beds: state.beds, harvests: state.harvests }, null, 2)], { type:'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = `gardensync-${new Date().toISOString().slice(0,10)}.json`;
@@ -1167,6 +1190,7 @@ function setupTools() {
       if (!data || !Array.isArray(data.beds)) throw new Error('shape');
       pushUndo();
       state.beds = migrateBeds(data.beds);
+      if (Array.isArray(data.harvests)) state.harvests = data.harvests;
       state.sel = null; state.armed = null;
       renderDrawer(); renderBeds(); renderAlmanac(); renderPlantingNote(); save();
       whisper('Garden restored from file.');
@@ -1348,6 +1372,7 @@ function boot() {
     if (raw) {
       const data = JSON.parse(raw);
       if (Array.isArray(data.beds)) state.beds = migrateBeds(data.beds);
+      if (Array.isArray(data.harvests)) state.harvests = data.harvests;
     }
   } catch (e) { /* corrupted save — start anew */ }
 

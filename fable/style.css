@@ -541,11 +541,31 @@ details.howto p { font-size: 13px; color: var(--ink-soft); margin: 8px 0 0; }
   overflow: hidden; margin: 2px 0 8px;
 }
 .goal-fill {
+  position: absolute; left: 0; top: 0;
   height: 100%; border-radius: 999px;
-  background: linear-gradient(90deg, var(--moss) 0%, var(--gold) 100%);
-  opacity: .75;
+  background: var(--moss);
+  opacity: .8;
   transition: width .8s var(--ease-calm);
 }
+.goal-fill.proj {
+  background: linear-gradient(90deg, var(--moss-pale) 0%, var(--gold-pale) 100%);
+  opacity: 1;
+}
+
+.log-form { display: flex; gap: 6px; align-items: center; }
+.log-form input {
+  width: 86px;
+  font-family: var(--sans); font-size: 13px; color: var(--ink);
+  background: #FFFFFF8C; border: 1px solid var(--paper-edge); border-radius: 999px;
+  padding: 7px 12px; outline: none;
+}
+.log-form input:focus { border-color: var(--moss); }
+.log-form button {
+  font-family: var(--sans); font-size: 12.5px; font-weight: 700;
+  background: var(--moss-deep); color: #F5EFDF;
+  border: none; border-radius: 999px; padding: 8px 14px; cursor: pointer;
+}
+.log-form button:hover { background: var(--moss); }
 .goal-label {
   position: absolute; inset: 0;
   display: grid; place-items: center;
