@@ -329,6 +329,7 @@ function renderRibbon() {
   // view pin
   const vx = doyToX(state.viewDoy);
   s += `<g id="ribbon-pin" style="cursor:grab">
+    ${state.pinHint ? `<circle class="pin-hint" cx="${vx}" cy="${RIB.bandY+RIB.bandH/2}" r="9" fill="none" stroke="#B5613D" stroke-width="2"/>` : ''}
     <line x1="${vx}" y1="${RIB.bandY-2}" x2="${vx}" y2="${RIB.bandY+RIB.bandH+2}" stroke="#2C3527" stroke-width="2"/>
     <circle cx="${vx}" cy="${RIB.bandY+RIB.bandH/2}" r="8.5" fill="#FCF6E3" stroke="#2C3527" stroke-width="1.6"/>
     <circle cx="${vx}" cy="${RIB.bandY+RIB.bandH/2}" r="2.6" fill="#B5613D"/>
@@ -352,7 +353,7 @@ function setupRibbon() {
     state.viewDoy = xToDoy(x);
     renderRibbon(); renderBeds(); renderAlmanac();
   };
-  svg.addEventListener('pointerdown', e => { dragging = true; svg.setPointerCapture(e.pointerId); move(e); });
+  svg.addEventListener('pointerdown', e => { dragging = true; state.pinHint = false; svg.setPointerCapture(e.pointerId); move(e); });
   svg.addEventListener('pointermove', e => { if (dragging) move(e); });
   svg.addEventListener('pointerup',   () => { dragging = false; });
   document.getElementById('btn-today').addEventListener('click', () => {
@@ -754,6 +755,16 @@ function gardenEvents() {
     if (p.directSow != null) events.push({ doy: w.inBed, kind:'sow', text:`Direct sow ${p.name}`, emoji: p.emoji });
     else if (p.transplantAfterFrost != null) events.push({ doy: w.inBed, kind:'transplant', text:`Transplant ${p.name} into the bed`, emoji: p.emoji });
     events.push({ doy: w.hStart, kind:'harvest', text:`First ${p.name} harvest`, emoji: p.emoji });
+
+    /* quick direct-sown vegetables with short harvest windows earn succession
+       rounds while they can still mature; long producers (kale, chard) don't need them */
+    if (p.directSow != null && p.type === 'vegetable' && p.daysToHarvest <= 55 && (p.harvestWeeks || 9) <= 6) {
+      for (let round = 1; round <= 3; round++) {
+        const doy = w.inBed + round * 21;
+        if (doy + p.daysToHarvest > FIRST_FROST + 7) break;
+        events.push({ doy, kind:'sow', text:`Sow another round of ${p.name}`, emoji: p.emoji });
+      }
+    }
   }
   return events.sort((a, b) => a.doy - b.doy);
 }
@@ -945,6 +956,109 @@ function wireAlmanac(el) {
   });
 }
 
+/* ---------- sharing: compact garden ↔ URL hash ---------- */
+
+function encodeGarden() {
+  const compact = state.beds.map(b => [
+    b.name, b.kind || 'bed', b.w, b.h, b.caretaker || '',
+    b.plants.map(pl => [pl.pid, pl.c, pl.r]),
+  ]);
+  const json = JSON.stringify(compact);
+  return btoa(unescape(encodeURIComponent(json))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function decodeGarden(s) {
+  const json = decodeURIComponent(escape(atob(s.replace(/-/g, '+').replace(/_/g, '/'))));
+  const compact = JSON.parse(json);
+  if (!Array.isArray(compact)) throw new Error('shape');
+  return compact.map(([name, kind, w, h, caretaker, plants]) => ({
+    id: 'bed-' + Math.random().toString(36).slice(2, 8),
+    name: String(name).slice(0, 80),
+    kind: KINDS[kind] ? kind : 'bed',
+    w: Math.max(1, Math.min(20, +w || 4)), h: Math.max(1, Math.min(20, +h || 4)),
+    caretaker: String(caretaker || '').slice(0, 60), notes: '',
+    plants: (plants || []).filter(x => PLANT_BY_ID[x[0]]).map(([pid, c, r]) => ({
+      uid: newUid(), pid, c: +c || 0, r: +r || 0,
+    })),
+  }));
+}
+
+function copyShareLink() {
+  const url = location.origin + location.pathname + '#g=' + encodeGarden();
+  navigator.clipboard.writeText(url)
+    .then(() => whisper('Share link copied — anyone who opens it sees this garden.'))
+    .catch(() => { prompt('Copy this link:', url); });
+}
+
+/* ---------- a picture of the garden (PNG) ---------- */
+
+function savePoster() {
+  const sel = state.sel; state.sel = null;
+  const armed = state.armed; state.armed = null;
+  renderBeds();   // clean svgs: no selection rings, no halos
+
+  const PADX = 48, GAP = 34, TITLE_H = 120;
+  const items = state.beds.map(bed => {
+    const g = geomOf(bed);
+    const svgEl = document.querySelector(`.bed-svg[data-bed="${bed.id}"]`);
+    return { bed, g, src: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(new XMLSerializer().serializeToString(svgEl)) };
+  });
+  const maxW = Math.max(420, ...items.map(i => i.g.svgW));
+  const totalH = TITLE_H + items.reduce((n, i) => n + i.g.svgH + 30 + GAP, 0) + 30;
+  const canvas = document.createElement('canvas');
+  const SCALE = 2;
+  canvas.width = (maxW + PADX * 2) * SCALE;
+  canvas.height = totalH * SCALE;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(SCALE, SCALE);
+
+  // paper
+  ctx.fillStyle = '#F5EFDF';
+  ctx.fillRect(0, 0, maxW + PADX * 2, totalH);
+
+  // masthead
+  const { total } = harvestOutlook();
+  ctx.fillStyle = '#2C3527';
+  ctx.font = '600 30px Fraunces, Georgia, serif';
+  ctx.fillText('GardenSync', PADX, 52);
+  ctx.font = 'italic 14px Fraunces, Georgia, serif';
+  ctx.fillStyle = '#5C6553';
+  ctx.fillText(`Food Not Bombs · Canton, Ohio · Zone 6a · pressed ${fmtDoy(todayDoy())}`, PADX, 76);
+  ctx.fillText(`${state.beds.length} plots · ≈${Math.round(total)} lbs for neighbors this season`, PADX, 96);
+
+  const imgs = items.map(i => new Promise(res => {
+    const img = new Image();
+    img.onload = () => res({ ...i, img });
+    img.onerror = () => res(null);
+    img.src = i.src;
+  }));
+
+  Promise.all(imgs).then(loaded => {
+    let y = TITLE_H;
+    for (const it of loaded.filter(Boolean)) {
+      ctx.fillStyle = '#2C3527';
+      ctx.font = 'italic 600 17px Fraunces, Georgia, serif';
+      ctx.fillText(it.bed.name, PADX + 2, y + 14);
+      if (it.bed.caretaker) {
+        ctx.font = 'italic 12px Fraunces, Georgia, serif';
+        ctx.fillStyle = '#8B927E';
+        ctx.fillText('tended by ' + it.bed.caretaker, PADX + 2 + ctx.measureText(it.bed.name).width + 70, y + 14);
+      }
+      ctx.drawImage(it.img, PADX, y + 24, it.g.svgW, it.g.svgH);
+      y += it.g.svgH + 30 + GAP;
+    }
+    canvas.toBlob(blob => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `gardensync-${new Date().toISOString().slice(0, 10)}.png`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+      whisper('A picture of the garden, pressed and saved.');
+      state.sel = sel; state.armed = armed;
+      renderBeds(); renderDrawer(); renderPlantingNote();
+    }, 'image/png');
+  });
+}
+
 /* ---------- the year calendar overlay ---------- */
 
 function openCalendar() {
@@ -985,7 +1099,9 @@ function setupTools() {
     menu.hidden = !menu.hidden;
   });
   document.addEventListener('click', () => { menu.hidden = true; });
-  menu.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+  document.getElementById('menu-share').addEventListener('click', copyShareLink);
+  document.getElementById('menu-poster').addEventListener('click', savePoster);
+  menu.querySelectorAll('button[data-plan]').forEach(b => b.addEventListener('click', () => {
     pushUndo();
     state.beds = TEMPLATES[b.dataset.plan]();
     state.sel = null; state.armed = null;
@@ -1207,7 +1323,7 @@ function migrateBeds(beds) {
 }
 
 function boot() {
-  let fresh = false;
+  let fresh = false, shared = false;
   try {
     const raw = localStorage.getItem(LS_KEY);
     if (raw) {
@@ -1216,16 +1332,31 @@ function boot() {
     }
   } catch (e) { /* corrupted save — start anew */ }
 
+  /* a shared garden arriving by link */
+  if (location.hash.startsWith('#g=')) {
+    try {
+      const beds = decodeGarden(location.hash.slice(3));
+      if (beds.length) {
+        if (state.beds.length) pushUndo();   // the old garden is one Ctrl+Z away
+        state.beds = beds;
+        shared = true;
+      }
+    } catch (e) { /* not a garden — ignore quietly */ }
+    history.replaceState(null, '', location.pathname);
+  }
+
   if (!state.beds.length) {
     state.beds = TEMPLATES['fnb-easy']();
     fresh = true;
   }
+  state.pinHint = fresh || shared;
 
   renderRibbon(); setupRibbon();
   renderDrawer(); renderBeds(); renderAlmanac(); renderPlantingNote();
   setupTools(); setupAsk(); loadWeather();
 
-  if (fresh) whisper('Welcome. The FNB Easy Start plan is laid out — drag the year above to watch it grow.', 5200);
+  if (shared) whisper('A shared garden, unfolded and laid out. Your old one is a Ctrl+Z away.', 5200);
+  else if (fresh) whisper('Welcome. The FNB Easy Start plan is laid out — drag the year above to watch it grow.', 5200);
 }
 
 boot();
