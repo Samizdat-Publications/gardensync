@@ -1,6 +1,6 @@
 /* ============================================================
    GardenSync — A Quiet Almanac
-   One state object, SVG beds, a scrubbable year.
+   One state object, SVG plots, a scrubbable year.
    XSS note: every dynamic string that reaches markup is either
    static plant-library data or passed through escapeHtml();
    chat and other free text use textContent.
@@ -13,6 +13,7 @@
 const MONTH_DAYS = [31,28,31,30,31,30,31,31,30,31,30,31];
 const MONTH_CUM  = [0,31,59,90,120,151,181,212,243,273,304,334];
 const MONTH_AB   = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MONTH_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
 const DOY = (m, d) => MONTH_CUM[m] + d - 1;          // 0-indexed month
 const LAST_FROST  = DOY(3, 18);                       // Apr 18
@@ -33,18 +34,50 @@ function fmtDoy(doy) {
   return `${MONTH_AB[m]} ${d}`;
 }
 
-/* ---------- geometry ---------- */
+/* ---------- geometry & plot kinds ---------- */
 
 const CELL = 46;
 const TYPE_FILL = { vegetable:'#DCE5CB', herb:'#E4E8CE', flower:'#F0DBD3', fruit:'#F3E4C0' };
 
+/* Every plot is a grid of square feet; vessels are small grids with
+   container rules (everything fits one square — roots make do). */
+const KINDS = {
+  bed:     { label:'raised bed',   shape:'rect',   vessel:false },
+  pot:     { label:'terracotta pot', shape:'round', vessel:true, w:1, h:1 },
+  treepot: { label:'tree pot',     shape:'round',  vessel:true, w:2, h:2 },
+  barrel:  { label:'half barrel',  shape:'round',  vessel:true, w:2, h:2 },
+  bag:     { label:'grow bag',     shape:'bag',    vessel:true, w:2, h:2 },
+  window:  { label:'window box',   shape:'window', vessel:true, w:4, h:1 },
+  trough:  { label:'steel trough', shape:'trough', vessel:true, w:6, h:2 },
+};
+const kindOf = bed => KINDS[bed.kind] || KINDS.bed;
+const isVessel = bed => kindOf(bed).vessel;
+
 function spanOf(p)  { return p.spacing <= 12 ? 1 : p.spacing <= 26 ? 2 : 3; }
+function plantSpan(bed, p) { return isVessel(bed) ? 1 : spanOf(p); }
 function perSquare(p) {
-  if (spanOf(p) > 1) return 1;
   if (p.spacing <= 3) return 16;
   if (p.spacing <= 4) return 9;
   if (p.spacing <= 6) return 4;
   return 1;
+}
+/* plants that resent life in a container */
+function sulksInVessel(p) {
+  return p.spacing >= 30 || /corn|pumpkin|watermelon|cantaloupe/.test(p.id);
+}
+
+/* svg geometry: vessels get chrome around the soil grid */
+function geomOf(bed) {
+  const W = bed.w * CELL, H = bed.h * CELL;
+  const shape = kindOf(bed).shape;
+  let ext = 0;
+  if (shape === 'round') {
+    const rIn = Math.sqrt((W/2)**2 + (H/2)**2) + 4;
+    ext = Math.ceil(rIn + 10 - Math.max(W, H) / 2);
+  }
+  else if (shape === 'bag') ext = 14;
+  else if (shape === 'window' || shape === 'trough') ext = 10;
+  return { W, H, ext, svgW: W + ext*2, svgH: H + ext*2 };
 }
 
 /* growth windows, in day-of-year, from Zone 6a frost dates */
@@ -69,17 +102,62 @@ function stageAt(p, doy) {
 }
 const STAGE_SCALE = { planned:.42, sprout:.52, growing:.8, harvest:1, rest:.7 };
 
+/* ---------- yields (lbs per planting, rough field estimates) ---------- */
+
+function yieldOf(p) {
+  const id = p.id;
+  if (/pumpkin/.test(id)) return 15;
+  if (/tomato/.test(id)) return 11;
+  if (/watermelon|cantaloupe|melon/.test(id)) return 10;
+  if (/squash|zucchini/.test(id)) return 9;
+  if (/cucumber/.test(id)) return 5;
+  if (/pepper/.test(id)) return 4;
+  if (/blueberry/.test(id)) return 4;
+  if (/potato/.test(id)) return 2.5;
+  if (/kale|chard|collard|cabbage|broccoli|cauliflower/.test(id)) return 2.5;
+  if (/bean|pea/.test(id)) return 2;
+  if (/carrot/.test(id)) return 1.6;
+  if (/lettuce|spinach|arugula|greens/.test(id)) return 1.2;
+  if (/beet|turnip|radish|kohlrabi/.test(id)) return 1.2;
+  if (/onion|garlic|leek|shallot|corn|strawberry|eggplant/.test(id)) return 1;
+  if (p.type === 'herb') return 0.4;
+  if (p.type === 'flower') return 0;
+  return 1.5;
+}
+const HARVEST_GOAL = 500;   // lbs — the FNB season goal
+
+function harvestOutlook() {
+  let total = 0;
+  const byMonth = new Array(12).fill(0);
+  for (const bed of state.beds) {
+    const factor = isVessel(bed) ? 0.8 : 1;
+    for (const pl of bed.plants) {
+      const p = PLANT_BY_ID[pl.pid];
+      if (!p) continue;
+      const lbs = yieldOf(p) * factor;
+      total += lbs;
+      const w = windowsOf(p);
+      const m0 = doyToMD(w.hStart).m, m1 = doyToMD(w.hEnd).m;
+      const span = Math.max(1, m1 - m0 + 1);
+      for (let m = m0; m <= m1; m++) byMonth[m] += lbs / span;
+    }
+  }
+  return { total, byMonth };
+}
+
 /* ---------- state ---------- */
 
 const LS_KEY = 'gardensync-almanac-v1';
 
 const state = {
-  beds: [],                 // {id, name, w, h, plants:[{uid,pid,c,r}]}
+  beds: [],                 // {id, name, w, h, kind, notes, caretaker, plants:[{uid,pid,c,r}]}
   viewDoy: todayDoy(),
   armed: null,              // plant id from the drawer
   sel: null,                // {bedId, uid}
   search: '',
   undoStack: [],
+  redoStack: [],
+  openNotes: new Set(),     // bed ids with field notes open (not persisted)
   chat: [],
 };
 
@@ -90,11 +168,21 @@ function snapshot() { return JSON.stringify(state.beds); }
 function pushUndo(snap) {
   state.undoStack.push(snap || snapshot());
   if (state.undoStack.length > 60) state.undoStack.shift();
+  state.redoStack.length = 0;
 }
 function undo() {
   const prev = state.undoStack.pop();
   if (!prev) { whisper('Nothing to undo — the garden is as it was.'); return; }
+  state.redoStack.push(snapshot());
   state.beds = JSON.parse(prev);
+  state.sel = null;
+  renderBeds(); renderAlmanac(); save();
+}
+function redo() {
+  const next = state.redoStack.pop();
+  if (!next) { whisper('Nothing to redo.'); return; }
+  state.undoStack.push(snapshot());
+  state.beds = JSON.parse(next);
   state.sel = null;
   renderBeds(); renderAlmanac(); save();
 }
@@ -103,7 +191,7 @@ let saveTimer = null;
 function save() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
-    try { localStorage.setItem(LS_KEY, JSON.stringify({ app:'gardensync-almanac', version:1, beds: state.beds })); }
+    try { localStorage.setItem(LS_KEY, JSON.stringify({ app:'gardensync-almanac', version:2, beds: state.beds })); }
     catch (e) { /* storage full or unavailable — the garden lives on in memory */ }
   }, 350);
 }
@@ -116,15 +204,15 @@ function cellsFree(bed, c, r, span, ignoreUid) {
   if (c < 0 || r < 0 || c + span > bed.w || r + span > bed.h) return false;
   for (const pl of bed.plants) {
     if (pl.uid === ignoreUid) continue;
-    const s = spanOf(PLANT_BY_ID[pl.pid]);
+    const s = plantSpan(bed, PLANT_BY_ID[pl.pid]);
     if (c < pl.c + s && pl.c < c + span && r < pl.r + s && pl.r < r + span) return false;
   }
   return true;
 }
 
 /* gap in feet between two footprints; 0 = touching/overlap, 1 = one square apart */
-function footprintGap(a, b) {
-  const sa = spanOf(PLANT_BY_ID[a.pid]), sb = spanOf(PLANT_BY_ID[b.pid]);
+function footprintGap(bed, a, b) {
+  const sa = plantSpan(bed, PLANT_BY_ID[a.pid]), sb = plantSpan(bed, PLANT_BY_ID[b.pid]);
   const gx = Math.max(0, b.c - (a.c + sa), a.c - (b.c + sb));
   const gy = Math.max(0, b.r - (a.r + sa), a.r - (b.r + sb));
   return Math.max(gx, gy);
@@ -141,7 +229,7 @@ function bedMood(bed) {
   let friends = 0, foes = 0;
   for (let i = 0; i < bed.plants.length; i++)
     for (let j = i + 1; j < bed.plants.length; j++) {
-      if (footprintGap(bed.plants[i], bed.plants[j]) > 1) continue;
+      if (footprintGap(bed, bed.plants[i], bed.plants[j]) > 1) continue;
       const rel = relation(bed.plants[i].pid, bed.plants[j].pid);
       if (rel === 'friend') friends++;
       else if (rel === 'foe') foes++;
@@ -155,16 +243,24 @@ function bedMood(bed) {
 
 /* ---------- templates ---------- */
 
-function makeBed(name, w, h) {
-  return { id: 'bed-' + Math.random().toString(36).slice(2, 8), name, w, h, plants: [] };
+function makeBed(name, w, h, kind = 'bed') {
+  const k = KINDS[kind];
+  return {
+    id: 'bed-' + Math.random().toString(36).slice(2, 8),
+    name, kind,
+    w: k.vessel ? k.w : w,
+    h: k.vessel ? k.h : h,
+    notes: '', caretaker: '',
+    plants: [],
+  };
 }
 function fillBed(bed, recipe) {
   const items = recipe
     .map(([pid, n]) => ({ p: PLANT_BY_ID[pid], n }))
     .filter(x => x.p)
-    .sort((a, b) => spanOf(b.p) - spanOf(a.p));
+    .sort((a, b) => plantSpan(bed, b.p) - plantSpan(bed, a.p));
   for (const { p, n } of items) {
-    const span = spanOf(p);
+    const span = plantSpan(bed, p);
     let placed = 0;
     for (let r = 0; r <= bed.h - span && placed < n; r++)
       for (let c = 0; c <= bed.w - span && placed < n; c++)
@@ -184,6 +280,8 @@ const TEMPLATES = {
     fillBed(makeBed('Potato Patch', 8, 4),   [['potato',32]]),
     fillBed(makeBed('Bean Machine', 8, 4),   [['green-beans',28],['nasturtium',4]]),
     fillBed(makeBed('Garlic & Herbs', 8, 4), [['garlic',16],['chive',6],['oregano',4],['basil',4]]),
+    fillBed(makeBed('Spud Sack', 0, 0, 'bag'), [['potato',4]]),
+    fillBed(makeBed('Blueberry Pot', 0, 0, 'treepot'), [['blueberry',1],['strawberry',3]]),
   ],
 };
 
@@ -314,25 +412,82 @@ function renderPlantingNote() {
   } else el.hidden = true;
 }
 
-/* ---------- bed rendering ---------- */
+/* ---------- plot chrome (the vessel around the soil) ---------- */
 
-function chipCenter(pl) {
-  const span = spanOf(PLANT_BY_ID[pl.pid]);
-  return { x: (pl.c + span / 2) * CELL, y: (pl.r + span / 2) * CELL };
+function chromeSvg(bed) {
+  const { W, H, ext, svgW, svgH } = geomOf(bed);
+  const shape = kindOf(bed).shape;
+  const cx = svgW / 2, cy = svgH / 2;
+
+  if (shape === 'round') {
+    const rIn = Math.sqrt((W/2)**2 + (H/2)**2) + 4;
+    const rOut = rIn + 9;
+    const tones = bed.kind === 'barrel'
+      ? { body:'#8B6748', edge:'#6E4F35', band:'#5B544C' }
+      : bed.kind === 'treepot'
+        ? { body:'#7E8E6F', edge:'#5F7053', band:null }
+        : { body:'#C97B54', edge:'#A95F3D', band:null };
+    let s = `<circle cx="${cx}" cy="${cy}" r="${rOut}" fill="${tones.body}" stroke="${tones.edge}" stroke-width="2"/>`;
+    if (bed.kind === 'barrel') {
+      for (let a = 0; a < 12; a++) {
+        const ang = a * Math.PI / 6;
+        s += `<line x1="${cx + Math.cos(ang)*rIn}" y1="${cy + Math.sin(ang)*rIn}" x2="${cx + Math.cos(ang)*rOut}" y2="${cy + Math.sin(ang)*rOut}" stroke="${tones.edge}" stroke-width="1" stroke-opacity=".55"/>`;
+      }
+      s += `<circle cx="${cx}" cy="${cy}" r="${rOut-2.5}" fill="none" stroke="${tones.band}" stroke-width="1.6" stroke-opacity=".7"/>`;
+    }
+    s += `<circle cx="${cx}" cy="${cy}" r="${rIn}" fill="url(#soil-${bed.id})"/>`;
+    s += `<circle cx="${cx}" cy="${cy}" r="${rIn-1.5}" fill="none" stroke="#FFFFFF" stroke-opacity=".18" stroke-width="1.5"/>`;
+    return s;
+  }
+
+  if (shape === 'bag') {
+    let s = `<rect x="2" y="2" width="${svgW-4}" height="${svgH-4}" rx="26" fill="#6F675C" stroke="#575047" stroke-width="2"/>`;
+    s += `<rect x="7" y="7" width="${svgW-14}" height="${svgH-14}" rx="21" fill="none" stroke="#FFFFFF" stroke-opacity=".35" stroke-width="1.4" stroke-dasharray="4 5"/>`;
+    s += `<rect x="${ext}" y="${ext}" width="${W}" height="${H}" rx="14" fill="url(#soil-${bed.id})"/>`;
+    return s;
+  }
+
+  if (shape === 'window') {
+    let s = `<rect x="1.5" y="1.5" width="${svgW-3}" height="${svgH-3}" rx="8" fill="#D9D3BF" stroke="#B9B098" stroke-width="2"/>`;
+    s += `<rect x="${ext}" y="${ext}" width="${W}" height="${H}" rx="6" fill="url(#soil-${bed.id})"/>`;
+    return s;
+  }
+
+  if (shape === 'trough') {
+    let s = `<rect x="1.5" y="1.5" width="${svgW-3}" height="${svgH-3}" rx="12" fill="#C2C8CC" stroke="#9AA2A8" stroke-width="2"/>`;
+    for (let i = 1; i < bed.w; i++)
+      s += `<line x1="${ext + i*CELL}" y1="4" x2="${ext + i*CELL}" y2="${svgH-4}" stroke="#9AA2A8" stroke-width="1" stroke-opacity=".4"/>`;
+    s += `<rect x="${ext}" y="${ext}" width="${W}" height="${H}" rx="8" fill="url(#soil-${bed.id})"/>`;
+    return s;
+  }
+
+  /* plain raised bed */
+  let s = `<rect x="0" y="0" width="${W}" height="${H}" rx="18" fill="url(#soil-${bed.id})"/>`;
+  s += `<rect x="3" y="3" width="${W-6}" height="${H-6}" rx="15" fill="none" stroke="#FFFFFF" stroke-opacity=".25" stroke-width="1.5"/>`;
+  return s;
+}
+
+/* ---------- plot rendering ---------- */
+
+function chipCenter(bed, pl) {
+  const { ext } = geomOf(bed);
+  const span = plantSpan(bed, PLANT_BY_ID[pl.pid]);
+  return { x: ext + (pl.c + span / 2) * CELL, y: ext + (pl.r + span / 2) * CELL };
 }
 
 function chipSvg(bed, pl) {
   const p = PLANT_BY_ID[pl.pid];
   if (!p) return '';
-  const span = spanOf(p);
-  const { x, y } = chipCenter(pl);
+  const span = plantSpan(bed, p);
+  const { x, y } = chipCenter(bed, pl);
   const stage = stageAt(p, state.viewDoy);
   const baseR = (span * CELL) / 2 - 6;
   const R = Math.max(8, baseR * STAGE_SCALE[stage]);
   const fill = TYPE_FILL[p.type] || TYPE_FILL.vegetable;
   const selected = state.sel && state.sel.uid === pl.uid;
-  const per = perSquare(p);
+  const per = span === 1 ? perSquare(p) : 1;
   const fontSize = Math.max(11, R * 1.05);
+  const stageWord = { planned:'planned', sprout:'sprouting', growing:'growing', harvest:'ready to harvest', rest:'done for the year' }[stage];
 
   let halo = '';
   if (state.armed && state.armed !== pl.pid) {
@@ -363,6 +518,7 @@ function chipSvg(bed, pl) {
     ? `style="animation-delay:-${(pl.uid.charCodeAt(1) % 7)}s"` : '';
 
   return `<g class="chip stage-${stage}" data-uid="${pl.uid}" data-bed="${bed.id}" transform="translate(${x},${y})">
+    <title>${escapeHtml(p.name)} — ${stageWord}</title>
     ${halo}<g class="swayer" ${sway}>${body}</g>
   </g>`;
 }
@@ -371,13 +527,13 @@ function arcsSvg(bed) {
   if (!state.sel || state.sel.bedId !== bed.id) return '';
   const selPl = bed.plants.find(pl => pl.uid === state.sel.uid);
   if (!selPl) return '';
-  const a = chipCenter(selPl);
+  const a = chipCenter(bed, selPl);
   let s = '';
   for (const other of bed.plants) {
-    if (other.uid === selPl.uid || footprintGap(selPl, other) > 1) continue;
+    if (other.uid === selPl.uid || footprintGap(bed, selPl, other) > 1) continue;
     const rel = relation(selPl.pid, other.pid);
     if (rel === 'neutral') continue;
-    const b = chipCenter(other);
+    const b = chipCenter(bed, other);
     const mx = (a.x + b.x) / 2 + (b.y - a.y) * 0.18;
     const my = (a.y + b.y) / 2 - (b.x - a.x) * 0.18;
     s += rel === 'friend'
@@ -398,30 +554,40 @@ function renderBeds() {
   }
   let html = '';
   for (const bed of state.beds) {
-    const W = bed.w * CELL, H = bed.h * CELL;
+    const { W, H, ext, svgW, svgH } = geomOf(bed);
     const mood = bedMood(bed);
+    const kindLabel = isVessel(bed) ? ` · ${kindOf(bed).label}` : '';
     let dots = '';
     for (let c = 1; c < bed.w; c++) for (let r = 1; r < bed.h; r++)
-      dots += `<circle cx="${c*CELL}" cy="${r*CELL}" r="1.4" fill="#2C3527" fill-opacity=".14"/>`;
+      dots += `<circle cx="${ext + c*CELL}" cy="${ext + r*CELL}" r="1.4" fill="#2C3527" fill-opacity=".14"/>`;
+    const noteOpen = state.openNotes.has(bed.id);
+    const hasNote = (bed.notes || '').trim() || (bed.caretaker || '').trim();
     html += `<div class="bed-card" data-bed="${bed.id}">
       <div class="bed-head">
         <h3 class="bed-name" contenteditable="true" spellcheck="false">${escapeHtml(bed.name)}</h3>
-        <span class="bed-mood ${mood.cls}"><span class="dot"></span>${mood.label}</span>
-        <button class="bed-del" title="Remove this bed">×</button>
+        <span class="bed-mood ${mood.cls}"><span class="dot"></span>${mood.label}${kindLabel}</span>
+        <button class="bed-note-btn ${hasNote ? 'has-note' : ''}" title="Field notes & caretaker">✎</button>
+        <button class="bed-del" title="Remove this plot">×</button>
       </div>
-      <svg class="bed-svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" data-bed="${bed.id}">
+      <svg class="bed-svg" width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}" data-bed="${bed.id}">
         <defs>
           <linearGradient id="soil-${bed.id}" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stop-color="#BCA481"/><stop offset="1" stop-color="#A98F6B"/>
           </linearGradient>
         </defs>
-        <rect x="0" y="0" width="${W}" height="${H}" rx="18" fill="url(#soil-${bed.id})"/>
-        <rect x="3" y="3" width="${W-6}" height="${H-6}" rx="15" fill="none" stroke="#FFFFFF" stroke-opacity=".25" stroke-width="1.5"/>
+        ${chromeSvg(bed)}
         ${dots}
         <g class="ghost-layer"></g>
         ${bed.plants.map(pl => chipSvg(bed, pl)).join('')}
         <g class="arc-layer">${arcsSvg(bed)}</g>
       </svg>
+      <div class="bed-note" ${noteOpen ? '' : 'hidden'}>
+        <label class="bn-caretaker">tended by
+          <input type="text" class="bn-caretaker-input" placeholder="anyone yet?" value="${escapeHtml(bed.caretaker || '')}">
+        </label>
+        <textarea class="bn-notes" placeholder="field notes — what was planted when, what the soil wants, what worked…">${escapeHtml(bed.notes || '')}</textarea>
+      </div>
+      ${!noteOpen && (bed.caretaker || '').trim() ? `<p class="bed-tended">tended by ${escapeHtml(bed.caretaker)}</p>` : ''}
     </div>`;
   }
   wrap.innerHTML = html;
@@ -432,13 +598,15 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-/* ---------- bed interaction ---------- */
+/* ---------- plot interaction ---------- */
 
 function svgCell(svg, bed, e) {
+  const { ext } = geomOf(bed);
   const rect = svg.getBoundingClientRect();
-  const scale = rect.width / (bed.w * CELL);
-  const x = (e.clientX - rect.left) / scale;
-  const y = (e.clientY - rect.top) / scale;
+  const { svgW } = geomOf(bed);
+  const scale = rect.width / svgW;
+  const x = (e.clientX - rect.left) / scale - ext;
+  const y = (e.clientY - rect.top) / scale - ext;
   return { c: Math.floor(x / CELL), r: Math.floor(y / CELL) };
 }
 
@@ -450,6 +618,7 @@ function wireBeds() {
     const bed = bedById(bedId);
     const svg = card.querySelector('.bed-svg');
     const ghost = svg.querySelector('.ghost-layer');
+    const { ext } = geomOf(bed);
 
     /* rename */
     const nameEl = card.querySelector('.bed-name');
@@ -462,13 +631,34 @@ function wireBeds() {
       nameEl.textContent = v;
     });
 
-    /* delete bed */
+    /* field notes & caretaker */
+    card.querySelector('.bed-note-btn').addEventListener('click', () => {
+      if (state.openNotes.has(bedId)) state.openNotes.delete(bedId);
+      else state.openNotes.add(bedId);
+      renderBeds();
+    });
+    const noteEl = card.querySelector('.bn-notes');
+    const careEl = card.querySelector('.bn-caretaker-input');
+    let noteSnap = null;
+    for (const el of [noteEl, careEl]) {
+      el.addEventListener('focus', () => { noteSnap = snapshot(); });
+      el.addEventListener('blur', () => {
+        const notes = noteEl.value, caretaker = careEl.value.trim();
+        if (notes !== (bed.notes || '') || caretaker !== (bed.caretaker || '')) {
+          pushUndo(noteSnap);
+          bed.notes = notes; bed.caretaker = caretaker;
+          save();
+        }
+      });
+    }
+
+    /* delete plot */
     card.querySelector('.bed-del').addEventListener('click', () => {
       pushUndo();
       state.beds = state.beds.filter(b => b.id !== bedId);
       if (state.sel && state.sel.bedId === bedId) state.sel = null;
       renderBeds(); renderAlmanac(); save();
-      whisper(`${bed.name} returned to lawn. Ctrl+Z to undo.`);
+      whisper(`${bed.name} returned to the shed. Ctrl+Z to undo.`);
     });
 
     /* ghost preview while a packet is armed, or while dragging a plant */
@@ -480,16 +670,16 @@ function wireBeds() {
       }
       if (!activePid) { ghost.innerHTML = ''; return; }
       const p = PLANT_BY_ID[activePid];
-      const span = spanOf(p);
+      const span = plantSpan(bed, p);
       let { c, r } = svgCell(svg, bed, e);
       c = Math.min(Math.max(0, c - Math.floor(span / 2)), bed.w - span);
       r = Math.min(Math.max(0, r - Math.floor(span / 2)), bed.h - span);
       const ok = cellsFree(bed, c, r, span, drag ? drag.uid : null);
       const col = ok ? '#5E7350' : '#B5613D';
       ghost.innerHTML = `
-        <rect x="${c*CELL+3}" y="${r*CELL+3}" width="${span*CELL-6}" height="${span*CELL-6}" rx="10"
+        <rect x="${ext + c*CELL+3}" y="${ext + r*CELL+3}" width="${span*CELL-6}" height="${span*CELL-6}" rx="10"
           fill="${col}" fill-opacity=".14" stroke="${col}" stroke-width="1.6" stroke-dasharray="5 4"/>
-        <text x="${(c+span/2)*CELL}" y="${(r+span/2)*CELL}" font-size="${span*16}" text-anchor="middle"
+        <text x="${ext + (c+span/2)*CELL}" y="${ext + (r+span/2)*CELL}" font-size="${span*16}" text-anchor="middle"
           dominant-baseline="central" opacity=".5">${ok ? p.emoji : '✕'}</text>`;
       ghost.dataset.c = c; ghost.dataset.r = r; ghost.dataset.ok = ok ? '1' : '';
     });
@@ -509,9 +699,12 @@ function wireBeds() {
         pushUndo();
         const uid = newUid();
         bed.plants.push({ uid, pid: state.armed, c, r });
+        const p = PLANT_BY_ID[state.armed];
         renderBeds(); renderAlmanac(); save();
         const justEl = document.querySelector(`.chip[data-uid="${uid}"]`);
         if (justEl) justEl.classList.add('just-planted');
+        if (isVessel(bed) && sulksInVessel(p))
+          whisper(`${p.name} really wants open ground — it may sulk in a ${kindOf(bed).label}.`, 4200);
       }
     });
 
@@ -581,6 +774,21 @@ const PROVERBS = [
   'Food grown for neighbors tastes twice.',
 ];
 
+function outlookSvg(byMonth) {
+  const W = 264, H = 46, pad = 2;
+  const max = Math.max(1, ...byMonth);
+  const bw = (W - pad * 2) / 12;
+  let s = `<svg viewBox="0 0 ${W} ${H}">`;
+  for (let m = 0; m < 12; m++) {
+    const h = Math.round(byMonth[m] / max * 28);
+    const x = pad + m * bw;
+    if (h > 0)
+      s += `<rect x="${x + 2}" y="${34 - h}" width="${bw - 4}" height="${h}" rx="2.5" fill="#C09A2C" fill-opacity=".8"/>`;
+    s += `<text x="${x + bw/2}" y="${H - 2}" text-anchor="middle" font-size="6.5" fill="#8B927E" font-family="Karla,sans-serif" font-weight="700">${MONTH_AB[m][0]}</text>`;
+  }
+  return s + '</svg>';
+}
+
 function renderAlmanac() {
   const el = document.getElementById('almanac-body');
   const pid = state.armed || (state.sel && bedById(state.sel.bedId)?.plants.find(pl => pl.uid === state.sel.uid)?.pid);
@@ -589,20 +797,33 @@ function renderAlmanac() {
   /* the garden today */
   const plantings = state.beds.reduce((n, b) => n + b.plants.length, 0);
   const varieties = new Set(state.beds.flatMap(b => b.plants.map(pl => pl.pid))).size;
-  const sqUsed = state.beds.reduce((n, b) => n + b.plants.reduce((m, pl) => m + spanOf(PLANT_BY_ID[pl.pid]) ** 2, 0), 0);
+  const sqUsed = state.beds.reduce((n, b) => n + b.plants.reduce((m, pl) => m + plantSpan(b, PLANT_BY_ID[pl.pid]) ** 2, 0), 0);
   const sqTotal = state.beds.reduce((n, b) => n + b.w * b.h, 0);
   const tasks = tasksNear(state.viewDoy);
   const t = todayDoy();
+  const { total, byMonth } = harvestOutlook();
+  const lbs = Math.round(total);
+  const bags = Math.round(total / 10);
+  const pct = Math.min(100, Math.round(total / HARVEST_GOAL * 100));
 
   el.innerHTML = `
     <h2>The garden on ${fmtDoy(state.viewDoy)}</h2>
     <p class="alm-sub">${Math.round(state.viewDoy)===t ? 'as it stands today' : 'as the almanac imagines it'}</p>
     <div class="alm-stats">
-      <div class="alm-stat"><div class="n">${state.beds.length}</div><div class="l">beds</div></div>
+      <div class="alm-stat"><div class="n">${state.beds.length}</div><div class="l">plots</div></div>
       <div class="alm-stat"><div class="n">${plantings}</div><div class="l">plantings</div></div>
       <div class="alm-stat"><div class="n">${varieties}</div><div class="l">varieties</div></div>
       <div class="alm-stat"><div class="n">${sqTotal ? Math.round(sqUsed / sqTotal * 100) : 0}%</div><div class="l">soil in use</div></div>
     </div>
+    <div class="alm-section">harvest outlook</div>
+    <p class="plant-notes" style="margin:4px 0 6px">
+      ≈ <strong>${lbs} lbs</strong> this season — about <strong>${bags} grocery bags</strong> for neighbors.
+    </p>
+    <div class="goal-bar" title="${lbs} of ${HARVEST_GOAL} lb season goal">
+      <div class="goal-fill" style="width:${pct}%"></div>
+      <span class="goal-label">${pct}% of the ${HARVEST_GOAL} lb goal</span>
+    </div>
+    <div class="year-strip">${outlookSvg(byMonth)}</div>
     <div class="alm-section">around this date</div>
     ${tasks.length ? tasks.map(e => `
       <div class="task k-${e.kind} ${e.doy < state.viewDoy ? 'past' : ''}">
@@ -650,19 +871,25 @@ function plantPage(pid) {
     : `<p class="calm-empty">none to speak of.</p>`;
 
   let neighborNote = '';
+  let vesselNote = '';
   if (planted) {
     const bed = bedById(state.sel.bedId);
     const selPl = bed?.plants.find(x => x.uid === state.sel.uid);
     if (selPl) {
       let f = 0, e = 0;
       for (const o of bed.plants) {
-        if (o.uid === selPl.uid || footprintGap(selPl, o) > 1) continue;
+        if (o.uid === selPl.uid || footprintGap(bed, selPl, o) > 1) continue;
         const rel = relation(selPl.pid, o.pid);
         if (rel === 'friend') f++; else if (rel === 'foe') e++;
       }
       neighborNote = e > 0
         ? `<p class="plant-notes">⚠ <strong>${e} unhappy neighbor${e>1?'s':''}</strong> nearby — consider a gentle move.</p>`
         : f > 0 ? `<p class="plant-notes">☺ ${f} good neighbor${f>1?'s':''} within reach. This plant is content.</p>` : '';
+      if (isVessel(bed)) {
+        vesselNote = sulksInVessel(p)
+          ? `<p class="plant-notes">🪴 Living in a ${kindOf(bed).label} — honestly, it would rather have open ground. Expect a modest crop.</p>`
+          : `<p class="plant-notes">🪴 Living in a ${kindOf(bed).label} — water more often than the beds, feed it every few weeks, and it will do fine.</p>`;
+      }
     }
   }
 
@@ -679,6 +906,7 @@ function plantPage(pid) {
       <span class="fact">💧 ${escapeHtml(String(p.waterNeed))} water</span>
       <span class="fact">↔ ${p.spacing}″ spacing</span>
       <span class="fact">⏳ ${p.daysToHarvest} days</span>
+      ${yieldOf(p) > 0 ? `<span class="fact">⚖ ≈${yieldOf(p)} lb each</span>` : ''}
       ${p.lowMaintenance ? '<span class="fact">🌿 easygoing</span>' : ''}
     </div>
     <div class="year-strip">${yearStrip(p)}</div>
@@ -688,6 +916,7 @@ function plantPage(pid) {
       ${w.indoor != null ? `· start indoors ${fmtDoy(w.indoor)}` : ''}
     </p>
     ${neighborNote}
+    ${vesselNote}
     <p class="plant-notes">${escapeHtml(p.notes || '')}</p>
     <div class="alm-section">grows well beside</div>
     ${mates(p.companions, false)}
@@ -716,10 +945,38 @@ function wireAlmanac(el) {
   });
 }
 
+/* ---------- the year calendar overlay ---------- */
+
+function openCalendar() {
+  const overlay = document.getElementById('calendar-overlay');
+  const grid = document.getElementById('calendar-months');
+  const events = gardenEvents();
+  const { total } = harvestOutlook();
+  document.getElementById('calendar-sub').textContent =
+    `Food Not Bombs · Canton, Ohio · Zone 6a · ${state.beds.length} plots · ≈${Math.round(total)} lbs projected`;
+
+  let html = '';
+  for (let m = 0; m < 12; m++) {
+    const inMonth = events.filter(e => doyToMD(e.doy).m === m);
+    html += `<div class="cal-month">
+      <h3>${MONTH_FULL[m]}</h3>
+      ${inMonth.length ? inMonth.map(e => `
+        <div class="task k-${e.kind}">
+          <span class="t-date">${fmtDoy(e.doy)}</span><span class="t-dot"></span>
+          <span class="t-text">${e.emoji} ${e.text}</span>
+        </div>`).join('')
+        : '<p class="calm-empty">rest.</p>'}
+    </div>`;
+  }
+  grid.innerHTML = html;
+  overlay.hidden = false;
+}
+
 /* ---------- header tools ---------- */
 
 function setupTools() {
   document.getElementById('btn-undo').addEventListener('click', undo);
+  document.getElementById('btn-redo').addEventListener('click', redo);
 
   /* plans menu */
   const menu = document.getElementById('plans-menu');
@@ -734,13 +991,28 @@ function setupTools() {
     state.sel = null; state.armed = null;
     renderDrawer(); renderBeds(); renderAlmanac(); renderPlantingNote(); save();
     whisper(b.dataset.plan === 'fnb-easy'
-      ? 'The FNB Easy Start plan is laid out — five beds, low fuss, high yield.'
+      ? 'The FNB Easy Start plan is laid out — five beds, a spud sack, and a blueberry pot.'
       : 'Three blank beds, raked smooth.');
   }));
 
+  /* calendar */
+  document.getElementById('btn-calendar').addEventListener('click', openCalendar);
+  document.getElementById('btn-close-calendar').addEventListener('click', () => {
+    document.getElementById('calendar-overlay').hidden = true;
+  });
+  document.getElementById('btn-print-calendar').addEventListener('click', () => window.print());
+
+  /* help */
+  document.getElementById('btn-help').addEventListener('click', () => {
+    document.getElementById('help-overlay').hidden = false;
+  });
+  document.getElementById('btn-close-help').addEventListener('click', () => {
+    document.getElementById('help-overlay').hidden = true;
+  });
+
   /* export */
   document.getElementById('btn-export').addEventListener('click', () => {
-    const blob = new Blob([JSON.stringify({ app:'gardensync-almanac', version:1, exported:new Date().toISOString(), beds: state.beds }, null, 2)], { type:'application/json' });
+    const blob = new Blob([JSON.stringify({ app:'gardensync-almanac', version:2, exported:new Date().toISOString(), beds: state.beds }, null, 2)], { type:'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = `gardensync-${new Date().toISOString().slice(0,10)}.json`;
@@ -759,7 +1031,7 @@ function setupTools() {
       const data = JSON.parse(txt);
       if (!data || !Array.isArray(data.beds)) throw new Error('shape');
       pushUndo();
-      state.beds = data.beds;
+      state.beds = migrateBeds(data.beds);
       state.sel = null; state.armed = null;
       renderDrawer(); renderBeds(); renderAlmanac(); renderPlantingNote(); save();
       whisper('Garden restored from file.');
@@ -773,16 +1045,27 @@ function setupTools() {
     renderDrawer();
   });
 
-  /* add bed */
-  document.querySelectorAll('.add-bed').forEach(b => b.addEventListener('click', () => {
-    const [w, h] = b.dataset.size.split('x').map(Number);
+  /* add plot */
+  document.querySelectorAll('.add-plot').forEach(b => b.addEventListener('click', () => {
+    const kind = b.dataset.kind;
     pushUndo();
-    state.beds.push(makeBed('New bed', w, h));
+    if (kind === 'bed') {
+      const [w, h] = b.dataset.size.split('x').map(Number);
+      state.beds.push(makeBed('New bed', w, h));
+    } else {
+      state.beds.push(makeBed('New ' + KINDS[kind].label, 0, 0, kind));
+    }
     renderBeds(); renderAlmanac(); save();
   }));
 
   /* keys */
   document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      const cal = document.getElementById('calendar-overlay');
+      const help = document.getElementById('help-overlay');
+      if (!cal.hidden) { cal.hidden = true; return; }
+      if (!help.hidden) { help.hidden = true; return; }
+    }
     if (e.target.closest('input, [contenteditable], textarea')) return;
     if (e.key === 'Escape') disarm();
     if ((e.key === 'Delete' || e.key === 'Backspace') && state.sel) {
@@ -794,11 +1077,12 @@ function setupTools() {
         renderBeds(); renderAlmanac(); save();
       }
     }
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); undo(); }
+    if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'z') { e.preventDefault(); undo(); }
+    if ((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === 'y' || (e.shiftKey && e.key.toLowerCase() === 'z'))) { e.preventDefault(); redo(); }
   });
 }
 
-/* ---------- weather ---------- */
+/* ---------- weather & frost watch ---------- */
 
 const WMO_WORDS = [
   [0,'clear skies'],[1,'mostly clear'],[2,'a few clouds'],[3,'overcast'],
@@ -812,12 +1096,28 @@ function weatherWord(code) {
   return best;
 }
 function loadWeather() {
-  fetch('https://api.open-meteo.com/v1/forecast?latitude=40.80&longitude=-81.38&current=temperature_2m,weather_code&temperature_unit=fahrenheit')
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=40.80&longitude=-81.38&current=temperature_2m,weather_code&daily=temperature_2m_min&forecast_days=7&temperature_unit=fahrenheit&timezone=America%2FNew_York')
     .then(r => r.json())
     .then(d => {
       const chip = document.getElementById('weather-chip');
       chip.textContent = `${Math.round(d.current.temperature_2m)}° and ${weatherWord(d.current.weather_code)} in Canton`;
       chip.hidden = false;
+
+      /* frost watch: a cold night coming during the growing season */
+      const mins = d.daily?.temperature_2m_min || [];
+      const days = d.daily?.time || [];
+      const month = new Date().getMonth();
+      if (month >= 2 && month <= 10) {
+        for (let i = 0; i < mins.length; i++) {
+          if (mins[i] <= 36) {
+            const night = new Date(days[i] + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long' });
+            chip.textContent += ` · ❄ ${Math.round(mins[i])}° ${night} night`;
+            chip.classList.add('frosty');
+            whisper(`Frost watch — down to ${Math.round(mins[i])}° ${night} night. Blanket the tender ones.`, 6000);
+            break;
+          }
+        }
+      }
     })
     .catch(() => {});
 }
@@ -829,7 +1129,8 @@ function gardenSummary() {
     const counts = {};
     for (const pl of b.plants) counts[pl.pid] = (counts[pl.pid] || 0) + 1;
     const list = Object.entries(counts).map(([pid, n]) => `${PLANT_BY_ID[pid]?.name || pid} ×${n}`).join(', ');
-    return `- ${b.name} (${b.w}×${b.h} ft): ${list || 'empty'}`;
+    const kind = isVessel(b) ? kindOf(b).label : `${b.w}×${b.h} ft bed`;
+    return `- ${b.name} (${kind}${b.caretaker ? ', tended by ' + b.caretaker : ''}): ${list || 'empty'}`;
   }).join('\n');
 }
 
@@ -896,13 +1197,22 @@ Answer briefly and warmly, like a wise neighbor over the fence — practical adv
 
 /* ---------- boot ---------- */
 
+function migrateBeds(beds) {
+  for (const b of beds) {
+    if (!b.kind) b.kind = 'bed';
+    if (b.notes == null) b.notes = '';
+    if (b.caretaker == null) b.caretaker = '';
+  }
+  return beds;
+}
+
 function boot() {
   let fresh = false;
   try {
     const raw = localStorage.getItem(LS_KEY);
     if (raw) {
       const data = JSON.parse(raw);
-      if (Array.isArray(data.beds)) state.beds = data.beds;
+      if (Array.isArray(data.beds)) state.beds = migrateBeds(data.beds);
     }
   } catch (e) { /* corrupted save — start anew */ }
 

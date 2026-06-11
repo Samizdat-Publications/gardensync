@@ -30,6 +30,8 @@
   <div class="masthead-tools">
     <span id="weather-chip" class="weather-chip" hidden></span>
     <button id="btn-undo" class="tool-btn" title="Undo (Ctrl+Z)">↶ Undo</button>
+    <button id="btn-redo" class="tool-btn" title="Redo (Ctrl+Y)">↷</button>
+    <button id="btn-calendar" class="tool-btn" title="The whole year, printable">Calendar</button>
     <div class="menu-wrap">
       <button id="btn-plans" class="tool-btn">Plans ▾</button>
       <div id="plans-menu" class="menu" hidden>
@@ -39,6 +41,7 @@
     </div>
     <button id="btn-export" class="tool-btn" title="Download garden as JSON">Save file</button>
     <button id="btn-import" class="tool-btn" title="Open a garden JSON file">Open file</button>
+    <button id="btn-help" class="tool-btn" title="How everything works">?</button>
     <input type="file" id="import-input" accept=".json,application/json" hidden>
   </div>
 </header>
@@ -64,11 +67,22 @@
   <section class="garden" aria-label="Garden beds">
     <div id="planting-note" class="planting-note" hidden></div>
     <div id="beds" class="beds"></div>
-    <div class="add-bed-row">
-      <span class="add-label">new bed —</span>
-      <button class="add-bed" data-size="8x4">8′ × 4′</button>
-      <button class="add-bed" data-size="10x5">10′ × 5′</button>
-      <button class="add-bed" data-size="4x4">4′ × 4′</button>
+    <div class="potting-shed">
+      <div class="shed-row">
+        <span class="add-label">raised beds —</span>
+        <button class="add-plot" data-kind="bed" data-size="8x4">8′ × 4′</button>
+        <button class="add-plot" data-kind="bed" data-size="10x5">10′ × 5′</button>
+        <button class="add-plot" data-kind="bed" data-size="4x4">4′ × 4′</button>
+      </div>
+      <div class="shed-row">
+        <span class="add-label">containers —</span>
+        <button class="add-plot" data-kind="pot" title="One square foot of terracotta. Herbs, a patio tomato, a fistful of carrots.">terracotta pot</button>
+        <button class="add-plot" data-kind="treepot" title="A deep 2×2 planter for bushes — blueberries love one.">tree pot</button>
+        <button class="add-plot" data-kind="barrel" title="A whisky half barrel, 2×2. Roomy and handsome.">half barrel</button>
+        <button class="add-plot" data-kind="bag" title="A fabric grow bag, 2×2. Famously good for potatoes.">grow bag</button>
+        <button class="add-plot" data-kind="window" title="A 4×1 box for a sill or railing. Greens and herbs.">window box</button>
+        <button class="add-plot" data-kind="trough" title="A 6×2 galvanized steel trough. A small bed on legs.">steel trough</button>
+      </div>
     </div>
   </section>
 
@@ -89,6 +103,38 @@
   </aside>
 
 </main>
+
+<div id="calendar-overlay" class="overlay" hidden>
+  <div class="overlay-page" id="calendar-page">
+    <header class="overlay-head">
+      <div>
+        <h2>The year in the garden</h2>
+        <p class="alm-sub" id="calendar-sub"></p>
+      </div>
+      <div class="overlay-tools no-print">
+        <button class="tool-btn" id="btn-print-calendar">Print</button>
+        <button class="tool-btn" id="btn-close-calendar">Close</button>
+      </div>
+    </header>
+    <div id="calendar-months" class="cal-grid"></div>
+  </div>
+</div>
+
+<div id="help-overlay" class="overlay" hidden>
+  <div class="overlay-page overlay-narrow">
+    <header class="overlay-head">
+      <h2>How to tend this place</h2>
+      <div class="overlay-tools"><button class="tool-btn" id="btn-close-help">Close</button></div>
+    </header>
+    <div class="help-body">
+      <p><strong>Plant something.</strong> Pick a packet from the seed drawer, then tap any open square. Friends in the garden glow green while you carry it; foes blush rust. Esc puts the packet back.</p>
+      <p><strong>Travel through the year.</strong> Drag the pin on the ribbon up top. Plants appear as dashed plans before sowing, sprout, fill out, ring gold when ready to pick, and fade after.</p>
+      <p><strong>Get to know a plant.</strong> Tap anything planted — the almanac opens its page, with arcs drawn to its friends and quarrels nearby. Drag a plant to move it. Delete removes it.</p>
+      <p><strong>Tend the beds.</strong> Click a bed's name to rename it. The ✎ opens its field notes and lets you name a caretaker. The × returns it to lawn.</p>
+      <p><strong>Keep it safe.</strong> Everything autosaves in this browser. <em>Save file</em> downloads a copy worth keeping; <em>Calendar</em> prints the year for the crew; Ctrl+Z undoes, Ctrl+Y redoes.</p>
+    </div>
+  </div>
+</div>
 
 <div id="whisper" class="whisper" hidden></div>
 
