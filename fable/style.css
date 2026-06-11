@@ -214,6 +214,10 @@ body {
 .packet[data-type="fruit"]  .pk-emoji { background: var(--fruit-pale); }
 
 .packet .pk-name { font-size: 13.5px; font-weight: 700; color: var(--ink); line-height: 1.2; }
+.pk-here {
+  display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--moss); margin-left: 6px; vertical-align: 2px;
+}
 .packet .pk-meta { font-size: 11px; color: var(--ink-faint); }
 
 /* ---------- garden ---------- */
@@ -404,6 +408,17 @@ body {
 .calm-empty {
   font-family: var(--serif); font-style: italic; font-size: 14.5px;
   color: var(--ink-soft); padding: 10px 0;
+}
+
+.ready-line {
+  margin: 12px 0 0; padding: 8px 12px;
+  background: var(--gold-pale); border: 1px solid var(--gold); border-radius: 10px;
+  font-size: 12.5px; font-weight: 600; color: var(--ink); line-height: 1.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip .swayer, .pin-hint, .chip.just-planted .swayer { animation: none !important; }
+  .masthead, .season-band, .seed-drawer, .garden, .almanac, .menu, .planting-note { animation: none !important; }
 }
 
 .proverb {

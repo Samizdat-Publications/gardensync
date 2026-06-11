@@ -347,11 +347,18 @@ function renderRibbon() {
 function setupRibbon() {
   const svg = document.getElementById('ribbon');
   let dragging = false;
+  /* scrubbing re-renders every plot — coalesce to one render per frame */
+  let raf = null, pendingX = 0;
   const move = e => {
-    const rect = svg.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width * RIB.W;
-    state.viewDoy = xToDoy(x);
-    renderRibbon(); renderBeds(); renderAlmanac();
+    pendingX = e.clientX;
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      raf = null;
+      const rect = svg.getBoundingClientRect();
+      const x = (pendingX - rect.left) / rect.width * RIB.W;
+      state.viewDoy = xToDoy(x);
+      renderRibbon(); renderBeds(); renderAlmanac();
+    });
   };
   svg.addEventListener('pointerdown', e => { dragging = true; state.pinHint = false; svg.setPointerCapture(e.pointerId); move(e); });
   svg.addEventListener('pointermove', e => { if (dragging) move(e); });
@@ -376,6 +383,7 @@ function packetMeta(p) {
 function renderDrawer() {
   const wrap = document.getElementById('drawer-groups');
   const q = state.search.trim().toLowerCase();
+  const present = new Set(state.beds.flatMap(b => b.plants.map(pl => pl.pid)));
   let html = '';
   for (const type of TYPE_ORDER) {
     const items = PLANTS.filter(p => p.type === type && (!q || p.name.toLowerCase().includes(q)));
@@ -384,7 +392,7 @@ function renderDrawer() {
     for (const p of items) {
       html += `<button class="packet ${state.armed === p.id ? 'armed' : ''}" data-pid="${p.id}" data-type="${p.type}">
         <span class="pk-emoji">${p.emoji}</span>
-        <span><span class="pk-name">${escapeHtml(p.name)}</span><br><span class="pk-meta">${packetMeta(p)}</span></span>
+        <span><span class="pk-name">${escapeHtml(p.name)}${present.has(p.id) ? '<span class="pk-here" title="already growing in your garden"></span>' : ''}</span><br><span class="pk-meta">${packetMeta(p)}</span></span>
       </button>`;
     }
   }
@@ -826,6 +834,17 @@ function renderAlmanac() {
       <div class="alm-stat"><div class="n">${varieties}</div><div class="l">varieties</div></div>
       <div class="alm-stat"><div class="n">${sqTotal ? Math.round(sqUsed / sqTotal * 100) : 0}%</div><div class="l">soil in use</div></div>
     </div>
+    ${(() => {
+      const ready = {};
+      for (const b of state.beds) for (const pl of b.plants) {
+        const p = PLANT_BY_ID[pl.pid];
+        if (p && stageAt(p, state.viewDoy) === 'harvest') ready[p.id] = (ready[p.id] || 0) + 1;
+      }
+      const names = Object.entries(ready).map(([id, n]) => `${PLANT_BY_ID[id].emoji} ${escapeHtml(PLANT_BY_ID[id].name)}${n > 1 ? ' ×' + n : ''}`);
+      return names.length
+        ? `<p class="ready-line">Ready to pick: ${names.slice(0, 6).join(' · ')}${names.length > 6 ? ' · …' : ''}</p>`
+        : '';
+    })()}
     <div class="alm-section">harvest outlook</div>
     <p class="plant-notes" style="margin:4px 0 6px">
       ≈ <strong>${lbs} lbs</strong> this season — about <strong>${bags} grocery bags</strong> for neighbors.

@@ -30,7 +30,7 @@
   <div class="masthead-tools">
     <span id="weather-chip" class="weather-chip" hidden></span>
     <button id="btn-undo" class="tool-btn" title="Undo (Ctrl+Z)">↶ Undo</button>
-    <button id="btn-redo" class="tool-btn" title="Redo (Ctrl+Y)">↷</button>
+    <button id="btn-redo" class="tool-btn" title="Redo (Ctrl+Y)" aria-label="Redo">↷</button>
     <button id="btn-calendar" class="tool-btn" title="The whole year, printable">Calendar</button>
     <div class="menu-wrap">
       <button id="btn-plans" class="tool-btn">Plans ▾</button>
@@ -44,7 +44,7 @@
     </div>
     <button id="btn-export" class="tool-btn" title="Download garden as JSON">Save file</button>
     <button id="btn-import" class="tool-btn" title="Open a garden JSON file">Open file</button>
-    <button id="btn-help" class="tool-btn" title="How everything works">?</button>
+    <button id="btn-help" class="tool-btn" title="How everything works" aria-label="Help">?</button>
     <input type="file" id="import-input" accept=".json,application/json" hidden>
   </div>
 </header>
@@ -107,7 +107,7 @@
 
 </main>
 
-<div id="calendar-overlay" class="overlay" hidden>
+<div id="calendar-overlay" class="overlay" role="dialog" aria-modal="true" aria-label="Year calendar" hidden>
   <div class="overlay-page" id="calendar-page">
     <header class="overlay-head">
       <div>
@@ -123,7 +123,7 @@
   </div>
 </div>
 
-<div id="help-overlay" class="overlay" hidden>
+<div id="help-overlay" class="overlay" role="dialog" aria-modal="true" aria-label="Help" hidden>
   <div class="overlay-page overlay-narrow">
     <header class="overlay-head">
       <h2>How to tend this place</h2>

@@ -29,8 +29,26 @@ three files and the shared plant library.
 - **Square-foot honest.** Placement footprints derive from real spacing —
   16 carrots per square, one tomato per 2×2 ft.
 
-Autosaves to localStorage; export/import JSON; full undo (Ctrl+Z);
-FNB Easy Start five-bed plan included as the default garden.
+- **A potting shed of containers.** Beyond raised beds: terracotta pots,
+  deep tree pots (blueberries approve), whisky half barrels, fabric grow
+  bags (famously good for potatoes), window boxes, and steel troughs —
+  each drawn with its own chrome. Container rules apply: everything fits
+  one square, sprawlers like squash get a gentle warning that they'll sulk.
+- **Harvest outlook.** Projected pounds for the season, progress toward the
+  FNB 500 lb goal, a month-by-month harvest chart, and a "ready to pick"
+  note for whatever date you're viewing.
+- **A printable year.** The Calendar overlay lays out every sowing,
+  transplant, succession round, and first harvest month by month — print it
+  for the volunteer crew.
+- **Field notes & caretakers.** Each plot keeps its own notes and a
+  "tended by" name (✎ on hover).
+- **Share & keep.** Copy a share link (the whole garden folds into the URL),
+  save a PNG picture of the garden, export/import JSON, full undo/redo.
+- **Frost watch.** The weather chip scans the real 7-day forecast and warns
+  when a cold night threatens the tender plantings.
+
+Autosaves to localStorage; FNB Easy Start (five beds, a spud sack, and a
+blueberry pot) is the default garden.
 
 Data (77 plants, companions, Zone 6a windows) is carried over from the
 original `js/constants.js` research — the design is new, the agronomy isn't.
