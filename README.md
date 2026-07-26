@@ -9,6 +9,7 @@ your browser and travels as a JSON file or a link.
 
 **[Open the planner](https://gardensync-e4e.pages.dev/)** ·
 **[Open A Quiet Almanac](https://gardensync-e4e.pages.dev/fable/)** ·
+[Project page](https://samizdat-publications.github.io/gardensync/) ·
 [GitHub](https://github.com/Samizdat-Publications/gardensync)
 
 ---
