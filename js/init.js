@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
         ['CanvasPan', initCanvasPan],
         ['SidebarResize', initSidebarResize],
         ['PaletteResize', initPaletteResize],
+        // Must follow the two resize inits — it reconciles their inline grid
+        // track with the current breakpoint.
+        ['LayoutBreakpointSync', initLayoutBreakpointSync],
         ['SectionResize', initSectionResize],
         ['CanvasZoom', initCanvasZoom],
         ['ContainerShelf', initContainerShelf],

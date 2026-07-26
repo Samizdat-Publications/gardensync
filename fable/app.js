@@ -1325,8 +1325,14 @@ Answer briefly and warmly, like a wise neighbor over the fence — practical adv
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 600,
+        model: 'claude-sonnet-5',
+        max_tokens: 800,
+        /* Sonnet 5 thinks by default and max_tokens covers thinking + reply.
+           These answers are three warm sentences, so skip thinking and keep
+           the effort low — it stays quick and cheap. No tools here, so the
+           reduced tool-eagerness of thinking-off costs us nothing. */
+        thinking: { type: 'disabled' },
+        output_config: { effort: 'low' },
         system,
         messages: state.chat.slice(-12),
       }),
@@ -1334,13 +1340,14 @@ Answer briefly and warmly, like a wise neighbor over the fence — practical adv
       .then(r => r.json())
       .then(d => {
         thinking.remove();
-        const text = d?.content?.[0]?.text || d?.error?.message || 'The almanac is silent today.';
-        state.chat.push({ role: 'assistant', content: text });
-        addMsg('bot', text);
+        const text = (d?.content || []).filter(b => b.type === 'text').map(b => b.text).join('').trim();
+        const msg = text || d?.error?.message || 'The almanac is silent today.';
+        state.chat.push({ role: 'assistant', content: msg });
+        addMsg('bot', msg);
       })
       .catch(() => {
         thinking.remove();
-        addMsg('bot', 'The almanac is offline. Run proxy.py with an Anthropic key in .env to wake it.');
+        addMsg('bot', 'The almanac is resting — no answering service is configured for this garden.');
       });
   });
 

@@ -163,6 +163,40 @@ function loadDemoData() {
     overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
 }
 
+/* Demo gardens ship as a single tall column of containers (all at the same
+   canvasX, 360px apart), which zoom-to-fit then shrinks to ~48% with dead
+   space either side. Re-flow them into a roughly square grid so a loaded
+   demo actually fills the viewport. Row heights are ragged-aware: each row
+   is as tall as its tallest container. */
+function arrangeContainersInGrid(containers, opts = {}) {
+    if (!Array.isArray(containers) || containers.length === 0) return;
+    const gap = opts.gap ?? 60;
+    const originX = opts.originX ?? 40;
+    const originY = opts.originY ?? 40;
+    const cols = opts.cols ?? Math.ceil(Math.sqrt(containers.length));
+
+    const dims = containers.map(c => getContainerPixelDims(c));
+    // Column widths are shared so containers line up vertically.
+    const colWidths = [];
+    for (let i = 0; i < containers.length; i++) {
+        const col = i % cols;
+        colWidths[col] = Math.max(colWidths[col] || 0, dims[i].width);
+    }
+    const colX = [];
+    let x = originX;
+    for (let c = 0; c < cols; c++) { colX[c] = x; x += colWidths[c] + gap; }
+
+    let y = originY;
+    let rowHeight = 0;
+    for (let i = 0; i < containers.length; i++) {
+        const col = i % cols;
+        if (col === 0 && i > 0) { y += rowHeight + gap; rowHeight = 0; }
+        containers[i].canvasX = Math.round(colX[col] / 20) * 20;
+        containers[i].canvasY = Math.round(y / 20) * 20;
+        rowHeight = Math.max(rowHeight, dims[i].height);
+    }
+}
+
 function applyDemoData(demoSource, toastMsg) {
     try {
         const data = JSON.parse(JSON.stringify(demoSource));
@@ -225,6 +259,7 @@ function applyDemoData(demoSource, toastMsg) {
             if (typeof mergeCustomPlantsIntoLibrary === 'function') mergeCustomPlantsIntoLibrary();
         }
 
+        arrangeContainersInGrid(state.containers);
         renderAllContainers();
         // Auto-organize all containers so plants are properly positioned
         state.containers.forEach(c => {

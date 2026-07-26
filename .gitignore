@@ -30,3 +30,9 @@ node_modules/
 *.zip
 Gardensync (redesign 1/
 .claude/worktrees/
+
+# Deploy staging directory — rebuilt by deploy.sh
+dist/
+
+# Playwright MCP scratch output
+.playwright-mcp/

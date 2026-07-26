@@ -403,8 +403,11 @@ body {
 }
 .plant-item {
     display: flex;
+    /* Wrap so the badges drop to a second line in a narrow palette instead of
+       squeezing the plant name (flex-basis 0) down to zero width. */
+    flex-wrap: wrap;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.3rem 0.5rem;
     padding: 0.5rem 0.6rem;
     background: var(--bg-tertiary);
     border: 1px solid var(--border);
@@ -421,7 +424,9 @@ body {
 .plant-item .plant-emoji { font-size: 1.1rem; }
 .plant-item .plant-name {
     font-weight: 600;
-    flex: 1;
+    /* basis auto + a floor, so the name keeps its width and the badges wrap */
+    flex: 1 1 auto;
+    min-width: 5.5rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -434,7 +439,10 @@ body {
     color: var(--text-muted);
     letter-spacing: 1px;
     border-radius: var(--radius);
+    flex-shrink: 0;
 }
+/* Chevron always trails at the far right of whichever line it lands on. */
+.plant-item .plant-expand-icon { margin-left: auto; }
 .plant-item[data-type="vegetable"] { border-left-color: var(--emerald); }
 .plant-item[data-type="fruit"] { border-left-color: #f59e0b; }
 .plant-item[data-type="herb"] { border-left-color: var(--teal); }
@@ -1861,12 +1869,15 @@ body.section-resizing * {
 }
 .bed-plant-entry .remove-plant:hover { opacity: 1; }
 
-/* Bed actions (clear / copy) */
+/* Bed actions (clear / copy) — wrap rather than clip. The sidebar is narrow
+   enough that three mono-spaced labels don't fit on one line. */
 .bed-actions {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.4rem;
     margin: 0.5rem 0;
 }
+.bed-actions .tool-btn { flex: 1 1 auto; }
 .tool-btn.small {
     font-size: 0.7rem;
     padding: 0.25rem 0.5rem;
@@ -1874,9 +1885,13 @@ body.section-resizing * {
 }
 .quick-add-row {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.3rem;
     margin: 0.4rem 0 0.6rem;
 }
+/* The select can shrink; the action buttons must keep their label. */
+.quick-add-row .quick-add-select { min-width: 7rem; }
+.quick-add-row .tool-btn { flex: 0 0 auto; }
 .quick-add-select {
     flex: 1;
     background: var(--bg-dark);
@@ -4542,6 +4557,34 @@ body::before {
     color: var(--text-primary);
     border-color: var(--border);
 }
+/* Link across to the other edition of the same app (/fable/). */
+.edition-link {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-decoration: none;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.3rem 0.5rem;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+}
+.edition-link:hover {
+    color: var(--emerald);
+    border-color: var(--emerald);
+}
+/* On phones the header is already tight — the almanac lives in the nav drawer
+   instead (.mobile-nav-link). */
+@media (max-width: 900px) {
+    .header-right .edition-link { display: none; }
+}
+.mobile-nav-link {
+    text-decoration: none;
+    display: block;
+}
+
 /* Theme toggle button */
 .theme-toggle {
     background: none;
@@ -6051,17 +6094,14 @@ body.tweak-heatmap-on .heatmap-overlay {
 .menu-wrap.open .menu-trigger::after {
     transform: rotate(180deg);
 }
+/* Chrome + closed state live on the base rule so EVERY popup gets them.
+   These used to sit only in the #container-menu override below, which left
+   the FILE popup unstyled and permanently open on top of the canvas. */
 .menu-popup {
     position: absolute;
     top: calc(100% + 4px);
     right: 0;
     min-width: 220px;
-}
-/* Container picker sits on the LEFT side of the shelf, so its popup should
-   align left (not right) so it doesn't extend off the canvas viewport. */
-#container-menu .menu-popup {
-    right: auto;
-    left: 0;
     background: var(--bg-secondary, #0e1612);
     border: 1px solid var(--emerald, #10b981);
     border-radius: 3px;
@@ -6070,6 +6110,12 @@ body.tweak-heatmap-on .heatmap-overlay {
     z-index: 50;
     font-family: var(--font-mono);
     display: none;
+}
+/* Container picker sits on the LEFT side of the shelf, so its popup should
+   align left (not right) so it doesn't extend off the canvas viewport. */
+#container-menu .menu-popup {
+    right: auto;
+    left: 0;
 }
 .menu-wrap.open .menu-popup {
     display: block;

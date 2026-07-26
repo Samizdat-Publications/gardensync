@@ -477,8 +477,13 @@ async function gbCallClaude() {
     const maxLoops = 5;
     for (let loop = 0; loop < maxLoops; loop++) {
         const body = {
-            model: 'claude-sonnet-4-20250514',
-            max_tokens: 1024,
+            // Sonnet 4 is deprecated (retires 2026-06-15). Sonnet 5 runs adaptive
+            // thinking by default, and max_tokens caps thinking + reply together —
+            // hence the larger budget. Thinking stays ON: with it disabled Sonnet 5
+            // reaches for tools noticeably less, and this assistant is tool-driven.
+            model: 'claude-sonnet-5',
+            max_tokens: 4096,
+            output_config: { effort: 'medium' },
             system: gbBuildSystemPrompt(),
             messages: gbConversation,
             tools: GB_TOOLS

@@ -6,14 +6,27 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **GardenSync** — A community garden bed planner for Food Not Bombs Canton, OH. Interactive drag-and-drop planner with companion planting, AI chat assistant, harvest tracking, volunteer management, and season-aware scheduling for Zone 6a.
 
+**Two editions share this repo**, with separate state and separate code:
+- `/` — the original planner (punk aesthetic, six tabs, Garden Buddy). Root `index.html` + `styles.css` + `js/`.
+- `/fable/` — *A Quiet Almanac*, a ground-up rebuild with a calm paper-and-ink design and a scrubbable season ribbon. Four self-contained files; shares no code with the root app.
+
+Live: <https://gardensync-e4e.pages.dev>
+
 ## How to Run
 
 ### Development server
 ```bash
-python3 proxy.py
-# Opens http://localhost:8080
+python proxy.py
+# Opens http://localhost:8080  (almanac at /fable/)
 ```
-The proxy server serves static files and proxies `/api/gemini/*` and `/api/claude/*` for the AI features (Garden Buddy chat).
+The proxy server serves static files and proxies `/api/gemini/*` and `/api/claude/*` for the AI features (Garden Buddy chat, Ask the almanac).
+
+### Deploy
+```bash
+./deploy.sh            # stage dist/ and publish to Cloudflare Pages
+./deploy.sh --stage    # stage only
+```
+`dist/` is assembled fresh each run — never edit it, and never deploy the repo root (it holds the pre-refactor monolith, personal garden JSON and screenshots).
 
 ### Tests
 Open in browser (no test runner):
@@ -29,7 +42,7 @@ Key modules:
 | Module | Responsibility |
 |--------|---------------|
 | `state.js` | Global state object, undo/redo stacks |
-| `constants.js` | Plant library (41 plants), Zone 6a climate data, Canton frost dates, 3 FNB demo gardens |
+| `constants.js` | Plant library (77 plants), Zone 6a climate data, Canton frost dates, demo gardens (11 in `DEMO_REGISTRY`) |
 | `placement.js` | Click-to-place mechanics, 20px grid snapping, spacing validation |
 | `selection.js` | Plant selection, multi-select, drag |
 | `canvas.js` | Canvas-based bed rendering, companion lines |
@@ -58,8 +71,18 @@ Key modules:
 - 20px grid cells for Square Foot Gardening alignment
 - Companion/enemy plant connection lines drawn on canvas overlay
 
+### Layout gotcha — inline grid tracks vs. the mobile breakpoint
+`initSidebarResize()` / `initPaletteResize()` in `canvas.js` write an inline
+`grid-template-columns` on `.planner-layout`. Inline styles outrank the
+`max-width: 900px` media query that collapses the planner to one column, so all
+grid writes must go through `_setLayoutColumns()`, and `initLayoutBreakpointSync()`
+must run after both resize inits. Writing that property directly will squeeze the
+garden viewport on phones.
+
 ### AI Integration (Garden Buddy)
-- Uses Claude Sonnet 4 via `proxy.py` CORS proxy
+- Uses Claude Sonnet 5, called directly from the browser with a user-supplied key
+  (`anthropic-dangerous-direct-browser-access`); the almanac's chat instead goes
+  through the `/api/claude/*` proxy
 - Tool-based: `place_plant`, `clear_bed`, `apply_template`, `get_garden_state`, `get_plant_info`, `list_plants`, `rename_bed`, `organize_bed`, `get_schedule_advice`
 - System prompt includes current garden state, frost dates, location
 - API keys via `.env` file or request headers

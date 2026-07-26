@@ -79,6 +79,41 @@ function _getSidebarWidth() {
     return el ? Math.round(el.getBoundingClientRect().width) : 260;
 }
 
+/* Below 900px the stylesheet collapses .planner-layout to a single column and
+   the two side panels become slide-up overlays. The resize handles must not
+   write an inline grid-template-columns there — inline styles outrank the media
+   query, which left a phantom 240px palette track squeezing the garden into
+   ~240px of a 390px phone screen. */
+const DESKTOP_PANELS_QUERY = '(min-width: 901px)';
+function _desktopPanels() {
+    return window.matchMedia(DESKTOP_PANELS_QUERY).matches;
+}
+// Write the three-column track, but only when the desktop layout is in play.
+function _setLayoutColumns(layout, cols) {
+    if (!layout) return;
+    if (_desktopPanels()) layout.style.gridTemplateColumns = cols;
+    else layout.style.removeProperty('grid-template-columns');
+}
+/* Crossing the breakpoint in either direction: drop the inline track on the way
+   down, restore the saved widths on the way back up. */
+function initLayoutBreakpointSync() {
+    const layout = document.querySelector('.planner-layout');
+    if (!layout) return;
+    const mq = window.matchMedia(DESKTOP_PANELS_QUERY);
+    const apply = () => {
+        if (!mq.matches) {
+            layout.style.removeProperty('grid-template-columns');
+            return;
+        }
+        const palette = parseInt(localStorage.getItem('gardensync_palette_width')) || 240;
+        const sidebar = parseInt(localStorage.getItem('gardensync_sidebar_width')) || 260;
+        layout.style.gridTemplateColumns = `${palette}px minmax(0, 1fr) ${sidebar}px`;
+    };
+    apply();
+    if (mq.addEventListener) mq.addEventListener('change', apply);
+    else if (mq.addListener) mq.addListener(apply);
+}
+
 function initSidebarResize() {
     const handle = document.querySelector('.sidebar-resize-handle');
     const layout = document.querySelector('.planner-layout');
@@ -92,7 +127,7 @@ function initSidebarResize() {
 
     const saved = parseInt(localStorage.getItem(STORAGE_KEY));
     const initialWidth = (saved && saved >= MIN_WIDTH && saved <= MAX_WIDTH) ? saved : DEFAULT_WIDTH;
-    layout.style.gridTemplateColumns = `${_getPaletteWidth()}px minmax(0, 1fr) ${initialWidth}px`;
+    _setLayoutColumns(layout, `${_getPaletteWidth()}px minmax(0, 1fr) ${initialWidth}px`);
 
     function onStart(e) {
         e.preventDefault();
@@ -108,7 +143,7 @@ function initSidebarResize() {
             const dx = startX - cx;
             let newWidth = Math.round(startWidth + dx);
             newWidth = Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, newWidth));
-            layout.style.gridTemplateColumns = `${_getPaletteWidth()}px minmax(0, 1fr) ${newWidth}px`;
+            _setLayoutColumns(layout, `${_getPaletteWidth()}px minmax(0, 1fr) ${newWidth}px`);
         }
 
         function onUp() {
@@ -144,7 +179,7 @@ function initPaletteResize() {
 
     const saved = parseInt(localStorage.getItem(STORAGE_KEY));
     const initialWidth = (saved && saved >= MIN_WIDTH && saved <= MAX_WIDTH) ? saved : DEFAULT_WIDTH;
-    layout.style.gridTemplateColumns = `${initialWidth}px minmax(0, 1fr) ${_getSidebarWidth()}px`;
+    _setLayoutColumns(layout, `${initialWidth}px minmax(0, 1fr) ${_getSidebarWidth()}px`);
 
     function onStart(e) {
         e.preventDefault();
@@ -160,7 +195,7 @@ function initPaletteResize() {
             const dx = cx - startX;
             let newWidth = Math.round(startWidth + dx);
             newWidth = Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, newWidth));
-            layout.style.gridTemplateColumns = `${newWidth}px minmax(0, 1fr) ${_getSidebarWidth()}px`;
+            _setLayoutColumns(layout, `${newWidth}px minmax(0, 1fr) ${_getSidebarWidth()}px`);
         }
 
         function onUp() {

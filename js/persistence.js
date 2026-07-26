@@ -90,6 +90,24 @@ function createDefaultGarden() {
     }
 }
 
+/* First genuine visit — nothing in localStorage, no backup, no share link.
+   Seed the FNB Easy Start plan so the planner opens on a real garden instead
+   of four empty rectangles. FILE > NEW GARDEN still clears to blank beds.
+   applyDemoData() renders, saves and zooms to fit on its own. */
+function seedFirstRunGarden() {
+    if (typeof applyDemoData === 'function' && typeof DEMO_FNB_EASY_START !== 'undefined') {
+        try {
+            applyDemoData(DEMO_FNB_EASY_START,
+                'Welcome — loaded the FNB Easy Start plan. FILE > NEW GARDEN for a blank slate.');
+            return true;
+        } catch (e) {
+            console.warn('[GardenSync] first-run demo seed failed, using empty beds:', e);
+        }
+    }
+    createDefaultGarden();
+    return false;
+}
+
 function applyLoadedState(validated, extras) {
     state.containers = validated.containers;
     state.volunteers = validated.volunteers;
@@ -181,14 +199,14 @@ function loadSavedStateLocal() {
                         return;
                     }
                 }
-                // No usable backup — create default
-                createDefaultGarden();
+                // No usable backup — first run, seed the starter garden
+                if (seedFirstRunGarden()) return;
                 renderAllContainers();
                 updateBedDetails();
                 updateToolbarSublabel();
                 setTimeout(() => zoomToFit(), 100);
             }).catch(() => {
-                createDefaultGarden();
+                if (seedFirstRunGarden()) return;
                 renderAllContainers();
                 updateBedDetails();
                 updateToolbarSublabel();
@@ -196,8 +214,8 @@ function loadSavedStateLocal() {
             });
             return;
         }
-        // No backup system available
-        createDefaultGarden();
+        // No backup system available — first run
+        if (seedFirstRunGarden()) return;
         renderAllContainers();
         updateBedDetails();
         updateToolbarSublabel();

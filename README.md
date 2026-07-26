@@ -1,286 +1,212 @@
 # GardenSync
 
-![GardenSync Hero Banner](screenshots/hero-banner.png)
+**Community garden bed planner for Food Not Bombs — Canton, Ohio (USDA Zone 6a)**
 
-**Community Garden Bed Planner for Food Not Bombs Canton, OH**
+Plan raised beds and containers on a square-foot grid, check companion planting
+before you commit, track what you actually harvest, and hand a printable year to
+the volunteer crew. No accounts, no server, no build step — everything lives in
+your browser and travels as a JSON file or a link.
 
-GardenSync is an interactive, AI-powered garden planner built for community organizing. Plan companion plantings, track harvests, manage volunteers, and optimize crop yields on a 20px Square Foot Gardening grid. Built with vanilla JS, Canvas rendering, Claude Sonnet 4 AI, and a punk-rock ethos.
+**[Open the planner](https://gardensync-e4e.pages.dev/)** ·
+**[Open A Quiet Almanac](https://gardensync-e4e.pages.dev/fable/)** ·
+[GitHub](https://github.com/Samizdat-Publications/gardensync)
 
-**[Live Demo](https://samizdat-publications.github.io/gardensync/)** • **[GitHub](https://github.com/Samizdat-Publications/gardensync)**
+---
+
+## Two editions, one garden
+
+The same agronomy — 77 plants, companion data, Zone 6a frost windows — rendered
+with two very different temperaments. Each has its own save file; they don't
+share state.
+
+### The Planner — `/`
+
+![The bed planner with the FNB Easy Start plan loaded](screenshots/planner-hero.png)
+
+Loud and high-contrast: emerald on black, Anton display type, a manifesto ticker
+across the top. Six workspaces — Bed Planner, Grow Schedule, Harvest, Volunteers,
+Climate Data, Visualize — plus Garden Buddy, a Claude-powered assistant that can
+place plants and rearrange beds for you.
+
+### A Quiet Almanac — `/fable/`
+
+![A Quiet Almanac, showing the season ribbon and the garden in late July](screenshots/almanac-hero.png)
+
+Warm paper, botanical ink, and a year you scrub through. Drag the pin on the
+season ribbon and the garden re-renders as the almanac imagines it on that date:
+dashed ghosts before sowing, sprouts, full plants, gold harvest rings, sepia
+spent crops. Companion halos glow while you're holding a seed packet, so you get
+guidance *before* you plant rather than an error after.
+
+Full notes: [`fable/README.md`](fable/README.md).
 
 ---
 
 ## Features
 
-![Features Grid](screenshots/features-grid.png)
+**Planning**
+- Square-foot grid with real spacing — 16 carrots per square, one tomato per 2×2 ft
+- Companion and antagonist relationships for every plant, drawn as connection lines
+- Seven container types: raised beds, pots, tree pots, half barrels, grow bags,
+  window boxes, steel troughs
+- Auto-arrange a bed with Square Foot Gardening spacing
+- Eleven demo gardens, including three researched FNB plans
 
-- **Interactive Bed Planner** — Drag-and-drop plant placement on 20px grid-aligned 5'×10' beds
-- **Companion Planting** — 41-plant library with full companion/enemy relationship data
-- **Garden Buddy AI** — Claude Sonnet 4 chat with tool-based plant placement, bed organization, and schedule advice
-- **Harvest Tracking** — Log yields, track which plants performed best in your garden
-- **Volunteer Management** — Assign crew members to beds and tasks
-- **7 Demo Gardens** — 3 FNB research plans + beginner, salsa/pizza, and personal layouts
-- **Season-Aware Scheduling** — Zone 6a frost dates, planting calendars, harvest windows
-- **Weather Integration** — Live weather data via Open-Meteo API
-- **Cloud Sync** — Supabase persistence + automatic local backup
-- **Export & Share** — JSON export, PNG snapshots, URL-based sharing (base64)
-- **Custom Seeds** — Add your own plants with OCR photo scanning
+**Through the season**
+- Zone 6a schedule built from Canton frost dates (last Apr 18, first Oct 28)
+- Today's Tasks — what to sow, transplant and pick this week
+- Harvest logging with progress toward a poundage goal
+- Live weather and a 7-day frost watch (Open-Meteo, no key needed)
+- Printable year calendar for the crew
 
----
-
-## Food Not Bombs Research Gardens
-
-The heart of GardenSync is the **FNB Demo Garden Suite** — three meticulously researched bed plans optimized for Food Not Bombs community kitchens in Zone 6a.
-
-![FNB Full Research Plan Overview](screenshots/fnb-full-research-plan-overview.png)
-
-### Plan 1: Full Research Plan
-- **5 beds, 400–600 lbs annual yield**
-- 22 crop types with full companion planting
-- High-diversity nutrition focus
-- Planned for volunteer crew workflow
-- Detailed succession planting schedule
-
-### Plan 2: Easy Start
-- **5 beds, 130–225 lbs annual yield**
-- 100% low-maintenance crops
-- Perfect for Year 1 community gardens
-- Minimal inputs, maximum reliability
-- Beginner-friendly setup
-
-### Plan 3: Max Storage
-- **5 beds, 250–400 lbs annual yield**
-- 70%+ shelf-stable crops
-- No-fridge pantry focus
-- Winter storage & fermentation friendly
-- Built for food security
-
-![Plan Comparison](screenshots/fnb-plan-comparison.png)
-
-Each plan includes:
-- Crop rotation schedules
-- Frost date markers (Canton, OH: last frost May 15, first frost Oct 1)
-- Companion plant networks
-- Estimated labor and water needs
-- Yield projections by crop
+**Keeping it**
+- Autosaves to localStorage; optional Supabase cloud sync
+- JSON export/import, PNG snapshots, and share links that fold the whole garden
+  into the URL
+- Full undo/redo
+- Custom seeds, including OCR from a photo of a seed packet
 
 ---
 
-## Quick Start
+## The FNB demo gardens
 
-### Run Locally
+Three researched plans for a Zone 6a community kitchen garden:
+
+| Plan | Beds | Yield | Built for |
+|------|------|-------|-----------|
+| **Full Research Plan** | 5 | 400–600 lbs | 22 crops, high nutritional diversity |
+| **Easy Start** | 5 | 130–225 lbs | Year one — low-maintenance crops only |
+| **Max Storage** | 5 | 250–400 lbs | Shelf-stable, no-fridge pantry crops |
+
+Easy Start loads automatically on a first visit. `FILE ▸ LOAD DEMO GARDEN`
+switches between all eleven; `FILE ▸ NEW GARDEN` clears to empty beds.
+
+---
+
+## Run it locally
+
 ```bash
-# Start the development server
-python3 proxy.py
-
-# Open http://localhost:8080 in your browser
+python proxy.py
 ```
 
-The proxy server:
-- Serves all static files from the repo
-- Proxies `/api/claude/*` to Anthropic's API
-- Proxies `/api/gemini/*` to Google's Gemini API (optional)
-- Handles CORS for Garden Buddy AI chat
-
-### Set API Keys
-Create a `.env` file in the repo root:
-```
-ANTHROPIC_API_KEY=sk-ant-...
-GOOGLE_API_KEY=AIza...  # Optional, for Gemini features
-```
-
-Or pass keys via request headers when connecting Garden Buddy.
+Serves both editions on <http://localhost:8080> (planner at `/`, almanac at
+`/fable/`) and proxies `/api/claude/*` and `/api/gemini/*` so the AI features
+work in development.
 
 ### Tests
-Open in your browser (no test runner needed):
-- `tests/test-pure-logic.html` — Unit tests for plant logic
-- `tests/test-integration.html` — Full integration tests
+
+Open in a browser — there is no test runner:
+
+- `tests/test-pure-logic.html` — unit tests for the pure logic functions
+- `tests/test-integration.html` — integration tests
+
+### Optional configuration
+
+- **Cloud sync** — copy `js/supabase-config.example.js` to
+  `js/supabase-config.js` and fill in your project details. Without it the app
+  logs one line and runs happily on localStorage alone.
+- **Garden Buddy** — paste your own Anthropic key when the chat asks. It is kept
+  in your browser and sent straight to the API; it never reaches a server of ours.
+- **Ask the almanac** — needs a `/api/claude/*` backend. `proxy.py` provides one
+  locally; see *Deploying* for the hosted equivalent.
 
 ---
 
-## Tech Stack
+## Deploying
 
-- **Frontend:** Vanilla HTML5, CSS3 (custom properties), JavaScript ES6
-- **Rendering:** Canvas API (beds, charts, climate data)
-- **AI:** Claude Sonnet 4 via Anthropic API (Garden Buddy chat with tools)
-- **Data:** Supabase (cloud sync), localStorage (offline persistence)
-- **Weather:** Open-Meteo API (no key required)
-- **Design:** Anton (display), Space Mono (mono), Barlow Condensed (body) — Google Fonts CDN
-- **Server:** Python 3 + Flask (simple proxy for dev)
+```bash
+./deploy.sh
+```
 
-**No bundler, no npm, no framework.** Modules load via `<script>` tags in `index.html`.
+Stages a clean copy into `dist/` — the two apps and nothing else, deliberately
+leaving behind the pre-refactor monolith, personal garden JSON, and screenshots —
+then publishes to Cloudflare Pages.
+
+`./deploy.sh --stage` builds `dist/` without deploying.
+
+**Almanac chat on the hosted site** needs a Pages Function at
+`functions/api/claude/[[path]].js` that forwards to `api.anthropic.com` using an
+environment variable holding your key. Without it, the rest of the almanac works
+normally and the chat reports that no answering service is configured.
 
 ---
 
-## Project Structure
+## Architecture
+
+No bundler, no framework, no npm. Every module is a plain `<script>` tag and
+communicates through a shared global `state` object.
 
 ```
 gardensync/
-├── index.html                 # Main app shell
-├── styles/
-│   ├── main.css              # Core styles + CSS custom properties
-│   └── themes.css            # Dark/light mode themes
-├── js/                        # ~30 modular JavaScript files
-│   ├── state.js              # Global state object, undo/redo
-│   ├── constants.js          # Plant library, climate data, demo gardens
-│   ├── placement.js          # Click-to-place, grid snapping
-│   ├── selection.js          # Plant selection, multi-select, drag
-│   ├── canvas.js             # Bed rendering, companion lines
-│   ├── garden-buddy.js       # Claude Sonnet 4 AI chat + tools
-│   ├── templates.js          # 7 pre-made bed layouts
-│   ├── custom-seeds.js       # User-added plants with OCR
-│   ├── persistence.js        # localStorage save/load
-│   ├── supabase-sync.js      # Cloud sync (5-min interval)
-│   ├── data-io.js            # JSON export/import, URL sharing
-│   ├── weather.js            # Open-Meteo integration
-│   ├── climate.js            # Canvas climate charts
-│   ├── organize.js           # Square Foot Gardening auto-arrange
-│   └── ...                   # Additional utility modules
-├── tests/
-│   ├── test-pure-logic.html  # Unit tests
-│   └── test-integration.html # Integration tests
-├── screenshots/              # README + demo screenshots
-├── proxy.py                  # Dev server (static + API proxy)
-├── .env.example              # API key template
-└── README.md                 # This file
+├── index.html              # The planner
+├── styles.css              # All planner styling
+├── js/                     # 33 modules, loaded in order by index.html
+│   ├── state.js            # Global state, undo/redo stacks
+│   ├── constants.js        # Plant library, Zone 6a data, demo gardens
+│   ├── canvas.js           # Pan, zoom, transform, resizable panels
+│   ├── placement.js        # Click-to-place, grid snapping, spacing checks
+│   ├── containers.js       # Bed and container geometry
+│   ├── persistence.js      # localStorage load/save, first-run seeding
+│   ├── data-io.js          # Export/import, share links, demo registry
+│   ├── garden-buddy.js     # Claude assistant with tool use
+│   └── ...
+├── fable/                  # A Quiet Almanac — four self-contained files
+│   ├── index.html
+│   ├── app.js
+│   ├── plants.js
+│   └── style.css
+├── tests/                  # Browser-opened test pages
+├── proxy.py                # Dev server + API proxy
+└── deploy.sh               # Stage dist/ and publish
 ```
 
-### State Management
-The `state` object is the single source of truth:
+Beds, charts and climate graphics are all drawn programmatically on `<canvas>` or
+inline SVG — no D3, no Chart.js.
+
+**State** is one object, and every mutation goes through `pushUndo()`:
+
 ```javascript
 state = {
-  beds: [
-    { id, name, width: 300, height: 600, plants: [...] }
-  ],
-  gardenId: "uuid",
-  selectedPlantId: null,
-  history: [],
-  redo: []
+  containers: [ { id, type, name, canvasX, canvasY, w, h, plants: [...] } ],
+  volunteers: [...],
+  canvasZoom, canvasOffsetX, canvasOffsetY,
+  selectedContainer
 }
 ```
 
-All changes flow through `pushUndo()` for undo/redo support.
-
 ---
 
-## Garden Buddy AI
+## Garden Buddy
 
-Ask Garden Buddy for help with:
-- **Placement:** "Put 4 tomatoes in the top row"
-- **Planning:** "Show me companion plants for carrots"
-- **Organization:** "Arrange the garden for maximum yield"
-- **Scheduling:** "When should I plant garlic in Canton?"
-- **Advice:** "What grows well in shade?"
+The assistant in the planner has tools for `place_plant`, `remove_plants`,
+`clear_bed`, `apply_template`, `organize_bed`, `rename_bed`, `get_garden_state`,
+`get_plant_info`, `list_plants` and `get_schedule_advice`. Its system prompt
+carries the live garden state, frost dates and location, so "put four tomatoes in
+the sunny bed" or "when should I start garlic here?" both work.
 
-Garden Buddy uses **tool-based interaction** with access to:
-- `place_plant` — Add plants to beds
-- `clear_bed` — Remove all plants
-- `apply_template` — Load a demo garden layout
-- `organize_bed` — Auto-arrange with Square Foot Gardening
-- `get_garden_state` — Read current bed state
-- `get_plant_info` — Lookup plant data
-- `list_plants` — Show all 41 available plants
-- `rename_bed` — Change bed names
-- `get_schedule_advice` — Frost dates, planting windows
-
-System prompt includes real-time garden state, Zone 6a frost dates, and local context.
-
----
-
-## Features Deep Dive
-
-### Companion Planting
-Each plant has full relationship data:
-- **Companions** — Plants that grow well together (nitrogen fixing, pest control, space optimization)
-- **Enemies** — Plants that compete or inhibit growth
-- Visual companion lines drawn on canvas overlay
-
-### Harvest Tracking
-Log yields per plant:
-- Track what actually grew vs. plan
-- Build historical data for your site
-- Refine future gardens based on real performance
-
-### Square Foot Gardening
-Auto-arrange plants with optimal spacing:
-- 20px grid alignment (represents 1 sq ft at 5'×10' scale)
-- Handles plant-specific spacing requirements
-- Visual feedback before confirming placement
-
-### Cloud Sync (Supabase)
-- Auto-save every 5 minutes (configurable)
-- Manual sync available
-- Survives browser crashes
-- Share gardens via unique garden IDs
-
-### Weather Integration
-Live current conditions + 7-day forecast for Canton, OH via Open-Meteo (no API key required).
-
-### Custom Seeds
-Upload plant photos, OCR extracts text, add new crops to your library:
-- Name, spacing, season, companions
-- Saved locally, synced to cloud
-
----
-
-## Aesthetics
-
-GardenSync embraces **punk-rock anarchist design**:
-- Bold, hand-drawn typography (Anton display font)
-- Emerald & teal accent colors against light backgrounds
-- Monospace details (Space Mono)
-- No corporate polish — raw, functional, community-first
-- Light mode only (dark mode CSS variables available but deferred)
+It runs on Claude Sonnet 5, called directly from the browser with your own key.
 
 ---
 
 ## Contributing
 
-GardenSync is **open source and community-owned**. Contributions welcome:
+Fork, branch, change, open a pull request. Areas that would help most:
 
-1. Fork the repo
-2. Create a feature branch (`git checkout -b feature/add-herbs`)
-3. Make your changes
-4. Test in `tests/` directory
-5. Submit a pull request
-
-**Areas we need help with:**
-- Plant library expansion (more heirloom varieties, regional adaptations)
-- Additional demo gardens (other zones, climates, crops)
-- Volunteer crew scheduling UI
-- Multilingual support
-- Garden Buddy tool expansion
+- More plants, especially regional and heirloom varieties
+- Demo gardens for other zones and climates
+- Volunteer scheduling UI
+- Translations
 
 ---
 
-## License
+## Credits & licence
 
-GardenSync is released under the **GNU Affero General Public License v3.0** (AGPL-3.0). See `LICENSE` file for details.
+Built by and for **Food Not Bombs Canton, Ohio** and the wider mutual-aid
+gardening community. Companion planting data from published guides and years of
+FNB kitchen-garden practice. Weather from [Open-Meteo](https://open-meteo.com).
+AI from [Anthropic](https://www.anthropic.com). Fonts from Google Fonts.
 
-The GardenSync code is a tool for community organizing. We require that modifications and improvements are shared back with the community.
-
----
-
-## Credits
-
-**GardenSync** is built by and for **Food Not Bombs Canton, OH** and the broader mutual aid gardening community.
-
-- **Design & Research** — Companion planting data from "Companion Planting: A Practical Guide" and decades of FNB kitchen gardening experience
-- **AI Integration** — Claude Sonnet 4 (Anthropic)
-- **Weather Data** — Open-Meteo (free, open source)
-- **Cloud Sync** — Supabase
-- **Fonts** — Google Fonts (Anton, Space Mono, Barlow Condensed)
-
----
-
-## Questions?
-
-- **Garden Buddy** — Ask the AI directly in the app
-- **GitHub Issues** — Report bugs or request features
-- **Food Not Bombs Canton** — Join a local mutual aid garden workshop
+Released under the **GNU Affero General Public License v3.0** — if you improve it,
+share the improvements back.
 
 **Let's grow food for our communities.** ✊
-
----
-
-*Last updated: April 2026*

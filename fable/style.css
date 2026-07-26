@@ -97,6 +97,8 @@ body {
 }
 .tool-btn:hover { color: var(--moss-deep); border-color: var(--moss); background: #FFFFFF66; }
 .tool-btn:active { transform: translateY(1px); }
+/* Link across to the other edition of the same app (the original planner). */
+a.edition-link { text-decoration: none; display: inline-block; }
 
 .linklike {
   border: none; padding: 0 2px; text-decoration: underline dotted;
