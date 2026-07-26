@@ -80,8 +80,28 @@ function geomOf(bed) {
   return { W, H, ext, svgW: W + ext*2, svgH: H + ext*2 };
 }
 
+/* Fall-sown crops break the spring model entirely: the cloves go in during
+   October, sleep under straw through winter, and come out the following July.
+   The plant library has no field for that — all three of garlic's sowing
+   fields are null, which the spring maths reads as "plant at last frost" and
+   lands the harvest in December. Recorded here instead, since plants.js is
+   generated from the planner's data and shouldn't be hand-edited. */
+const FALL_SOWN = {
+  garlic: { sow: DOY(9, 10), harvest: DOY(6, 12) },   // Oct 10 -> Jul 12
+};
+
+/* true when a window runs backwards across the turn of the year */
+const wrapsYear = (a, b) => a > b;
+/* is x inside [a,b], where the range may wrap past Dec 31? */
+const inSpan = (a, b, x) => (a <= b ? (x >= a && x <= b) : (x >= a || x <= b));
+
 /* growth windows, in day-of-year, from Zone 6a frost dates */
 function windowsOf(p) {
+  const fall = FALL_SOWN[p.id];
+  if (fall) {
+    const hEnd = Math.min(fall.harvest + (p.harvestWeeks || 2) * 7, 364);
+    return { indoor: null, inBed: fall.sow, hStart: fall.harvest, hEnd, wraps: true };
+  }
   const indoor = p.sowIndoors != null ? LAST_FROST + p.sowIndoors * 7 : null;
   let inBed;
   if (p.directSow != null) inBed = LAST_FROST + p.directSow * 7;
@@ -89,10 +109,16 @@ function windowsOf(p) {
   else inBed = LAST_FROST;
   const hStart = inBed + p.daysToHarvest;
   const hEnd = Math.min(hStart + (p.harvestWeeks || 3) * 7, 364);
-  return { indoor, inBed, hStart, hEnd };
+  return { indoor, inBed, hStart, hEnd, wraps: false };
 }
 function stageAt(p, doy) {
   const w = windowsOf(p);
+  if (w.wraps) {
+    if (inSpan(w.hStart, w.hEnd, doy)) return 'harvest';
+    if (inSpan(w.inBed, w.hStart, doy))
+      return inSpan(w.inBed, (w.inBed + 24) % 365, doy) ? 'sprout' : 'growing';
+    return 'rest';
+  }
   if (doy < w.inBed) return 'planned';
   const sproutEnd = w.inBed + Math.max(10, (w.hStart - w.inBed) * 0.3);
   if (doy < sproutEnd) return 'sprout';
@@ -579,7 +605,8 @@ function renderBeds() {
         <button class="bed-note-btn ${hasNote ? 'has-note' : ''}" title="Field notes & caretaker">✎</button>
         <button class="bed-del" title="Remove this plot">×</button>
       </div>
-      <svg class="bed-svg" width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}" data-bed="${bed.id}">
+      <svg class="bed-svg" width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}" data-bed="${bed.id}"
+        tabindex="0" role="group" aria-label="${escapeHtml(bed.name)}, ${isVessel(bed) ? kindOf(bed).label : bed.w + ' by ' + bed.h + ' foot bed'}, ${bed.plants.length} plantings. Arrow keys walk the planting.">
         <defs>
           <linearGradient id="soil-${bed.id}" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stop-color="#BCA481"/><stop offset="1" stop-color="#A98F6B"/>
@@ -629,6 +656,30 @@ function wireBeds() {
     const svg = card.querySelector('.bed-svg');
     const ghost = svg.querySelector('.ghost-layer');
     const { ext } = geomOf(bed);
+
+    /* Keyboard: each plot is a single tab stop, and the arrows walk its
+       plants in reading order — so the garden can be toured, inspected and
+       weeded without ever touching a pointer. Delete already works on the
+       selection, so that closes the loop. */
+    svg.addEventListener('keydown', e => {
+      const keys = ['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
+      if (!keys.includes(e.key)) return;
+      e.preventDefault();
+      const order = bed.plants.slice().sort((a, b) => a.r - b.r || a.c - b.c);
+      if (!order.length) { whisper(`${bed.name} is empty — pick a seed packet to fill it.`, 2600); return; }
+      const cur = state.sel && state.sel.bedId === bedId
+        ? order.findIndex(pl => pl.uid === state.sel.uid) : -1;
+      const step = (e.key === 'ArrowRight' || e.key === 'ArrowDown') ? 1 : -1;
+      let next;
+      if (e.key === 'Home') next = 0;
+      else if (e.key === 'End') next = order.length - 1;
+      else if (cur < 0) next = step > 0 ? 0 : order.length - 1;
+      else next = (cur + step + order.length) % order.length;
+      state.sel = { bedId, uid: order[next].uid };
+      renderBeds(); renderAlmanac();
+      /* renderBeds rebuilds the DOM, so carry focus back to this plot */
+      document.querySelector(`.bed-svg[data-bed="${bedId}"]`)?.focus();
+    });
 
     /* rename */
     const nameEl = card.querySelector('.bed-name');
@@ -761,7 +812,8 @@ function gardenEvents() {
     if (!p) continue;
     const w = windowsOf(p);
     if (w.indoor != null) events.push({ doy: w.indoor, kind:'indoor', text:`Start ${p.name} seeds indoors`, emoji: p.emoji });
-    if (p.directSow != null) events.push({ doy: w.inBed, kind:'sow', text:`Direct sow ${p.name}`, emoji: p.emoji });
+    if (FALL_SOWN[pid]) events.push({ doy: w.inBed, kind:'sow', text:`Plant ${p.name} for next summer`, emoji: p.emoji });
+    else if (p.directSow != null) events.push({ doy: w.inBed, kind:'sow', text:`Direct sow ${p.name}`, emoji: p.emoji });
     else if (p.transplantAfterFrost != null) events.push({ doy: w.inBed, kind:'transplant', text:`Transplant ${p.name} into the bed`, emoji: p.emoji });
     events.push({ doy: w.hStart, kind:'harvest', text:`First ${p.name} harvest`, emoji: p.emoji });
 
@@ -873,6 +925,11 @@ function yearStrip(p) {
   const x = doy => pad + (Math.max(0, Math.min(364, doy)) / 364) * (W - pad * 2);
   let s = `<svg viewBox="0 0 ${W} ${H}">`;
   s += `<rect x="${pad}" y="10" width="${W-pad*2}" height="8" rx="4" fill="#E4DCC6"/>`;
+  if (w.wraps) {
+    /* in the ground from autumn, across the turn of the year, to summer */
+    s += `<rect x="${x(w.inBed)}" y="10" width="${Math.max(2, W-pad-x(w.inBed))}" height="8" rx="4" fill="#9DB380"/>`;
+    s += `<rect x="${pad}" y="10" width="${Math.max(2, x(w.hStart)-pad)}" height="8" rx="4" fill="#9DB380"/>`;
+  } else
   s += `<rect x="${x(w.inBed)}" y="10" width="${Math.max(2, x(w.hStart)-x(w.inBed))}" height="8" rx="4" fill="#9DB380"/>`;
   s += `<rect x="${x(w.hStart)}" y="10" width="${Math.max(2, x(w.hEnd)-x(w.hStart))}" height="8" rx="4" fill="#C09A2C"/>`;
   if (w.indoor != null && w.indoor >= 0)
@@ -945,7 +1002,7 @@ function plantPage(pid) {
     </div>
     <div class="year-strip">${yearStrip(p)}</div>
     <p class="plant-notes" style="font-size:11px;color:var(--ink-faint);margin-top:0">
-      ${p.directSow != null ? `sow ${fmtDoy(w.inBed)}` : `transplant ${fmtDoy(w.inBed)}`}
+      ${FALL_SOWN[p.id] ? `plant ${fmtDoy(w.inBed)}` : p.directSow != null ? `sow ${fmtDoy(w.inBed)}` : `transplant ${fmtDoy(w.inBed)}`}
       · harvest ${fmtDoy(w.hStart)}–${fmtDoy(w.hEnd)}
       ${w.indoor != null ? `· start indoors ${fmtDoy(w.indoor)}` : ''}
     </p>
@@ -1293,6 +1350,139 @@ function gardenSummary() {
   }).join('\n');
 }
 
+/* ---------- the almanac's own reading ----------
+   The public build ships without an answering service, so the almanac
+   answers from the plant library and the garden in front of it instead.
+   Not a chat model — a well-read gardener with the book open. */
+
+function listOf(arr) {
+  const a = arr.filter(Boolean);
+  if (!a.length) return '';
+  if (a.length === 1) return a[0];
+  return a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
+}
+
+function findPlantIn(q) {
+  let best = null;
+  for (const p of PLANTS) {
+    const full = p.name.toLowerCase();
+    for (const cand of [full, full.split(' - ')[0], p.id.replace(/-/g, ' ')]) {
+      if (cand.length > 2 && q.includes(cand) && (!best || cand.length > best.len))
+        best = { p, len: cand.length };
+    }
+  }
+  return best && best.p;
+}
+
+function plantedCount(pid) {
+  return state.beds.reduce((n, b) => n + b.plants.filter(pl => pl.pid === pid).length, 0);
+}
+
+function readyNow(doy) {
+  const out = {};
+  for (const b of state.beds) for (const pl of b.plants) {
+    const p = PLANT_BY_ID[pl.pid];
+    if (p && stageAt(p, doy) === 'harvest') out[p.id] = (out[p.id] || 0) + 1;
+  }
+  return Object.entries(out).map(([id, n]) => `${PLANT_BY_ID[id].name}${n > 1 ? ' ×' + n : ''}`);
+}
+
+const ALMANAC_CAN = `I keep the book rather than the conversation, so ask me plainly and I will read from it:
+
+· when to sow tomatoes — or any of the 77 seeds in the drawer
+· what grows well beside basil, and what to keep away from it
+· what is ready to pick right now
+· how much this garden should yield
+· what wants doing this week
+· whether kale minds living in a pot
+
+Run the garden on your own machine with a key in .env and the fuller almanac wakes up. She is better company than I am.`;
+
+function localAnswer(qRaw) {
+  const q = ' ' + qRaw.toLowerCase().replace(/[?!.,;:]/g, ' ').replace(/\s+/g, ' ') + ' ';
+  const has = (...w) => w.some(s => q.includes(s));
+  const p = findPlantIn(q);
+
+  if (has('frost'))
+    return `In Canton the last frost lands around ${fmtDoy(LAST_FROST)}, and the first one back arrives near ${fmtDoy(FIRST_FROST)} — roughly ${FIRST_FROST - LAST_FROST} open days between them. Tender things wait for the first date. Kale, spinach and the roots will shrug at both.`;
+
+  if (p) {
+    const w = windowsOf(p);
+    const n = plantedCount(p.id);
+    const yours = n ? ` You have ${n} in the ground.` : '';
+
+    /* Word boundaries, not substrings — otherwise "potatoes" reads as "pot". */
+    if (/\b(pots?|container|grow bag|barrel|window box|trough|planter)\b/.test(q))
+      return sulksInVessel(p)
+        ? `${p.name} sprawls — it wants ${p.spacing}" of elbow room and open soil. A half barrel will keep one alive, but expect a modest crop and a great deal of watering.`
+        : `${p.name} takes to a container happily. Give it ${p.spacing}" of width, water more often than you would a bed — a pot dries from every side — and feed it every few weeks, since there is no deep soil to draw on.${yours}`;
+
+    if (has('with', 'beside', 'next to', 'companion', 'friend', 'near', 'pair')) {
+      const mates = (p.companions || []).map(id => PLANT_BY_ID[id]?.name);
+      if (!listOf(mates)) return `${p.name} keeps its own counsel — no strong friendships recorded. It will not mind whoever sits beside it.`;
+      const here = (p.companions || []).filter(id => plantedCount(id) > 0).map(id => PLANT_BY_ID[id]?.name);
+      return `${p.name} is happy beside ${listOf(mates.slice(0, 6))}${mates.length > 6 ? ', among others' : ''}.` +
+        (here.length ? ` You already grow ${listOf(here.slice(0, 4))} — keep them within a square of each other.` : '');
+    }
+
+    if (has('away', 'avoid', 'enem', 'apart', 'not plant', 'bad neighb', 'shouldn'))
+      return (p.enemies || []).length
+        ? `Keep ${p.name} clear of ${listOf(p.enemies.map(id => PLANT_BY_ID[id]?.name))}. A square of space between them is usually enough to settle the quarrel.`
+        : `${p.name} has no quarrels in the book. Plant it wherever it fits.`;
+
+    if (has('water', ' sun', 'shade', 'light', 'thirst'))
+      return `${p.name} wants ${p.sunNeed} sun and ${p.waterNeed} water. ${p.care || ''}`.trim();
+
+    if (has('how many', 'spacing', 'space', 'fit', 'per square', 'room'))
+      return spanOf(p) > 1
+        ? `${p.name} needs ${p.spacing}" — a ${spanOf(p)}×${spanOf(p)} foot footprint, so one plant to that whole patch.`
+        : `${p.name} sits ${p.spacing}" apart, which comes to ${perSquare(p)} in a square foot.`;
+
+    if (FALL_SOWN[p.id])
+      return `${p.emoji} ${p.name} goes in the wrong way round: plant the cloves around ${fmtDoy(w.inBed)}, mulch them under straw, and let them sleep through the winter. They shoot up in spring and come out near ${fmtDoy(w.hStart)}.${yours} ${p.care || ''}`.trim();
+
+    const lead = w.indoor != null ? `Start it indoors around ${fmtDoy(w.indoor)}, then ` : '';
+    const out = p.directSow != null
+      ? `sow straight into the bed near ${fmtDoy(w.inBed)}`
+      : `set it out after the frost, around ${fmtDoy(w.inBed)}`;
+    return `${p.emoji} ${p.name}. ${lead}${lead ? out : out.charAt(0).toUpperCase() + out.slice(1)}. First picking falls near ${fmtDoy(w.hStart)} and carries to about ${fmtDoy(w.hEnd)} — ${p.daysToHarvest} days from planting.${yours}${p.notes ? ' ' + p.notes : ''}`;
+  }
+
+  /* Weight before quantity: "how much will I harvest" is a yield question,
+     not a what-is-ripe question, so it has to be caught first. */
+  if (has('how much', 'how many', 'yield', 'pound', ' lbs', 'goal', 'produce', 'feed')) {
+    const { total } = harvestOutlook();
+    const picked = state.harvests.reduce((n, h) => n + (+h.lbs || 0), 0);
+    return `This planting should bring in about ${Math.round(total)} lbs across the season — roughly ${Math.round(total / 10)} grocery bags for the table.` +
+      (picked > 0 ? ` ${Math.round(picked * 10) / 10} lbs have come in so far.` : '') +
+      ` The bar in the almanac measures against ${HARVEST_GOAL} lbs.`;
+  }
+
+  if (has('ready', 'pick', 'harvest', 'ripe')) {
+    const r = readyNow(state.viewDoy);
+    if (!r.length)
+      return `Nothing is ready on ${fmtDoy(state.viewDoy)}. Drag the pin along the ribbon and the beds will show you when the first crop comes in.`;
+    return `On ${fmtDoy(state.viewDoy)} you could be picking ${listOf(r.slice(0, 6))}${r.length > 6 ? `, and ${r.length - 6} more` : ''}. Take the outer leaves and leave the crowns to carry on.`;
+  }
+
+  if (has('this week', 'what should i', 'to do', 'todo', 'task', 'right now')) {
+    const t = tasksNear(state.viewDoy, 3, 10);
+    if (t.length)
+      return `Around ${fmtDoy(state.viewDoy)}: ${listOf(t.slice(0, 5).map(e => `${e.text.toLowerCase()} (${fmtDoy(e.doy)})`))}.`;
+    const r = readyNow(state.viewDoy);
+    return `Nothing is scheduled around ${fmtDoy(state.viewDoy)}.` +
+      (r.length ? ` It is a picking week rather than a planting one — ${listOf(r.slice(0, 4))} are ready.` : '') +
+      ` Water if it has been dry, pull a weed, and let the beds get on with it.`;
+  }
+
+  if (has('what do i have', 'in my garden', 'what is planted', "what's planted", 'my beds', 'my plots'))
+    return state.beds.length
+      ? `You are tending ${state.beds.length} plots:\n${gardenSummary()}`
+      : `Nothing yet — the ground is bare. Open Plans for the FNB Easy Start layout, or add a bed beneath the garden.`;
+
+  return ALMANAC_CAN;
+}
+
 function setupAsk() {
   const toggle = document.getElementById('ask-toggle');
   const panel = document.getElementById('ask-panel');
@@ -1305,6 +1495,16 @@ function setupAsk() {
     if (!panel.hidden) input.focus();
   });
 
+  /* The public build ships without an answering service. Try the proxy once;
+     if nothing answers, fall back to the almanac's own reading of the book
+     and stop asking after that. */
+  let apiAlive = null;
+
+  function reply(text) {
+    state.chat.push({ role: 'assistant', content: text });
+    addMsg('bot', text);
+  }
+
   form.addEventListener('submit', e => {
     e.preventDefault();
     const q = input.value.trim();
@@ -1312,6 +1512,9 @@ function setupAsk() {
     input.value = '';
     state.chat.push({ role: 'user', content: q });
     addMsg('user', q);
+
+    if (apiAlive === false) { reply(localAnswer(q)); return; }
+
     const thinking = addMsg('bot thinking', 'leafing through the almanac…');
 
     const system = `You are the Almanac: a calm, knowledgeable companion inside GardenSync, a community garden planner for Food Not Bombs in Canton, Ohio (USDA Zone 6a; last frost Apr 18, first frost Oct 28). Today is ${fmtDoy(todayDoy())}; the user is viewing ${fmtDoy(state.viewDoy)}.
@@ -1341,13 +1544,13 @@ Answer briefly and warmly, like a wise neighbor over the fence — practical adv
       .then(d => {
         thinking.remove();
         const text = (d?.content || []).filter(b => b.type === 'text').map(b => b.text).join('').trim();
-        const msg = text || d?.error?.message || 'The almanac is silent today.';
-        state.chat.push({ role: 'assistant', content: msg });
-        addMsg('bot', msg);
+        if (text) { apiAlive = true; reply(text); }
+        else { apiAlive = false; reply(localAnswer(q)); }
       })
       .catch(() => {
         thinking.remove();
-        addMsg('bot', 'The almanac is resting — no answering service is configured for this garden.');
+        apiAlive = false;
+        reply(localAnswer(q));
       });
   });
 

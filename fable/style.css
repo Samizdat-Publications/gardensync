@@ -273,6 +273,17 @@ a.edition-link { text-decoration: none; display: inline-block; }
 
 .bed-svg { display: block; filter: drop-shadow(0 4px 10px rgba(44,53,39,.14)); max-width: 100%; height: auto; touch-action: none; }
 
+/* Keyboard focus. Mouse users never see these; keyboard users need them badly. */
+.bed-svg:focus { outline: none; }
+.bed-svg:focus-visible { outline: 2.5px solid var(--moss-deep); outline-offset: 5px; border-radius: 20px; }
+.tool-btn:focus-visible, .packet:focus-visible, .add-plot:focus-visible, .alm-btn:focus-visible,
+.ask-toggle:focus-visible, .menu button:focus-visible, .log-form button:focus-visible,
+.bed-note-btn:focus-visible, .bed-del:focus-visible, .linklike:focus-visible {
+  outline: 2px solid var(--moss-deep); outline-offset: 2px;
+}
+/* the note and delete buttons only appear on hover — reveal them on focus too */
+.bed-card:focus-within .bed-note-btn, .bed-card:focus-within .bed-del { opacity: 1; }
+
 .potting-shed { margin: 30px auto 10px; width: fit-content; max-width: 100%; }
 .shed-row {
   display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;

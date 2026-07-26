@@ -24,6 +24,11 @@ cp -r js "$OUT"/js
 cp -r fable "$OUT"/fable
 rm -f "$OUT"/fable/README.md
 
+# The og:image for link previews. It lives in docs/ rather than fable/ so the
+# app folder stays free of a 780KB screenshot; it is copied in at publish time
+# because the meta tag points at an absolute production URL.
+cp docs/screenshots/almanac-hero.png "$OUT"/fable/preview.png
+
 # The local Supabase settings file is gitignored and never deployed. Ship an
 # empty stand-in so the <script> tag resolves instead of falling through to the
 # 404 page, which the browser then rejects as a bad MIME type. supabase-sync.js
