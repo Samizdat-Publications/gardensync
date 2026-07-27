@@ -1,5 +1,67 @@
 # GardenSync Changelog
 
+Both editions are live at <https://gardensync-e4e.pages.dev> — the planner at
+`/`, A Quiet Almanac at `/fable/`. Project page:
+<https://samizdat-publications.github.io/gardensync/>
+
+---
+
+## v6.1 — 2026-07-26
+
+Polish pass on A Quiet Almanac ahead of republishing.
+
+### Ask the almanac now answers for everyone
+
+The chat only worked where a proxy was running, which was nowhere on the public
+build — every visitor who asked a question got *"The almanac is resting"*. It now
+falls back to its own reading of the plant library and the garden in front of it:
+
+- Answers sowing calendars, companions and quarrels, container suitability, sun
+  and water, spacing, what is ready to pick on the date being viewed, the
+  season's projected yield, and what wants doing this week.
+- The proxy is tried once. If nothing answers it stops asking, and every later
+  question is instant and local — measured at 3ms, no network.
+- Where a key *is* configured, the fuller model still answers as before.
+
+Two matching bugs, both caught by testing rather than reading:
+
+- *"keep away from potatoes"* matched the **container** branch, because `" pot"`
+  is a substring of `" potatoes"`. Word boundaries now.
+- *"how much will I harvest"* hit the what-is-ripe branch ahead of the yield
+  branch. Weight questions are caught first.
+
+### Garlic grows the right way round
+
+Garlic was scheduled as a spring crop. All three of its sowing fields are `null`,
+which the spring maths reads as *plant at last frost* — landing the harvest on
+**Dec 14**, for a crop whose own notes say plant October, harvest July.
+
+Fall-sown crops now have their own window that wraps the turn of the year: in the
+ground Oct 10, growing through winter, harvest Jul 12–26, resting Aug–Sep. The
+year strip draws it as two bars, the calendar gained the missing *"plant for next
+summer"* entry, and spring crops are untouched.
+
+### Keyboard
+
+The garden is navigable without a pointer. Each plot is a single tab stop; arrows
+walk its plants in reading order, Home and End jump to the ends, and Delete
+already worked on the selection, which closes the loop. Focus survives the
+re-render. Focus-visible outlines throughout, and the hover-only note and delete
+buttons reveal on focus too.
+
+### Link previews
+
+Open Graph and Twitter card tags with a canonical URL and theme colour.
+`deploy.sh` copies the hero screenshot in as the card image at publish time, so
+the 780KB PNG stays out of the app folder.
+
+*Verified in the browser: 11 question shapes answered correctly, garlic staged
+correctly at nine points across the year, tomato unaffected, keyboard walk and
+focus retention, no console errors, no horizontal overflow, no NaN in any SVG
+attribute.*
+
+---
+
 ## v6.0 — 2026-07-26
 
 First public release. Both editions are live at
@@ -66,6 +128,62 @@ First public release. Both editions are live at
 
 - Almanac chat is inert on the hosted site until a Pages Function exists at
   `functions/api/claude/[[path]].js`. Everything else works without it.
+  *(Resolved in v6.1 — the chat now answers locally, so no Function is needed.)*
+
+---
+
+## A Quiet Almanac — the rebuild — 2026-06-10
+
+A second edition of the same garden, written from scratch rather than restyled.
+Four self-contained files in `fable/`, sharing no code with the original planner —
+only the agronomy: 77 plants, companions, Zone 6a windows, carried over from
+`js/constants.js`.
+
+### The idea
+
+Where the planner shouts, this edition breathes. Warm paper, botanical ink, and a
+year you scrub through rather than a calendar you read.
+
+- **The season ribbon.** The whole year sits at the top of the page. Drag the pin
+  to any date and the garden re-renders as the almanac imagines it then: dashed
+  ghosts before sowing, small sprouts, full plants, gold harvest rings, sepia
+  spent crops. Frost dates marked; today pinned in clay red.
+- **Companion halos, not error lines.** Pick up a seed packet and every planted
+  friend glows moss green, every foe blushes terracotta — guidance *before* you
+  commit, instead of alarms after.
+- **Bed moods.** Each bed reports how its plants get along: *thriving*,
+  *content*, or *uneasy — 2 quarrels*.
+- **The almanac panel.** Context-sensitive: the garden's week at a glance, or a
+  full plant page with a year-strip timeline, the companions actually present in
+  your garden, and care notes.
+- **Square-foot honest.** Footprints derive from real spacing — 16 carrots per
+  square, one tomato per 2×2 ft.
+
+### Expansion 1 — the potting shed
+
+Containers beyond raised beds: terracotta pots, deep tree pots, whisky half
+barrels, fabric grow bags, window boxes and steel troughs, each drawn with its own
+chrome. Container rules apply — everything fits one square, and sprawlers like
+squash get a gentle warning that they'll sulk. Plus the harvest outlook with the
+FNB 500 lb goal, the printable year calendar, field notes and caretakers per plot,
+frost watch, redo, and the help overlay.
+
+### Expansion 2 — sharing
+
+Share links that fold the whole garden into a compact URL hash, a PNG garden
+poster, succession sowing reminders, and a first-visit hint pointing at the pin.
+
+### Expansion 3 — refinement
+
+A ready-to-pick line for the viewed date, seed-drawer inventory dots, rAF-throttled
+ribbon scrubbing, reduced-motion support, and ARIA dialog roles.
+
+### Expansion 4 — harvest logging
+
+Log picks per plant, a picked-versus-projected goal bar, season tallies, all
+persisted and included in export/import.
+
+---
 
 ## v5.4 — 2026-03-08
 
