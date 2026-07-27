@@ -215,8 +215,43 @@ code {
   background: var(--bg-raised); padding: 0.1em 0.35em; border: 1px solid var(--border);
 }
 
-/* The phone capture is 390px wide — don't upscale it into a blurry slab. */
+/* Portrait and strip captures are narrower than their column. Cap each at its
+   own natural width so none of them get upscaled into a blurry slab. */
 #mobile figure { max-width: 390px; justify-self: start; }
+figure.narrow { max-width: max-content; justify-self: center; }
+figure.narrow img { width: auto; max-width: 100%; }
+
+/* ---------- feature block: text beside its own capture ---------- */
+.fblock {
+  display: grid; grid-template-columns: minmax(0,5fr) minmax(0,7fr);
+  gap: 2.5rem 3rem; align-items: center; margin-bottom: 4.5rem;
+}
+.fblock:last-child { margin-bottom: 0; }
+.fblock.flip .fb-text { order: 2; }
+.fblock .fb-kicker {
+  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--text-mute); margin-bottom: 0.6rem;
+}
+.fblock .fb-kicker b { color: var(--emerald); font-weight: 400; }
+.fblock.warm .fb-kicker b { color: var(--amber); }
+.fblock h3 {
+  font-family: var(--display); font-size: 1.6rem; letter-spacing: 2px;
+  text-transform: uppercase; margin-bottom: 0.7rem; line-height: 1.1;
+}
+.fblock p { color: var(--text-dim); margin-bottom: 0.9rem; }
+.fblock p:last-child { margin-bottom: 0; }
+.fblock .stackfigs { display: grid; gap: 1rem; }
+.fb-list { list-style: none; margin-top: 0.4rem; }
+.fb-list li {
+  color: var(--text-dim); padding-left: 1.1rem; position: relative;
+  margin-bottom: 0.35rem; font-size: 0.98rem;
+}
+.fb-list li::before { content: '▸'; position: absolute; left: 0; color: var(--emerald); }
+.fblock.warm .fb-list li::before { color: var(--amber); }
+@media (max-width: 860px) {
+  .fblock { grid-template-columns: 1fr; gap: 1.5rem; }
+  .fblock.flip .fb-text { order: 0; }
+}
 
 /* ---------- callout ---------- */
 .callout {
@@ -258,7 +293,7 @@ footer a:hover { color: var(--emerald); }
   <span><span class="dot"></span>Garden active <span class="sep">·</span> <b>Zone 6a</b> · Canton, OH</span>
   <span class="right">
     <span>77 plants indexed</span>
-    <span>Release <b>v6.0</b></span>
+    <span>Release <b>v6.1</b></span>
   </span>
 </div>
 
@@ -293,7 +328,7 @@ footer a:hover { color: var(--emerald); }
 
   <figure class="hero-shot">
     <img src="screenshots/planner-beds.png" alt="The GardenSync bed planner: four raised beds full of plants on a dark grid, a plant library on the left, bed details on the right, and a row of today's harvest tasks across the top." width="1600" height="1000">
-    <figcaption><span>Bed planner — FNB Classic, 95 plants across four beds with companion threads drawn</span><span class="fig">Fig.00</span></figcaption>
+    <figcaption><span>Bed planner — FNB Classic, 95 plants across four beds with companion threads drawn</span><span class="fig">Fig.01</span></figcaption>
   </figure>
 
   <!-- ================= SEC 01 ================= -->
@@ -308,7 +343,7 @@ footer a:hover { color: var(--emerald); }
       <article class="edition">
         <figure>
           <img src="screenshots/planner-hero.png" alt="The planner in emerald-on-black styling, showing the FNB Easy Start plan across five beds." width="1440" height="900" loading="lazy">
-          <figcaption><span>Emerald on black, Anton display type</span><span class="fig">Fig.01</span></figcaption>
+          <figcaption><span>Emerald on black, Anton display type</span><span class="fig">Fig.02</span></figcaption>
         </figure>
         <h3>The Planner</h3>
         <p class="path">/</p>
@@ -322,7 +357,7 @@ footer a:hover { color: var(--emerald); }
       <article class="edition calm">
         <figure>
           <img src="screenshots/almanac-garden.png" alt="A Quiet Almanac: the same garden rendered on warm paper with botanical ink and a season ribbon across the top." width="1600" height="1000" loading="lazy">
-          <figcaption><span>Warm paper, botanical ink, a scrubbable year</span><span class="fig">Fig.02</span></figcaption>
+          <figcaption><span>Warm paper, botanical ink, a scrubbable year</span><span class="fig">Fig.03</span></figcaption>
         </figure>
         <h3>A Quiet Almanac</h3>
         <p class="path">/fable/</p>
@@ -336,121 +371,362 @@ footer a:hover { color: var(--emerald); }
     </div>
   </section>
 
-  <!-- ================= SEC 02 ================= -->
-  <section id="workspaces">
+  <!-- ================= SEC 03 ================= -->
+  <section id="planning">
     <div class="sec-head">
       <span class="sec-num">Sec.02</span>
-      <h2>The workspaces</h2>
-      <span class="sec-tag">6 tabs</span>
+      <h2>Planning a bed</h2>
+      <span class="sec-tag">Companion-aware</span>
     </div>
 
-    <div class="features">
-      <div class="feature">
-        <div class="fnum">01</div>
-        <h3>Bed Planner</h3>
+    <div class="fblock">
+      <div class="fb-text">
+        <p class="fb-kicker"><b>01</b> &nbsp;/&nbsp; Companion planting</p>
+        <h3>Friends drawn, quarrels flagged</h3>
         <p>
-          Drag or click plants onto a square-foot grid. Spacing comes from real agronomy — 16
-          carrots per square, one tomato per 2&times;2 ft — and companion threads draw
-          themselves between friends while antagonists flag red. Seven container types, from
-          raised beds to whisky half barrels.
+          Every plant carries its companions and its antagonists. Place one and the
+          threads draw themselves — dashed green between plants that help each other,
+          red where two crops will fight.
+        </p>
+        <p>
+          Here tomatoes sit with basil and marigold, and carrots with onions: the
+          classic pairings, made visible rather than remembered.
         </p>
       </div>
-      <div class="feature">
-        <div class="fnum">02</div>
-        <h3>Grow Schedule</h3>
+      <figure>
+        <img src="screenshots/feat-companions.png" alt="A raised bed zoomed in, showing tomatoes, peppers, basil, marigolds, carrots and onions with dashed green companion threads drawn between compatible neighbours." loading="lazy">
+        <figcaption><span>Companion threads at 210% zoom</span><span class="fig">Fig.04</span></figcaption>
+      </figure>
+    </div>
+
+    <div class="fblock flip">
+      <div class="fb-text">
+        <p class="fb-kicker"><b>02</b> &nbsp;/&nbsp; The plant library</p>
+        <h3>77 plants, searchable by what you need</h3>
         <p>
-          A Gantt chart of the whole season built from what you actually planted, colour-coded
-          for start-indoors, transplant, direct sow and harvest. Every date is calibrated to
-          Canton's last frost of April 18 and first frost of October 28.
+          Search by name, or by what you're after — <em>low water</em>, <em>easy</em>,
+          <em>companion to tomato</em>. Filter by type, sort by what's in season now.
+        </p>
+        <ul class="fb-list">
+          <li>Spacing, days to harvest, water and sun at a glance</li>
+          <li>Seed-starting dates calculated from Canton's frost dates</li>
+          <li>Care notes for the whole season</li>
+          <li>Add your own seeds, including OCR from a photo of the packet</li>
+        </ul>
+      </div>
+      <figure class="narrow">
+        <img src="screenshots/feat-library.png" alt="The plant library panel with a search for tomato, filter buttons, and an expanded Basil entry showing spacing, harvest days, water, sun, care level and seed-starting notes." loading="lazy">
+        <figcaption><span>Library, filters and an expanded plant</span><span class="fig">Fig.05</span></figcaption>
+      </figure>
+    </div>
+
+    <div class="fblock">
+      <div class="fb-text">
+        <p class="fb-kicker"><b>03</b> &nbsp;/&nbsp; Containers</p>
+        <h3>Seven kinds of ground</h3>
+        <p>
+          Not everything is a raised bed. Round pots, planters, grow bags, window
+          boxes, potato towers and in-ground mounds each have their own footprint and
+          their own rules about what will be happy in them.
+        </p>
+        <p>
+          Mix them freely — the square-foot maths follows the vessel.
         </p>
       </div>
-      <div class="feature">
-        <div class="fnum">03</div>
-        <h3>Harvest Log</h3>
+      <figure>
+        <img src="screenshots/feat-containers.png" alt="A garden of eleven containers across seven types: raised beds, planters, round pots, grow bags, in-ground mounds, a window box and a potato tower." loading="lazy">
+        <figcaption><span>Container Showcase — 11 vessels, 7 types</span><span class="fig">Fig.06</span></figcaption>
+      </figure>
+    </div>
+
+    <div class="fblock flip">
+      <div class="fb-text">
+        <p class="fb-kicker"><b>04</b> &nbsp;/&nbsp; Reading the garden</p>
+        <h3>What the plan adds up to</h3>
         <p>
-          Record what you pick, in pounds, per bed, with a flag for what went out to the
-          community. Set a season goal and watch the bar fill. Season insights surface your top
-          producer, best bed, average days between picks and donation rate.
+          A stats strip totals the garden the moment anything changes: plants,
+          varieties, beds in use, average coverage, how many companion pairings you've
+          managed, how many conflicts remain, water demand, and days to first harvest.
+        </p>
+        <p>
+          Today's Tasks sits above it all — what to sow, transplant and pick this week,
+          with the season's progress bar running from first sowing to last frost.
         </p>
       </div>
-      <div class="feature">
-        <div class="fnum">04</div>
-        <h3>Volunteers</h3>
-        <p>
-          A crew list with availability levels, bed assignments and a generated weekly task
-          list — water checks and weed patrol, per bed, per person. Built for spotty
-          availability, because mutual aid runs on real life rather than corporate schedules.
-        </p>
-      </div>
-      <div class="feature">
-        <div class="fnum">05</div>
-        <h3>Climate Data</h3>
-        <p>
-          Live conditions and a 7-day forecast from Open-Meteo, with a status readout that
-          tells you whether it's an ideal growing temperature and how many days remain until
-          first frost. Rainfall and temperature curves are drawn on canvas.
-        </p>
-      </div>
-      <div class="feature">
-        <div class="fnum">06</div>
-        <h3>Visualize</h3>
-        <p>
-          Generate an AI mockup of one bed or the whole garden through Google Gemini, to see
-          roughly what a layout will look like before anything goes in the ground. Bring your
-          own key.
-        </p>
+      <div class="stackfigs">
+        <figure>
+          <img src="screenshots/feat-stats.png" alt="A statistics strip reading 95 plants, 23 varieties, 4 of 4 beds used, 33% average coverage, 33 companions, 2 conflicts, low average water, 25 days to first harvest." loading="lazy">
+          <figcaption><span>Live garden statistics</span><span class="fig">Fig.07</span></figcaption>
+        </figure>
+        <figure>
+          <img src="screenshots/feat-tasks.png" alt="A horizontal band of today's tasks listing harvests for kale, marigold, sweet peas, dill and more, with a season progress bar reading week 24 of 39, peak growing." loading="lazy">
+          <figcaption><span>Today's tasks, week 24 of 39</span><span class="fig">Fig.08</span></figcaption>
+        </figure>
       </div>
     </div>
   </section>
 
-  <!-- ================= SEC 03 ================= -->
-  <section id="captures">
+  <!-- ================= SEC 03b ================= -->
+  <section id="season">
     <div class="sec-head">
       <span class="sec-num">Sec.03</span>
-      <h2>Field captures</h2>
-      <span class="sec-tag">8 frames</span>
+      <h2>Through the season</h2>
+      <span class="sec-tag">Zone 6a</span>
     </div>
 
-    <div class="gallery">
+    <div class="fblock">
+      <div class="fb-text">
+        <p class="fb-kicker"><b>05</b> &nbsp;/&nbsp; Grow schedule</p>
+        <h3>The whole year as a Gantt chart</h3>
+        <p>
+          Built from what you actually planted, not a generic calendar. Colour-coded
+          for start-indoors, transplant, direct sow and harvest, with every date
+          calibrated to Canton's last frost of April 18 and first frost of October 28.
+        </p>
+      </div>
       <figure>
-        <img src="screenshots/planner-schedule.png" alt="The grow schedule tab: a colour-coded Gantt chart of sowing, transplanting and harvest windows arranged by month." width="1600" height="1000" loading="lazy">
-        <figcaption><span>Grow schedule — the season as a Gantt chart</span><span class="fig">Fig.03</span></figcaption>
+        <img src="screenshots/planner-schedule.png" alt="The grow schedule: a colour-coded Gantt chart of sowing, transplanting and harvest windows arranged by month from February onward." loading="lazy">
+        <figcaption><span>Grow schedule — 193-day season</span><span class="fig">Fig.09</span></figcaption>
       </figure>
+    </div>
+
+    <div class="fblock flip">
+      <div class="fb-text">
+        <p class="fb-kicker"><b>06</b> &nbsp;/&nbsp; Harvest log</p>
+        <h3>Count what actually feeds people</h3>
+        <p>
+          Record every pick in pounds, per bed, with a flag for what went out to the
+          community. Set a season goal and watch the bar fill.
+        </p>
+        <ul class="fb-list">
+          <li>Top producer, best bed, average days between picks</li>
+          <li>Donation rate — the number that matters for mutual aid</li>
+          <li>Full harvest history, exportable with the garden</li>
+        </ul>
+      </div>
       <figure>
-        <img src="screenshots/planner-harvest.png" alt="The harvest log: total harvests, total weight, pounds distributed to the community, and a season goal progress bar." width="1600" height="1000" loading="lazy">
-        <figcaption><span>Harvest log — 59.9 lbs picked, 98% donation rate</span><span class="fig">Fig.04</span></figcaption>
+        <img src="screenshots/planner-harvest.png" alt="The harvest log showing 15 harvests, 59.9 lbs total, 58.7 lbs distributed to the community, 11 plant varieties, a season goal bar at 40 percent, and season insights." loading="lazy">
+        <figcaption><span>59.9 lbs picked · 98% donation rate</span><span class="fig">Fig.10</span></figcaption>
       </figure>
+    </div>
+
+    <div class="fblock">
+      <div class="fb-text">
+        <p class="fb-kicker"><b>07</b> &nbsp;/&nbsp; Volunteers</p>
+        <h3>A crew, not a staff roster</h3>
+        <p>
+          Assign beds to people with availability levels, and let the weekly task list
+          generate itself — water checks and weed patrol, per bed, per person.
+        </p>
+        <p>
+          Built for spotty availability, because mutual aid runs on real life rather
+          than corporate schedules.
+        </p>
+      </div>
       <figure>
-        <img src="screenshots/planner-volunteers.png" alt="The volunteer collective: a crew of five with availability badges, bed assignments and a generated weekly task list." width="1600" height="1000" loading="lazy">
-        <figcaption><span>Volunteer collective — crew, assignments, weekly tasks</span><span class="fig">Fig.05</span></figcaption>
+        <img src="screenshots/planner-volunteers.png" alt="The volunteer collective: five crew members with availability badges, four bed assignments, and a generated weekly task list of water checks and weed patrols." loading="lazy">
+        <figcaption><span>Crew, assignments and the week's tasks</span><span class="fig">Fig.11</span></figcaption>
       </figure>
+    </div>
+
+    <div class="fblock flip">
+      <div class="fb-text">
+        <p class="fb-kicker"><b>08</b> &nbsp;/&nbsp; Climate</p>
+        <h3>Live weather, local frost</h3>
+        <p>
+          Current conditions and a 7-day forecast from Open-Meteo — no key required —
+          with a status readout telling you whether it's an ideal growing temperature
+          and how many days remain until first frost.
+        </p>
+        <p>
+          Monthly rainfall and growing-season temperature curves are drawn on canvas
+          from Canton's climate record.
+        </p>
+      </div>
       <figure>
-        <img src="screenshots/planner-climate.png" alt="Canton climate data: current conditions, a seven day forecast, monthly rainfall bars and growing season temperature curves." width="1600" height="1000" loading="lazy">
-        <figcaption><span>Climate data — live forecast and frost windows</span><span class="fig">Fig.06</span></figcaption>
-      </figure>
-      <figure>
-        <img src="screenshots/planner-buddy.png" alt="Garden Buddy, an AI chat panel open over the bed planner, offering to plant tomatoes or set up a Three Sisters garden." width="1600" height="1000" loading="lazy">
-        <figcaption><span>Garden Buddy — Claude, with tools for the garden</span><span class="fig">Fig.07</span></figcaption>
-      </figure>
-      <figure>
-        <img src="screenshots/almanac-plant.png" alt="The almanac's plant page for Kale, with companion arcs drawn from the selected plant to its friends across the bed." width="1600" height="1000" loading="lazy">
-        <figcaption><span>Almanac — a plant page, with arcs to its neighbours</span><span class="fig">Fig.08</span></figcaption>
-      </figure>
-      <figure>
-        <img src="screenshots/almanac-scrub.png" alt="The same almanac garden scrubbed back to April 16, where most beds show small sprouts and unsown crops appear as dashed ghosts." width="1600" height="1000" loading="lazy">
-        <figcaption><span>Almanac — the same garden, scrubbed back to April 16</span><span class="fig">Fig.09</span></figcaption>
-      </figure>
-      <figure>
-        <img src="screenshots/almanac-calendar.png" alt="The printable year calendar, listing every sowing, transplant and first harvest month by month." width="1600" height="1000" loading="lazy">
-        <figcaption><span>Almanac — the printable year, for the crew</span><span class="fig">Fig.10</span></figcaption>
+        <img src="screenshots/planner-climate.png" alt="Canton climate data: current conditions at 66 degrees, a seven day forecast, monthly rainfall bars peaking in June, and growing season temperature curves." loading="lazy">
+        <figcaption><span>Climate data — 94 days until first frost</span><span class="fig">Fig.12</span></figcaption>
       </figure>
     </div>
   </section>
+
+  <!-- ================= SEC 03c ================= -->
+  <section id="assistant">
+    <div class="sec-head">
+      <span class="sec-num">Sec.04</span>
+      <h2>Two assistants</h2>
+      <span class="sec-tag">One needs no key</span>
+    </div>
+
+    <div class="fblock">
+      <div class="fb-text">
+        <p class="fb-kicker"><b>09</b> &nbsp;/&nbsp; Garden Buddy</p>
+        <h3>Ask it to do the planting</h3>
+        <p>
+          The planner's assistant runs on Claude Sonnet 5 with nine tools — it can
+          place plants, clear and organise beds, rename them, apply a template, and
+          answer scheduling questions against your actual garden.
+        </p>
+        <p>
+          <em>"Plant tomatoes in Main Veggie Bed."</em> &nbsp;
+          <em>"Set up a Three Sisters garden."</em> &nbsp;
+          <em>"What should I plant this time of year?"</em>
+        </p>
+        <p>
+          It calls the API straight from your browser with a key you supply — nothing
+          passes through a server of ours.
+        </p>
+      </div>
+      <figure>
+        <img src="screenshots/planner-buddy.png" alt="Garden Buddy, an AI chat panel open over the bed planner, introducing itself and suggesting example commands like planting tomatoes or setting up a Three Sisters garden." loading="lazy">
+        <figcaption><span>Garden Buddy — Claude with tools</span><span class="fig">Fig.13</span></figcaption>
+      </figure>
+    </div>
+
+    <div class="fblock flip warm">
+      <div class="fb-text">
+        <p class="fb-kicker"><b>10</b> &nbsp;/&nbsp; Ask the almanac</p>
+        <h3>Answers with no key at all</h3>
+        <p>
+          The almanac's companion reads the plant library and the garden in front of it
+          directly. Sowing calendars, companions and quarrels, container suitability,
+          spacing, what's ripe on the date you're viewing, the season's projected
+          yield, what wants doing this week.
+        </p>
+        <p>
+          No account, no key, no network — answers land in about 3ms. Where a key
+          <em>is</em> configured, the fuller model takes over instead.
+        </p>
+      </div>
+      <figure class="narrow">
+        <img src="screenshots/almanac-ask.png" alt="The Ask the almanac panel answering when to plant garlic: plant cloves around October 10, mulch under straw, harvest near July 12, and noting sixteen are already in the ground." loading="lazy">
+        <figcaption><span>Answering offline, from your own garden</span><span class="fig">Fig.14</span></figcaption>
+      </figure>
+    </div>
+  </section>
+  <!-- ================= ALMANAC DEEP DIVE ================= -->
+  <section id="almanac">
+    <div class="sec-head">
+      <span class="sec-num">Sec.05</span>
+      <h2>A Quiet Almanac</h2>
+      <span class="sec-tag">The second edition</span>
+    </div>
+
+    <div class="fblock warm">
+      <div class="fb-text">
+        <p class="fb-kicker"><b>11</b> &nbsp;/&nbsp; The season ribbon</p>
+        <h3>Drag the pin, watch the year turn</h3>
+        <p>
+          The whole year sits at the top of the page. Move the pin to any date and the
+          garden re-renders as the almanac imagines it then — the same beds, a
+          different month.
+        </p>
+        <ul class="fb-list">
+          <li><strong>Before sowing</strong> — dashed ghosts, waiting</li>
+          <li><strong>Growing</strong> — small sprouts, filling out</li>
+          <li><strong>Ready</strong> — a gold ring around the plant</li>
+          <li><strong>Spent</strong> — faded to sepia</li>
+        </ul>
+      </div>
+      <div class="stackfigs">
+        <figure>
+          <img src="screenshots/almanac-scrub.png" alt="The almanac garden viewed on April 16: most beds show small sprouts and the garlic and bean beds appear as dashed outlines, not yet sown." loading="lazy">
+          <figcaption><span>April 16 — sprouts and dashed plans</span><span class="fig">Fig.15</span></figcaption>
+        </figure>
+        <figure>
+          <img src="screenshots/almanac-october.png" alt="The same garden on October 16: most crops have faded to sepia, a few gold harvest rings remain, and the ready-to-pick line has shrunk to parsley, chives and oregano." loading="lazy">
+          <figcaption><span>October 16 — the same beds, spent</span><span class="fig">Fig.16</span></figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="fblock flip warm">
+      <div class="fb-text">
+        <p class="fb-kicker"><b>12</b> &nbsp;/&nbsp; Companion halos</p>
+        <h3>Guidance before you commit</h3>
+        <p>
+          Pick up a seed packet and the garden answers before you plant anything. Every
+          friend already in the ground glows moss green; every quarrel blushes
+          terracotta.
+        </p>
+        <p>
+          The plant's page opens alongside, and the ticks show which of its companions
+          and antagonists are <em>actually in your beds</em> — not a generic list.
+        </p>
+      </div>
+      <figure>
+        <img src="screenshots/almanac-halos.png" alt="A tomato seed packet picked up in the almanac: a banner reads planting tomato, every open square shows a dotted target, and the tomato page lists companions with ticks beside the ones present in the garden." loading="lazy">
+        <figcaption><span>Holding a tomato packet — friends ticked</span><span class="fig">Fig.17</span></figcaption>
+      </figure>
+    </div>
+
+    <div class="fblock warm">
+      <div class="fb-text">
+        <p class="fb-kicker"><b>13</b> &nbsp;/&nbsp; A plant's page</p>
+        <h3>Arcs to its neighbours</h3>
+        <p>
+          Tap anything planted and the almanac opens its page, drawing arcs across the
+          bed to the friends and quarrels standing near it. A year strip shows its whole
+          cycle; below sit its care notes and a box to log what you picked.
+        </p>
+      </div>
+      <figure>
+        <img src="screenshots/almanac-plant.png" alt="The almanac plant page for kale, with arcs drawn from the selected plant across the bed to its companions, and a panel listing sun, water, spacing, days, yield and companion chips." loading="lazy">
+        <figcaption><span>Kale, and everything standing near it</span><span class="fig">Fig.18</span></figcaption>
+      </figure>
+    </div>
+
+    <div class="fblock flip warm">
+      <div class="fb-text">
+        <p class="fb-kicker"><b>14</b> &nbsp;/&nbsp; The potting shed &amp; the printable year</p>
+        <h3>For the crew, on paper</h3>
+        <p>
+          Add raised beds in three sizes, or six kinds of container — each drawn with
+          its own chrome, each honest about what will sulk in it.
+        </p>
+        <p>
+          Then print the year: every sowing, transplant, succession round and first
+          harvest, month by month, for people who don't want a screen in the garden.
+        </p>
+      </div>
+      <div class="stackfigs">
+        <figure class="narrow">
+          <img src="screenshots/almanac-shed.png" alt="The potting shed row: raised beds in three sizes, and containers including terracotta pot, tree pot, half barrel, grow bag, window box and steel trough." loading="lazy">
+          <figcaption><span>The potting shed</span><span class="fig">Fig.19</span></figcaption>
+        </figure>
+        <figure>
+          <img src="screenshots/almanac-calendar.png" alt="The printable year calendar listing every sowing, transplant and first harvest by month, including garlic planted in October for next summer." loading="lazy">
+          <figcaption><span>The year in the garden, printable</span><span class="fig">Fig.20</span></figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="fblock warm">
+      <div class="fb-text">
+        <p class="fb-kicker"><b>15</b> &nbsp;/&nbsp; Learnable in a minute</p>
+        <h3>Five paragraphs, no tour</h3>
+        <p>
+          The whole interaction model fits on one card: pick a packet and tap a square;
+          drag the pin to travel the year; tap a plant to meet it; click a bed's name to
+          rename it; everything autosaves.
+        </p>
+        <p>
+          The garden is also fully navigable from the keyboard — each plot is one tab
+          stop, arrows walk its plants in reading order, Home and End jump to the ends.
+        </p>
+      </div>
+      <figure class="narrow">
+        <img src="screenshots/almanac-help.png" alt="The help overlay titled How to tend this place, with five short paragraphs explaining planting, travelling through the year, getting to know a plant, tending the beds, and keeping it safe." loading="lazy">
+        <figcaption><span>The entire manual</span><span class="fig">Fig.21</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
 
   <!-- ================= SEC 04 ================= -->
   <section id="plans">
     <div class="sec-head">
-      <span class="sec-num">Sec.04</span>
+      <span class="sec-num">Sec.06</span>
       <h2>The FNB plans</h2>
       <span class="sec-tag">11 demos loaded</span>
     </div>
@@ -509,12 +785,47 @@ footer a:hover { color: var(--emerald); }
         <code>FILE ▸ NEW GARDEN</code> clears to a blank slate.
       </p>
     </div>
+
+    <div class="fblock" style="margin-top:3.5rem">
+      <div class="fb-text">
+        <p class="fb-kicker"><b>16</b> &nbsp;/&nbsp; Eleven gardens</p>
+        <h3>Somewhere to start</h3>
+        <p>
+          Every demo is a complete garden — beds, plants, and where it applies a crew,
+          a harvest log and a journal. Load one to explore the app with real data in it,
+          or as the base for your own plot.
+        </p>
+        <p>
+          The three FNB plans are the researched ones; the rest range from a two-bed
+          beginner plot to a kitchen herb patio and a full container showcase.
+        </p>
+      </div>
+      <figure class="narrow">
+        <img src="screenshots/feat-demos.png" alt="The load demo garden dialog listing eleven gardens: FNB Classic, Container Showcase, Three Sisters Companion, Kitchen Herb Patio, Beginner Starter, Salsa and Pizza Garden, Our Garden empty and planted, and the three FNB research plans." loading="lazy">
+        <figcaption><span>All eleven, one click away</span><span class="fig">Fig.22</span></figcaption>
+      </figure>
+    </div>
+
+    <div class="fblock flip">
+      <div class="fb-text">
+        <p class="fb-kicker"><b>17</b> &nbsp;/&nbsp; Light mode</p>
+        <h3>For daylight, and for printing</h3>
+        <p>
+          The whole planner has a light theme — the same beds, companion threads and
+          panels on paper-white rather than OLED black. One button in the header.
+        </p>
+      </div>
+      <figure>
+        <img src="screenshots/feat-light-theme.png" alt="The bed planner in light theme: four beds of plants with companion threads on a pale background, with the plant library and bed details panels in matching light styling." loading="lazy">
+        <figcaption><span>Light theme, same garden</span><span class="fig">Fig.23</span></figcaption>
+      </figure>
+    </div>
   </section>
 
   <!-- ================= SEC 05 ================= -->
   <section id="research">
     <div class="sec-head">
-      <span class="sec-num">Sec.05</span>
+      <span class="sec-num">Sec.07</span>
       <h2>The full research plan</h2>
       <span class="sec-tag">Bed by bed</span>
     </div>
@@ -522,27 +833,27 @@ footer a:hover { color: var(--emerald); }
     <div class="gallery tight">
       <figure>
         <img src="screenshots/full-plan-bed1-greens-powerhouse.png" alt="Bed 1, the Greens Powerhouse, planted with leafy greens." loading="lazy">
-        <figcaption><span>Bed 1 — Greens Powerhouse</span><span class="fig">Fig.11</span></figcaption>
+        <figcaption><span>Bed 1 — Greens Powerhouse</span><span class="fig">Fig.24</span></figcaption>
       </figure>
       <figure>
         <img src="screenshots/full-plan-bed2-tomato-pepper-hq.png" alt="Bed 2, Tomato and Pepper HQ, with nightshades and their companions." loading="lazy">
-        <figcaption><span>Bed 2 — Tomato &amp; Pepper HQ</span><span class="fig">Fig.12</span></figcaption>
+        <figcaption><span>Bed 2 — Tomato &amp; Pepper HQ</span><span class="fig">Fig.25</span></figcaption>
       </figure>
       <figure>
         <img src="screenshots/full-plan-bed3-underground-vault.png" alt="Bed 3, the Underground Vault, planted with root crops." loading="lazy">
-        <figcaption><span>Bed 3 — Underground Vault</span><span class="fig">Fig.13</span></figcaption>
+        <figcaption><span>Bed 3 — Underground Vault</span><span class="fig">Fig.26</span></figcaption>
       </figure>
       <figure>
         <img src="screenshots/full-plan-bed4-calorie-central.png" alt="Bed 4, Calorie Central, planted with starchy staples." loading="lazy">
-        <figcaption><span>Bed 4 — Calorie Central</span><span class="fig">Fig.14</span></figcaption>
+        <figcaption><span>Bed 4 — Calorie Central</span><span class="fig">Fig.27</span></figcaption>
       </figure>
       <figure>
         <img src="screenshots/full-plan-bed5-storage-protein.png" alt="Bed 5, Storage and Protein, planted with beans and keeping crops." loading="lazy">
-        <figcaption><span>Bed 5 — Storage &amp; Protein</span><span class="fig">Fig.15</span></figcaption>
+        <figcaption><span>Bed 5 — Storage &amp; Protein</span><span class="fig">Fig.28</span></figcaption>
       </figure>
       <figure>
         <img src="screenshots/fnb-plan-comparison.png" alt="A comparison table of the three FNB plans, showing yield, crop count and maintenance level." loading="lazy">
-        <figcaption><span>All three plans, compared</span><span class="fig">Fig.16</span></figcaption>
+        <figcaption><span>All three plans, compared</span><span class="fig">Fig.29</span></figcaption>
       </figure>
     </div>
   </section>
@@ -550,7 +861,7 @@ footer a:hover { color: var(--emerald); }
   <!-- ================= SEC 06 ================= -->
   <section id="build">
     <div class="sec-head">
-      <span class="sec-num">Sec.06</span>
+      <span class="sec-num">Sec.08</span>
       <h2>Under the hood</h2>
       <span class="sec-tag">No build step</span>
     </div>
@@ -600,7 +911,7 @@ footer a:hover { color: var(--emerald); }
   <!-- ================= SEC 07 ================= -->
   <section id="mobile">
     <div class="sec-head">
-      <span class="sec-num">Sec.07</span>
+      <span class="sec-num">Sec.09</span>
       <h2>In the garden</h2>
       <span class="sec-tag">390px and up</span>
     </div>
@@ -608,7 +919,7 @@ footer a:hover { color: var(--emerald); }
     <div class="editions">
       <figure>
         <img src="screenshots/planner-mobile.png" alt="GardenSync on a phone: the planner collapses to a single column with the plant library and bed details as slide-up drawers." width="390" height="844" loading="lazy">
-        <figcaption><span>The planner on a phone — panels become drawers</span><span class="fig">Fig.17</span></figcaption>
+        <figcaption><span>The planner on a phone — panels become drawers</span><span class="fig">Fig.30</span></figcaption>
       </figure>
       <div class="edition">
         <h3>Made for standing in a bed</h3>

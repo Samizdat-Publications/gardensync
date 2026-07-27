@@ -22,7 +22,7 @@ share state.
 
 ### The Planner — `/`
 
-![The bed planner with the FNB Easy Start plan loaded](screenshots/planner-hero.png)
+![The bed planner with the FNB Classic garden loaded — four beds, 95 plants, companion threads drawn](docs/screenshots/planner-beds.png)
 
 Loud and high-contrast: emerald on black, Anton display type, a manifesto ticker
 across the top. Six workspaces — Bed Planner, Grow Schedule, Harvest, Volunteers,
@@ -31,7 +31,7 @@ place plants and rearrange beds for you.
 
 ### A Quiet Almanac — `/fable/`
 
-![A Quiet Almanac, showing the season ribbon and the garden in late July](screenshots/almanac-hero.png)
+![A Quiet Almanac, showing the season ribbon and the garden in late July](docs/screenshots/almanac-garden.png)
 
 Warm paper, botanical ink, and a year you scrub through. Drag the pin on the
 season ribbon and the garden re-renders as the almanac imagines it on that date:
