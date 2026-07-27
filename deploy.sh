@@ -35,6 +35,16 @@ cat > "$OUT"/js/supabase-config.js <<'STUB'
    Local development: copy supabase-config.example.js to supabase-config.js. */
 STUB
 
+# A Quiet Almanac lived at /fable/ on this domain until v7.0. Anything already
+# linking there — the old README, the changelog, a bookmark — should land on the
+# almanac's own site rather than silently falling through to the planner.
+# The bare path has to come before the splat, or the splat shadows it.
+cat > "$OUT"/_redirects <<'REDIRECTS'
+/fable    https://gardensync-almanac.pages.dev/        301
+/fable/   https://gardensync-almanac.pages.dev/        301
+/fable/*  https://gardensync-almanac.pages.dev/:splat  301
+REDIRECTS
+
 cat > "$OUT"/_headers <<'HEADERS'
 /*
   X-Content-Type-Options: nosniff
