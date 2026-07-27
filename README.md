@@ -55,6 +55,22 @@ Garden, Pizza Garden, Three Sisters, Salad Bowl, Pollinator Patch, Herb Haven, K
 Garden) drop a whole planting in at once, and **auto-arrange** re-flows a bed to
 Square Foot Gardening spacing.
 
+![Eleven containers laid out across one garden, covering all seven types — raised beds and a salad bar bed at the top, round pots and small planters in the middle, and a squash patch, kitchen planter and potato tower below](docs/screenshots/feat-containers.png)
+
+Every container carries its own footprint and its own rules about what will be happy
+in it, and the square-foot maths follows the vessel rather than assuming a bed.
+
+**STATS** totals the garden the moment anything changes — plants, varieties, beds in
+use, coverage, how many companion pairings you have managed, how many conflicts are
+left, water demand, and days to first harvest.
+
+![A statistics strip reading 95 plants, 23 varieties, 4 of 4 beds used, 33 percent average coverage, 33 companions, 2 conflicts, low average water and 25 days to first harvest](docs/screenshots/feat-stats.png)
+
+Above all of it sits **Today's Tasks** — what wants sowing, transplanting or picking
+this week, with the season's progress running from first sowing to first frost.
+
+![A horizontal band of today's tasks listing harvests for kale, marigold, sweet peas, dill, nasturtium, carrot and more, with a season progress bar reading week 24 of 39, peak growing](docs/screenshots/feat-tasks.png)
+
 ### Grow Schedule
 
 ![The grow schedule, showing frost badges for last frost April 18, first frost October 28 and a 193-day season, above a timeline of sowing and transplanting dates](docs/screenshots/planner-schedule.png)
