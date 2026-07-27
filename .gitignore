@@ -36,3 +36,6 @@ dist/
 
 # Playwright MCP scratch output
 .playwright-mcp/
+
+# Wrangler build cache (contains the Cloudflare account id)
+.wrangler/

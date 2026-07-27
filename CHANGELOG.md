@@ -1,8 +1,42 @@
 # GardenSync Changelog
 
-Both editions are live at <https://gardensync-e4e.pages.dev> — the planner at
-`/`, A Quiet Almanac at `/fable/`. Project page:
+The planner is live at <https://gardensync-e4e.pages.dev>. Project page:
 <https://samizdat-publications.github.io/gardensync/>
+
+Its sibling edition, *A Quiet Almanac*, now lives in its own repository:
+<https://github.com/Samizdat-Publications/gardensync-almanac>
+(live at <https://gardensync-almanac.pages.dev>).
+
+---
+
+## v7.0 — 2026-07-26
+
+**The two editions became two repositories.**
+
+They never shared a line of code — only a repo, a deploy script and a plant
+dataset. Keeping them together meant one README trying to introduce two
+different programs with two different aesthetics, one landing page split down
+the middle, and every visitor landing on a choice before they had seen either
+thing. Each edition now gets its own front door.
+
+- `fable/` was lifted out with `git subtree split`, so the almanac carries its
+  own seven commits into the new repo rather than starting from a squashed
+  import. Its history is intact and attributable.
+- This repo keeps the name, the tags (v1.0 through v6.1) and the whole record
+  of the planner's development — which is what most of that history always was.
+- The almanac's ten screenshots moved with it; the planner keeps its own
+  thirty-six.
+- `deploy.sh` no longer stages `fable/`, and now copies `planner-hero.png` in
+  as the link-preview image.
+- The two editions still point at each other, but by absolute URL now that they
+  are hosted separately: the almanac link in the header and the mobile drawer
+  goes to <https://gardensync-almanac.pages.dev>.
+- Open Graph and Twitter card tags added, so sharing the planner's link no
+  longer previews as a blank rectangle.
+- README and project page rewritten for the planner alone.
+
+Nothing about the running planner changed. This is a repository and packaging
+change only.
 
 ---
 

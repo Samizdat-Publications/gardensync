@@ -3,7 +3,7 @@
 #
 # The repo root carries plenty that must never ship: the pre-refactor monolith,
 # personal garden JSON, node_modules, screenshots, notes. This assembles only
-# what the two apps actually need, then deploys it.
+# what the app actually needs, then deploys it.
 #
 #   ./deploy.sh          # stage into dist/ and deploy
 #   ./deploy.sh --stage  # stage only, don't deploy
@@ -20,14 +20,10 @@ mkdir -p "$OUT"
 cp index.html styles.css guide.html "$OUT"/
 cp -r js "$OUT"/js
 
-# A Quiet Almanac
-cp -r fable "$OUT"/fable
-rm -f "$OUT"/fable/README.md
-
-# The og:image for link previews. It lives in docs/ rather than fable/ so the
-# app folder stays free of a 780KB screenshot; it is copied in at publish time
-# because the meta tag points at an absolute production URL.
-cp docs/screenshots/almanac-hero.png "$OUT"/fable/preview.png
+# The og:image for link previews, copied in at publish time so the repo root
+# stays free of a 600KB screenshot. The meta tag points at an absolute
+# production URL, so this only has to exist on the deployed site.
+cp docs/screenshots/planner-hero.png "$OUT"/preview.png
 
 # The local Supabase settings file is gitignored and never deployed. Ship an
 # empty stand-in so the <script> tag resolves instead of falling through to the
