@@ -31,7 +31,7 @@ function exportCalendar() {
     let ics = [
         'BEGIN:VCALENDAR',
         'VERSION:2.0',
-        'PRODID:-//GardenSync//Food Not Bombs Canton//EN',
+        'PRODID:-//GardenSync//Canton, Ohio//EN',
         'CALSCALE:GREGORIAN',
         'METHOD:PUBLISH',
         'X-WR-CALNAME:GardenSync Planting Schedule',

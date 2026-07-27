@@ -68,7 +68,7 @@ function exportPNG() {
     // Title
     ctx.fillStyle = '#10b981';
     ctx.font = 'bold 14px monospace';
-    ctx.fillText('GARDENSYNC // FOOD NOT BOMBS CANTON', 10, height - 10);
+    ctx.fillText('GARDENSYNC // CANTON, OHIO', 10, height - 10);
 
     // Download
     const link = document.createElement('a');
@@ -155,7 +155,7 @@ function printBedMap() {
     }
 </style>
 </head><body>
-    <h1>GardenSync // Food Not Bombs Canton</h1>
+    <h1>GardenSync // Canton, Ohio</h1>
     <div class="subtitle">Garden Bed Map &mdash; ${today} &mdash; Zone 6a</div>
     <div class="beds-grid">${bedsHTML}</div>
     <div class="legend">

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**GardenSync** — A community garden bed planner for Food Not Bombs Canton, OH. Interactive
+**GardenSync** — A community garden bed planner for Canton, Ohio. Interactive
 drag-and-drop planner with companion planting, an AI chat assistant, harvest tracking, volunteer
 management, and season-aware scheduling for Zone 6a. The harvest feeds neighbours, so the plant
 data and the schedule maths are the parts most worth getting right.
@@ -98,7 +98,7 @@ in without checking for duplicate definitions.
 - Each placement inside `plants[]`: `{id, plantId, x, y}` — `x`/`y` are pixels within the container
   element, snapped to the 20px grid
 - A first genuine visit — no localStorage, no backup, no share link — opens on the
-  `DEMO_FNB_EASY_START` plan via `seedFirstRunGarden()` in `persistence.js`, so nobody meets an
+  `DEMO_EASY_START` plan via `seedFirstRunGarden()` in `persistence.js`, so nobody meets an
   empty screen. `createDefaultGarden()` (four 5'×10' raised beds) is the FILE > NEW GARDEN path and
   the fallback when seeding throws.
 - `localStorage` for persistence + optional Supabase cloud backup (stewops-dashboard project)
@@ -136,6 +136,10 @@ garden viewport on phones.
 
 ## Coding Conventions
 
+- **No build tools** *for the app*. The one exception is `tools/`, which holds
+  Playwright scripts for regenerating the documentation screenshots; `package.json`
+  exists only for those. Nothing in `tools/` ships — `deploy.sh` copies files and
+  nothing else.
 - **No build tools.** Vanilla HTML/CSS/JS. No webpack, vite, npm, bundlers.
 - **No framework.** Plain DOM manipulation, no React/Vue/Angular.
 - **Modules via script tags** — each `js/*.js` file is a separate `<script>` in `index.html`,

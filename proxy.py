@@ -251,7 +251,7 @@ if __name__ == '__main__':
         pass
 
     print(f"""
-  GARDENSYNC // FOOD NOT BOMBS CANTON
+  GARDENSYNC // CANTON, OHIO
   Server running on http://localhost:{PORT}
   Gemini API proxy active at /api/gemini/*
   Claude API proxy active at /api/claude/*

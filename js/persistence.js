@@ -91,14 +91,14 @@ function createDefaultGarden() {
 }
 
 /* First genuine visit — nothing in localStorage, no backup, no share link.
-   Seed the FNB Easy Start plan so the planner opens on a real garden instead
+   Seed the Easy Start plan so the planner opens on a real garden instead
    of four empty rectangles. FILE > NEW GARDEN still clears to blank beds.
    applyDemoData() renders, saves and zooms to fit on its own. */
 function seedFirstRunGarden() {
-    if (typeof applyDemoData === 'function' && typeof DEMO_FNB_EASY_START !== 'undefined') {
+    if (typeof applyDemoData === 'function' && typeof DEMO_EASY_START !== 'undefined') {
         try {
-            applyDemoData(DEMO_FNB_EASY_START,
-                'Welcome — loaded the FNB Easy Start plan. FILE > NEW GARDEN for a blank slate.');
+            applyDemoData(DEMO_EASY_START,
+                'Welcome — loaded the Easy Start plan. FILE > NEW GARDEN for a blank slate.');
             return true;
         } catch (e) {
             console.warn('[GardenSync] first-run demo seed failed, using empty beds:', e);

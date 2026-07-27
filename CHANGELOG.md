@@ -125,7 +125,7 @@ First public release. Both editions are live at
 
 ### Polish
 
-- First visit loads the **FNB Easy Start** plan instead of four empty beds.
+- First visit loads the **Easy Start** plan instead of four empty beds.
   `FILE ▸ NEW GARDEN` still clears to a blank slate.
 - Demo gardens ship as a single tall column of beds, which zoom-to-fit shrank to
   ~48% with dead space either side. They are now re-flowed into a grid on load —
@@ -199,7 +199,7 @@ Containers beyond raised beds: terracotta pots, deep tree pots, whisky half
 barrels, fabric grow bags, window boxes and steel troughs, each drawn with its own
 chrome. Container rules apply — everything fits one square, and sprawlers like
 squash get a gentle warning that they'll sulk. Plus the harvest outlook with the
-FNB 500 lb goal, the printable year calendar, field notes and caretakers per plot,
+500 lb goal, the printable year calendar, field notes and caretakers per plot,
 frost watch, redo, and the help overlay.
 
 ### Expansion 2 — sharing

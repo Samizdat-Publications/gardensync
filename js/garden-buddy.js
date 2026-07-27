@@ -282,7 +282,7 @@ function gbBuildSystemPrompt() {
         return `  Container ${i + 1} (${container.name}, ${typeLabel}): ${container.plants.length} plants \u2014 ${items}`;
     }).join('\n');
 
-    return `You are Garden Buddy, the AI assistant built into GardenSync — a community garden planner for Food Not Bombs Canton, OH (USDA Zone 6a). You can directly control the garden through tools — placing plants, clearing beds, organizing layouts, and more.
+    return `You are Garden Buddy, the AI assistant built into GardenSync — a community garden planner for Canton, Ohio (USDA Zone 6a). You can directly control the garden through tools — placing plants, clearing beds, organizing layouts, and more.
 
 CURRENT GARDEN STATE:
 ${bedSummary}

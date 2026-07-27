@@ -113,7 +113,7 @@ function renderWeeklyTasks() {
     if (now.getMonth() >= 3 && now.getMonth() <= 5) {
         tasks.push({ text: `Check watering schedule \u2014 rainfall vs plant needs`, done: false });
     }
-    tasks.push({ text: `Harvest any ripe produce for FNB distribution`, done: false });
+    tasks.push({ text: `Harvest any ripe produce for distribution`, done: false });
     tasks.push({ text: `Update garden log / take photos`, done: false });
 
     container.innerHTML = `<h4 style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);letter-spacing:1px;margin-bottom:0.75rem;">WEEK OF ${monthName.toUpperCase()} ${now.getDate()}</h4>` +

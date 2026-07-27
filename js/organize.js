@@ -299,7 +299,7 @@ const GARDEN_PRESETS = [
         ]
     },
     {
-        name: '\u{1F345} FOOD NOT BOMBS HARVEST',
+        name: '\u{1F345} COMMUNITY HARVEST',
         desc: 'Maximum food production for community distribution. Stewart\'s original plan with high-yield, low-maintenance crops for Canton Zone 6a.',
         beds: [
             [

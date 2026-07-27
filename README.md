@@ -1,6 +1,6 @@
 # GardenSync
 
-**A square-foot garden planner for Food Not Bombs — Canton, Ohio (USDA Zone 6a).**
+**A square-foot garden planner for a community garden in Canton, Ohio (USDA Zone 6a).**
 
 Lay out raised beds and containers on a real spacing grid, check companion planting
 before you commit, follow a frost-aware schedule through the season, log what you
@@ -41,7 +41,7 @@ Across the top: **Bed Planner**, **Grow Schedule**, **Harvest**, **Volunteers**,
 
 ### Bed Planner
 
-![The bed planner with the FNB Classic garden open — four raised beds holding 95 plants, with faint companion threads webbing between neighbouring plants](docs/screenshots/planner-beds.png)
+![The bed planner with the Community Classic garden open — four raised beds holding 95 plants, with faint companion threads webbing between neighbouring plants](docs/screenshots/planner-beds.png)
 
 Click a seed in the library, click the bed, and the plant lands snapped to a 20px
 grid with its real footprint reserved — sixteen carrots to a square foot, one tomato
@@ -116,7 +116,7 @@ seed packet and letting Claude read it — using the same key Garden Buddy uses.
 
 ---
 
-## The three Food Not Bombs plans
+## The three garden plans
 
 Three researched five-bed plans for a Zone 6a community kitchen garden, each solving
 a different constraint:
@@ -127,7 +127,7 @@ a different constraint:
 | **Easy Start** | 5 | 130–225 lbs | Year one — low-maintenance crops only |
 | **Max Storage** | 5 | 250–400 lbs | Shelf-stable pantry crops, no refrigeration |
 
-![A comparison table of the three plans — Full Research, Easy Start and Max Storage in columns, against rows for target yield, crop types, maintenance, storage duration, refrigeration, who each one suits, companion planting depth and cooking herbs](docs/screenshots/fnb-plan-comparison.png)
+![A comparison table of the three plans — Full Research, Easy Start and Max Storage in columns, against rows for target yield, crop types, maintenance, storage duration, refrigeration, who each one suits, companion planting depth and cooking herbs](docs/screenshots/plan-comparison.png)
 
 Each bed in each plan carries volunteer notes explaining *why* those crops, in that
 arrangement, on that calendar — kale for cold-hardiness and cut-and-come-again yield,
@@ -143,7 +143,7 @@ much as loaded.
 [Underground Vault](docs/screenshots/full-plan-bed3-underground-vault.png) ·
 [Calorie Central](docs/screenshots/full-plan-bed4-calorie-central.png) ·
 [Storage & Protein](docs/screenshots/full-plan-bed5-storage-protein.png) ·
-[overview](docs/screenshots/fnb-full-research-plan-overview.png)
+[overview](docs/screenshots/plan-full-research-plan-overview.png)
 
 **Easy Start** —
 [Greens Bed](docs/screenshots/easy-start-bed1-greens-bed.png) ·
@@ -151,7 +151,7 @@ much as loaded.
 [Potato Patch](docs/screenshots/easy-start-bed3-potato-patch.png) ·
 [Bean Machine](docs/screenshots/easy-start-bed4-bean-machine.png) ·
 [Garlic & Herbs](docs/screenshots/easy-start-bed5-garlic-herbs.png) ·
-[overview](docs/screenshots/fnb-easy-start-overview.png)
+[overview](docs/screenshots/plan-easy-start-overview.png)
 
 **Max Storage** —
 [Potato Bed A](docs/screenshots/max-storage-bed1-potato-bed-a.png) ·
@@ -159,7 +159,7 @@ much as loaded.
 [Allium Fortress](docs/screenshots/max-storage-bed3-allium-fortress.png) ·
 [Squash & Beans](docs/screenshots/max-storage-bed4-squash-beans.png) ·
 [Greens & Carrots](docs/screenshots/max-storage-bed5-greens-carrots.png) ·
-[overview](docs/screenshots/fnb-max-storage-overview.png)
+[overview](docs/screenshots/plan-max-storage-overview.png)
 
 </details>
 
@@ -167,22 +167,22 @@ much as loaded.
 
 ## Demo gardens
 
-![The LOAD DEMO GARDEN dialog, a scrolling column of labelled cards each with a one-line summary of its beds, containers and crops — ten of the eleven in frame, FNB Max Storage below the fold](docs/screenshots/feat-demos.png)
+![The LOAD DEMO GARDEN dialog, a scrolling column of labelled cards each with a one-line summary of its beds, containers and crops — ten of the eleven in frame, Max Storage below the fold](docs/screenshots/feat-demos.png)
 
 Eleven gardens ship with the app, loadable from `FILE ▸ LOAD DEMO GARDEN`:
 
 | Garden | What it shows |
 |--------|---------------|
-| FNB Classic | 4 raised beds, 5 volunteers, harvest log and journal |
+| Community Classic | 4 raised beds, 5 volunteers, harvest log and journal |
 | Container Showcase | All 7 container types across 11 containers |
 | Three Sisters Companion | Corn, beans and squash in traditional groupings |
 | Kitchen Herb Patio | Window boxes, pots, planter and grow bag |
 | Beginner Starter | Small beds and containers, fast easy crops |
 | Salsa & Pizza Garden | Two themed beds plus a herb planter |
 | Our Garden (Empty / Planted) | A real 20-container layout, before and after |
-| FNB Full Research Plan | 5 beds, 400–600 lbs |
-| FNB Easy Start | 5 beds, 130–225 lbs |
-| FNB Max Storage | 5 beds, 250–400 lbs |
+| Full Research Plan | 5 beds, 400–600 lbs |
+| Easy Start | 5 beds, 130–225 lbs |
+| Max Storage | 5 beds, 250–400 lbs |
 
 Easy Start loads on a first visit so nobody meets an empty screen.
 `FILE ▸ NEW GARDEN` clears back to empty beds.
@@ -341,8 +341,8 @@ Fork, branch, change, open a pull request. The things that would help most:
 
 ## Credits
 
-Built by and for **Food Not Bombs Canton, Ohio** and the wider mutual-aid gardening
-community. Companion planting data from published guides and several seasons of FNB
+Built by and for **Canton, Ohio** and the wider mutual-aid gardening
+community. Companion planting data from published guides and several seasons of
 kitchen-garden practice. Weather from [Open-Meteo](https://open-meteo.com). AI from
 [Anthropic](https://www.anthropic.com). Fonts — Anton, Space Mono, Barlow Condensed —
 from Google Fonts.

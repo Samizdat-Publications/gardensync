@@ -84,7 +84,7 @@ function generateVisualization() {
         },
         {
             label: 'GARDEN AT HARVEST TIME',
-            prompt: `A community garden during peak harvest with ripe vegetables and flowers. ${baseContext} The beds contain: ${plantDescription}. Show ripe tomatoes, full bean plants, blooming flowers, ready-to-pick produce. A woven basket sits at the edge of a bed partially filled with fresh vegetables. Warm afternoon light. Inviting and abundant. Food Not Bombs mutual aid spirit.`
+            prompt: `A community garden during peak harvest with ripe vegetables and flowers. ${baseContext} The beds contain: ${plantDescription}. Show ripe tomatoes, full bean plants, blooming flowers, ready-to-pick produce. A woven basket sits at the edge of a bed partially filled with fresh vegetables. Warm afternoon light. Inviting and abundant. the community garden mutual aid spirit.`
         }
     ];
 

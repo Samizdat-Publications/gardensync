@@ -94,9 +94,9 @@ function newGarden() {
 }
 
 const DEMO_REGISTRY = [
-    { key: 'classic',   source: () => DEMO_CLASSIC,       icon: '🌿', title: 'FNB Classic',
+    { key: 'classic',   source: () => DEMO_CLASSIC,       icon: '🌿', title: 'Community Classic',
       desc: '4 raised beds • 5 volunteers • harvest log & journal',
-      toast: 'FNB Classic loaded! Explore all tabs to see it in action.' },
+      toast: 'Community Classic loaded! Explore all tabs to see it in action.' },
     { key: 'showcase',  source: () => DEMO_SHOWCASE,      icon: '🏡', title: 'Container Showcase',
       desc: 'All 7 container types • 11 containers • 60+ plants',
       toast: 'Container Showcase loaded! 11 containers across all 7 types.' },
@@ -118,15 +118,15 @@ const DEMO_REGISTRY = [
     { key: 'mygarden-planted', source: () => DEMO_OUR_GARDEN_PLANTED, icon: '🍅', title: 'Our Garden (Planted)',
       desc: '20 containers • tomatoes, melons, peas, root veg & blueberries • companion groups',
       toast: 'Your garden loaded! All plants placed as planned. Check with your fiancée and tweak as needed.' },
-    { key: 'fnb-full-plan', source: () => DEMO_FNB_FULL_PLAN, icon: '📋', title: 'FNB Full Research Plan',
+    { key: 'full-plan', source: () => DEMO_FULL_PLAN, icon: '📋', title: 'Full Research Plan',
       desc: '5 beds • 400-600 lbs donation yield • companion planting • detailed volunteer notes',
-      toast: 'FNB Full Research Plan loaded! 5 beds optimized for maximum food bank donations.' },
-    { key: 'fnb-easy-start', source: () => DEMO_FNB_EASY_START, icon: '🌱', title: 'FNB Easy Start',
+      toast: 'Full Research Plan loaded! 5 beds optimized for maximum food bank donations.' },
+    { key: 'easy-start', source: () => DEMO_EASY_START, icon: '🌱', title: 'Easy Start',
       desc: '5 beds • 130-225 lbs • low-maintenance crops only • perfect for new volunteers',
-      toast: 'FNB Easy Start loaded! All low-maintenance crops — plant and forget.' },
-    { key: 'fnb-max-storage', source: () => DEMO_FNB_MAX_STORAGE, icon: '🏪', title: 'FNB Max Storage',
+      toast: 'Easy Start loaded! All low-maintenance crops — plant and forget.' },
+    { key: 'max-storage', source: () => DEMO_MAX_STORAGE, icon: '🏪', title: 'Max Storage',
       desc: '5 beds • 250-400 lbs • shelf-stable pantry crops • no fridge needed',
-      toast: 'FNB Max Storage loaded! Potatoes, onions, squash & beans — stores for months.' }
+      toast: 'Max Storage loaded! Potatoes, onions, squash & beans — stores for months.' }
 ];
 
 function loadDemoData() {
@@ -283,7 +283,7 @@ function exportAllData() {
     const exportData = {
         version: 2,
         exportDate: new Date().toISOString(),
-        app: 'GardenSync // Food Not Bombs Canton',
+        app: 'GardenSync // Canton, Ohio',
         state: {
             containers: state.containers,
             volunteers: state.volunteers,

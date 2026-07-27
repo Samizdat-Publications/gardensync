@@ -1,7 +1,7 @@
 {
     "version": 1,
     "exportDate": "2025-06-15T12:00:00.000Z",
-    "app": "GardenSync // Food Not Bombs Canton",
+    "app": "GardenSync // Canton, Ohio",
     "isDemo": true,
     "state": {
         "beds": [
@@ -127,7 +127,7 @@
         {"id":"h-005","plant":"lettuce","bed":"2","weight":"2.0","date":"2025-06-05","notes":"Second succession planting.","donated":"yes"},
         {"id":"h-006","plant":"green-beans","bed":"3","weight":"4.2","date":"2025-06-20","notes":"Bush beans going crazy.","donated":"yes"},
         {"id":"h-007","plant":"zucchini","bed":"3","weight":"6.5","date":"2025-06-25","notes":"Two massive zukes. Should have picked smaller.","donated":"yes"},
-        {"id":"h-008","plant":"cucumber","bed":"3","weight":"3.0","date":"2025-07-01","notes":"Fresh cukes for FNB meal!","donated":"yes"},
+        {"id":"h-008","plant":"cucumber","bed":"3","weight":"3.0","date":"2025-07-01","notes":"Fresh cukes for community meal!","donated":"yes"},
         {"id":"h-009","plant":"tomato","bed":"1","weight":"8.5","date":"2025-07-15","notes":"Tomato avalanche begins.","donated":"yes"},
         {"id":"h-010","plant":"basil","bed":"1","weight":"0.5","date":"2025-07-15","notes":"Huge basil harvest, made pesto.","donated":"partial"},
         {"id":"h-011","plant":"pepper","bed":"1","weight":"2.3","date":"2025-07-20","notes":"Green peppers, left some to ripen red.","donated":"yes"},
@@ -159,7 +159,7 @@
         ],
         "bed-3": [
             {"id":4001,"text":"Garlic planted last October, scapes appearing","date":"2025-06-01T10:00:00.000Z"},
-            {"id":4002,"text":"Removed garlic scapes - will use in FNB stir fry","date":"2025-06-10T09:00:00.000Z"},
+            {"id":4002,"text":"Removed garlic scapes - will use in stir fry","date":"2025-06-10T09:00:00.000Z"},
             {"id":4003,"text":"Sweet peas blooming beautifully on trellis","date":"2025-06-15T16:00:00.000Z"},
             {"id":4004,"text":"Thyme spreading nicely as ground cover between beds","date":"2025-06-20T12:00:00.000Z"},
             {"id":4005,"text":"Mint in sunken pots - NOT letting it escape this year","date":"2025-05-01T14:00:00.000Z"}
