@@ -162,7 +162,7 @@ function printBedMap() {
         <h3>PLANT KEY</h3>
         <div class="legend-grid">${legendHTML}</div>
     </div>
-    <div class="footer">GardenSync &mdash; No Copyright, No Gods, No Masters &mdash; Share Freely</div>
+    <div class="footer">GardenSync &mdash; Canton, Ohio &mdash; Zone 6a</div>
     <script>window.onload = function() { window.print(); }</script>
 </body></html>`;
 
