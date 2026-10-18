@@ -1,0 +1,26 @@
+{
+  "name": "GardenSync",
+  "repo": "gardensync",
+  "pitch": "Square-foot garden planner for a Canton, Ohio community garden: beds, companion planting, frost-aware schedule, harvest log.",
+  "status": "v1",
+  "version": "7.1.0",
+  "kind": "tool",
+  "started": "2026-02-16",
+  "updated": "2026-07-26",
+  "tech": ["JavaScript", "Cloudflare Pages", "Open-Meteo API", "Anthropic API"],
+  "links": {
+    "landing": "https://gardensync-e4e.pages.dev",
+    "play": "",
+    "devlog": ""
+  },
+  "hero": {
+    "gif": "",
+    "poster": "docs/screenshots/planner-hero.png",
+    "clip": ""
+  },
+  "credits": [
+    { "what": "Weather data", "who": "Open-Meteo", "licence": "CC BY 4.0" },
+    { "what": "Fonts: Anton, Space Mono, Barlow Condensed", "who": "Google Fonts", "licence": "SIL OFL" },
+    { "what": "Companion planting data", "who": "Published guides and kitchen-garden practice", "licence": "Compiled by the author" }
+  ]
+}

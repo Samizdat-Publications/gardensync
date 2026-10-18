@@ -1,5 +1,7 @@
 # GardenSync
 
+![Status: v1.0](https://img.shields.io/badge/status-v1.0-2ea043)
+
 **A square-foot garden planner for a community garden in Canton, Ohio (USDA Zone 6a).**
 
 Lay out raised beds and containers on a real spacing grid, check companion planting
