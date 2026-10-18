@@ -39,3 +39,7 @@ dist/
 
 # Wrangler build cache (contains the Cloudflare account id)
 .wrangler/
+
+# Landing page (site/): its media JPGs are committed; the built copy is not
+!site/media/*.jpg
+site-dist/

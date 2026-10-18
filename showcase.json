@@ -6,17 +6,17 @@
   "version": "7.1.0",
   "kind": "tool",
   "started": "2026-02-16",
-  "updated": "2026-07-26",
+  "updated": "2026-10-18",
   "tech": ["JavaScript", "Cloudflare Pages", "Open-Meteo API", "Anthropic API"],
   "links": {
-    "landing": "https://gardensync-e4e.pages.dev",
-    "play": "",
+    "landing": "https://gardensync-landing.pages.dev",
+    "play": "https://gardensync-e4e.pages.dev",
     "devlog": ""
   },
   "hero": {
     "gif": "",
-    "poster": "docs/screenshots/planner-hero.png",
-    "clip": ""
+    "poster": "site/media/hero.jpg",
+    "clip": "site/media/hero.mp4"
   },
   "credits": [
     { "what": "Weather data", "who": "Open-Meteo", "licence": "CC BY 4.0" },
