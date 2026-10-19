@@ -366,9 +366,6 @@ kitchen-garden practice. Weather from [Open-Meteo](https://open-meteo.com). AI f
 [Anthropic](https://www.anthropic.com). Fonts - Anton, Space Mono, Barlow Condensed  - 
 from Google Fonts.
 
-Intended for release under the **GNU Affero General Public License v3.0** - the
-`LICENSE` file has not been added to the repo yet (TODO: add the AGPL-3.0 text at the
-repo root). The ask doesn't change either way: if you improve it, share the
-improvements back.
+Code released under the **MIT License** (see `LICENSE`). Weather data, fonts and other third-party material keep their own terms. If you improve it, sharing the improvements back is welcome.
 
 **Let's grow food for our communities.**
