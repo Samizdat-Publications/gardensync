@@ -8,7 +8,7 @@ and pick, using frost dates worked out for your own town.**
 A garden bed planner for home gardeners anywhere. No account, no server: your garden lives in your
 browser, works offline, and travels as a file or a link.
 
-![Placing lettuce, carrots and beans into a new bed](docs/media/hero.gif)
+![A planted bed changing through the season, from June into fall](docs/media/hero.gif)
 
 **[Open GardenSync](https://gardensync-e4e.pages.dev/)** · [Landing page](https://gardensync-landing.pages.dev) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md)
 

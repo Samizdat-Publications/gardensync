@@ -22,8 +22,8 @@
   },
   "hero": {
     "gif": "docs/media/hero.gif",
-    "poster": "site/media/hero.jpg",
-    "clip": "site/media/hero.mp4"
+    "poster": "site/media/hub.jpg",
+    "clip": "site/media/hub.mp4"
   },
   "credits": [
     {

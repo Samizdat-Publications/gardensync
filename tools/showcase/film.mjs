@@ -25,14 +25,14 @@ rmSync(TMP, { recursive: true, force: true });
 
 const browser = await chromium.launch();
 
-async function session(record) {
+async function session(record, size = SIZE) {
   const context = await browser.newContext({
-    viewport: SIZE,
+    viewport: size,
     deviceScaleFactor: 1,
     colorScheme: 'light',
     reducedMotion: 'no-preference',
     serviceWorkers: 'block',
-    ...(record ? { recordVideo: { dir: TMP, size: SIZE } } : {}),
+    ...(record ? { recordVideo: { dir: TMP, size } } : {}),
   });
   const page = await context.newPage();
   await page.clock.install({ time: DAY });
@@ -53,17 +53,42 @@ async function startGarden(page, starter) {
 
 const pause = (page, ms) => page.waitForTimeout(ms);
 
-/** Records one shot, then cuts it to an mp4 loop and a poster. */
-async function shot(name, script, { trimStart = 0.6 } = {}) {
-  const { context, page } = await session(true);
-  await script(page);
+/**
+ * Records one shot, then cuts it to an mp4 loop and a poster. The script calls mark() where the
+ * footage should begin (setup before it is cut away) and may return a crop rectangle in page pixels,
+ * which is cut out and scaled to 1280x720. The poster is the frame at `posterAt` seconds into the
+ * cut, or its last frame.
+ */
+async function shot(name, script, { size = SIZE, posterAt } = {}) {
+  const { context, page } = await session(true, size);
+  const t0 = Date.now();
+  let start = 0.6;
+  const crop = await script(page, () => (start = (Date.now() - t0) / 1000));
   const video = page.video();
   await context.close();
   const raw = await video.path();
   const mp4 = join(OUT, `${name}.mp4`);
-  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-ss', String(trimStart), '-i', raw, '-an', '-c:v', 'libx264', '-preset', 'slow', '-crf', '26', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', '-vf', 'fps=30', mp4]);
-  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-sseof', '-0.5', '-i', mp4, '-frames:v', '1', '-q:v', '3', join(OUT, `${name}.jpg`)]);
+  const vf = crop ? `crop=${crop.w}:${crop.h}:${crop.x}:${crop.y},scale=1280:720:flags=lanczos,fps=30` : 'fps=30';
+  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-ss', start.toFixed(2), '-i', raw, '-an', '-c:v', 'libx264', '-preset', 'slow', '-crf', '24', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', '-vf', vf, mp4]);
+  const at = posterAt === undefined ? ['-sseof', '-0.5'] : ['-ss', String(posterAt)];
+  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...at, '-i', mp4, '-frames:v', '1', '-q:v', '3', join(OUT, `${name}.jpg`)]);
   console.log('shot', name);
+}
+
+/** Moves the season slider from its current day by `days`, smoothly, over about `ms`. */
+async function scrubSeason(page, days, ms) {
+  const slider = page.locator('.season input[type="range"]').first();
+  const from = Number(await slider.inputValue());
+  const steps = Math.round(ms / 60);
+  for (let i = 1; i <= steps; i++) {
+    const v = Math.round(from + (days * i) / steps);
+    await slider.evaluate((el, val) => {
+      const input = el;
+      input.value = String(val);
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    }, v);
+    await page.waitForTimeout(60);
+  }
 }
 
 /** A full-size still of the current screen. */
@@ -76,20 +101,48 @@ async function still(name, setup, dirs = [OUT, DOCS]) {
   console.log('still', name);
 }
 
-// 1. Hero: first run to a planted bed.
-await shot('hero', async (page) => {
-  await page.goto(BASE);
-  await pause(page, 900);
-  await page.getByRole('button', { name: 'I know my frost dates' }).click();
-  await pause(page, 500);
-  await page.getByLabel('Typical last spring frost').fill('2027-04-20');
-  await page.getByLabel('Typical first fall frost').fill('2027-10-20');
-  await page.getByRole('button', { name: 'Use these dates' }).click();
-  await pause(page, 1600);
-  await page.getByLabel(/Name your garden/).fill('Back garden');
-  await page.getByRole('button', { name: 'Start planning' }).click();
-  await pause(page, 2600);
-});
+// 1. Hero: a planted bed from the first frame, then the season slider runs it from late May into
+// fall, so the bed fills, changes and empties through the year. Also the hub's card clip (the hub
+// shows its first 8 seconds).
+await shot(
+  'hero',
+  async (page, mark) => {
+    await startGarden(page);
+    // Open on Jun 1, when the whole bed is planted.
+    await scrubSeason(page, 12, 100);
+    await pause(page, 600);
+    mark();
+    await pause(page, 1300);
+    await scrubSeason(page, 120, 6200);
+    await pause(page, 1400);
+  },
+  { posterAt: 0.4 },
+);
+
+// 1b. The hub's close-up: the same run cropped to the bed, so it reads at 640 px on a card.
+await shot(
+  'hub',
+  async (page, mark) => {
+    await startGarden(page);
+    await pause(page, 600);
+    const box = await page.getByRole('application', { name: /Plan of/ }).boundingBox();
+    const bed = await page.locator('.bed-soil').first().boundingBox();
+    // A 16:9 window around the bed, inside the plan.
+    const h = Math.min(box.height, (box.width * 9) / 16, bed.height * 1.9);
+    const w = (h * 16) / 9;
+    const cx = Math.min(Math.max(bed.x + bed.width / 2, box.x + w / 2), box.x + box.width - w / 2);
+    const cy = Math.min(Math.max(bed.y + bed.height / 2, box.y + h / 2), box.y + box.height - h / 2);
+    await scrubSeason(page, 12, 100);
+    await pause(page, 600);
+    mark();
+    await pause(page, 1000);
+    await scrubSeason(page, 120, 6000);
+    await pause(page, 1200);
+    const even = (n) => Math.round(n / 2) * 2;
+    return { w: even(w), h: even(h), x: even(cx - w / 2), y: even(cy - h / 2) };
+  },
+  { size: { width: 1920, height: 1080 }, posterAt: 0.4 },
+);
 
 // 2. Placing: pick lettuce, tap two squares, see the dates it gets.
 await shot('plan', async (page) => {
@@ -183,6 +236,6 @@ await browser.close();
 rmSync(TMP, { recursive: true, force: true });
 
 // Social card 1200x630 and a README GIF from the hero clip.
-execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', join(OUT, 'shot-garden.jpg'), '-vf', 'scale=1200:-1,crop=1200:630:0:0', '-q:v', '3', join(OUT, 'og.jpg')]);
-execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', join(OUT, 'plan.mp4'), '-vf', 'fps=12,scale=640:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=96[p];[b][p]paletteuse=dither=bayer', join(DOCS, 'hero.gif')]);
+execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', join(OUT, 'hub.jpg'), '-vf', 'scale=1200:-1,crop=1200:630:0:(ih-630)/2', '-q:v', '3', join(OUT, 'og.jpg')]);
+execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-t', '8', '-i', join(OUT, 'hub.mp4'), '-vf', 'fps=12,scale=640:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=96[p];[b][p]paletteuse=dither=bayer', join(DOCS, 'hero.gif')]);
 console.log('done:', readdirSync(OUT).join(', '));
