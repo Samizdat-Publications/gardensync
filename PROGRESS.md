@@ -5,14 +5,13 @@ Things only Stewart can do: [docs/v8/NEEDS_STEWART.md](docs/v8/NEEDS_STEWART.md)
 
 ## Current phase
 
-**Released, one step left.** 8.0 is live at https://gardensync-e4e.pages.dev and the new landing
-page at https://gardensync-landing.pages.dev. The old repo is now the private
-`Samizdat-Publications/gardensync-v7-archive` (local remote `archive`). The new public
-`Samizdat-Publications/gardensync` does not exist yet: creating it was blocked by the session's
-permission check, so Stewart runs the publish command in HANDOFF.md. It pushes branch
-`release-8.0` (one clean commit with the 8.0 tree) as `master` and tags v8.0.0. After that: topics,
-the GitHub release, a look at the rendered README, CI on master, and the kit's publish-check on the
-new repo. Then 8.0.x polish from review/LEDGER.md item 82.
+**8.0 released (2026-10-28).** Live at https://gardensync-e4e.pages.dev; landing page at
+https://gardensync-landing.pages.dev; public repo https://github.com/Samizdat-Publications/gardensync
+(clean history from one 8.0 commit, release v8.0.0, topics set, CI green, publish-check clean). The
+old history is the private `gardensync-v7-archive` (local remote `archive`, branch `v8`) plus a
+verified bundle in `C:\Users\stewa\Documents\Claude\_archives\`. Work continues on `master`
+(remote `origin`). Hub media proposal: `C:\Users\stewa\Documents\Claude\Github Hub\proposals\gardensync.md`;
+showcase.json already points at the hub cut. Next: 8.0.x polish from review/LEDGER.md item 82.
 
 ## Done
 
