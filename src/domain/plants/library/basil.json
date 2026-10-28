@@ -1,0 +1,39 @@
+{
+  "id": "basil",
+  "name": "Basil",
+  "latin": "Ocimum basilicum",
+  "category": "herb",
+  "family": "Lamiaceae",
+  "lifecycle": "annual",
+  "frost": "tender",
+  "temp": { "minC": 16, "maxC": 30 },
+  "soilMinC": 16,
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 4 },
+  "spacingCm": { "inRow": 20, "betweenRows": 45 },
+  "container": { "minLitres": 6, "perVessel": 1 },
+  "canopy": "mid",
+  "shadeTolerant": false,
+  "maturity": { "days": 68, "from": "sow" },
+  "methods": {
+    "indoor": { "ageWeeks": [4, 6] },
+    "transplant": { "weeks": [1, 3] },
+    "direct": { "weeks": [2, 4] }
+  },
+  "harvest": { "type": "cut-and-come-again", "windowDays": 90 },
+  "purpose": ["food"],
+  "yield": { "amount": 200, "unit": "g", "per": "plant" },
+  "glyph": { "form": "sprig", "color": "#3d9a4b" },
+  "notes": {
+    "sowing": "Start seeds indoors 4 to 6 weeks before planting out, {cm:0.6} deep, at about {c:21}. Plant out once nights stay above {c:10} and the soil is at least {c:16}, usually 1 to 3 weeks after your last frost. Sow directly only where early summer is reliably warm.",
+    "care": "Grow in full sun with even moisture, watering at the base in the morning. Pinch shoot tips to make plants bushy and remove flower buds as they form to keep leaves coming. Nights near {c:10} can blacken the leaves.",
+    "harvest": "Start picking leaves and shoot tips a few weeks after planting out, leaving several pairs of leaves on each stem. The first fall frost kills basil, so cut whole plants just before it."
+  },
+  "sources": [
+    { "title": "Royal Horticultural Society: How to grow basil", "url": "https://www.rhs.org.uk/herbs/basil/grow-your-own" },
+    { "title": "Clemson Cooperative Extension Home and Garden Information Center: Basil", "url": "https://hgic.clemson.edu/factsheet/basil/" },
+    { "title": "University of Illinois Extension: Basil", "url": "https://extension.illinois.edu/herbs/basil" },
+    { "title": "Johnny's Selected Seeds: Genovese Basil Seed", "url": "https://www.johnnyseeds.com/herbs/basil/genovese-basil/genovese-basil-seed-911.html" }
+  ]
+}

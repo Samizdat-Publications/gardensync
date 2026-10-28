@@ -1,0 +1,39 @@
+{
+  "id": "winter-squash",
+  "name": "Winter squash",
+  "latin": "Cucurbita maxima, C. moschata, C. pepo",
+  "category": "vegetable",
+  "family": "Cucurbitaceae",
+  "lifecycle": "annual",
+  "frost": "tender",
+  "temp": { "minC": 16, "maxC": 29 },
+  "fruitSetMaxC": 35,
+  "soilMinC": 18,
+  "sun": "full",
+  "water": "medium",
+  "density": { "squares": [3, 3] },
+  "spacingCm": { "inRow": 90, "betweenRows": 180 },
+  "container": null,
+  "canopy": "mid",
+  "shadeTolerant": false,
+  "maturity": { "days": 95, "from": "sow" },
+  "methods": {
+    "indoor": { "ageWeeks": [3, 4] },
+    "transplant": { "weeks": [1, 3] },
+    "direct": { "weeks": [1, 3] }
+  },
+  "harvest": { "type": "once", "windowDays": 21 },
+  "yield": { "amount": 3, "unit": "count", "per": "plant" },
+  "glyph": { "form": "vine", "color": "#c98a2e" },
+  "notes": {
+    "sowing": "Sow outdoors {cm:2.5} deep, two or three seeds per spot, 1 to 3 weeks after your last frost once the soil is at least {c:18}. Or sow indoors, one seed per pot at least {cm:5} wide, about 4 weeks before planting out.",
+    "care": "Trailing types need about {cm:150} between plants; small-fruited types such as acorn can be trellised. Water about {cm:2.5} a week at the base. Set ripening fruit on a board or tile to keep it off damp soil.",
+    "harvest": "Harvest when the rind is hard and the stem is drying, always before a hard freeze. Cut with {cm:10} of stem, cure in sun or at about {c:27} for 1 to 2 weeks, then store at {c:10} to {c:15}."
+  },
+  "sources": [
+    { "title": "University of Minnesota Extension: Growing pumpkins and winter squash in home gardens", "url": "https://extension.umn.edu/vegetables/growing-pumpkins-and-winter-squash-home-gardens" },
+    { "title": "Royal Horticultural Society: How to grow squashes", "url": "https://www.rhs.org.uk/vegetables/squash/grow-your-own" },
+    { "title": "Colorado State University Extension: Vegetable Planting Guide", "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/" },
+    { "title": "Johnny's Selected Seeds: Waltham Butternut Squash Seed", "url": "https://www.johnnyseeds.com/vegetables/squash/winter-squash/waltham-butternut-butternut-squash-seed-671.html" }
+  ]
+}

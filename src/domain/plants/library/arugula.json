@@ -1,0 +1,84 @@
+{
+  "id": "arugula",
+  "name": "Arugula",
+  "latin": "Eruca vesicaria subsp. sativa",
+  "category": "vegetable",
+  "family": "Brassicaceae",
+  "lifecycle": "annual",
+  "frost": "half-hardy",
+  "temp": {
+    "minC": 4,
+    "maxC": 21
+  },
+  "soilMinC": 4,
+  "sun": "full",
+  "water": "medium",
+  "density": {
+    "perSquare": 4
+  },
+  "spacingCm": {
+    "inRow": 15,
+    "betweenRows": 20
+  },
+  "container": {
+    "minLitres": 11,
+    "perVessel": 4
+  },
+  "canopy": "low",
+  "shadeTolerant": true,
+  "maturity": {
+    "days": 35,
+    "from": "sow"
+  },
+  "methods": {
+    "direct": {
+      "weeks": [
+        -4,
+        0
+      ]
+    }
+  },
+  "fall": {
+    "windowWeeks": 4
+  },
+  "succession": {
+    "everyDays": 14
+  },
+  "harvest": {
+    "type": "cut-and-come-again",
+    "windowDays": 30
+  },
+  "yield": {
+    "amount": 150,
+    "unit": "g",
+    "per": "square"
+  },
+  "glyph": {
+    "form": "rosette",
+    "color": "#5f8f2f"
+  },
+  "notes": {
+    "sowing": "Sow {cm:0.6} deep as soon as the soil can be worked; seed sprouts in cold soil from about {c:4}. Sow small batches every 2 weeks, but skip spring sowings that would mature in summer heat. Resume in late summer until about 4 weeks before your first fall frost.",
+    "care": "Heat, long days and dry soil make arugula bolt and turn very hot. Keep it watered, thin crowded rows, and give light shade in warm spells.",
+    "harvest": "Start picking about 4 weeks after sowing. Cut leaves {cm:2.5} to {cm:5} above the crown so the plant regrows, and pull plants once they flower."
+  },
+  "sources": [
+    {
+      "title": "Cornell Garden-Based Learning: Arugula growing guide",
+      "url": "https://gardening.cals.cornell.edu/garden-guidance/foodgarden/vegetable-growing-guides/arugula/"
+    },
+    {
+      "title": "Royal Horticultural Society: How to grow rocket",
+      "url": "https://www.rhs.org.uk/vegetables/rocket/grow-your-own"
+    },
+    {
+      "title": "SARE Northeast Crop Production and Harvest Manual: Arugula",
+      "url": "https://www.sare.org/publications/northeast-crop-production-harvest-manual/arugula/"
+    },
+    {
+      "title": "UC Cooperative Extension Placer and Nevada Counties: Vegetable Characteristics (optimum temperatures for different vegetables)",
+      "url": "https://projects.sare.org/wp-content/uploads/944820osa-43c-vegetable-characteristics.pdf"
+    },
+    { "title": "UF/IFAS Extension Leon County: Arugula, Planting and Care", "url": "https://blogs.ifas.ufl.edu/leonco/2023/11/09/arugula-planting-and-care/" }
+  ]
+}

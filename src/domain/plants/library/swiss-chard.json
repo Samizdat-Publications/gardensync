@@ -1,0 +1,94 @@
+{
+  "id": "swiss-chard",
+  "name": "Swiss chard",
+  "latin": "Beta vulgaris subsp. vulgaris (Cicla Group)",
+  "category": "vegetable",
+  "family": "Amaranthaceae",
+  "lifecycle": "annual",
+  "frost": "half-hardy",
+  "temp": {
+    "minC": 4,
+    "maxC": 24
+  },
+  "soilMinC": 4,
+  "sun": "full",
+  "water": "medium",
+  "density": {
+    "perSquare": 4
+  },
+  "spacingCm": {
+    "inRow": 20,
+    "betweenRows": 45
+  },
+  "container": {
+    "minLitres": 25,
+    "perVessel": 2
+  },
+  "canopy": "mid",
+  "shadeTolerant": true,
+  "maturity": {
+    "days": 55,
+    "from": "sow"
+  },
+  "methods": {
+    "indoor": {
+      "ageWeeks": [
+        4,
+        6
+      ]
+    },
+    "transplant": {
+      "weeks": [
+        0,
+        2
+      ]
+    },
+    "direct": {
+      "weeks": [
+        -2,
+        1
+      ]
+    }
+  },
+  "fall": {
+    "windowWeeks": 3
+  },
+  "harvest": {
+    "type": "continuous",
+    "windowDays": 120,
+    "untilFrost": true
+  },
+  "yield": {
+    "amount": 250,
+    "unit": "g",
+    "per": "plant"
+  },
+  "glyph": { "form": "stalk", "color": "#d9483b" },
+  "notes": {
+    "sowing": "Sow {cm:1.3} deep from 2 weeks before your last frost, or start indoors 4 to 6 weeks ahead and plant out around the last frost. Each seed is a cluster that sends up several seedlings, so thin to the strongest.",
+    "care": "Chard does not bolt from heat or long days, but growth slows in midsummer and picks up again when it cools. Water through dry spells. A cold snap soon after planting out can make young plants bolt, so harden them off well.",
+    "harvest": "Pick outer leaves at the base of the stalk and leave the center to keep producing. Plants stand light frosts and crop until a hard freeze."
+  },
+  "sources": [
+    {
+      "title": "University of Minnesota Extension: Growing spinach and Swiss chard in home gardens",
+      "url": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-spinach-and-swiss-chard"
+    },
+    {
+      "title": "Royal Horticultural Society: How to grow chard",
+      "url": "https://www.rhs.org.uk/vegetables/chard/grow-your-own"
+    },
+    {
+      "title": "Utah State University Extension: How to Grow Swiss Chard in Your Garden",
+      "url": "https://extension.usu.edu/yardandgarden/research/swiss-chard-in-the-garden"
+    },
+    {
+      "title": "Colorado State University Extension: Vegetable Planting Guide",
+      "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/"
+    },
+    {
+      "title": "UC Cooperative Extension Placer and Nevada Counties: Vegetable Characteristics (optimum temperatures for different vegetables)",
+      "url": "https://projects.sare.org/wp-content/uploads/944820osa-43c-vegetable-characteristics.pdf"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "calendula",
+  "name": "Calendula",
+  "latin": "Calendula officinalis",
+  "category": "flower",
+  "family": "Asteraceae",
+  "lifecycle": "annual",
+  "frost": "half-hardy",
+  "temp": { "minC": 7, "maxC": 24 },
+  "soilMinC": 10,
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 2 },
+  "spacingCm": { "inRow": 25, "betweenRows": 30 },
+  "container": { "minLitres": 8, "perVessel": 1 },
+  "canopy": "mid",
+  "shadeTolerant": true,
+  "maturity": { "days": 55, "from": "sow" },
+  "methods": {
+    "indoor": { "ageWeeks": [6, 8] },
+    "transplant": { "weeks": [0, 2] },
+    "direct": { "weeks": [-2, 0] }
+  },
+  "harvest": { "type": "continuous", "windowDays": 100 },
+  "purpose": ["display", "cut-flowers", "food"],
+  "yield": { "amount": 20, "unit": "count", "per": "plant" },
+  "glyph": { "form": "flower", "color": "#f5a623" },
+  "notes": {
+    "sowing": "Sow outdoors from 2 weeks before your last frost up to the frost date, {cm:0.6} to {cm:1} deep, and cover the seed. For earlier flowers, start indoors 6 to 8 weeks before your last frost. Seedlings appear in 1 to 2 weeks.",
+    "care": "Grows in sun or part shade in average, well-drained soil; do not overfeed. Flowering slows or stops in hot weather and picks up again when it cools. Plants take frost down to about {c:-4}. Deadhead to keep flowers coming and to limit self-sowing.",
+    "harvest": "First flowers open about 8 weeks from sowing. Pick at full bloom every few days; new flowers follow in about two weeks. The petals are edible."
+  },
+  "sources": [
+    { "title": "Utah State University Extension: How to Grow Calendula in Your Garden", "url": "https://extension.usu.edu/yardandgarden/research/calendula-in-the-garden" },
+    { "title": "University of Wisconsin-Madison Extension: Calendula, Calendula officinalis", "url": "https://hort.extension.wisc.edu/articles/calendula-calendula-officinalis/" },
+    { "title": "Johnny's Selected Seeds: Alpha Organic Calendula Seed", "url": "https://www.johnnyseeds.com/herbs/calendula/alpha-organic-calendula-seed-2935.html" }
+  ]
+}

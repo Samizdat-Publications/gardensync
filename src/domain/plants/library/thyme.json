@@ -1,0 +1,37 @@
+{
+  "id": "thyme",
+  "name": "Thyme",
+  "latin": "Thymus vulgaris",
+  "category": "herb",
+  "family": "Lamiaceae",
+  "lifecycle": "perennial",
+  "frost": "hardy",
+  "temp": { "minC": 10, "maxC": 27 },
+  "sun": "full",
+  "water": "low",
+  "density": { "perSquare": 1 },
+  "spacingCm": { "inRow": 25, "betweenRows": 40 },
+  "container": { "minLitres": 2, "perVessel": 1 },
+  "canopy": "low",
+  "shadeTolerant": false,
+  "maturity": { "days": 60, "from": "transplant" },
+  "methods": {
+    "indoor": { "ageWeeks": [6, 8] },
+    "transplant": { "weeks": [-2, 2] }
+  },
+  "harvest": { "type": "cut-and-come-again", "windowDays": 180 },
+  "winterMinC": -15,
+  "purpose": ["food"],
+  "yield": { "amount": 50, "unit": "g", "per": "plant" },
+  "glyph": { "form": "sprig", "color": "#8a9a6b" },
+  "notes": {
+    "sowing": "Start seed indoors in spring at {c:15} to {c:20}, 6 to 8 weeks before planting out, or buy plants; divisions and cuttings are easier than seed. Plant out from 2 weeks before to 2 weeks after your last frost, {cm:20} to {cm:30} apart.",
+    "care": "Full sun and light, free-draining soil; soil that stays wet in winter is the main cause of losses. Water sparingly. Trim after flowering to keep plants compact, and replace them once they turn woody and straggly, usually after several years.",
+    "harvest": "Snip young shoots as needed; spring and summer growth has the best flavor, and evergreen types can be picked year round. Cut stems for drying just before flowering."
+  },
+  "sources": [
+    { "title": "Royal Horticultural Society: How to grow thyme", "url": "https://www.rhs.org.uk/herbs/thyme/grow-your-own" },
+    { "title": "University of Illinois Extension: Thyme", "url": "https://extension.illinois.edu/herbs/thyme" },
+    { "title": "Royal Horticultural Society: Thymus vulgaris, common thyme (plant profile)", "url": "https://www.rhs.org.uk/plants/18213/thymus-vulgaris/details" }
+  ]
+}

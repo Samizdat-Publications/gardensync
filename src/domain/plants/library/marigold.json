@@ -1,0 +1,38 @@
+{
+  "id": "marigold",
+  "name": "French marigold",
+  "latin": "Tagetes patula",
+  "category": "flower",
+  "family": "Asteraceae",
+  "lifecycle": "annual",
+  "frost": "tender",
+  "temp": { "minC": 16, "maxC": 30 },
+  "soilMinC": 18,
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 4 },
+  "spacingCm": { "inRow": 20, "betweenRows": 30 },
+  "container": { "minLitres": 4, "perVessel": 1 },
+  "canopy": "low",
+  "shadeTolerant": false,
+  "maturity": { "days": 55, "from": "sow" },
+  "methods": {
+    "indoor": { "ageWeeks": [4, 6] },
+    "transplant": { "weeks": [0, 3] },
+    "direct": { "weeks": [1, 3] }
+  },
+  "harvest": { "type": "continuous", "windowDays": 100, "untilFrost": true },
+  "purpose": ["display", "cut-flowers", "pest-control"],
+  "yield": { "amount": 30, "unit": "count", "per": "plant" },
+  "glyph": { "form": "flower", "color": "#f28c1c" },
+  "notes": {
+    "sowing": "Start seeds indoors at {c:21} to {c:24}, 4 to 6 weeks before your last frost, {cm:0.6} deep; seedlings appear in about a week. Plant out after the last frost, or sow directly once the soil is above {c:18}.",
+    "care": "Grow in full sun, {cm:20} to {cm:25} apart, and deadhead faded flowers to keep blooms coming. Grown as a dense cover crop, some varieties reduce root-knot nematodes in the soil, but single plants dotted among vegetables do not protect their neighbors.",
+    "harvest": "Flowers open about 7 to 8 weeks from sowing and continue until a hard frost. Cut stems for small bouquets as the flowers open."
+  },
+  "sources": [
+    { "title": "Clemson Cooperative Extension Home and Garden Information Center: How to Grow and Care for Marigolds", "url": "https://hgic.clemson.edu/factsheet/marigold/" },
+    { "title": "University of Wisconsin-Madison Extension: Marigolds", "url": "https://hort.extension.wisc.edu/articles/marigolds/" },
+    { "title": "Johnny's Selected Seeds: Bonanza Harmony Marigold Seed", "url": "https://www.johnnyseeds.com/flowers/marigold/french-marigolds/bonanza-harmony-marigold-seed-5209.html" }
+  ]
+}

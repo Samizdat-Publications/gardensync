@@ -1,0 +1,95 @@
+{
+  "id": "cauliflower",
+  "name": "Cauliflower",
+  "latin": "Brassica oleracea var. botrytis",
+  "category": "vegetable",
+  "family": "Brassicaceae",
+  "lifecycle": "annual",
+  "frost": "half-hardy",
+  "temp": {
+    "minC": 7,
+    "maxC": 22
+  },
+  "soilMinC": 4,
+  "sun": "full",
+  "water": "high",
+  "density": {
+    "perSquare": 1
+  },
+  "spacingCm": {
+    "inRow": 45,
+    "betweenRows": 60
+  },
+  "container": {
+    "minLitres": 25,
+    "perVessel": 1
+  },
+  "canopy": "mid",
+  "shadeTolerant": false,
+  "maturity": {
+    "days": 60,
+    "from": "transplant"
+  },
+  "methods": {
+    "indoor": {
+      "ageWeeks": [
+        5,
+        7
+      ]
+    },
+    "transplant": {
+      "weeks": [
+        -2,
+        0
+      ]
+    }
+  },
+  "fall": {
+    "windowWeeks": 2
+  },
+  "harvest": {
+    "type": "once",
+    "windowDays": 7
+  },
+  "soilPh": [
+    6,
+    7
+  ],
+  "yield": {
+    "amount": 400,
+    "unit": "g",
+    "per": "plant"
+  },
+  "glyph": {
+    "form": "brassica",
+    "color": "#efe8d0"
+  },
+  "notes": {
+    "sowing": "Start indoors 5 to 7 weeks before planting out, {cm:1.3} deep at {c:12} to {c:22}. Plant out 1 to 2 weeks before your last frost, before seedlings get root-bound. Any check to growth gives small, early heads.",
+    "care": "Keep the soil evenly moist and the plants growing steadily. Heads form best when days average {c:10} to {c:21}. Once a head shows, tie the outer leaves over white types to keep the curd pale.",
+    "harvest": "Cut while the head is firm and tight, before it loosens or yellows. Heads go over within days, so check often."
+  },
+  "sources": [
+    {
+      "title": "University of Minnesota Extension: Growing cauliflower in home gardens",
+      "url": "https://extension.umn.edu/vegetables/growing-cauliflower"
+    },
+    {
+      "title": "Royal Horticultural Society: How to grow cauliflower",
+      "url": "https://www.rhs.org.uk/vegetables/cauliflower/grow-your-own"
+    },
+    {
+      "title": "Utah State University Extension: How to Grow Cauliflower in Your Garden",
+      "url": "https://extension.usu.edu/yardandgarden/research/cauliflower-in-the-garden"
+    },
+    {
+      "title": "Colorado State University Extension: Vegetable Planting Guide",
+      "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/"
+    },
+    {
+      "title": "UC Cooperative Extension Placer and Nevada Counties: Vegetable Characteristics (optimum temperatures for different vegetables)",
+      "url": "https://projects.sare.org/wp-content/uploads/944820osa-43c-vegetable-characteristics.pdf"
+    },
+    { "title": "Clemson Cooperative Extension Home and Garden Information Center: Cauliflower", "url": "https://hgic.clemson.edu/factsheet/cauliflower/" }
+  ]
+}

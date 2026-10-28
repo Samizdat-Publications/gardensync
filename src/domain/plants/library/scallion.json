@@ -1,0 +1,86 @@
+{
+  "id": "scallion",
+  "name": "Scallion",
+  "latin": "Allium fistulosum",
+  "category": "vegetable",
+  "family": "Alliaceae",
+  "lifecycle": "annual",
+  "frost": "hardy",
+  "temp": {
+    "minC": 7,
+    "maxC": 29
+  },
+  "soilMinC": 2,
+  "sun": "full",
+  "water": "medium",
+  "density": {
+    "perSquare": 16
+  },
+  "spacingCm": {
+    "inRow": 5,
+    "betweenRows": 20
+  },
+  "container": {
+    "minLitres": 8
+  },
+  "canopy": "low",
+  "shadeTolerant": true,
+  "maturity": {
+    "days": 60,
+    "from": "sow"
+  },
+  "methods": {
+    "direct": {
+      "weeks": [
+        -4,
+        2
+      ]
+    }
+  },
+  "fall": {
+    "windowWeeks": 4
+  },
+  "succession": {
+    "everyDays": 14
+  },
+  "harvest": {
+    "type": "cut-and-come-again",
+    "windowDays": 30
+  },
+  "yield": {
+    "amount": 200,
+    "unit": "g",
+    "per": "square"
+  },
+  "glyph": {
+    "form": "allium",
+    "color": "#8dc63f"
+  },
+  "notes": {
+    "sowing": "Sow thinly {cm:1} deep from 4 weeks before your last frost, in rows {cm:20} apart, and sow a short row every 2 weeks for a steady supply. Hardy types sown in late summer stand the winter for an early spring crop.",
+    "care": "Thin to about {cm:2.5} apart, as crowding invites downy mildew. Keep weeded and watered, since the thin leaves cannot shade out weeds. Bunching onions can be left as a clump and divided.",
+    "harvest": "Pull when about {cm:15} tall, around 2 months after sowing, or cut the leaves and let them regrow several times. Older plants have a stronger flavor."
+  },
+  "sources": [
+    {
+      "title": "Royal Horticultural Society: How to grow salad onions",
+      "url": "https://www.rhs.org.uk/vegetables/salad-onions/grow-your-own"
+    },
+    {
+      "title": "Oregon State University Extension: Onions (Bunching)",
+      "url": "https://extension.oregonstate.edu/imported-publication/onions-bunching"
+    },
+    {
+      "title": "Colorado State University Extension: Vegetable Planting Guide",
+      "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/"
+    },
+    {
+      "title": "University of Minnesota Extension: Planting vegetables in midsummer for fall harvest",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/planting-vegetables-midsummer-fall-harvest"
+    },
+    {
+      "title": "UC Cooperative Extension Placer and Nevada Counties: Vegetable Characteristics (optimum temperatures for different vegetables)",
+      "url": "https://projects.sare.org/wp-content/uploads/944820osa-43c-vegetable-characteristics.pdf"
+    }
+  ]
+}

@@ -1,0 +1,152 @@
+/* Design tokens for direction A, "Plot" (Claude Design canvas, artboard A-system).
+   Components use these variables only, never raw colours. The garden carries the colour (soil,
+   timber, crops); the interface stays quiet around it. Frost is always blue; friends and foes
+   differ in shape and line as well as hue. */
+
+@import '@fontsource-variable/bricolage-grotesque/opsz.css';
+@import '@fontsource-variable/atkinson-hyperlegible-next/wght.css';
+
+:root {
+  color-scheme: light;
+
+  /* Ground and surfaces */
+  --c-bg: #f3f4ef;
+  --c-panel: #ffffff;
+  --c-raised: #f8f9f5;
+  --c-ink: #1c231d;
+  --c-muted: #4d584e;
+  --c-line: #d8ddd2;
+  /* Borders of inputs and controls: at least 3:1 against panel. */
+  --c-control: #7e887a;
+
+  /* Action and states */
+  --c-accent: #2e7d46;
+  --c-accent-ink: #ffffff;
+  --c-accent-soft: #e1efe3;
+  --c-frost: #2f64c8;
+  --c-frost-soft: #dce6f7;
+  /* Frost-coloured text on frost-soft fills: 4.5:1 or better. */
+  --c-frost-ink: #234c99;
+  --c-frost-hatch: #c3d3f2;
+  --c-caution: #b4530b;
+  --c-caution-soft: #fbe7d6;
+  --c-friend: #2e7d46;
+  --c-foe: #c2560c;
+  --c-select: #1c231d;
+  --c-halo: #ffffff;
+  --c-focus: #1f5bcc;
+
+  /* The garden */
+  --c-paper: #edf0e7;
+  --c-grid: #d9dfcf;
+  --c-soil: #e7dcc9;
+  --c-soil-speck: #d3c3a9;
+  --c-soil-grid: rgba(70, 50, 30, 0.3);
+  --c-timber: #8e6b46;
+  --c-pot: #a85a36;
+  --c-bag: #4a4f45;
+  --c-glyph-edge: #2b2a24;
+  --c-stem: #3e8e41;
+
+  /* Type */
+  --font-display: 'Bricolage Grotesque Variable', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Atkinson Hyperlegible Next Variable', 'Segoe UI', system-ui, sans-serif;
+  --fs-xs: 0.8125rem; /* 13 */
+  --fs-sm: 0.875rem; /* 14 */
+  --fs-md: 0.9375rem; /* 15 */
+  --fs-lg: 1.0625rem; /* 17 */
+  --fs-xl: 1.375rem; /* 22 */
+  --fs-2xl: 2rem; /* 32 */
+  --fs-3xl: 2.375rem; /* 38 */
+  --fs-hero: clamp(2.5rem, 5vw, 3.75rem);
+
+  /* Space and shape */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --r-bed: 4px;
+  --r-control: 8px;
+  --r-panel: 12px;
+  --target: 44px;
+
+  /* Motion */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --t-fast: 120ms;
+  --t-med: 220ms;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --c-bg: #17130f;
+    --c-panel: #211c17;
+    --c-raised: #2a241d;
+    --c-ink: #eee9e0;
+    --c-muted: #bcb3a6;
+    --c-line: #3a332b;
+    --c-control: #8a8073;
+    --c-accent: #7dd38b;
+    --c-accent-ink: #10200f;
+    --c-accent-soft: #25361f;
+    --c-frost: #8db4ff;
+    --c-frost-soft: #1e283a;
+    --c-frost-ink: #b5cdff;
+    --c-frost-hatch: #2a3a57;
+    --c-caution: #f2a065;
+    --c-caution-soft: #3a2618;
+    --c-friend: #7dd38b;
+    --c-foe: #f2a065;
+    --c-select: #eee9e0;
+    --c-halo: #17130f;
+    --c-focus: #86aeff;
+    --c-paper: #1d1915;
+    --c-grid: #2d2720;
+    --c-soil: #3b3026;
+    --c-soil-speck: #2e251d;
+    --c-soil-grid: rgba(255, 255, 255, 0.14);
+    --c-timber: #7b6043;
+    --c-pot: #8e4e31;
+    --c-bag: #3a3e36;
+    --c-glyph-edge: #f3eee4;
+    --c-stem: #6fbf72;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --c-bg: #17130f;
+  --c-panel: #211c17;
+  --c-raised: #2a241d;
+  --c-ink: #eee9e0;
+  --c-muted: #bcb3a6;
+  --c-line: #3a332b;
+  --c-control: #8a8073;
+  --c-accent: #7dd38b;
+  --c-accent-ink: #10200f;
+  --c-accent-soft: #25361f;
+  --c-frost: #8db4ff;
+  --c-frost-soft: #1e283a;
+  --c-frost-ink: #b5cdff;
+  --c-frost-hatch: #2a3a57;
+  --c-caution: #f2a065;
+  --c-caution-soft: #3a2618;
+  --c-friend: #7dd38b;
+  --c-foe: #f2a065;
+  --c-select: #eee9e0;
+  --c-halo: #17130f;
+  --c-focus: #86aeff;
+  --c-paper: #1d1915;
+  --c-grid: #2d2720;
+  --c-soil: #3b3026;
+  --c-soil-speck: #2e251d;
+  --c-soil-grid: rgba(255, 255, 255, 0.14);
+  --c-timber: #7b6043;
+  --c-pot: #8e4e31;
+  --c-bag: #3a3e36;
+  --c-glyph-edge: #f3eee4;
+  --c-stem: #6fbf72;
+}

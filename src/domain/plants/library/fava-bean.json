@@ -1,0 +1,38 @@
+{
+  "id": "fava-bean",
+  "name": "Fava bean",
+  "latin": "Vicia faba",
+  "category": "vegetable",
+  "family": "Fabaceae",
+  "lifecycle": "annual",
+  "frost": "hardy",
+  "temp": { "minC": 7, "maxC": 20 },
+  "fruitSetMaxC": 27,
+  "soilMinC": 5,
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 2 },
+  "spacingCm": { "inRow": 20, "betweenRows": 45 },
+  "container": { "minLitres": 30, "perVessel": 4 },
+  "canopy": "mid",
+  "shadeTolerant": false,
+  "maturity": { "days": 85, "from": "sow" },
+  "methods": {
+    "direct": { "weeks": [-6, -2] }
+  },
+  "overwinter": { "plantWeeks": [-6, 0], "harvestWeeks": [2, 8] },
+  "harvest": { "type": "continuous", "windowDays": 21 },
+  "winterMinC": -10,
+  "yield": { "amount": 200, "unit": "g", "per": "plant" },
+  "glyph": { "form": "pod", "color": "#6f8f4e" },
+  "notes": {
+    "sowing": "Sow outdoors {cm:5} deep and {cm:15} to {cm:20} apart, 2 to 6 weeks before your last frost, as soon as the soil can be worked. Where winter lows stay above about {c:-12}, sow a hardy variety around your first fall frost for an earlier crop next spring.",
+    "care": "Stake tall plants or run string along the rows to stop them toppling. Pinch out the tips once the lowest pods form, which helps deter black bean aphids. Plants set few pods in hot weather, so sow early.",
+    "harvest": "Pick pods for shelling when the beans inside are plump but still green. Very young pods about {cm:5} long can be eaten whole. For dried beans, leave the pods to dry on the plant."
+  },
+  "sources": [
+    { "title": "Royal Horticultural Society: How to grow broad beans", "url": "https://www.rhs.org.uk/vegetables/broad-beans/grow-your-own" },
+    { "title": "Johnny's Selected Seeds: Growing Fava Beans From Seed", "url": "https://www.johnnyseeds.com/growers-library/vegetables/fava-bean/fava-bean-key-growing-information.html" },
+    { "title": "USDA NRCS Plant Guide: Fava Bean, Vicia faba", "url": "https://projects.sare.org/media/pdf/N/R/C/NRCSs-Fava-Plant-Guide.pdf" }
+  ]
+}

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GardenSync empty, error and offline states</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&amp;family=Atkinson+Hyperlegible+Next:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2E7D46}a:hover{color:#1F5C33}
+</style>
+</helmet>
+<div style="min-height: 900px; padding: 40px clamp(20px, 4vw, 56px); box-sizing: border-box; background: #F3F4EF; color: #1C231D; font-family: 'Atkinson Hyperlegible Next', 'Segoe UI', system-ui, sans-serif; font-size: 15px; line-height: 1.5; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr)); gap: 24px; align-content: start">
+
+<section aria-labelledby="e1" style="padding: 28px; border: 1px solid #D8DDD2; border-radius: 14px; background: #FFFFFF; display: flex; flex-direction: column; gap: 14px">
+<svg viewBox="0 0 220 120" aria-hidden="true" style="width: 220px; height: auto"><rect x="2" y="2" width="216" height="116" rx="8" fill="#EDF0E7"></rect><path d="M2 42 H218 M2 82 H218 M56 2 V118 M110 2 V118 M164 2 V118" stroke="#D9DFCF"></path><rect x="58" y="44" width="104" height="36" rx="3" fill="none" stroke="#2E7D46" stroke-width="2.5" stroke-dasharray="7 5"></rect></svg>
+<h2 id="e1" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px">Draw your first bed</h2>
+<p style="margin: 0; color: #4D584E">Drag on the grid to mark out a raised bed, or add a pot. Then pick plants to fill the squares.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px"><button style="min-height: 46px; padding: 0 16px; border: 0; border-radius: 8px; background: #2E7D46; color: #FFFFFF; font: inherit; font-weight: 700">Add a 4 by 8 bed</button><button style="min-height: 46px; padding: 0 16px; border: 1px solid #D8DDD2; border-radius: 8px; background: #FFFFFF; font: inherit">Add a pot</button></div>
+<span style="font-size: 13px; color: #4D584E">Empty garden</span>
+</section>
+
+<section aria-labelledby="e2" style="padding: 28px; border: 1px solid #D8DDD2; border-radius: 14px; background: #FFFFFF; display: flex; flex-direction: column; gap: 14px">
+<h2 id="e2" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px">Nothing to do this week</h2>
+<p style="margin: 0; color: #4D584E">The next job is on Feb 17: start tomato seeds indoors. Winter is a good time to plan next year's beds.</p>
+<a href="A-calendar.dc.html" style="font-weight: 700">Look at the year ahead</a>
+<span style="font-size: 13px; color: #4D584E">This week, quiet</span>
+</section>
+
+<section aria-labelledby="e3" style="padding: 28px; border: 2px solid #C2560C; border-radius: 14px; background: #FFFFFF; display: flex; flex-direction: column; gap: 14px">
+<h2 id="e3" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px">Weather records did not load</h2>
+<p style="margin: 0">The weather archive did not answer, so frost dates for Portland are not worked out yet. Your garden is safe and nothing was changed.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px"><button style="min-height: 46px; padding: 0 16px; border: 0; border-radius: 8px; background: #1C231D; color: #FFFFFF; font: inherit; font-weight: 700">Try again</button><button style="min-height: 46px; padding: 0 16px; border: 1px solid #D8DDD2; border-radius: 8px; background: #FFFFFF; font: inherit">Type my frost dates instead</button></div>
+<span style="font-size: 13px; color: #4D584E">Location lookup failed</span>
+</section>
+
+<section aria-labelledby="e4" style="padding: 28px; border: 1px solid #D8DDD2; border-radius: 14px; background: #FFFFFF; display: flex; flex-direction: column; gap: 14px">
+<div role="status" style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; background: #F1F2EC">
+<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M2 7 Q10 0 18 7 M5 10.5 Q10 6 15 10.5 M8 14 Q10 12.5 12 14" stroke="#4D584E" stroke-width="1.7" fill="none" stroke-linecap="round"></path><path d="M3 3 L17 17" stroke="#C2560C" stroke-width="1.8" stroke-linecap="round"></path></svg>
+<span><strong>Offline.</strong> Everything still works; the frost forecast comes back when you reconnect.</span>
+</div>
+<h2 id="e4" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px">Your 7.x garden is here</h2>
+<p style="margin: 0">GardenSync found a garden saved by the older version in this browser: 4 beds and 212 plants, 3 of them not in the new library. They will come across as your own plants.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px"><button style="min-height: 46px; padding: 0 16px; border: 0; border-radius: 8px; background: #2E7D46; color: #FFFFFF; font: inherit; font-weight: 700">Bring it across</button><button style="min-height: 46px; padding: 0 16px; border: 1px solid #D8DDD2; border-radius: 8px; background: #FFFFFF; font: inherit">Download the old data</button></div>
+<span style="font-size: 13px; color: #4D584E">Offline banner, and importing an old garden</span>
+</section>
+
+<section aria-labelledby="e5" style="padding: 28px; border: 1px solid #D8DDD2; border-radius: 14px; background: #FFFFFF; display: flex; flex-direction: column; gap: 14px">
+<h2 id="e5" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px">Not a good fit for this square</h2>
+<p style="margin: 0">Squash needs 3 by 3 squares and only 2 by 3 are free here. Move it to Bed 2, or plant it in a big pot of 60 litres or more.</p>
+<span style="font-size: 13px; color: #4D584E">Placement conflict</span>
+</section>
+
+<section aria-labelledby="e6" style="padding: 28px; border: 1px solid #D8DDD2; border-radius: 14px; background: #FFFFFF; display: flex; flex-direction: column; gap: 14px">
+<h2 id="e6" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px">Too warm for peas here</h2>
+<p style="margin: 0">In Singapore the days stay above the range peas grow in all year, so GardenSync has no dates to give. Okra and sweet potato like the heat and do have dates here.</p>
+<span style="font-size: 13px; color: #4D584E">No window in this climate</span>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

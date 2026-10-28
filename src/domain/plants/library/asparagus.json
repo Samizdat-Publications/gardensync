@@ -1,0 +1,34 @@
+{
+  "id": "asparagus",
+  "name": "Asparagus",
+  "latin": "Asparagus officinalis",
+  "category": "vegetable",
+  "family": "Asparagaceae",
+  "lifecycle": "perennial",
+  "frost": "hardy",
+  "temp": { "minC": 10, "maxC": 24 },
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 1 },
+  "spacingCm": { "inRow": 30, "betweenRows": 90 },
+  "container": { "minLitres": 20, "perVessel": 1 },
+  "canopy": "tall",
+  "shadeTolerant": false,
+  "maturity": { "days": 730, "from": "transplant" },
+  "methods": {
+    "plant": { "weeks": [-4, 2], "what": "dormant crowns" }
+  },
+  "harvest": { "type": "continuous", "windowDays": 56 },
+  "yield": { "amount": 10, "unit": "count", "per": "plant" },
+  "perennial": { "firstHarvestYear": 3, "harvestWeeks": [-2, 6], "lifespanYears": 15 },
+  "glyph": { "form": "stalk", "color": "#7d9a3c" },
+  "notes": {
+    "sowing": "Plant dormant crowns in early spring, from a few weeks before to just after your last frost. Set them {cm:30} apart in a trench {cm:15} to {cm:20} deep, cover with {cm:5} of soil, and fill the trench gradually as the shoots grow.",
+    "care": "Keep the bed weeded and mulched, as young asparagus competes poorly. Let the ferns grow all summer to feed the crowns and cut them down once they yellow in fall. Prefers soil pH 6.5 to 7.0. Frost after spears emerge can damage them.",
+    "harvest": "Cut nothing until the third season, then cut lightly for 2 to 4 weeks. From the fourth season, cut for 6 to 8 weeks. Snap or cut spears at {cm:15} to {cm:20} long, then stop and let the rest grow into ferns."
+  },
+  "sources": [
+    { "title": "University of Minnesota Extension: Growing asparagus in home gardens", "url": "https://extension.umn.edu/vegetables/growing-asparagus" },
+    { "title": "Royal Horticultural Society: How to grow asparagus", "url": "https://www.rhs.org.uk/vegetables/asparagus/grow-your-own" }
+  ]
+}

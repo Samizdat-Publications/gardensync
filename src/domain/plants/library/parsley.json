@@ -1,0 +1,40 @@
+{
+  "id": "parsley",
+  "name": "Parsley",
+  "latin": "Petroselinum crispum",
+  "category": "herb",
+  "family": "Apiaceae",
+  "lifecycle": "annual",
+  "frost": "hardy",
+  "temp": { "minC": 7, "maxC": 24 },
+  "soilMinC": 10,
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 4 },
+  "spacingCm": { "inRow": 20, "betweenRows": 30 },
+  "container": { "minLitres": 12 },
+  "canopy": "mid",
+  "shadeTolerant": true,
+  "maturity": { "days": 75, "from": "sow" },
+  "methods": {
+    "indoor": { "ageWeeks": [6, 8] },
+    "transplant": { "weeks": [-2, 2] },
+    "direct": { "weeks": [-2, 4] }
+  },
+  "fall": { "windowWeeks": 4 },
+  "harvest": { "type": "cut-and-come-again", "windowDays": 120 },
+  "purpose": ["food"],
+  "yield": { "amount": 150, "unit": "g", "per": "plant" },
+  "glyph": { "form": "sprig", "color": "#2a7d34" },
+  "notes": {
+    "sowing": "Soak seed overnight, then sow {cm:0.6} to {cm:1} deep. Start indoors 6 to 8 weeks before planting out, or sow outdoors from about 2 weeks before your last frost. Germination is slow: about 4 weeks at {c:10}, and about 2 weeks at {c:20} or warmer.",
+    "care": "Thin or plant {cm:20} apart in sun or part shade and keep the soil evenly moist. Parsley is a biennial: plants kept over winter flower the next spring and their leaves turn tough and bitter, so sow fresh each year.",
+    "harvest": "Begin cutting when plants have several full stems, about 10 weeks from sowing. Cut outer stems near the base and leave the center to keep growing. Plants take light frost and keep cropping into fall."
+  },
+  "sources": [
+    { "title": "Royal Horticultural Society: How to grow parsley", "url": "https://www.rhs.org.uk/herbs/parsley/grow-your-own" },
+    { "title": "University of Illinois Extension: Parsley", "url": "https://extension.illinois.edu/herbs/parsley" },
+    { "title": "Oregon State University Extension: Soil temperature conditions for vegetable seed germination", "url": "https://extension.oregonstate.edu/gardening/soil-compost/soil-temperature-conditions-vegetable-seed-germination" },
+    { "title": "Johnny's Selected Seeds: Giant of Italy Parsley Seed", "url": "https://www.johnnyseeds.com/herbs/parsley/leaf-parsley/giant-of-italy-parsley-seed-2390.html" }
+  ]
+}

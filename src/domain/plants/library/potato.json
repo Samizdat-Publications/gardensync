@@ -1,0 +1,36 @@
+{
+  "id": "potato",
+  "name": "Potato",
+  "latin": "Solanum tuberosum",
+  "category": "vegetable",
+  "family": "Solanaceae",
+  "lifecycle": "annual",
+  "frost": "half-hardy",
+  "temp": { "minC": 10, "maxC": 21 },
+  "soilMinC": 10,
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 1 },
+  "spacingCm": { "inRow": 30, "betweenRows": 75 },
+  "container": { "minLitres": 20, "perVessel": 1 },
+  "canopy": "mid",
+  "shadeTolerant": false,
+  "maturity": { "days": 90, "from": "transplant" },
+  "methods": {
+    "plant": { "weeks": [-4, 0], "what": "seed potatoes" }
+  },
+  "harvest": { "type": "once", "windowDays": 28 },
+  "yield": { "amount": 1000, "unit": "g", "per": "plant" },
+  "glyph": { "form": "tuber", "color": "#b8935a" },
+  "notes": {
+    "sowing": "Plant seed potatoes, whole or cut into pieces with two or three eyes, {cm:10} to {cm:15} deep, from 4 weeks before your last frost up to the frost date, once the soil is at least {c:10}. Sprouting them in a bright, cool room for 4 to 6 weeks first gives an earlier crop.",
+    "care": "Earth up when shoots reach about {cm:23}, leaving the tips showing, and repeat every few weeks until the ridge is {cm:20} to {cm:30} high: exposed tubers turn green and toxic. Cover new shoots if frost is forecast. Water about {cm:2.5} a week.",
+    "harvest": "Dig new potatoes 7 to 8 weeks after planting, around flowering. For storage, wait until the tops die back, cure at {c:15} to {c:18} for 10 days, then store cool and dark."
+  },
+  "sources": [
+    { "title": "University of Minnesota Extension: Growing potatoes in home gardens", "url": "https://extension.umn.edu/vegetables/growing-potatoes" },
+    { "title": "Royal Horticultural Society: How to grow potatoes", "url": "https://www.rhs.org.uk/vegetables/potatoes/grow-your-own" },
+    { "title": "North Dakota State University Extension: Dakota Gardener: How to plant potatoes", "url": "https://www.ag.ndsu.edu/news/columns/dakota-gardener/dakota-gardener-how-to-plant-potatoes" },
+    { "title": "Colorado State University Extension: Vegetable Planting Guide", "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/" }
+  ]
+}

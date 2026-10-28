@@ -1,0 +1,96 @@
+{
+  "id": "cabbage",
+  "name": "Cabbage",
+  "latin": "Brassica oleracea var. capitata",
+  "category": "vegetable",
+  "family": "Brassicaceae",
+  "lifecycle": "annual",
+  "frost": "hardy",
+  "temp": {
+    "minC": 4,
+    "maxC": 24
+  },
+  "soilMinC": 4,
+  "sun": "full",
+  "water": "medium",
+  "density": {
+    "perSquare": 1
+  },
+  "spacingCm": {
+    "inRow": 40,
+    "betweenRows": 60
+  },
+  "container": {
+    "minLitres": 11,
+    "perVessel": 1
+  },
+  "canopy": "mid",
+  "shadeTolerant": false,
+  "maturity": {
+    "days": 75,
+    "from": "transplant"
+  },
+  "methods": {
+    "indoor": {
+      "ageWeeks": [
+        5,
+        7
+      ]
+    },
+    "transplant": {
+      "weeks": [
+        -3,
+        -1
+      ]
+    },
+    "direct": {
+      "weeks": [
+        -3,
+        -1
+      ]
+    }
+  },
+  "fall": {
+    "windowWeeks": 3
+  },
+  "harvest": {
+    "type": "once",
+    "windowDays": 21
+  },
+  "yield": {
+    "amount": 700,
+    "unit": "g",
+    "per": "plant"
+  },
+  "glyph": {
+    "form": "brassica",
+    "color": "#9fc58a"
+  },
+  "notes": {
+    "sowing": "Start indoors 5 to 7 weeks before planting out, {cm:0.6} deep, growing seedlings at {c:16} to {c:21}. Set plants out 1 to 3 weeks before your last frost. For a fall crop, sow 12 to 14 weeks before your first fall frost.",
+    "care": "Water evenly: a heavy soaking after dry weather splits mature heads. Heat above about {c:27} slows growth and can cause tipburn inside the head. Avoid ground where cabbage-family crops grew recently.",
+    "harvest": "Cut when heads are firm and full size, just above the outer leaves. If rain threatens to split a ready head, twist it a quarter turn to break some of the roots."
+  },
+  "sources": [
+    {
+      "title": "University of Minnesota Extension: Growing cabbage in home gardens",
+      "url": "https://extension.umn.edu/vegetables/growing-cabbage"
+    },
+    {
+      "title": "Royal Horticultural Society: How to grow cabbages",
+      "url": "https://www.rhs.org.uk/vegetables/cabbages/grow-your-own"
+    },
+    {
+      "title": "Utah State University Extension: How to Grow Cabbage in Your Garden",
+      "url": "https://extension.usu.edu/yardandgarden/research/cabbage-in-the-garden"
+    },
+    {
+      "title": "Colorado State University Extension: Vegetable Planting Guide",
+      "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/"
+    },
+    {
+      "title": "UC Cooperative Extension Placer and Nevada Counties: Vegetable Characteristics (optimum temperatures for different vegetables)",
+      "url": "https://projects.sare.org/wp-content/uploads/944820osa-43c-vegetable-characteristics.pdf"
+    }
+  ]
+}

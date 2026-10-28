@@ -1,0 +1,36 @@
+{
+  "id": "raspberry",
+  "name": "Raspberry",
+  "latin": "Rubus idaeus",
+  "category": "fruit",
+  "family": "Rosaceae",
+  "lifecycle": "perennial",
+  "frost": "hardy",
+  "temp": { "minC": 10, "maxC": 24 },
+  "sun": "full",
+  "water": "medium",
+  "density": { "squares": [2, 2] },
+  "spacingCm": { "inRow": 60, "betweenRows": 200 },
+  "container": { "minLitres": 35, "perVessel": 1 },
+  "canopy": "tall",
+  "shadeTolerant": false,
+  "maturity": { "days": 400, "from": "transplant" },
+  "methods": {
+    "plant": { "weeks": [-4, 0], "what": "dormant bare-root canes" }
+  },
+  "harvest": { "type": "continuous", "windowDays": 42 },
+  "support": "trellis",
+  "spreads": true,
+  "yield": { "amount": 1500, "unit": "g", "per": "plant" },
+  "perennial": { "firstHarvestYear": 2, "harvestWeeks": [6, 12], "lifespanYears": 10 },
+  "glyph": { "form": "cane", "color": "#c21f5b" },
+  "notes": {
+    "sowing": "Plant dormant canes in early spring, as soon as the soil can be worked, with the top roots no more than {cm:5} below the surface. Space plants {cm:40} to {cm:60} apart in rows about {cm:200} apart.",
+    "care": "Grow along posts and wires. Summer-fruiting types fruit on last year's canes: cut fruited canes to the ground after harvest and tie in the new ones. Fall-bearing types fruit on this year's canes: cut all canes to near ground level in late winter. Keep soil pH 5.6 to 6.5 and mulch to hold moisture.",
+    "harvest": "Summer types crop from their second summer for about six weeks. Fall-bearing types often crop in their first year, from late summer until frost. Pick every 3 to 4 days, when berries slip easily off the core."
+  },
+  "sources": [
+    { "title": "Royal Horticultural Society: How to grow raspberries", "url": "https://www.rhs.org.uk/fruit/raspberries/grow-your-own" },
+    { "title": "Oregon State University Extension: Growing Raspberries in Your Home Garden", "url": "https://extension.oregonstate.edu/catalog/pub/ec-1306-growing-raspberries-your-home-garden" }
+  ]
+}

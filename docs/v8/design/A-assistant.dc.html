@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GardenSync assistant panel</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&amp;family=Atkinson+Hyperlegible+Next:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2E7D46}a:hover{color:#1F5C33}
+</style>
+</helmet>
+<div style="min-height: 900px; display: flex; flex-wrap: wrap; background: #F3F4EF; color: #1C231D; font-family: 'Atkinson Hyperlegible Next', 'Segoe UI', system-ui, sans-serif; font-size: 15px; line-height: 1.45">
+<div aria-hidden="true" style="flex: 999 1 560px; min-width: 0; padding: 70px 40px; display: flex; flex-direction: column; gap: 16px">
+<svg viewBox="0 0 820 520" style="display: block; width: 100%; height: auto; border: 1px solid #D8DDD2; border-radius: 10px; background: #EDF0E7">
+<rect x="44" y="44" width="352" height="176" fill="#6A4E38" opacity="0.85"></rect>
+<rect x="44" y="266" width="352" height="132" fill="#6A4E38" opacity="0.85"></rect>
+<rect x="470" y="44" width="176" height="176" fill="#6A4E38" opacity="0.35"></rect>
+<g fill="none" stroke="#2E7D46" stroke-width="2.5" stroke-dasharray="7 5"><rect x="470" y="44" width="176" height="176" rx="3"></rect></g>
+<g opacity="0.95"><rect x="474" y="48" width="80" height="80" rx="3" fill="#d64545" opacity="0.35"></rect><rect x="558" y="48" width="40" height="40" rx="3" fill="#2f9e6a" opacity="0.45"></rect><rect x="602" y="48" width="40" height="40" rx="3" fill="#2f9e6a" opacity="0.45"></rect><rect x="474" y="132" width="80" height="40" rx="3" fill="#b07cc6" opacity="0.45"></rect><rect x="558" y="92" width="84" height="40" rx="3" fill="#6fae3a" opacity="0.45"></rect><rect x="558" y="136" width="40" height="40" rx="3" fill="#4f9d5a" opacity="0.45"></rect></g>
+<text x="470" y="244" fill="#1C231D" font-family="Atkinson Hyperlegible Next, sans-serif" font-size="14" font-weight="700">Bed 3, proposed</text>
+</svg>
+</div>
+<aside aria-labelledby="as-title" style="flex: 1 1 380px; max-width: 460px; min-height: 900px; display: flex; flex-direction: column; background: #FFFFFF; border-left: 1px solid #D8DDD2">
+<header style="display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-bottom: 1px solid #D8DDD2">
+<h1 id="as-title" style="margin: 0; flex: 1 1 auto; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px">Ask about your garden</h1>
+<button aria-label="Close the assistant" style="width: 40px; height: 40px; border: 1px solid #D8DDD2; border-radius: 8px; background: #FFFFFF; font: inherit; font-size: 18px">&#215;</button>
+</header>
+<ol style="list-style: none; margin: 0; padding: 18px; display: flex; flex-direction: column; gap: 14px; flex: 1 1 auto">
+<li style="align-self: flex-end; max-width: 85%; padding: 10px 14px; border-radius: 14px 14px 4px 14px; background: #E1EFE3">Plan the new 4 by 4 bed for salsa. It gets afternoon shade.</li>
+<li style="max-width: 92%; display: flex; flex-direction: column; gap: 10px">
+<p style="margin: 0">Here is a salsa bed for Bed 3. Tomatoes and peppers go along the north edge so they shade nothing, with onions and cilantro in front. Cilantro likes the afternoon shade and will last longer before it bolts.</p>
+<section aria-labelledby="prop" style="border: 1px solid #A9B2A5; border-radius: 12px; overflow: hidden">
+<h2 id="prop" style="margin: 0; padding: 10px 14px; background: #F3F4EF; font-size: 15px">Proposed changes to Bed 3</h2>
+<ul style="margin: 0; padding: 10px 14px 10px 32px; display: flex; flex-direction: column; gap: 4px">
+<li>Tomato, 2 plants, squares A1 to B2</li>
+<li>Pepper, 2 plants, C1 and D1</li>
+<li>Onion, 18 plants, A3 and B3</li>
+<li>Cilantro, 8 plants, C2 and D2</li>
+<li>Basil, 4 plants, C3</li>
+</ul>
+<p style="margin: 0; padding: 0 14px 10px; font-size: 14px; color: #4D584E">Dates follow your calendar: tomatoes and peppers out from Apr 14, onions and cilantro now.</p>
+<div style="display: flex; gap: 8px; padding: 0 14px 14px">
+<button style="flex: 2 1 0; min-height: 44px; border: 0; border-radius: 8px; background: #2E7D46; color: #FFFFFF; font: inherit; font-weight: 700">Apply to the garden</button>
+<button style="flex: 1 1 0; min-height: 44px; border: 1px solid #D8DDD2; border-radius: 8px; background: #FFFFFF; font: inherit">Discard</button>
+</div>
+</section>
+<p style="margin: 0; font-size: 14px; color: #4D584E">You can undo this as one step.</p>
+</li>
+<li style="align-self: flex-end; max-width: 85%; display: flex; flex-direction: column; gap: 6px; align-items: flex-end">
+<div style="width: 140px; height: 96px; border-radius: 10px; background: repeating-linear-gradient(135deg, #E9DCC6 0 10px, #E1D2B8 10px 20px); display: flex; align-items: center; justify-content: center; font-size: 13px; color: #4D584E">Photo of a seed packet</div>
+<span style="padding: 10px 14px; border-radius: 14px 14px 4px 14px; background: #E1EFE3">Add this one</span>
+</li>
+<li style="max-width: 92%; display: flex; flex-direction: column; gap: 8px">
+<p style="margin: 0">The packet is <strong>Cherokee Purple</strong> tomato: 80 days from transplant, indeterminate, 24 in apart. I can add it as a tomato variety, so it gets tomato dates with its own days to harvest.</p>
+<div style="display: flex; gap: 8px"><button style="min-height: 42px; padding: 0 14px; border: 0; border-radius: 8px; background: #2E7D46; color: #FFFFFF; font: inherit; font-weight: 700">Add Cherokee Purple</button><button style="min-height: 42px; padding: 0 14px; border: 1px solid #D8DDD2; border-radius: 8px; background: #FFFFFF; font: inherit">Edit first</button></div>
+</li>
+</ol>
+<form style="padding: 14px 18px 18px; border-top: 1px solid #D8DDD2; display: flex; flex-direction: column; gap: 8px">
+<label for="ask" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Message</label>
+<div style="display: flex; gap: 8px">
+<button type="button" aria-label="Attach a photo" style="width: 46px; height: 46px; flex: 0 0 auto; border: 1px solid #D8DDD2; border-radius: 10px; background: #FFFFFF"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="5" width="15" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"></rect><circle cx="10" cy="10.5" r="3" fill="none" stroke="currentColor" stroke-width="1.6"></circle><path d="M7 5 L8.2 3 H11.8 L13 5" stroke="currentColor" stroke-width="1.6" fill="none"></path></svg></button>
+<input id="ask" placeholder="Ask anything about your garden" style="flex: 1 1 auto; min-height: 46px; padding: 0 12px; border: 1px solid #A9B2A5; border-radius: 10px; font: inherit">
+<button type="submit" style="min-height: 46px; padding: 0 16px; border: 0; border-radius: 10px; background: #1C231D; color: #FFFFFF; font: inherit; font-weight: 700">Send</button>
+</div>
+<span style="font-size: 13px; color: #4D584E">Runs on Claude with your own Anthropic key. Answers can be wrong; dates in your calendar come from GardenSync, not the chat.</span>
+</form>
+</aside>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

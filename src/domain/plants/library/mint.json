@@ -1,0 +1,36 @@
+{
+  "id": "mint",
+  "name": "Mint",
+  "latin": "Mentha spp.",
+  "category": "herb",
+  "family": "Lamiaceae",
+  "lifecycle": "perennial",
+  "frost": "hardy",
+  "temp": { "minC": 10, "maxC": 27 },
+  "sun": "full",
+  "water": "high",
+  "density": { "perSquare": 1 },
+  "spacingCm": { "inRow": 45, "betweenRows": 60 },
+  "container": { "minLitres": 11, "perVessel": 1 },
+  "canopy": "mid",
+  "shadeTolerant": true,
+  "maturity": { "days": 30, "from": "transplant" },
+  "methods": {
+    "plant": { "weeks": [-2, 4], "what": "nursery plants or rooted runners" }
+  },
+  "harvest": { "type": "cut-and-come-again", "windowDays": 150 },
+  "spreads": true,
+  "purpose": ["food"],
+  "yield": { "amount": 200, "unit": "g", "per": "plant" },
+  "glyph": { "form": "sprig", "color": "#3fbf8f" },
+  "notes": {
+    "sowing": "Plant nursery plants or rooted pieces of runner in spring, or in early fall. Mint spreads fast by underground runners, so grow it in a container, or in a large bottomless pot sunk into the bed with its rim above the soil.",
+    "care": "Keep the soil evenly moist; mint grows in sun or part shade. A container above ground is the surest way to contain it, as runners escape sunk pots. Remove flower spikes to keep the leaves tender, and divide or repot every 3 to 4 years.",
+    "harvest": "Pick young shoot tips from late spring to fall; frequent cutting keeps fresh growth coming. Cut plants back to about {cm:5} after flowering for a new flush of leaves."
+  },
+  "sources": [
+    { "title": "Royal Horticultural Society: How to grow mint", "url": "https://www.rhs.org.uk/herbs/mint/grow-your-own" },
+    { "title": "University of Illinois Extension: Mint", "url": "https://extension.illinois.edu/herbs/mint" },
+    { "title": "Royal Horticultural Society: Mentha spicata, spearmint (plant profile)", "url": "https://www.rhs.org.uk/plants/11055/mentha-spicata/details" }
+  ]
+}

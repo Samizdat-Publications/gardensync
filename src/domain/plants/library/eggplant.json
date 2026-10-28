@@ -1,0 +1,39 @@
+{
+  "id": "eggplant",
+  "name": "Eggplant",
+  "latin": "Solanum melongena",
+  "category": "vegetable",
+  "family": "Solanaceae",
+  "lifecycle": "annual",
+  "frost": "tender",
+  "temp": { "minC": 18, "maxC": 29 },
+  "fruitSetMaxC": 32,
+  "soilMinC": 16,
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 1 },
+  "spacingCm": { "inRow": 50, "betweenRows": 80 },
+  "container": { "minLitres": 15, "perVessel": 1 },
+  "canopy": "mid",
+  "shadeTolerant": false,
+  "maturity": { "days": 75, "from": "transplant" },
+  "methods": {
+    "indoor": { "ageWeeks": [8, 10] },
+    "transplant": { "weeks": [2, 4] }
+  },
+  "harvest": { "type": "continuous", "windowDays": 60 },
+  "support": "stake",
+  "yield": { "amount": 1200, "unit": "g", "per": "plant" },
+  "glyph": { "form": "fruiting", "color": "#5b2d6e" },
+  "notes": {
+    "sowing": "Start seeds indoors 8 to 10 weeks before your last frost, {cm:0.6} deep, at {c:24} to {c:29}. Plant out 2 to 4 weeks after your last frost, once nights stay above {c:10}. Plants chill easily, so warm the soil under a cover for a couple of weeks first.",
+    "care": "Water about {cm:2.5} a week and mulch once the soil is warm. Flowering suffers above {c:32} or with cool nights. On large-fruited types, keep five or six fruits and remove later flowers. Stake heavy plants.",
+    "harvest": "Cut fruit with shears while the skin is still glossy and the flesh firm. Dull skin and brown seeds mean it is overripe. Fruit keeps about a week in the fridge."
+  },
+  "sources": [
+    { "title": "University of Minnesota Extension: Growing eggplant in home gardens", "url": "https://extension.umn.edu/vegetables/growing-eggplant" },
+    { "title": "Royal Horticultural Society: How to grow aubergines", "url": "https://www.rhs.org.uk/vegetables/aubergines/grow-your-own" },
+    { "title": "Colorado State University Extension: Vegetable Planting Guide", "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/" },
+    { "title": "Johnny's Selected Seeds: Rosa Bianca Eggplant Seed", "url": "https://johnnyseeds.com/vegetables/eggplant/italian-eggplants/rosa-bianca-organic-eggplant-seed-2605G.html" }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "id": "beet",
+  "name": "Beet",
+  "latin": "Beta vulgaris subsp. vulgaris (Conditiva Group)",
+  "category": "vegetable",
+  "family": "Amaranthaceae",
+  "lifecycle": "annual",
+  "frost": "half-hardy",
+  "temp": {
+    "minC": 4,
+    "maxC": 24
+  },
+  "soilMinC": 4,
+  "sun": "full",
+  "water": "medium",
+  "density": {
+    "perSquare": 9
+  },
+  "spacingCm": {
+    "inRow": 10,
+    "betweenRows": 30
+  },
+  "container": {
+    "minLitres": 25,
+    "perVessel": 12
+  },
+  "canopy": "low",
+  "shadeTolerant": false,
+  "maturity": {
+    "days": 55,
+    "from": "sow"
+  },
+  "methods": {
+    "direct": {
+      "weeks": [
+        -3,
+        2
+      ]
+    }
+  },
+  "fall": {
+    "windowWeeks": 3
+  },
+  "succession": {
+    "everyDays": 21
+  },
+  "harvest": {
+    "type": "once",
+    "windowDays": 30
+  },
+  "yield": {
+    "amount": 600,
+    "unit": "g",
+    "per": "square"
+  },
+  "glyph": {
+    "form": "root",
+    "color": "#8e1b3a"
+  },
+  "notes": {
+    "sowing": "Sow {cm:2.5} deep from 3 weeks before your last frost. Each seed is a cluster that gives several seedlings, so thin to one every {cm:10} once they are about {cm:2.5} tall, and eat the thinnings.",
+    "care": "Water every week or so in dry spells; drought in the first 6 weeks often causes bolting and woody roots. Sow short rows every 3 weeks until midsummer, and about 10 weeks before your first fall frost for a fall crop.",
+    "harvest": "Pull roots at {cm:4} to {cm:7} across, between golf-ball and tennis-ball size; larger roots turn fibrous. Young leaves can be picked as greens. Lift fall roots before a hard freeze."
+  },
+  "sources": [
+    {
+      "title": "Royal Horticultural Society: How to grow beetroot",
+      "url": "https://www.rhs.org.uk/vegetables/beetroot/grow-your-own"
+    },
+    {
+      "title": "Utah State University Extension: How to Grow Beets in Your Garden",
+      "url": "https://extension.usu.edu/yardandgarden/research/beets-in-the-garden"
+    },
+    {
+      "title": "Colorado State University Extension: Vegetable Planting Guide",
+      "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/"
+    },
+    {
+      "title": "University of Minnesota Extension: Planting vegetables in midsummer for fall harvest",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/planting-vegetables-midsummer-fall-harvest"
+    },
+    {
+      "title": "UC Cooperative Extension Placer and Nevada Counties: Vegetable Characteristics (optimum temperatures for different vegetables)",
+      "url": "https://projects.sare.org/wp-content/uploads/944820osa-43c-vegetable-characteristics.pdf"
+    },
+    {
+      "title": "UC Cooperative Extension Sacramento County Garden Notes GN 154: Soil Temperature Conditions for Vegetable Seed Germination",
+      "url": "https://ucanr.edu/sites/ucmgplacer/files/345143.pdf"
+    }
+  ]
+}

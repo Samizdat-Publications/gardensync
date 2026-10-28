@@ -1,0 +1,36 @@
+{
+  "id": "borage",
+  "name": "Borage",
+  "latin": "Borago officinalis",
+  "category": "flower",
+  "family": "Boraginaceae",
+  "lifecycle": "annual",
+  "frost": "half-hardy",
+  "temp": { "minC": 10, "maxC": 24 },
+  "soilMinC": 10,
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 1 },
+  "spacingCm": { "inRow": 45, "betweenRows": 60 },
+  "container": { "minLitres": 15, "perVessel": 1 },
+  "canopy": "mid",
+  "shadeTolerant": false,
+  "maturity": { "days": 60, "from": "sow" },
+  "methods": {
+    "direct": { "weeks": [-1, 3] }
+  },
+  "harvest": { "type": "continuous", "windowDays": 60 },
+  "purpose": ["food", "pollinators"],
+  "yield": { "amount": 50, "unit": "count", "per": "plant" },
+  "glyph": { "form": "flower", "color": "#4a7fd4" },
+  "notes": {
+    "sowing": "Sow directly in spring once the soil has begun to warm, {cm:1} deep, and thin to {cm:30} to {cm:50} apart. Borage has a taproot and does not transplant well.",
+    "care": "Grows in most well-drained soils in sun; plants are smaller in dry, poor soil. Tall plants may lean, and grouping them helps them hold each other up. Bees visit the flowers heavily. It self-sows freely, so pull unwanted seedlings while small.",
+    "harvest": "Flowers start about 8 weeks from sowing and continue through summer, fading by late summer on spring-sown plants. Pick the blue flowers just as they open for salads and drinks."
+  },
+  "sources": [
+    { "title": "Royal Horticultural Society: How to grow borage", "url": "https://www.rhs.org.uk/plants/borage/growing-guide" },
+    { "title": "Johnny's Selected Seeds: Growing Borage From Seed", "url": "https://johnnyseeds.com/growers-library/herbs/borage/borage-key-growing-information.html" },
+    { "title": "Johnny's Selected Seeds: Borage Seeds", "url": "https://www.johnnyseeds.com/herbs/borage/borage-borage-seed-912.html" }
+  ]
+}

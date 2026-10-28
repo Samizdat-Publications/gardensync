@@ -1,0 +1,419 @@
+/* Plant library and plant card (artboard A-plants). Tokens only. Wide screens: grid and card side by
+   side. Below 1000 px an open card is its own view with a link back to the grid. */
+
+.plants {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+.plants[data-card='open'] {
+  grid-template-columns: minmax(0, 1fr) minmax(380px, 480px);
+}
+
+/* ---- Library ---- */
+
+.plants-lib {
+  min-width: 0;
+  padding: 22px var(--sp-5) var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+.plants-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-2) 20px;
+}
+.plants-head h1 {
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.plants-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px var(--sp-3);
+}
+.plants-find {
+  flex: 1 1 260px;
+  max-width: 380px;
+  display: flex;
+}
+.plants-find .input {
+  width: 100%;
+}
+.plants-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.plants-status:empty {
+  display: none;
+}
+
+.plants-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  /* 155 px min keeps 3 columns in the library even when a card is open at 1024 px.
+     (card takes ~480 px; library has 24 px padding each side; content = 496 px;
+     3 × 155 + 2 × 10 gap = 485 px which fits.) */
+  grid-template-columns: repeat(auto-fill, minmax(min(155px, 100%), 1fr));
+  gap: 10px;
+}
+.plant-tile {
+  position: relative;
+  height: 100%;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: 14px;
+  border: 1px solid var(--c-line);
+  border-radius: 10px;
+  background: var(--c-panel);
+  color: var(--c-ink);
+  text-decoration: none;
+  transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+}
+.plant-tile:hover {
+  border-color: var(--c-control);
+}
+.plant-tile[aria-current='true'] {
+  border-color: var(--c-accent);
+  box-shadow: inset 0 0 0 1px var(--c-accent);
+}
+.plant-tile-name {
+  font-weight: 700;
+  font-size: var(--fs-lg);
+  line-height: 1.2;
+}
+.plant-tile-when {
+  font-size: var(--fs-xs);
+  color: var(--c-muted);
+}
+.plant-tile-own {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 1px 8px;
+  border: 1px solid var(--c-line);
+  border-radius: 10px;
+  font-size: var(--fs-xs);
+  color: var(--c-muted);
+}
+
+.plants-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  padding: var(--sp-5);
+}
+.plants-empty h2 {
+  font-size: var(--fs-xl);
+  font-weight: 800;
+}
+
+/* ---- Card ---- */
+
+.plant-card {
+  position: sticky;
+  top: 0;
+  /* The shared header (about 65 px) sits above; keep the whole card, and its action, on screen. */
+  max-height: calc(100vh - 66px);
+  overflow-y: auto;
+  padding: var(--sp-5);
+  border-left: 1px solid var(--c-line);
+  background: var(--c-panel);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.plant-back {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  min-height: var(--target);
+  padding-right: var(--sp-3);
+  font-weight: 700;
+  text-decoration: none;
+}
+.plant-back:hover {
+  text-decoration: underline;
+}
+
+.pc-top {
+  display: flex;
+  gap: var(--sp-4);
+  align-items: center;
+}
+.pc-tile {
+  flex: none;
+  width: 84px;
+  height: 84px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pc-names {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.pc-names h2 {
+  font-size: 30px;
+  font-weight: 800;
+}
+.pc-names h2:focus {
+  outline: none;
+}
+.pc-names h2:focus-visible {
+  outline: 3px solid var(--c-focus);
+  outline-offset: 2px;
+}
+.pc-latin {
+  color: var(--c-muted);
+  font-style: italic;
+}
+
+.pc-facts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.pc-fact {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid var(--c-line);
+  border-radius: 6px;
+  background: var(--c-raised);
+  font-size: var(--fs-sm);
+}
+.pc-fact-frost {
+  border-color: var(--c-frost);
+  background: var(--c-frost-soft);
+}
+
+.pc-icon {
+  flex: none;
+}
+.pc-icon-frost {
+  color: var(--c-frost);
+}
+.pc-icon-caution {
+  color: var(--c-caution);
+}
+
+.pc-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pc-section h3 {
+  font-size: var(--fs-lg);
+}
+.pc-section h4 {
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  font-weight: 700;
+  margin: 0;
+}
+.pc-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.pc-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pc-row {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 2px var(--sp-3);
+}
+.pc-dates {
+  font-weight: 700;
+}
+.pc-why {
+  grid-column: 2;
+  font-size: var(--fs-xs);
+  color: var(--c-muted);
+}
+.pc-note {
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--r-control);
+  background: var(--c-raised);
+}
+.pc-warnings,
+.pc-plain,
+.pc-neighbors {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.pc-plain {
+  font-size: var(--fs-sm);
+}
+.pc-warn {
+  display: flex;
+  gap: var(--sp-2);
+  align-items: flex-start;
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--c-caution);
+  border-radius: var(--r-control);
+  background: var(--c-caution-soft);
+  font-size: var(--fs-sm);
+}
+.pc-warn-frost {
+  border-color: var(--c-frost);
+  background: var(--c-frost-soft);
+}
+.pc-warn .pc-icon {
+  margin-top: 1px;
+}
+.pc-notviable {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-4);
+  border: 2px solid var(--c-caution);
+  border-radius: var(--r-panel);
+}
+.pc-notviable h4 {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: 800;
+}
+
+.pc-neighbor {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: var(--fs-sm);
+}
+.pc-mark {
+  flex: none;
+  margin-top: 1px;
+}
+.pc-mark-good {
+  color: var(--c-friend);
+}
+.pc-mark-bad {
+  color: var(--c-foe);
+}
+
+.pc-sources a,
+.pc-neighbor a {
+  /* Inline links inside text: tall enough to tap by line height, with room around them. */
+  padding: 2px 0;
+}
+
+.pc-add {
+  margin-top: auto;
+  min-height: 46px;
+  font-size: var(--fs-lg);
+}
+/* Beside the grid the card scrolls on its own; keep its one action in reach. */
+@media (min-width: 1000px) {
+  .pc-add {
+    position: sticky;
+    bottom: 0;
+    /* A solid band as wide as the card's padding, so nothing scrolling behind shows around it. */
+    box-shadow: 0 0 0 var(--sp-5) var(--c-panel);
+    z-index: 1;
+  }
+}
+
+/* ---- Narrow: the card is its own view ---- */
+
+@media (max-width: 999px) {
+  .plants[data-card='open'] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .plants[data-card='open'] .plants-lib {
+    padding: 0;
+  }
+  .plants[data-card='open'] .plants-lib > :not(.plants-head) {
+    display: none;
+  }
+  /* Keep the page's h1 for screen readers so headings stay in order. */
+  .plants[data-card='open'] .plants-head {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .plant-card {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    border-left: 0;
+    padding: var(--sp-3) var(--sp-4) var(--sp-6);
+  }
+  .plant-back {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 560px) {
+  .plants-lib {
+    padding: var(--sp-4) var(--sp-4) var(--sp-6);
+  }
+  .plants-find {
+    max-width: none;
+  }
+  /* One horizontally scrolling row of chips; 44 px targets preserved by the chip's own min-height. */
+  .plants-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px; /* keep focus rings from clipping */
+    scrollbar-width: none; /* Firefox: hide scrollbar */
+  }
+  .plants-chips::-webkit-scrollbar {
+    display: none; /* WebKit: hide scrollbar */
+  }
+  .plants-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sp-2);
+  }
+  .plant-tile {
+    min-height: 112px;
+    padding: var(--sp-3);
+  }
+  .pc-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pc-why {
+    grid-column: 1;
+  }
+  .pc-names h2 {
+    font-size: var(--fs-2xl);
+  }
+  .pc-tile {
+    width: 72px;
+    height: 72px;
+  }
+}

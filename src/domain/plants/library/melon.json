@@ -1,0 +1,40 @@
+{
+  "id": "melon",
+  "name": "Melon",
+  "latin": "Cucumis melo",
+  "category": "fruit",
+  "family": "Cucurbitaceae",
+  "lifecycle": "annual",
+  "frost": "tender",
+  "temp": { "minC": 20, "maxC": 30 },
+  "fruitSetMaxC": 35,
+  "soilMinC": 18,
+  "sun": "full",
+  "water": "medium",
+  "density": { "squares": [2, 2] },
+  "spacingCm": { "inRow": 60, "betweenRows": 150 },
+  "container": { "minLitres": 40, "perVessel": 1 },
+  "canopy": "low",
+  "shadeTolerant": false,
+  "maturity": { "days": 90, "from": "sow" },
+  "methods": {
+    "indoor": { "ageWeeks": [3, 4] },
+    "transplant": { "weeks": [2, 4] },
+    "direct": { "weeks": [2, 4] }
+  },
+  "harvest": { "type": "continuous", "windowDays": 21 },
+  "yield": { "amount": 3, "unit": "count", "per": "plant" },
+  "glyph": { "form": "vine", "color": "#f5b971" },
+  "notes": {
+    "sowing": "Sow indoors 3 to 4 weeks before planting out, two seeds per pot {cm:1.5} deep, at {c:21} to {c:32}. Plant out 2 to 4 weeks after your last frost, once the soil is at least {c:18} and nights stay above {c:12}. Or sow outdoors once the soil is that warm.",
+    "care": "Black plastic mulch and a row cover help in cool summers; lift the cover when flowers open so bees can reach them. Water evenly at the base until fruit is full sized, then ease off. Vines can trail or climb a strong support.",
+    "harvest": "Cantaloupes are ripe when the netting coarsens, the skin turns from green to tan or yellow, and the fruit slips off with a gentle twist. Smooth melons smell sweet and give slightly at the blossom end."
+  },
+  "sources": [
+    { "title": "University of Minnesota Extension: Growing melons in the home garden", "url": "https://extension.umn.edu/fruit/growing-melons-home-garden" },
+    { "title": "Royal Horticultural Society: How to grow melons", "url": "https://www.rhs.org.uk/fruit/melons/grow-your-own" },
+    { "title": "Colorado State University Extension: Vegetable Planting Guide", "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/" },
+    { "title": "Johnny's Selected Seeds: Athena (F1) Melon Seed", "url": "https://www.johnnyseeds.com/fruits/melons/cantaloupe-muskmelon/athena-f1-melon-seed-457.html" },
+    { "title": "University of Arizona Cooperative Extension az1005: Vegetable Planting Calendar for Maricopa County", "url": "https://extension.arizona.edu/sites/default/files/2024-08/az1005-2018.pdf" }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "id": "radish",
+  "name": "Radish",
+  "latin": "Raphanus sativus",
+  "category": "vegetable",
+  "family": "Brassicaceae",
+  "lifecycle": "annual",
+  "frost": "hardy",
+  "temp": {
+    "minC": 4,
+    "maxC": 22
+  },
+  "soilMinC": 4,
+  "sun": "full",
+  "water": "medium",
+  "density": {
+    "perSquare": 16
+  },
+  "spacingCm": {
+    "inRow": 5,
+    "betweenRows": 15
+  },
+  "container": {
+    "minLitres": 11,
+    "perVessel": 20
+  },
+  "canopy": "low",
+  "shadeTolerant": false,
+  "maturity": {
+    "days": 28,
+    "from": "sow"
+  },
+  "methods": {
+    "direct": {
+      "weeks": [
+        -5,
+        0
+      ]
+    }
+  },
+  "fall": {
+    "windowWeeks": 4
+  },
+  "succession": {
+    "everyDays": 10
+  },
+  "harvest": {
+    "type": "once",
+    "windowDays": 7
+  },
+  "yield": {
+    "amount": 200,
+    "unit": "g",
+    "per": "square"
+  },
+  "glyph": {
+    "form": "root",
+    "color": "#e0457b"
+  },
+  "notes": {
+    "sowing": "Sow {cm:1.3} deep from 5 weeks before your last frost, {cm:2.5} apart so no thinning is needed. Sow a short row every 10 days for a steady supply, and pause in summer heat.",
+    "care": "Keep the soil evenly moist: dry or uneven watering gives woody, split or very hot roots. Warm weather makes radishes bolt instead of forming roots, so sow fall batches once it cools.",
+    "harvest": "Pull 3 to 5 weeks after sowing, when roots are about {cm:2.5} across. Left too long, they turn pithy and hot."
+  },
+  "sources": [
+    {
+      "title": "University of Minnesota Extension: Growing radishes in home gardens",
+      "url": "https://extension.umn.edu/vegetables/growing-radishes"
+    },
+    {
+      "title": "Royal Horticultural Society: How to grow radishes",
+      "url": "https://www.rhs.org.uk/vegetables/radishes/grow-your-own"
+    },
+    {
+      "title": "Utah State University Extension: How to Grow Radishes in Your Garden",
+      "url": "https://extension.usu.edu/yardandgarden/research/radishes-in-the-garden"
+    },
+    {
+      "title": "Colorado State University Extension: Vegetable Planting Guide",
+      "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/"
+    },
+    {
+      "title": "UC Cooperative Extension Placer and Nevada Counties: Vegetable Characteristics (optimum temperatures for different vegetables)",
+      "url": "https://projects.sare.org/wp-content/uploads/944820osa-43c-vegetable-characteristics.pdf"
+    },
+    { "title": "UMass Amherst Center for Agriculture, Food, and the Environment: Radish", "url": "https://www.umass.edu/agriculture-food-environment/vegetable/fact-sheets/radish" }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "id": "cosmos",
+  "name": "Cosmos",
+  "latin": "Cosmos bipinnatus",
+  "category": "flower",
+  "family": "Asteraceae",
+  "lifecycle": "annual",
+  "frost": "tender",
+  "temp": { "minC": 16, "maxC": 30 },
+  "soilMinC": 18,
+  "sun": "full",
+  "water": "low",
+  "density": { "perSquare": 1 },
+  "spacingCm": { "inRow": 30, "betweenRows": 60 },
+  "container": { "minLitres": 10, "perVessel": 1 },
+  "canopy": "tall",
+  "shadeTolerant": false,
+  "maturity": { "days": 75, "from": "sow" },
+  "methods": {
+    "direct": { "weeks": [1, 4] }
+  },
+  "harvest": { "type": "continuous", "windowDays": 90 },
+  "purpose": ["cut-flowers", "pollinators", "display"],
+  "yield": { "amount": 30, "unit": "count", "per": "plant" },
+  "glyph": { "form": "flower", "color": "#e88bc4" },
+  "notes": {
+    "sowing": "Sow directly after your last frost, once the soil is about {c:18}, only {cm:0.3} deep, since deeper sowing cuts germination. Seed comes up in 1 to 2 weeks. Thin to {cm:30} to {cm:60} apart.",
+    "care": "Full sun and poor to average soil; rich soil or fertilizer gives floppy stems and late, sparse flowers, so do not feed. Tall plants may need staking. Deadhead, or cut plants back to {cm:30} to {cm:45} for a fresh flush. Self-sows readily.",
+    "harvest": "Flowers start 2 to 3 months from sowing and peak in late summer as the days shorten. Cut stems when the buds are just opening. Bees, butterflies, hoverflies and lacewings visit the flowers."
+  },
+  "sources": [
+    { "title": "Utah State University Extension: Cosmos in the Garden", "url": "https://extension.usu.edu/yardandgarden/research/cosmos-in-the-garden" },
+    { "title": "University of Florida IFAS Gardening Solutions: Cosmos", "url": "https://gardeningsolutions.ifas.ufl.edu/plants/ornamentals/cosmos/" }
+  ]
+}

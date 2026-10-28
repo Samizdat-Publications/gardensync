@@ -1,0 +1,7 @@
+# GardenSync
+
+> A garden bed planner for home gardeners anywhere. Draw beds and pots, place plants into 1 ft (or 30 cm) squares, and get a sowing, planting and harvest schedule worked out from 30 years of weather for your own town.
+
+GardenSync runs entirely in the browser. It has no accounts and no server; gardens are saved in the browser and can be downloaded or shared as a link.
+
+- [Source code and documentation](https://github.com/Samizdat-Publications/gardensync)

@@ -1,0 +1,79 @@
+{
+  "id": "strawberry",
+  "name": "Strawberry",
+  "latin": "Fragaria x ananassa",
+  "category": "fruit",
+  "family": "Rosaceae",
+  "lifecycle": "perennial",
+  "frost": "hardy",
+  "temp": {
+    "minC": 10,
+    "maxC": 24
+  },
+  "sun": "full",
+  "water": "medium",
+  "density": {
+    "perSquare": 1
+  },
+  "spacingCm": {
+    "inRow": 30,
+    "betweenRows": 90
+  },
+  "container": {
+    "minLitres": 11,
+    "perVessel": 3
+  },
+  "canopy": "low",
+  "shadeTolerant": false,
+  "maturity": {
+    "days": 400,
+    "from": "transplant"
+  },
+  "methods": {
+    "plant": {
+      "weeks": [
+        -4,
+        0
+      ],
+      "what": "dormant bare-root plants"
+    }
+  },
+  "harvest": {
+    "type": "continuous",
+    "windowDays": 21
+  },
+  "spreads": true,
+  "yield": {
+    "amount": 500,
+    "unit": "g",
+    "per": "plant"
+  },
+  "perennial": {
+    "firstHarvestYear": 2,
+    "harvestWeeks": [
+      4,
+      8
+    ],
+    "lifespanYears": 4
+  },
+  "glyph": { "form": "cane", "color": "#e5383b" },
+  "notes": {
+    "sowing": "Plant dormant plants in early spring, about 4 weeks before your last frost, once the soil can be worked. Set the middle of the crown at soil level with the roots fully buried: too deep and it rots, too shallow and it dries out.",
+    "care": "Pinch off flowers on June-bearing plants through the first season, and on day-neutral types for the first few weeks. Mulch with straw once plants are dormant and nights stay below {c:4}, and cover open blossoms on frosty nights. Renovate June-bearing beds after harvest and start a new bed every 3 to 4 years.",
+    "harvest": "Pick fully red berries every two to three days, with the cap on. June-bearing types crop for about three weeks in the year after planting; day-neutral types can fruit from midsummer of the first year."
+  },
+  "sources": [
+    {
+      "title": "University of Minnesota Extension: Growing strawberries in the home garden",
+      "url": "https://extension.umn.edu/fruit/growing-strawberries-home-garden"
+    },
+    {
+      "title": "Royal Horticultural Society: How to grow strawberries",
+      "url": "https://www.rhs.org.uk/fruit/strawberries/grow-your-own"
+    },
+    {
+      "title": "Nebraska Extension: Strawberries (NebGuide G89-897)",
+      "url": "https://extensionpubs.unl.edu/publication/g89-897/2023/html/view"
+    }
+  ]
+}

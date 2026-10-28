@@ -1,0 +1,37 @@
+{
+  "id": "oregano",
+  "name": "Oregano",
+  "latin": "Origanum vulgare",
+  "category": "herb",
+  "family": "Lamiaceae",
+  "lifecycle": "perennial",
+  "frost": "hardy",
+  "temp": { "minC": 13, "maxC": 30 },
+  "sun": "full",
+  "water": "low",
+  "density": { "perSquare": 1 },
+  "spacingCm": { "inRow": 30, "betweenRows": 45 },
+  "container": { "minLitres": 3, "perVessel": 1 },
+  "canopy": "mid",
+  "shadeTolerant": false,
+  "maturity": { "days": 60, "from": "transplant" },
+  "methods": {
+    "indoor": { "ageWeeks": [6, 8] },
+    "transplant": { "weeks": [0, 3] }
+  },
+  "harvest": { "type": "cut-and-come-again", "windowDays": 150 },
+  "winterMinC": -20,
+  "purpose": ["food"],
+  "yield": { "amount": 100, "unit": "g", "per": "plant" },
+  "glyph": { "form": "sprig", "color": "#6f8f3f" },
+  "notes": {
+    "sowing": "Buy plants or root cuttings, since seed-grown oregano often lacks flavor. Seed needs light: press it onto the surface indoors 6 to 8 weeks before your last frost, at about {c:20}. Plant out after the last frost, {cm:25} to {cm:30} apart.",
+    "care": "Needs full sun and sharp drainage; use a raised bed or a gritty pot on heavy soil. Water little once established. Common oregano is fully hardy; where winters are hard, mulch after the ground freezes, and bring tender types indoors.",
+    "harvest": "Snip shoot tips as needed from late spring to fall, leaving 4 to 6 pairs of leaves on each stem. Flavor peaks just before flowering, the best time to cut stems for drying."
+  },
+  "sources": [
+    { "title": "Royal Horticultural Society: How to grow oregano", "url": "https://www.rhs.org.uk/herbs/oregano/grow-your-own" },
+    { "title": "University of Illinois Extension: Oregano", "url": "https://extension.illinois.edu/herbs/oregano" },
+    { "title": "Royal Horticultural Society: Origanum vulgare, oregano (plant profile)", "url": "https://www.rhs.org.uk/plants/11923/origanum-vulgare/details" }
+  ]
+}

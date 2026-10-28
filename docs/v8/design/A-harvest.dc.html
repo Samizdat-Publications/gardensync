@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GardenSync harvest log</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=Atkinson+Hyperlegible+Next:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2E7D46}a:hover{color:#1F5C33}
+</style>
+</helmet>
+<div style="min-height: 900px; display: flex; flex-direction: column; background: #F3F4EF; color: #1C231D; font-family: 'Atkinson Hyperlegible Next', 'Segoe UI', system-ui, sans-serif; font-size: 15px; line-height: 1.45">
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding: 10px 20px; border-bottom: 1px solid #D8DDD2; background: #FFFFFF">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #1C231D"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect x="1" y="1" width="28" height="28" rx="4" fill="#2E7D46"></rect><path d="M15 24 V14 M15 15 Q10 14 9 9 Q14 9.5 15 14 M15 13 Q19.5 11 21 7 Q16.5 7.5 15 12" stroke="#FFFFFF" stroke-width="1.8" fill="none" stroke-linecap="round"></path></svg><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 21px">GardenSync</span></a>
+<nav aria-label="Main" style="display: flex; flex-wrap: wrap; gap: 4px; flex: 1 1 auto">
+<a href="Main.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 14px; border-radius: 8px; color: #4D584E; text-decoration: none">Garden</a>
+<a href="A-week.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 14px; border-radius: 8px; color: #4D584E; text-decoration: none">This week</a>
+<a href="A-calendar.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 14px; border-radius: 8px; color: #4D584E; text-decoration: none">Calendar</a>
+<a href="A-plants.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 14px; border-radius: 8px; color: #4D584E; text-decoration: none">Plants</a>
+<a href="#" aria-current="page" style="display: flex; align-items: center; min-height: 40px; padding: 0 14px; border-radius: 8px; background: #E1EFE3; color: #1C231D; font-weight: 700; text-decoration: none">Harvest</a>
+</nav>
+</header>
+<div style="display: flex; flex-wrap: wrap; gap: 28px; padding: 28px clamp(20px, 4vw, 56px); align-items: flex-start">
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 22px">
+<div>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 38px; letter-spacing: -0.02em; line-height: 1.05">Harvest, 2027 so far</h1>
+<p style="margin: 6px 0 0; font-size: 18px">38 lb 6 oz picked since Apr 30. The plan expects about 95 lb by the end of the season.</p>
+</div>
+<section aria-labelledby="by-crop" style="padding: 18px 20px; border: 1px solid #D8DDD2; border-radius: 12px; background: #FFFFFF; display: flex; flex-direction: column; gap: 12px">
+<h2 id="by-crop" style="margin: 0; font-size: 17px">Picked so far, against what each planting should give</h2>
+<sc-for list="{{crops}}" as="c" hint-placeholder-count="6">
+<div style="display: grid; grid-template-columns: 130px 1fr 120px; align-items: center; gap: 12px">
+<span style="font-weight: 700">{{c.name}}</span>
+<div style="position: relative; height: 14px; border-radius: 7px; background: #EEF0EA" role="img" aria-label="{{c.label}}">
+<span style="position: absolute; left: 0; top: 0; bottom: 0; width: {{c.pct}}; border-radius: 7px; background: {{c.color}}"></span>
+</div>
+<span style="font-size: 14px; color: #4D584E; text-align: right">{{c.text}}</span>
+</div>
+</sc-for>
+</section>
+<section aria-labelledby="hist" style="display: flex; flex-direction: column; gap: 8px">
+<h2 id="hist" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 22px">Recent picks</h2>
+<table style="width: 100%; border-collapse: collapse; background: #FFFFFF; border: 1px solid #D8DDD2; border-radius: 12px; overflow: hidden">
+<thead><tr style="text-align: left; font-size: 14px; color: #4D584E"><th style="padding: 10px 14px; font-weight: 500">Date</th><th style="padding: 10px 14px; font-weight: 500">Plant</th><th style="padding: 10px 14px; font-weight: 500">Where</th><th style="padding: 10px 14px; font-weight: 500; text-align: right">Amount</th></tr></thead>
+<tbody>
+<sc-for list="{{picks}}" as="p" hint-placeholder-count="6">
+<tr style="border-top: 1px solid #E6E9E1"><td style="padding: 10px 14px">{{p.date}}</td><td style="padding: 10px 14px; font-weight: 700">{{p.plant}}</td><td style="padding: 10px 14px; color: #4D584E">{{p.where}}</td><td style="padding: 10px 14px; text-align: right">{{p.amount}}</td></tr>
+</sc-for>
+</tbody>
+</table>
+</section>
+</main>
+<aside aria-labelledby="log" style="flex: 1 1 320px; max-width: 400px; padding: 20px; border: 1px solid #D8DDD2; border-radius: 12px; background: #FFFFFF; display: flex; flex-direction: column; gap: 14px">
+<h2 id="log" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 22px">Log a harvest</h2>
+<label for="h-plant" style="font-weight: 700">What did you pick?</label>
+<select id="h-plant" style="min-height: 46px; padding: 0 12px; border: 1px solid #A9B2A5; border-radius: 8px; background: #FFFFFF; font: inherit"><option>Zucchini, Bed 2</option><option>Lettuce, Bed 1</option><option>Peas, Bed 2</option></select>
+<div style="display: grid; grid-template-columns: 1fr 120px; gap: 10px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="h-amt" style="font-weight: 700">How much</label><input id="h-amt" inputmode="decimal" value="1.5" style="min-height: 46px; padding: 0 12px; border: 1px solid #A9B2A5; border-radius: 8px; font: inherit"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="h-unit" style="font-weight: 700">Unit</label><select id="h-unit" style="min-height: 46px; padding: 0 10px; border: 1px solid #A9B2A5; border-radius: 8px; background: #FFFFFF; font: inherit"><option>lb</option><option>oz</option><option>count</option></select></div>
+</div>
+<label for="h-date" style="font-weight: 700">When</label>
+<input id="h-date" type="date" value="2027-07-02" style="min-height: 46px; padding: 0 12px; border: 1px solid #A9B2A5; border-radius: 8px; font: inherit">
+<label for="h-note" style="font-weight: 700">Note <span style="font-weight: 400; color: #4D584E">(optional)</span></label>
+<input id="h-note" placeholder="Two were split from the rain" style="min-height: 46px; padding: 0 12px; border: 1px solid #A9B2A5; border-radius: 8px; font: inherit">
+<button style="min-height: 48px; border: 0; border-radius: 8px; background: #2E7D46; color: #FFFFFF; font: inherit; font-weight: 700; font-size: 16px">Log harvest</button>
+</aside>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const c = (name, color, got, exp) => ({ name, color, pct: Math.min(100, Math.round(got / exp * 100)) + '%', text: got + ' of ' + exp + ' lb', label: name + ': ' + got + ' of ' + exp + ' pounds expected' });
+    return {
+      crops: [c('Lettuce', '#6fae3a', 9.5, 12), c('Peas', '#5aa36a', 6, 8), c('Zucchini', '#5e9a2e', 14, 30), c('Strawberry', '#d94f6a', 5.5, 6), c('Tomato', '#d64545', 0, 28), c('Bush bean', '#4a9a5a', 3.4, 11)],
+      picks: [
+        { date: 'Jul 1', plant: 'Zucchini', where: 'Bed 2', amount: '2 lb 4 oz' },
+        { date: 'Jun 30', plant: 'Bush bean', where: 'Bed 1', amount: '14 oz' },
+        { date: 'Jun 28', plant: 'Lettuce', where: 'Bed 1', amount: '1 lb 2 oz' },
+        { date: 'Jun 27', plant: 'Zucchini', where: 'Bed 2', amount: '3 fruit, 3 lb' },
+        { date: 'Jun 25', plant: 'Strawberry', where: 'Trough', amount: '10 oz' },
+        { date: 'Jun 24', plant: 'Peas', where: 'Bed 2', amount: '1 lb 6 oz' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

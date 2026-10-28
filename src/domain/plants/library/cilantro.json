@@ -1,0 +1,40 @@
+{
+  "id": "cilantro",
+  "name": "Cilantro / coriander",
+  "latin": "Coriandrum sativum",
+  "category": "herb",
+  "family": "Apiaceae",
+  "lifecycle": "annual",
+  "frost": "half-hardy",
+  "temp": { "minC": 7, "maxC": 24 },
+  "soilMinC": 7,
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 9 },
+  "spacingCm": { "inRow": 10, "betweenRows": 30 },
+  "container": { "minLitres": 6 },
+  "canopy": "mid",
+  "shadeTolerant": true,
+  "maturity": { "days": 50, "from": "sow" },
+  "methods": {
+    "direct": { "weeks": [-2, 2] }
+  },
+  "fall": { "windowWeeks": 4 },
+  "succession": { "everyDays": 21 },
+  "harvest": { "type": "cut-and-come-again", "windowDays": 21 },
+  "purpose": ["food"],
+  "yield": { "amount": 50, "unit": "g", "per": "plant" },
+  "glyph": { "form": "sprig", "color": "#6bb04a" },
+  "notes": {
+    "sowing": "Sow directly where it will grow, {cm:0.6} to {cm:1} deep, from about 2 weeks before your last frost; the taproot makes it hard to transplant. Sow a small batch every 3 weeks while the weather is cool, and again in late summer for a fall crop.",
+    "care": "Cilantro bolts quickly in hot weather and long days, sooner if the soil dries out. Keep it watered, give it afternoon shade as the weather warms, and choose slow-bolting varieties. Young plants take light frost.",
+    "harvest": "Cut leaves once plants are about {cm:15} tall, roughly 7 weeks from sowing. For coriander seed, let some plants flower and cut them when the seed heads turn brown, about 3 months from sowing."
+  },
+  "sources": [
+    { "title": "Royal Horticultural Society: How to grow coriander", "url": "https://www.rhs.org.uk/herbs/coriander/grow-your-own" },
+    { "title": "University of Illinois Extension: Cilantro", "url": "https://extension.illinois.edu/herbs/cilantro" },
+    { "title": "Texas A&M AgriLife Extension: Cilantro", "url": "https://aggie-horticulture.tamu.edu/vegetable/wp-content/uploads/sites/10/2011/10/cilantro.pdf" },
+    { "title": "Johnny's Selected Seeds: How to Grow Cilantro (Coriander)", "url": "https://www.johnnyseeds.com/growers-library/herbs/cilantro-coriander/cilantro-coriander-key-growing-information.html" },
+    { "title": "Penn State Extension: Cilantro, a Unique Culinary Herb", "url": "https://extension.psu.edu/cilantro-a-unique-culinary-herb" }
+  ]
+}

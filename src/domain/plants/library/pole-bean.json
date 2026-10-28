@@ -1,0 +1,37 @@
+{
+  "id": "pole-bean",
+  "name": "Pole bean",
+  "latin": "Phaseolus vulgaris",
+  "category": "vegetable",
+  "family": "Fabaceae",
+  "lifecycle": "annual",
+  "frost": "tender",
+  "temp": { "minC": 16, "maxC": 26 },
+  "fruitSetMaxC": 32,
+  "soilMinC": 16,
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 8 },
+  "spacingCm": { "inRow": 15, "betweenRows": 90 },
+  "container": { "minLitres": 40, "perVessel": 3 },
+  "canopy": "tall",
+  "shadeTolerant": false,
+  "maturity": { "days": 65, "from": "sow" },
+  "methods": {
+    "direct": { "weeks": [1, 4] }
+  },
+  "harvest": { "type": "continuous", "windowDays": 60, "untilFrost": true },
+  "support": "trellis",
+  "yield": { "amount": 250, "unit": "g", "per": "plant" },
+  "glyph": { "form": "pod", "color": "#2f7a3a" },
+  "notes": {
+    "sowing": "Put supports in first, then sow outdoors {cm:2.5} to {cm:5} deep, one or two seeds at the base of each pole or cane, 1 to 4 weeks after your last frost once the soil is at least {c:16}. Thin to the strongest seedling.",
+    "care": "Give a trellis, wigwam or netting at least {cm:180} tall. Water evenly during flowering. Hot spells above {c:32} can stop pods setting for a while; cropping resumes when it cools.",
+    "harvest": "Pick pods at {cm:15} to {cm:20}, before the seeds bulge, every few days. Regular picking keeps plants bearing from midsummer until frost."
+  },
+  "sources": [
+    { "title": "University of Minnesota Extension: Growing beans in home gardens", "url": "https://extension.umn.edu/vegetables/growing-beans" },
+    { "title": "Royal Horticultural Society: How to grow French beans", "url": "https://www.rhs.org.uk/vegetables/french-beans/grow-your-own" },
+    { "title": "Clemson Cooperative Extension Home & Garden Information Center: Bush & Pole-Type Snap Beans", "url": "https://hgic.clemson.edu/factsheet/bush-pole-type-snap-beans/" }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "id": "pepper",
+  "name": "Sweet pepper",
+  "latin": "Capsicum annuum",
+  "category": "vegetable",
+  "family": "Solanaceae",
+  "lifecycle": "annual",
+  "frost": "tender",
+  "temp": { "minC": 18, "maxC": 27 },
+  "fruitSetMaxC": 32,
+  "soilMinC": 16,
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 1 },
+  "spacingCm": { "inRow": 45, "betweenRows": 75 },
+  "container": { "minLitres": 15, "perVessel": 1 },
+  "canopy": "mid",
+  "shadeTolerant": false,
+  "maturity": { "days": 70, "from": "transplant" },
+  "methods": {
+    "indoor": { "ageWeeks": [8, 10] },
+    "transplant": { "weeks": [2, 4] }
+  },
+  "harvest": { "type": "continuous", "windowDays": 60 },
+  "support": "stake",
+  "yield": { "amount": 1000, "unit": "g", "per": "plant" },
+  "glyph": { "form": "pepper", "color": "#3f9b3a" },
+  "notes": {
+    "sowing": "Start seeds indoors 8 to 10 weeks before your last frost, {cm:0.6} deep, at {c:27} to {c:32} on a heat mat. Harden off and plant out 2 to 4 weeks after your last frost, once nights stay above {c:10} and the soil has warmed.",
+    "care": "Water evenly and mulch once the soil is warm. Flowers drop in hot spells above {c:32} and when nights fall below {c:16}. Stake plants that are heavy with fruit, since the branches snap easily.",
+    "harvest": "Pick green peppers once full sized and firm, or leave them 2 to 3 weeks longer to color and sweeten. Cut the stem with shears rather than pulling."
+  },
+  "sources": [
+    { "title": "University of Minnesota Extension: Growing peppers in home gardens", "url": "https://extension.umn.edu/vegetables/growing-peppers" },
+    { "title": "Royal Horticultural Society: How to grow sweet peppers", "url": "https://www.rhs.org.uk/vegetables/peppers/grow-your-own" },
+    { "title": "Colorado State University Extension: Vegetable Planting Guide", "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/" },
+    { "title": "Johnny's Selected Seeds: Ace (F1) Bell Pepper Seed", "url": "https://www.johnnyseeds.com/vegetables/peppers/sweet-bell-peppers/ace-f1-bell-pepper-seed-574.html" }
+  ]
+}

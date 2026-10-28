@@ -1,0 +1,38 @@
+{
+  "id": "sunflower",
+  "name": "Sunflower",
+  "latin": "Helianthus annuus",
+  "category": "flower",
+  "family": "Asteraceae",
+  "lifecycle": "annual",
+  "frost": "tender",
+  "temp": { "minC": 16, "maxC": 30 },
+  "soilMinC": 16,
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 1 },
+  "spacingCm": { "inRow": 30, "betweenRows": 75 },
+  "container": { "minLitres": 20, "perVessel": 1 },
+  "canopy": "tall",
+  "shadeTolerant": false,
+  "maturity": { "days": 70, "from": "sow" },
+  "methods": {
+    "direct": { "weeks": [1, 4] }
+  },
+  "succession": { "everyDays": 14 },
+  "harvest": { "type": "once", "windowDays": 14 },
+  "support": "stake",
+  "purpose": ["cut-flowers", "pollinators", "display", "food"],
+  "yield": { "amount": 1, "unit": "count", "per": "plant" },
+  "glyph": { "form": "flower", "color": "#f2c418" },
+  "notes": {
+    "sowing": "Sow directly 1 to 3 weeks after your last frost, once the soil is at least {c:16}, {cm:2} to {cm:5} deep. Thin to {cm:30} to {cm:40} apart, wider for giant types. Sow again every 2 weeks for a longer show.",
+    "care": "Full sun. Stake tall varieties with a strong cane at planting and tie the stem in as it grows; dwarf types need no support and suit large pots. Water deeply as flower buds form. The flowers feed bees and other pollinators.",
+    "harvest": "Single-stem types flower once, about 9 to 11 weeks from sowing. Cut for the vase as the petals open. For seed, cut heads with some stem once they droop and dry, and cure them in a warm, airy place for several weeks."
+  },
+  "sources": [
+    { "title": "Royal Horticultural Society: How to grow Helianthus (sunflowers)", "url": "https://www.rhs.org.uk/plants/helianthus/growing-guide" },
+    { "title": "University of Georgia Cooperative Extension: Growing Sunflowers in the Home Garden", "url": "https://fieldreport.caes.uga.edu/publications/C1121/growing-sunflowers-in-the-home-garden/" },
+    { "title": "Johnny's Selected Seeds: Full Sun Improved (F1) Sunflower Seed", "url": "https://www.johnnyseeds.com/flowers/sunflowers/tall-sunflowers/full-sun-improved-f1-sunflower-seed-1743.html" }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "chives",
+  "name": "Chives",
+  "latin": "Allium schoenoprasum",
+  "category": "herb",
+  "family": "Alliaceae",
+  "lifecycle": "perennial",
+  "frost": "hardy",
+  "temp": { "minC": 7, "maxC": 24 },
+  "soilMinC": 10,
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 4 },
+  "spacingCm": { "inRow": 15, "betweenRows": 45 },
+  "container": { "minLitres": 6 },
+  "canopy": "low",
+  "shadeTolerant": true,
+  "maturity": { "days": 80, "from": "sow" },
+  "methods": {
+    "indoor": { "ageWeeks": [6, 8] },
+    "transplant": { "weeks": [-2, 2] },
+    "direct": { "weeks": [0, 4] },
+    "plant": { "weeks": [-4, 0], "what": "divisions of 4 to 6 bulbs" }
+  },
+  "harvest": { "type": "cut-and-come-again", "windowDays": 150 },
+  "winterMinC": -20,
+  "purpose": ["food", "pollinators"],
+  "yield": { "amount": 100, "unit": "g", "per": "plant" },
+  "glyph": { "form": "sprig", "color": "#a77bc4" },
+  "notes": {
+    "sowing": "Plant divisions of 4 to 6 bulbs in early spring, {cm:15} to {cm:20} apart. From seed, sow several seeds per cell indoors 6 to 8 weeks before your last frost, or sow outdoors {cm:0.6} deep once the soil warms. Seed is slow to make a usable clump.",
+    "care": "Grows in sun or part shade in any well-drained soil. Water in dry spells and divide clumps every 3 to 4 years to keep them vigorous. Fully hardy; the leaves die back in winter and regrow in spring.",
+    "harvest": "Snip leaves about {cm:3} above the soil as needed from spring to fall, lightly in the first year from seed. The flowers are edible: pick them just as they open."
+  },
+  "sources": [
+    { "title": "Royal Horticultural Society: How to grow chives", "url": "https://www.rhs.org.uk/herbs/chives/grow-your-own" },
+    { "title": "University of Illinois Extension: Chives", "url": "https://extension.illinois.edu/herbs/chives" },
+    { "title": "Johnny's Selected Seeds: Nelly Chive Seed", "url": "https://johnnyseeds.com/herbs/chives/standard-chives/nelly-chive-seed-4963.html" },
+    { "title": "Royal Horticultural Society: Allium schoenoprasum, chives (plant profile)", "url": "https://www.rhs.org.uk/plants/859/allium-schoenoprasum/details" }
+  ]
+}

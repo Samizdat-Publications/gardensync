@@ -1,0 +1,104 @@
+{
+  "id": "onion",
+  "name": "Onion",
+  "latin": "Allium cepa",
+  "category": "vegetable",
+  "family": "Alliaceae",
+  "lifecycle": "annual",
+  "frost": "hardy",
+  "temp": {
+    "minC": 7,
+    "maxC": 29
+  },
+  "soilMinC": 2,
+  "sun": "full",
+  "water": "medium",
+  "density": {
+    "perSquare": 9
+  },
+  "spacingCm": {
+    "inRow": 10,
+    "betweenRows": 30
+  },
+  "container": {
+    "minLitres": 35,
+    "perVessel": 12
+  },
+  "canopy": "mid",
+  "shadeTolerant": false,
+  "maturity": {
+    "days": 100,
+    "from": "transplant"
+  },
+  "methods": {
+    "indoor": {
+      "ageWeeks": [
+        8,
+        12
+      ]
+    },
+    "transplant": {
+      "weeks": [
+        -4,
+        -2
+      ]
+    },
+    "direct": {
+      "weeks": [
+        -4,
+        -2
+      ]
+    },
+    "plant": {
+      "weeks": [
+        -4,
+        -2
+      ],
+      "what": "sets"
+    }
+  },
+  "harvest": {
+    "type": "once",
+    "windowDays": 14
+  },
+  "yield": {
+    "amount": 150,
+    "unit": "g",
+    "per": "plant"
+  },
+  "glyph": {
+    "form": "allium",
+    "color": "#c9873a"
+  },
+  "notes": {
+    "sowing": "Start seed indoors 8 to 12 weeks before planting out, {cm:1.3} deep. Plant transplants or sets 2 to 4 weeks before your last frost, sets {cm:2} deep with the tips showing. Small sets bolt less than large ones.",
+    "care": "Bulbs form in response to day length: choose long-day types for high latitudes, short-day types near the tropics, and intermediate types in between. Plants need plenty of leaf before bulbing starts, so plant early, keep weeded, and stop watering once bulbs swell.",
+    "harvest": "Lift when about half the tops have fallen over. Cure in a warm, airy, dry place for 2 to 4 weeks until the necks are tight, then store cool and dry."
+  },
+  "sources": [
+    {
+      "title": "University of Minnesota Extension: Growing onions in home gardens",
+      "url": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-onions"
+    },
+    {
+      "title": "Royal Horticultural Society: How to grow onions",
+      "url": "https://www.rhs.org.uk/vegetables/onions/grow-your-own"
+    },
+    {
+      "title": "Utah State University Extension: How to Grow Onions in Your Garden",
+      "url": "https://extension.usu.edu/yardandgarden/research/onions-in-the-garden"
+    },
+    {
+      "title": "Colorado State University Extension: Vegetable Planting Guide",
+      "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/"
+    },
+    {
+      "title": "UC Cooperative Extension Placer and Nevada Counties: Vegetable Characteristics (optimum temperatures for different vegetables)",
+      "url": "https://projects.sare.org/wp-content/uploads/944820osa-43c-vegetable-characteristics.pdf"
+    },
+    {
+      "title": "UC Cooperative Extension Sacramento County Garden Notes GN 154: Soil Temperature Conditions for Vegetable Seed Germination",
+      "url": "https://ucanr.edu/sites/ucmgplacer/files/345143.pdf"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "name": "GardenSync",
+  "repo": "gardensync",
+  "pitch": "Garden bed planner for home gardeners anywhere: draw beds, place plants square by square, and get a sowing and harvest schedule from 30 years of weather for your own town.",
+  "status": "v1",
+  "version": "8.0.0",
+  "kind": "tool",
+  "started": "2026-02-16",
+  "updated": "2026-10-28",
+  "tech": [
+    "TypeScript",
+    "Preact",
+    "Vite",
+    "Cloudflare Pages",
+    "Open-Meteo API",
+    "Anthropic API (optional)"
+  ],
+  "links": {
+    "landing": "https://gardensync-landing.pages.dev",
+    "play": "https://gardensync-e4e.pages.dev",
+    "devlog": ""
+  },
+  "hero": {
+    "gif": "docs/media/hero.gif",
+    "poster": "site/media/hero.jpg",
+    "clip": "site/media/hero.mp4"
+  },
+  "credits": [
+    {
+      "what": "Weather history, forecast and place search",
+      "who": "Open-Meteo",
+      "licence": "CC BY 4.0"
+    },
+    {
+      "what": "Fonts: Bricolage Grotesque, Atkinson Hyperlegible Next",
+      "who": "Fontsource (self-hosted)",
+      "licence": "SIL OFL"
+    },
+    {
+      "what": "Plant data",
+      "who": "University extension services and the RHS, cited plant by plant",
+      "licence": "Compiled by the author"
+    }
+  ],
+  "models": [
+    "Opus 5.5"
+  ]
+}

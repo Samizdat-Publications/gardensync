@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GardenSync planner, direction B: Seed packet</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@75..150,500..900&amp;family=Familjen+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1E3E8C}a:hover{color:#132a63}
+</style>
+</helmet>
+<div style="min-height: 900px; display: flex; flex-direction: column; background: #F6F5F0; color: #1E3E8C; font-family: 'Familjen Grotesk', 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.45">
+<svg width="0" height="0" style="position: absolute" aria-hidden="true"><defs>
+<pattern id="b-dots" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="1.4" fill="#F15A9A"></circle></pattern>
+<pattern id="b-dots-g" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.5" fill="#00A05A"></circle></pattern>
+</defs></svg>
+
+<header style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 28px; padding: 22px 28px 14px; border-bottom: 3px solid #1E3E8C">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-family: 'Anybody', sans-serif; font-stretch: 150%; font-weight: 900; font-size: 44px; line-height: 0.95; letter-spacing: -0.01em; color: #1E3E8C">GardenSync</span>
+<span style="font-size: 15px">Back garden, Portland, Oregon. Last frost around Mar 22.</span>
+</div>
+<nav aria-label="Main" style="display: flex; flex-wrap: wrap; gap: 6px; flex: 1 1 auto; justify-content: flex-end">
+<a href="#" aria-current="page" style="display: flex; align-items: center; min-height: 40px; padding: 0 16px; background: #1E3E8C; color: #F6F5F0; text-decoration: none; font-weight: 700">Garden</a>
+<a href="#" style="display: flex; align-items: center; min-height: 40px; padding: 0 16px; border: 2px solid #1E3E8C; text-decoration: none">This week</a>
+<a href="#" style="display: flex; align-items: center; min-height: 40px; padding: 0 16px; border: 2px solid #1E3E8C; text-decoration: none">Calendar</a>
+<a href="#" style="display: flex; align-items: center; min-height: 40px; padding: 0 16px; border: 2px solid #1E3E8C; text-decoration: none">Plants</a>
+<a href="#" style="display: flex; align-items: center; min-height: 40px; padding: 0 16px; border: 2px solid #1E3E8C; text-decoration: none">Harvest</a>
+</nav>
+</header>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; padding: 24px 28px; flex: 1 1 auto">
+<aside aria-label="Plants" style="flex: 1 1 260px; max-width: 290px; display: flex; flex-direction: column; gap: 10px">
+<label for="b-find" style="font-family: 'Anybody', sans-serif; font-stretch: 125%; font-weight: 800; font-size: 20px">Seed box</label>
+<input id="b-find" type="search" placeholder="Find a plant" style="min-height: 44px; padding: 0 12px; border: 2px solid #1E3E8C; background: #FFFFFF; color: #1E3E8C; font: inherit">
+<ul style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{packets}}" as="p" hint-placeholder-count="8">
+<li><button style="width: 100%; min-height: 96px; display: flex; flex-direction: column; justify-content: space-between; padding: 8px; border: 2px solid #1E3E8C; background: {{p.bg}}; color: #1E3E8C; font: inherit; text-align: left">
+<span style="font-family: 'Anybody', sans-serif; font-stretch: 125%; font-weight: 800; font-size: 16px; line-height: 1.05">{{p.name}}</span>
+<span style="font-size: 13px">{{p.hint}}</span>
+</button></li>
+</sc-for>
+</ul>
+</aside>
+
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+<h1 style="margin: 0; font-family: 'Anybody', sans-serif; font-stretch: 140%; font-weight: 900; font-size: 34px; line-height: 1">June 12 in the back garden</h1>
+<div style="border: 3px solid #1E3E8C; background: #FFFFFF">
+<svg viewBox="0 0 820 420" role="img" aria-label="Two beds and a pot drawn as two-colour print" style="display: block; width: 100%; height: auto">
+<g transform="translate(40 40)">
+<rect x="5" y="5" width="352" height="176" fill="url(#b-dots)" opacity="0.9"></rect>
+<rect width="352" height="176" fill="none" stroke="#1E3E8C" stroke-width="3"></rect>
+<path d="M44 0 V176 M88 0 V176 M132 0 V176 M176 0 V176 M220 0 V176 M264 0 V176 M308 0 V176 M0 44 H352 M0 88 H352 M0 132 H352" stroke="#1E3E8C" stroke-width="1" opacity="0.4"></path>
+<circle cx="22" cy="22" r="16" fill="#F15A9A" style="mix-blend-mode: multiply"></circle><circle cx="66" cy="22" r="16" fill="#F15A9A" style="mix-blend-mode: multiply"></circle><circle cx="110" cy="22" r="16" fill="#F15A9A" style="mix-blend-mode: multiply"></circle>
+<rect x="178" y="2" width="84" height="84" fill="#00A05A" opacity="0.85" style="mix-blend-mode: multiply"></rect>
+<text x="220" y="52" text-anchor="middle" fill="#F6F5F0" font-family="Anybody, sans-serif" font-weight="900" font-size="22">LET</text>
+<rect x="266" y="2" width="84" height="84" fill="url(#b-dots-g)"></rect>
+<text x="308" y="52" text-anchor="middle" fill="#1E3E8C" font-family="Anybody, sans-serif" font-weight="900" font-size="22">CAR</text>
+<rect x="134" y="90" width="84" height="84" fill="#F15A9A" opacity="0.7" style="mix-blend-mode: multiply"></rect>
+<text x="176" y="140" text-anchor="middle" fill="#1E3E8C" font-family="Anybody, sans-serif" font-weight="900" font-size="22">ONI</text>
+<text x="0" y="-12" fill="#1E3E8C" font-family="Anybody, sans-serif" font-stretch="125%" font-weight="800" font-size="16">Bed 1</text>
+</g>
+<g transform="translate(40 266)">
+<rect x="5" y="5" width="352" height="132" fill="url(#b-dots-g)" opacity="0.6"></rect>
+<rect width="352" height="132" fill="none" stroke="#1E3E8C" stroke-width="3"></rect>
+<circle cx="66" cy="66" r="60" fill="#00A05A" opacity="0.8" style="mix-blend-mode: multiply"></circle>
+<text x="66" y="74" text-anchor="middle" fill="#F6F5F0" font-family="Anybody, sans-serif" font-weight="900" font-size="22">ZUC</text>
+<rect x="134" y="2" width="128" height="84" fill="#F15A9A" opacity="0.6" style="mix-blend-mode: multiply"></rect>
+<text x="198" y="52" text-anchor="middle" fill="#1E3E8C" font-family="Anybody, sans-serif" font-weight="900" font-size="22">BEAN</text>
+</g>
+<g transform="translate(520 80)">
+<circle cx="64" cy="64" r="64" fill="url(#b-dots)"></circle><circle cx="64" cy="64" r="64" fill="none" stroke="#1E3E8C" stroke-width="3"></circle>
+<circle cx="70" cy="60" r="30" fill="#00A05A" style="mix-blend-mode: multiply"></circle>
+<text x="64" y="154" text-anchor="middle" fill="#1E3E8C" font-family="Anybody, sans-serif" font-stretch="125%" font-weight="800" font-size="15">Pepper pot</text>
+</g>
+</svg>
+</div>
+<section aria-label="Season" style="border: 3px solid #1E3E8C; background: #FFFFFF; padding: 12px 14px">
+<h2 style="margin: 0 0 8px; font-family: 'Anybody', sans-serif; font-stretch: 125%; font-weight: 800; font-size: 18px">The season, Jan to Dec</h2>
+<svg viewBox="0 0 780 90" role="img" aria-label="Season ribbon in two inks" style="display: block; width: 100%; height: auto">
+<rect x="0" y="0" width="150" height="90" fill="url(#b-dots)" opacity="0.6"></rect><rect x="640" y="0" width="140" height="90" fill="url(#b-dots)" opacity="0.6"></rect>
+<rect x="200" y="10" width="330" height="18" fill="#F15A9A" style="mix-blend-mode: multiply"></rect>
+<rect x="120" y="36" width="190" height="18" fill="#00A05A" style="mix-blend-mode: multiply"></rect><rect x="420" y="36" width="160" height="18" fill="#00A05A" style="mix-blend-mode: multiply"></rect>
+<rect x="250" y="62" width="200" height="18" fill="#1E3E8C"></rect>
+<path d="M300 0 V90" stroke="#1E3E8C" stroke-width="3"></path>
+</svg>
+</section>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      packets: [
+        { name: 'Bush bean', hint: 'Sow now', bg: '#FCE3EF' },
+        { name: 'Basil', hint: 'Plant out now', bg: '#DDF3E6' },
+        { name: 'Beet', hint: 'Sow now', bg: '#FCE3EF' },
+        { name: 'Carrot', hint: 'Sow now', bg: '#DDF3E6' },
+        { name: 'Cucumber', hint: 'Plant out now', bg: '#DDF3E6' },
+        { name: 'Lettuce', hint: 'Sow in shade', bg: '#FCE3EF' },
+        { name: 'Marigold', hint: 'Plant out now', bg: '#FCE3EF' },
+        { name: 'Zucchini', hint: 'Plant out now', bg: '#DDF3E6' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

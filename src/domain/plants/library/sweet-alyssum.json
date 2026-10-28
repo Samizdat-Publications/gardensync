@@ -1,0 +1,37 @@
+{
+  "id": "sweet-alyssum",
+  "name": "Sweet alyssum",
+  "latin": "Lobularia maritima",
+  "category": "flower",
+  "family": "Brassicaceae",
+  "lifecycle": "annual",
+  "frost": "half-hardy",
+  "temp": { "minC": 10, "maxC": 24 },
+  "soilMinC": 10,
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 4 },
+  "spacingCm": { "inRow": 15, "betweenRows": 20 },
+  "container": { "minLitres": 2, "perVessel": 1 },
+  "canopy": "low",
+  "shadeTolerant": true,
+  "maturity": { "days": 49, "from": "sow" },
+  "methods": {
+    "indoor": { "ageWeeks": [4, 5] },
+    "transplant": { "weeks": [-2, 1] },
+    "direct": { "weeks": [-4, 0] }
+  },
+  "harvest": { "type": "continuous", "windowDays": 120 },
+  "purpose": ["pollinators", "pest-control", "display"],
+  "yield": { "amount": 20, "unit": "count", "per": "plant" },
+  "glyph": { "form": "flower", "color": "#efeaf7" },
+  "notes": {
+    "sowing": "Sow outdoors as soon as the soil can be worked, or start indoors 4 to 5 weeks before planting out. Press the seed onto the surface or barely cover it, as it needs light. Hardened-off plants can go out a week or two before your last frost.",
+    "care": "Grows in sun or part shade and copes with poor soil. Flowering slows in hot weather: shear plants back by half when nights cool to bring on new flowers. The small flowers are a rich nectar source for bees, hoverflies and tiny parasitic wasps.",
+    "harvest": "Flowers start 6 to 8 weeks from sowing and carry on until a hard frost, with a pause in midsummer heat. It is grown for edging, pots and beneficial insects rather than for cutting."
+  },
+  "sources": [
+    { "title": "University of Wisconsin-Madison Extension: Sweet Alyssum, Lobularia maritima", "url": "https://hort.extension.wisc.edu/articles/sweet-alyssum-lobularia-maritima/" },
+    { "title": "Johnny's Selected Seeds: Growing Sweet Alyssum From Seed", "url": "https://johnnyseeds.com/alyssum/alyssum-key-growing-information.html" }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "id": "chili-pepper",
+  "name": "Chili pepper",
+  "latin": "Capsicum annuum",
+  "category": "vegetable",
+  "family": "Solanaceae",
+  "lifecycle": "annual",
+  "frost": "tender",
+  "temp": { "minC": 18, "maxC": 29 },
+  "fruitSetMaxC": 32,
+  "soilMinC": 16,
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 1 },
+  "spacingCm": { "inRow": 40, "betweenRows": 75 },
+  "container": { "minLitres": 8, "perVessel": 1 },
+  "canopy": "mid",
+  "shadeTolerant": false,
+  "maturity": { "days": 75, "from": "transplant" },
+  "methods": {
+    "indoor": { "ageWeeks": [8, 10] },
+    "transplant": { "weeks": [2, 4] }
+  },
+  "harvest": { "type": "continuous", "windowDays": 75 },
+  "yield": { "amount": 400, "unit": "g", "per": "plant" },
+  "glyph": { "form": "pepper", "color": "#e0622a" },
+  "notes": {
+    "sowing": "Start seeds indoors 8 to 10 weeks before your last frost, {cm:0.6} deep, at {c:21} to {c:30}. They can take 2 weeks or more to sprout. Harden off for 2 weeks and plant out 2 to 4 weeks after your last frost, once nights stay above {c:12}.",
+    "care": "Keep the soil evenly moist, since dry spells make flower buds drop. Fruit sets best with days of {c:18} to {c:29} and fails in heat above {c:32}. Feed potted plants weekly with a high-potassium feed once flowering starts.",
+    "harvest": "Pick green once fruit is full sized, or leave it to ripen to its final color for more heat and flavor. Regular picking keeps plants flowering. Wear gloves when handling hot types."
+  },
+  "sources": [
+    { "title": "Royal Horticultural Society: How to grow chilli peppers", "url": "https://www.rhs.org.uk/vegetables/chilli-pepper/grow-your-own" },
+    { "title": "New Mexico State University Extension: Growing Chile Peppers in New Mexico Gardens (Guide H-240)", "url": "https://pubs.nmsu.edu/_h/H240/" },
+    { "title": "University of Minnesota Extension: Growing peppers in home gardens", "url": "https://extension.umn.edu/vegetables/growing-peppers" }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "id": "garlic",
+  "name": "Garlic",
+  "latin": "Allium sativum",
+  "category": "vegetable",
+  "family": "Alliaceae",
+  "lifecycle": "annual",
+  "frost": "hardy",
+  "temp": {
+    "minC": 7,
+    "maxC": 29
+  },
+  "sun": "full",
+  "water": "medium",
+  "density": {
+    "perSquare": 9
+  },
+  "spacingCm": {
+    "inRow": 10,
+    "betweenRows": 30
+  },
+  "container": {
+    "minLitres": 8,
+    "perVessel": 4
+  },
+  "canopy": "mid",
+  "shadeTolerant": false,
+  "maturity": {
+    "days": 120,
+    "from": "transplant"
+  },
+  "methods": {
+    "plant": {
+      "weeks": [
+        -6,
+        -3
+      ],
+      "what": "cloves"
+    }
+  },
+  "overwinter": {
+    "plantWeeks": [
+      -3,
+      1
+    ],
+    "harvestWeeks": [
+      9,
+      12
+    ],
+    "chillWeeks": 6
+  },
+  "harvest": {
+    "type": "once",
+    "windowDays": 14
+  },
+  "soilPh": [
+    6,
+    7
+  ],
+  "yield": {
+    "amount": 50,
+    "unit": "g",
+    "per": "plant"
+  },
+  "glyph": {
+    "form": "allium",
+    "color": "#f1ecdf"
+  },
+  "notes": {
+    "sowing": "Plant cloves pointed end up, {cm:5} to {cm:7.5} deep, from about 3 weeks before to 1 week after your first fall frost, so roots grow before the ground freezes. Use the largest cloves of a variety suited to your climate. Spring planting works but gives small bulbs.",
+    "care": "Most varieties need 1 to 2 months below {c:10} to form bulbs; in frost-free climates, chill cloves in the refrigerator before planting. Mulch over winter where the ground freezes. Cut hardneck flower stems once they curl, and stop watering as the leaves yellow.",
+    "harvest": "Lift when the lower leaves are brown and about half the upper ones are still green. Cure in a dry, airy, shady place for 2 to 4 weeks, then trim the tops."
+  },
+  "sources": [
+    {
+      "title": "University of Minnesota Extension: Growing garlic in home gardens",
+      "url": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-garlic"
+    },
+    {
+      "title": "Royal Horticultural Society: How to grow garlic",
+      "url": "https://www.rhs.org.uk/vegetables/garlic/grow-your-own"
+    },
+    {
+      "title": "Utah State University Extension: How to Grow Garlic in Your Garden",
+      "url": "https://extension.usu.edu/yardandgarden/research/garlic-in-the-garden"
+    },
+    {
+      "title": "University of Minnesota Extension: Planting vegetables in midsummer for fall harvest",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/planting-vegetables-midsummer-fall-harvest"
+    },
+    {
+      "title": "UC Cooperative Extension Placer and Nevada Counties: Vegetable Characteristics (optimum temperatures for different vegetables)",
+      "url": "https://projects.sare.org/wp-content/uploads/944820osa-43c-vegetable-characteristics.pdf"
+    },
+    {
+      "title": "Penn State Extension: Garlic Production",
+      "url": "https://extension.psu.edu/garlic-production"
+    }
+  ]
+}

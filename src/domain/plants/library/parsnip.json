@@ -1,0 +1,83 @@
+{
+  "id": "parsnip",
+  "name": "Parsnip",
+  "latin": "Pastinaca sativa",
+  "category": "vegetable",
+  "family": "Apiaceae",
+  "lifecycle": "annual",
+  "frost": "hardy",
+  "temp": {
+    "minC": 4,
+    "maxC": 24
+  },
+  "soilMinC": 4,
+  "sun": "full",
+  "water": "medium",
+  "density": {
+    "perSquare": 9
+  },
+  "spacingCm": {
+    "inRow": 10,
+    "betweenRows": 30
+  },
+  "container": null,
+  "canopy": "mid",
+  "shadeTolerant": false,
+  "maturity": {
+    "days": 110,
+    "from": "sow"
+  },
+  "methods": {
+    "direct": {
+      "weeks": [
+        -2,
+        2
+      ]
+    }
+  },
+  "harvest": {
+    "type": "once",
+    "windowDays": 90
+  },
+  "soilPh": [
+    6,
+    7
+  ],
+  "yield": {
+    "amount": 600,
+    "unit": "g",
+    "per": "square"
+  },
+  "glyph": {
+    "form": "root",
+    "color": "#e8dcb0"
+  },
+  "notes": {
+    "sowing": "Buy fresh seed every year, as it loses vigor after one season. Sow {cm:1.3} deep from 2 weeks before your last frost, three seeds every {cm:15}. Seedlings take 2 to 4 weeks to appear, and come up fastest once the soil is near {c:12}.",
+    "care": "Thin to the strongest seedling at each station. Parsnips grow a long taproot and do not transplant. Keep the row moist and weeded while the slow seedlings establish, and water in long dry spells.",
+    "harvest": "Dig after the first few hard frosts, which turn starch to sugar. Roots can stay in the ground through winter under mulch; lift them before new growth starts in spring."
+  },
+  "sources": [
+    {
+      "title": "University of Minnesota Extension: Growing carrots and parsnips in home gardens",
+      "url": "https://extension.umn.edu/vegetables/growing-carrots-and-parsnips"
+    },
+    {
+      "title": "Royal Horticultural Society: How to grow parsnips",
+      "url": "https://www.rhs.org.uk/vegetables/parsnips/grow-your-own"
+    },
+    {
+      "title": "Utah State University Extension: How to Grow Parsnips in Your Garden",
+      "url": "https://extension.usu.edu/yardandgarden/research/parsnips-in-the-garden"
+    },
+    {
+      "title": "Colorado State University Extension: Vegetable Planting Guide",
+      "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/"
+    },
+    {
+      "title": "UC Cooperative Extension Sacramento County Garden Notes GN 154: Soil Temperature Conditions for Vegetable Seed Germination",
+      "url": "https://ucanr.edu/sites/ucmgplacer/files/345143.pdf"
+    },
+    { "title": "Oregon State University Extension: Soil temperature conditions for vegetable seed germination", "url": "https://extension.oregonstate.edu/gardening/soil-compost/soil-temperature-conditions-vegetable-seed-germination" }
+  ]
+}

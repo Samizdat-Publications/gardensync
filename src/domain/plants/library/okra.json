@@ -1,0 +1,36 @@
+{
+  "id": "okra",
+  "name": "Okra",
+  "latin": "Abelmoschus esculentus",
+  "category": "vegetable",
+  "family": "Malvaceae",
+  "lifecycle": "annual",
+  "frost": "tender",
+  "temp": { "minC": 21, "maxC": 32 },
+  "soilMinC": 18,
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 1 },
+  "spacingCm": { "inRow": 30, "betweenRows": 90 },
+  "container": { "minLitres": 20, "perVessel": 1 },
+  "canopy": "tall",
+  "shadeTolerant": false,
+  "maturity": { "days": 60, "from": "sow" },
+  "methods": {
+    "indoor": { "ageWeeks": [4, 6] },
+    "transplant": { "weeks": [2, 5] },
+    "direct": { "weeks": [2, 5] }
+  },
+  "harvest": { "type": "continuous", "windowDays": 80, "untilFrost": true },
+  "yield": { "amount": 400, "unit": "g", "per": "plant" },
+  "glyph": { "form": "fruiting", "color": "#7fae5b" },
+  "notes": {
+    "sowing": "Soak seed in warm water for a few hours, then sow {cm:2} deep 2 to 5 weeks after your last frost, once the soil is at least {c:18}. Or sow indoors in individual pots 4 to 6 weeks before planting out. Seedlings die in cold soil, so wait for warmth.",
+    "care": "Okra grows best with days of {c:24} to {c:32} and copes with heat and dry spells. Water about {cm:2.5} a week. Tall types may need staking.",
+    "harvest": "Pick pods at {cm:5} to {cm:8} long, every day or two: bigger pods turn tough and fibrous, and unpicked pods slow new ones. Wear gloves, as the spines can irritate skin."
+  },
+  "sources": [
+    { "title": "Clemson Cooperative Extension Home & Garden Information Center: How to Grow Okra in South Carolina", "url": "https://hgic.clemson.edu/factsheet/okra/" },
+    { "title": "Royal Horticultural Society: How to grow okra", "url": "https://www.rhs.org.uk/vegetables/okra/grow-your-own" }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "id": "lettuce",
+  "name": "Lettuce",
+  "latin": "Lactuca sativa",
+  "category": "vegetable",
+  "family": "Asteraceae",
+  "lifecycle": "annual",
+  "frost": "half-hardy",
+  "temp": {
+    "minC": 7,
+    "maxC": 22
+  },
+  "soilMinC": 2,
+  "sun": "full",
+  "water": "high",
+  "density": {
+    "perSquare": 4
+  },
+  "spacingCm": {
+    "inRow": 20,
+    "betweenRows": 30
+  },
+  "container": {
+    "minLitres": 11,
+    "perVessel": 3
+  },
+  "canopy": "low",
+  "shadeTolerant": true,
+  "maturity": {
+    "days": 50,
+    "from": "sow"
+  },
+  "methods": {
+    "indoor": {
+      "ageWeeks": [
+        4,
+        6
+      ]
+    },
+    "transplant": {
+      "weeks": [
+        -2,
+        0
+      ]
+    },
+    "direct": {
+      "weeks": [
+        -4,
+        -1
+      ]
+    }
+  },
+  "fall": {
+    "windowWeeks": 4
+  },
+  "succession": {
+    "everyDays": 14
+  },
+  "harvest": {
+    "type": "cut-and-come-again",
+    "windowDays": 28
+  },
+  "yield": {
+    "amount": 150,
+    "unit": "g",
+    "per": "plant"
+  },
+  "glyph": {
+    "form": "rosette",
+    "color": "#7cc04b"
+  },
+  "notes": {
+    "sowing": "Sow {cm:0.6} deep from 4 weeks before your last frost, or start indoors 4 to 6 weeks ahead and plant out around the last frost. Seed germinates poorly in soil above {c:27}, so sow summer batches in shade or in the evening.",
+    "care": "Keep the soil evenly moist, as the shallow roots dry out fast. Several days above {c:24} bring on bolting and bitterness, so give light shade in warm spells and sow little and often, about every 2 weeks.",
+    "harvest": "Pick outer leaves once they are about {cm:10} long, or cut whole heads leaving a {cm:2.5} stump to regrow. For a fall crop, sow 8 to 12 weeks before your first fall frost."
+  },
+  "sources": [
+    {
+      "title": "University of Minnesota Extension: Growing lettuce, endive and radicchio in home gardens",
+      "url": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-lettuce-endive-and-radicchio"
+    },
+    {
+      "title": "Royal Horticultural Society: How to grow lettuces",
+      "url": "https://www.rhs.org.uk/vegetables/lettuce/grow-your-own"
+    },
+    {
+      "title": "Utah State University Extension: How to Grow Lettuce in Your Garden",
+      "url": "https://extension.usu.edu/yardandgarden/research/lettuce-in-the-garden"
+    },
+    {
+      "title": "Colorado State University Extension: Vegetable Planting Guide",
+      "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/"
+    },
+    {
+      "title": "UC Cooperative Extension Placer and Nevada Counties: Vegetable Characteristics (optimum temperatures for different vegetables)",
+      "url": "https://projects.sare.org/wp-content/uploads/944820osa-43c-vegetable-characteristics.pdf"
+    },
+    { "title": "University of Tennessee Extension D 68: Leafy Crops for the Tennessee Vegetable Garden", "url": "https://uthort.tennessee.edu/wp-content/uploads/sites/228/2023/11/D68.pdf" }
+  ]
+}

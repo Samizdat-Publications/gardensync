@@ -1,0 +1,87 @@
+{
+  "id": "turnip",
+  "name": "Turnip",
+  "latin": "Brassica rapa subsp. rapa",
+  "category": "vegetable",
+  "family": "Brassicaceae",
+  "lifecycle": "annual",
+  "frost": "hardy",
+  "temp": {
+    "minC": 4,
+    "maxC": 24
+  },
+  "soilMinC": 4,
+  "sun": "full",
+  "water": "medium",
+  "density": {
+    "perSquare": 9
+  },
+  "spacingCm": {
+    "inRow": 10,
+    "betweenRows": 30
+  },
+  "container": {
+    "minLitres": 25,
+    "perVessel": 8
+  },
+  "canopy": "low",
+  "shadeTolerant": false,
+  "maturity": {
+    "days": 50,
+    "from": "sow"
+  },
+  "methods": {
+    "direct": {
+      "weeks": [
+        -4,
+        -1
+      ]
+    }
+  },
+  "fall": {
+    "windowWeeks": 4
+  },
+  "succession": {
+    "everyDays": 28
+  },
+  "harvest": {
+    "type": "once",
+    "windowDays": 21
+  },
+  "yield": {
+    "amount": 500,
+    "unit": "g",
+    "per": "square"
+  },
+  "glyph": {
+    "form": "root",
+    "color": "#c79fd6"
+  },
+  "notes": {
+    "sowing": "Sow {cm:1.3} deep 1 to 4 weeks before your last frost. For the fall crop, which is often the better one, sow 10 to 12 weeks before your first fall frost.",
+    "care": "Thin early types to {cm:10} to {cm:15} apart. Water steadily, since dry spells make turnips bolt and turn bitter. Light frosts improve the flavor.",
+    "harvest": "Pull early turnips between golf-ball and tennis-ball size, about 6 to 10 weeks after sowing; bigger roots turn woody. Young tops can be picked as greens, a few leaves per plant."
+  },
+  "sources": [
+    {
+      "title": "Royal Horticultural Society: How to grow turnips",
+      "url": "https://www.rhs.org.uk/vegetables/turnips/grow-your-own"
+    },
+    {
+      "title": "Utah State University Extension: How to Grow Rutabagas and Turnips in Your Garden",
+      "url": "https://extension.usu.edu/yardandgarden/research/rutabagas-and-turnips-in-the-garden"
+    },
+    {
+      "title": "Colorado State University Extension: Vegetable Planting Guide",
+      "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/"
+    },
+    {
+      "title": "University of Minnesota Extension: Planting vegetables in midsummer for fall harvest",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/planting-vegetables-midsummer-fall-harvest"
+    },
+    {
+      "title": "UC Cooperative Extension Placer and Nevada Counties: Vegetable Characteristics (optimum temperatures for different vegetables)",
+      "url": "https://projects.sare.org/wp-content/uploads/944820osa-43c-vegetable-characteristics.pdf"
+    }
+  ]
+}

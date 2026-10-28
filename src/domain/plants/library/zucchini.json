@@ -1,0 +1,38 @@
+{
+  "id": "zucchini",
+  "name": "Zucchini",
+  "latin": "Cucurbita pepo",
+  "category": "vegetable",
+  "family": "Cucurbitaceae",
+  "lifecycle": "annual",
+  "frost": "tender",
+  "temp": { "minC": 16, "maxC": 29 },
+  "fruitSetMaxC": 35,
+  "soilMinC": 18,
+  "sun": "full",
+  "water": "medium",
+  "density": { "squares": [3, 3] },
+  "spacingCm": { "inRow": 90, "betweenRows": 120 },
+  "container": { "minLitres": 45, "perVessel": 1 },
+  "canopy": "mid",
+  "shadeTolerant": false,
+  "maturity": { "days": 50, "from": "sow" },
+  "methods": {
+    "indoor": { "ageWeeks": [3, 4] },
+    "transplant": { "weeks": [1, 3] },
+    "direct": { "weeks": [1, 4] }
+  },
+  "harvest": { "type": "continuous", "windowDays": 60 },
+  "yield": { "amount": 3000, "unit": "g", "per": "plant" },
+  "glyph": { "form": "vine", "color": "#6b8e23" },
+  "notes": {
+    "sowing": "Sow outdoors {cm:2.5} deep, two or three seeds per spot, 1 to 4 weeks after your last frost once the soil is at least {c:18}, then thin to the strongest. For an earlier crop, sow indoors in individual pots 3 to 4 weeks before planting out and handle the roots gently.",
+    "care": "Each plant needs a space about {cm:90} each way. Water at the base, not the leaves, about {cm:2.5} a week. Mulch once the soil is above {c:24}. Cold, wet or cloudy weather can leave the first fruits unpollinated.",
+    "harvest": "Pick at {cm:10} to {cm:20} long, while tender and glossy. Check every day or two in warm weather: one plant gives several fruits a week, and missed ones swell into tough marrows."
+  },
+  "sources": [
+    { "title": "University of Minnesota Extension: Growing summer squash and zucchini in home gardens", "url": "https://extension.umn.edu/vegetables/growing-summer-squash-and-zucchini" },
+    { "title": "Royal Horticultural Society: How to grow courgettes", "url": "https://www.rhs.org.uk/vegetables/courgettes/grow-your-own" },
+    { "title": "Colorado State University Extension: Vegetable Planting Guide", "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/" }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "id": "pumpkin",
+  "name": "Pumpkin",
+  "latin": "Cucurbita pepo, C. maxima",
+  "category": "vegetable",
+  "family": "Cucurbitaceae",
+  "lifecycle": "annual",
+  "frost": "tender",
+  "temp": { "minC": 16, "maxC": 29 },
+  "fruitSetMaxC": 35,
+  "soilMinC": 18,
+  "sun": "full",
+  "water": "medium",
+  "density": { "squares": [3, 3] },
+  "spacingCm": { "inRow": 90, "betweenRows": 180 },
+  "container": null,
+  "canopy": "mid",
+  "shadeTolerant": false,
+  "maturity": { "days": 100, "from": "sow" },
+  "methods": {
+    "indoor": { "ageWeeks": [3, 4] },
+    "transplant": { "weeks": [1, 3] },
+    "direct": { "weeks": [1, 3] }
+  },
+  "harvest": { "type": "once", "windowDays": 21 },
+  "yield": { "amount": 2, "unit": "count", "per": "plant" },
+  "glyph": { "form": "vine", "color": "#f47a1f" },
+  "notes": {
+    "sowing": "Sow outdoors {cm:2.5} deep, two or three seeds per spot, 1 to 3 weeks after your last frost once the soil is at least {c:18}. Or sow indoors, one seed per pot laid on its side, about 4 weeks before planting out.",
+    "care": "Trailing types need about {cm:150} between plants, bush types about {cm:90}. Water about {cm:2.5} a week at the base. For large pumpkins keep only two or three fruits per plant, and set each on a board to keep it off damp soil.",
+    "harvest": "Harvest once the fruit is fully colored and the rind is hard, before the first hard frost. Cut with at least {cm:10} of stem and cure in the sun for 7 to 10 days. Frosted fruit does not store."
+  },
+  "sources": [
+    { "title": "University of Minnesota Extension: Growing pumpkins and winter squash in home gardens", "url": "https://extension.umn.edu/vegetables/growing-pumpkins-and-winter-squash-home-gardens" },
+    { "title": "Royal Horticultural Society: How to grow pumpkins", "url": "https://www.rhs.org.uk/vegetables/pumpkins/grow-your-own" },
+    { "title": "Colorado State University Extension: Vegetable Planting Guide", "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/" },
+    { "title": "Johnny's Selected Seeds: Howden Pumpkin Seed", "url": "https://www.johnnyseeds.com/vegetables/pumpkins/jack-o-lanterns/howden-pumpkin-seed-603.html" }
+  ]
+}

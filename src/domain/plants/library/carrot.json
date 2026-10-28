@@ -1,0 +1,95 @@
+{
+  "id": "carrot",
+  "name": "Carrot",
+  "latin": "Daucus carota subsp. sativus",
+  "category": "vegetable",
+  "family": "Apiaceae",
+  "lifecycle": "annual",
+  "frost": "half-hardy",
+  "temp": {
+    "minC": 7,
+    "maxC": 24
+  },
+  "soilMinC": 4,
+  "sun": "full",
+  "water": "medium",
+  "density": {
+    "perSquare": 16
+  },
+  "spacingCm": {
+    "inRow": 6,
+    "betweenRows": 30
+  },
+  "container": {
+    "minLitres": 11,
+    "perVessel": 15
+  },
+  "canopy": "low",
+  "shadeTolerant": false,
+  "maturity": {
+    "days": 75,
+    "from": "sow"
+  },
+  "methods": {
+    "direct": {
+      "weeks": [
+        -3,
+        2
+      ]
+    }
+  },
+  "fall": {
+    "windowWeeks": 3
+  },
+  "succession": {
+    "everyDays": 21
+  },
+  "harvest": {
+    "type": "once",
+    "windowDays": 30
+  },
+  "soilPh": [
+    6,
+    7
+  ],
+  "yield": {
+    "amount": 700,
+    "unit": "g",
+    "per": "square"
+  },
+  "glyph": {
+    "form": "root",
+    "color": "#f28c28"
+  },
+  "notes": {
+    "sowing": "Sow thinly {cm:0.6} deep from 3 weeks before your last frost. Seed takes 2 to 3 weeks to come up, so keep the surface moist until it does. Always sow where the crop will grow, as the taproot does not transplant.",
+    "care": "Thin to {cm:5} to {cm:7.5} apart and water deeply about once a week. Soil hotter than about {c:29} gives pale roots. Sow again every 3 weeks until midsummer, and 10 to 12 weeks before your first fall frost for a fall crop.",
+    "harvest": "Lift once roots reach usable size, watering the day before to ease them out. Roots stand light frost, and fall carrots can stay under mulch to be dug as needed."
+  },
+  "sources": [
+    {
+      "title": "University of Minnesota Extension: Growing carrots and parsnips in home gardens",
+      "url": "https://extension.umn.edu/vegetables/growing-carrots-and-parsnips"
+    },
+    {
+      "title": "Royal Horticultural Society: How to grow carrots",
+      "url": "https://www.rhs.org.uk/vegetables/carrots/grow-your-own"
+    },
+    {
+      "title": "Utah State University Extension: How to Grow Carrots in Your Garden",
+      "url": "https://extension.usu.edu/yardandgarden/research/carrots-in-the-garden"
+    },
+    {
+      "title": "Colorado State University Extension: Vegetable Planting Guide",
+      "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/"
+    },
+    {
+      "title": "UC Cooperative Extension Placer and Nevada Counties: Vegetable Characteristics (optimum temperatures for different vegetables)",
+      "url": "https://projects.sare.org/wp-content/uploads/944820osa-43c-vegetable-characteristics.pdf"
+    },
+    {
+      "title": "UC Cooperative Extension Sacramento County Garden Notes GN 154: Soil Temperature Conditions for Vegetable Seed Germination",
+      "url": "https://ucanr.edu/sites/ucmgplacer/files/345143.pdf"
+    }
+  ]
+}

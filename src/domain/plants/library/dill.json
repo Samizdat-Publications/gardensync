@@ -1,0 +1,39 @@
+{
+  "id": "dill",
+  "name": "Dill",
+  "latin": "Anethum graveolens",
+  "category": "herb",
+  "family": "Apiaceae",
+  "lifecycle": "annual",
+  "frost": "half-hardy",
+  "temp": { "minC": 10, "maxC": 24 },
+  "soilMinC": 10,
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 2 },
+  "spacingCm": { "inRow": 20, "betweenRows": 30 },
+  "container": { "minLitres": 20 },
+  "canopy": "tall",
+  "shadeTolerant": false,
+  "maturity": { "days": 42, "from": "sow" },
+  "methods": {
+    "direct": { "weeks": [-2, 2] }
+  },
+  "fall": { "windowWeeks": 4 },
+  "succession": { "everyDays": 21 },
+  "harvest": { "type": "cut-and-come-again", "windowDays": 30 },
+  "purpose": ["food", "pollinators"],
+  "yield": { "amount": 50, "unit": "g", "per": "plant" },
+  "glyph": { "form": "sprig", "color": "#8aa86a" },
+  "notes": {
+    "sowing": "Sow directly from 1 to 2 weeks before your last frost, {cm:0.6} deep in rows {cm:30} apart, and thin to about {cm:20}. Dill has a taproot and dislikes transplanting. Sow again every 3 weeks for a steady supply of leaves, and in late summer for fall.",
+    "care": "Grow in full sun in a sheltered spot, as tall plants can blow over. Water in dry spells to delay flowering. Leave the striped swallowtail caterpillars that feed on it; the flowers also draw hoverflies, lacewings and small wasps.",
+    "harvest": "Pick leaves from about 6 weeks after sowing. For seed, cut heads 2 to 3 weeks after flowering, once the seeds turn brown, and dry them in a paper bag. Plants left to seed will sow themselves."
+  },
+  "sources": [
+    { "title": "Royal Horticultural Society: How to grow dill", "url": "https://www.rhs.org.uk/herbs/dill/grow-your-own" },
+    { "title": "University of Illinois Extension: Dill", "url": "https://extension.illinois.edu/herbs/dill" },
+    { "title": "Utah State University Extension: How to Grow Dill in Your Garden", "url": "https://extension.usu.edu/yardandgarden/research/dill-in-the-garden" },
+    { "title": "Johnny's Selected Seeds: Bouquet Dill Seed", "url": "https://johnnyseeds.com/herbs/dill/bouquet-dill-seed-920.html" }
+  ]
+}

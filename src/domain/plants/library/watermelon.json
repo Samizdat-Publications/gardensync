@@ -1,0 +1,40 @@
+{
+  "id": "watermelon",
+  "name": "Watermelon",
+  "latin": "Citrullus lanatus",
+  "category": "fruit",
+  "family": "Cucurbitaceae",
+  "lifecycle": "annual",
+  "frost": "tender",
+  "temp": { "minC": 21, "maxC": 30 },
+  "fruitSetMaxC": 35,
+  "soilMinC": 18,
+  "sun": "full",
+  "water": "medium",
+  "density": { "squares": [3, 3] },
+  "spacingCm": { "inRow": 90, "betweenRows": 180 },
+  "container": null,
+  "canopy": "low",
+  "shadeTolerant": false,
+  "maturity": { "days": 85, "from": "sow" },
+  "methods": {
+    "indoor": { "ageWeeks": [3, 5] },
+    "transplant": { "weeks": [2, 4] },
+    "direct": { "weeks": [2, 4] }
+  },
+  "harvest": { "type": "continuous", "windowDays": 21 },
+  "yield": { "amount": 2, "unit": "count", "per": "plant" },
+  "glyph": { "form": "vine", "color": "#e2526b" },
+  "notes": {
+    "sowing": "Sow outdoors {cm:2.5} deep, or indoors 3 to 5 weeks before planting out in pots you can plant without disturbing the roots. Sow or plant out 2 to 4 weeks after your last frost, once the soil is at least {c:18}.",
+    "care": "Black plastic mulch warms the soil. Remove row covers when flowers open or days pass {c:32}. Seedless types need a seeded variety nearby to pollinate them. Water {cm:2.5} to {cm:5} a week.",
+    "harvest": "Watermelons do not slip from the vine. One is ripe when the curly tendril nearest it has browned, the skin turns dull, and the spot where it rests on the ground turns from white to cream or yellow."
+  },
+  "sources": [
+    { "title": "Utah State University Extension: How to Grow Watermelon in Your Garden", "url": "https://extension.usu.edu/yardandgarden/research/watermelon-in-the-garden" },
+    { "title": "Clemson Cooperative Extension Home & Garden Information Center: Watermelons", "url": "https://hgic.clemson.edu/factsheet/Watermelons/" },
+    { "title": "University of Minnesota Extension: Growing melons in the home garden", "url": "https://extension.umn.edu/fruit/growing-melons-home-garden" },
+    { "title": "Iowa State University Extension Yard and Garden: Growing Watermelon in the Home Garden", "url": "https://yardandgarden.extension.iastate.edu/how-to/growing-watermelon-home-garden" },
+    { "title": "Johnny's Selected Seeds: Sugar Baby Watermelon Seed", "url": "https://www.johnnyseeds.com/fruits/watermelons/diploid-watermelons/sugar-baby-watermelon-seed-476.html" }
+  ]
+}

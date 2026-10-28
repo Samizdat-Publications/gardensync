@@ -1,0 +1,34 @@
+{
+  "id": "sweet-potato",
+  "name": "Sweet potato",
+  "latin": "Ipomoea batatas",
+  "category": "vegetable",
+  "family": "Convolvulaceae",
+  "lifecycle": "annual",
+  "frost": "tender",
+  "temp": { "minC": 20, "maxC": 29 },
+  "soilMinC": 18,
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 1 },
+  "spacingCm": { "inRow": 30, "betweenRows": 90 },
+  "container": { "minLitres": 30, "perVessel": 1 },
+  "canopy": "low",
+  "shadeTolerant": false,
+  "maturity": { "days": 100, "from": "transplant" },
+  "methods": {
+    "plant": { "weeks": [2, 5], "what": "rooted slips" }
+  },
+  "harvest": { "type": "once", "windowDays": 14 },
+  "yield": { "amount": 800, "unit": "g", "per": "plant" },
+  "glyph": { "form": "tuber", "color": "#c4622d" },
+  "notes": {
+    "sowing": "Plant rooted slips 2 to 5 weeks after your last frost, once the soil is above {c:18}, {cm:8} to {cm:10} deep and {cm:30} apart, ideally on a raised ridge. To grow your own slips, start a sprouting root in moist sand about 6 weeks before planting.",
+    "care": "Grows best at {c:21} to {c:29}. Water about {cm:2.5} a week until the vines cover the ground. Cover plants if a cold night threatens, since any frost kills them.",
+    "harvest": "Dig before frost and before the soil turns cold, handling the roots gently. Cure at about {c:29} and high humidity for 5 to 7 days, then store at {c:13} to {c:16}. Never refrigerate."
+  },
+  "sources": [
+    { "title": "Clemson Cooperative Extension Home & Garden Information Center: Sweetpotato", "url": "https://hgic.clemson.edu/factsheet/sweet-potato/" },
+    { "title": "Royal Horticultural Society: How to grow sweet potatoes", "url": "https://www.rhs.org.uk/vegetables/sweet-potatoes/grow-your-own" }
+  ]
+}

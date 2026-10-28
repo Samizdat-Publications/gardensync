@@ -1,0 +1,179 @@
+/* Page basics and shared component classes. Components keep their own layout in their own CSS file;
+   this file holds only what every screen shares. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--c-bg);
+  color: var(--c-ink);
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  line-height: 1.45;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--c-accent);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+:focus-visible {
+  outline: 3px solid var(--c-focus);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Buttons: one primary style, one secondary, one quiet. All at least 44 px tall. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  min-height: var(--target);
+  padding: 0 var(--sp-4);
+  border: 1px solid var(--c-control);
+  border-radius: var(--r-control);
+  background: var(--c-panel);
+  color: var(--c-ink);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn:hover {
+  background: var(--c-raised);
+}
+.btn[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.btn-primary {
+  border-color: var(--c-accent);
+  background: var(--c-accent);
+  color: var(--c-accent-ink);
+  font-weight: 700;
+}
+.btn-primary:hover {
+  background: var(--c-accent);
+  filter: brightness(1.06);
+}
+.btn-quiet {
+  border-color: transparent;
+  background: transparent;
+  color: var(--c-accent);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.btn-icon {
+  width: var(--target);
+  padding: 0;
+}
+
+.chip {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+  padding: 0 14px;
+  border: 1px solid var(--c-control);
+  border-radius: 22px;
+  background: var(--c-panel);
+  color: var(--c-ink);
+  font: inherit;
+  font-size: var(--fs-sm);
+  cursor: pointer;
+}
+.chip[aria-pressed='true'] {
+  border-color: var(--c-ink);
+  background: var(--c-ink);
+  color: var(--c-panel);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.field > label {
+  font-weight: 700;
+}
+.input {
+  min-height: var(--target);
+  padding: 0 var(--sp-3);
+  border: 1px solid var(--c-control);
+  border-radius: var(--r-control);
+  background: var(--c-panel);
+  color: var(--c-ink);
+  font: inherit;
+}
+
+.panel {
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-panel);
+  background: var(--c-panel);
+}
+
+.muted {
+  color: var(--c-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Destructive confirmation: only after the gardener asked to delete. */
+.btn-danger {
+  border-color: var(--c-caution);
+  background: var(--c-caution);
+  color: var(--c-accent-ink);
+  font-weight: 700;
+}
+
+/* Placeholders read as examples, not as values already typed. */
+.input::placeholder {
+  color: var(--c-muted);
+  opacity: 0.75;
+  font-style: italic;
+}

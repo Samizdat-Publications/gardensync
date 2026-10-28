@@ -1,0 +1,171 @@
+.harvest {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  padding: 28px clamp(16px, 4vw, 56px) 56px;
+  align-items: flex-start;
+}
+.harvest-main {
+  flex: 999 1 560px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.harvest h1 {
+  font-size: var(--fs-3xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.harvest-sub {
+  margin-top: 6px;
+  font-size: 18px;
+}
+.harvest h2 {
+  font-size: var(--fs-lg);
+  font-weight: 700;
+}
+.harvest-recent h2 {
+  font-size: var(--fs-xl);
+  margin-bottom: 8px;
+}
+.harvest-crops {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.harvest-crops ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+/* Compact plan list shown before the first pick. */
+.crop-plan-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.crop-plan-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 0;
+}
+.crop-plan-amt {
+  font-size: var(--fs-sm);
+  white-space: nowrap;
+}
+.crop-row {
+  display: grid;
+  grid-template-columns: minmax(130px, 180px) 1fr minmax(110px, 150px);
+  align-items: center;
+  gap: 12px;
+}
+.crop-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+}
+.crop-bar {
+  position: relative;
+  height: 14px;
+  border-radius: 7px;
+  background: var(--c-raised);
+  border: 1px solid var(--c-line);
+  overflow: hidden;
+}
+.crop-bar > span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 7px;
+}
+.crop-text {
+  font-size: var(--fs-sm);
+  text-align: right;
+}
+.table-wrap {
+  overflow-x: auto;
+}
+.harvest table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.harvest th,
+.harvest td {
+  padding: 10px 14px;
+  text-align: left;
+  border-top: 1px solid var(--c-line);
+}
+.harvest thead th {
+  border-top: 0;
+  font-weight: 500;
+  font-size: var(--fs-sm);
+  color: var(--c-muted);
+}
+.harvest-side {
+  flex: 1 1 320px;
+  max-width: 400px;
+}
+.log-form {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.log-form h2 {
+  font-size: var(--fs-xl);
+}
+.log-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.log-error {
+  color: var(--c-caution);
+  font-weight: 700;
+}
+.log-ok {
+  color: var(--c-accent);
+  font-weight: 700;
+}
+@media (max-width: 560px) {
+  .crop-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .crop-text {
+    text-align: left;
+  }
+}
+/* Two inputs side by side must share the card, however narrow. */
+.log-two {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+.log-form .input {
+  width: 100%;
+  min-width: 0;
+}
+.harvest-side {
+  min-width: 0;
+}
+/* When the form wraps under the list, put it first: logging a pick is why most people come here. */
+@media (max-width: 960px) {
+  .harvest-side {
+    order: -1;
+    max-width: none;
+  }
+}
+/* The page heading spans both columns and stays first, whichever column wraps first. */
+.harvest-head {
+  flex: 1 1 100%;
+  order: -2;
+}

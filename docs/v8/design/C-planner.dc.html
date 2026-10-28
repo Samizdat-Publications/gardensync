@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GardenSync planner, direction C: Quiet tool</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1F7A4D}a:hover{color:#155C39}
+</style>
+</helmet>
+<div style="min-height: 900px; display: flex; flex-direction: column; background: #FFFFFF; color: #1B1C1A; font-family: 'Geist', 'Segoe UI', system-ui, sans-serif; font-size: 14px; line-height: 1.45">
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; height: auto; min-height: 52px; padding: 6px 16px; border-bottom: 1px solid #E6E6E2">
+<span style="font-weight: 700; font-size: 16px">GardenSync</span>
+<span style="color: #6A6B66">/</span>
+<button style="min-height: 34px; padding: 0 10px; border: 1px solid #E6E6E2; border-radius: 6px; background: #FFFFFF; color: #1B1C1A; font: inherit; font-weight: 500">Back garden</button>
+<nav aria-label="Main" style="display: flex; flex-wrap: wrap; gap: 2px; flex: 1 1 auto">
+<a href="#" aria-current="page" style="display: flex; align-items: center; min-height: 34px; padding: 0 10px; border-radius: 6px; background: #F1F2EE; color: #1B1C1A; font-weight: 600; text-decoration: none">Garden</a>
+<a href="#" style="display: flex; align-items: center; min-height: 34px; padding: 0 10px; border-radius: 6px; color: #5C5D58; text-decoration: none">This week</a>
+<a href="#" style="display: flex; align-items: center; min-height: 34px; padding: 0 10px; border-radius: 6px; color: #5C5D58; text-decoration: none">Calendar</a>
+<a href="#" style="display: flex; align-items: center; min-height: 34px; padding: 0 10px; border-radius: 6px; color: #5C5D58; text-decoration: none">Plants</a>
+<a href="#" style="display: flex; align-items: center; min-height: 34px; padding: 0 10px; border-radius: 6px; color: #5C5D58; text-decoration: none">Harvest</a>
+</nav>
+<span style="color: #5C5D58">Portland, Oregon. Last frost Mar 22, first frost Nov 21.</span>
+</header>
+<div style="display: flex; flex-wrap: wrap; flex: 1 1 auto">
+<aside aria-label="Plants" style="flex: 1 1 220px; max-width: 240px; padding: 12px; border-right: 1px solid #E6E6E2; display: flex; flex-direction: column; gap: 8px">
+<label for="c-find" style="font-weight: 600">Plants</label>
+<input id="c-find" type="search" placeholder="Search" style="min-height: 36px; padding: 0 10px; border: 1px solid #D6D6D1; border-radius: 6px; font: inherit">
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column">
+<sc-for list="{{plants}}" as="p" hint-placeholder-count="10">
+<li><button style="width: 100%; display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 0 6px; border: 0; border-radius: 6px; background: transparent; color: #1B1C1A; font: inherit; text-align: left">
+<span style="width: 26px; height: 26px; border-radius: 5px; background: {{p.bg}}; color: #FFFFFF; font-weight: 700; font-size: 12px; display: flex; align-items: center; justify-content: center">{{p.code}}</span>
+<span style="flex: 1 1 auto">{{p.name}}</span>
+<span style="color: #5C5D58; font-size: 12px">{{p.when}}</span>
+</button></li>
+</sc-for>
+</ul>
+</aside>
+<main style="flex: 999 1 560px; min-width: 0; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: baseline; gap: 12px"><h1 style="margin: 0; font-size: 20px; font-weight: 600">Jun 12</h1><span style="color: #5C5D58">214 plants in 5 containers</span></div>
+<svg viewBox="0 0 820 380" role="img" aria-label="Beds as outlined grids with letter-coded plants" style="display: block; width: 100%; height: auto; border: 1px solid #E6E6E2; border-radius: 8px">
+<rect width="820" height="380" fill="#FAFAF8"></rect>
+<g transform="translate(40 40)">
+<rect width="352" height="176" fill="#FFFFFF" stroke="#1B1C1A" stroke-width="1.5"></rect>
+<path d="M44 0 V176 M88 0 V176 M132 0 V176 M176 0 V176 M220 0 V176 M264 0 V176 M308 0 V176 M0 44 H352 M0 88 H352 M0 132 H352" stroke="#E6E6E2"></path>
+<g font-family="Geist, sans-serif" font-weight="700" font-size="13" text-anchor="middle" fill="#FFFFFF">
+<rect x="4" y="4" width="36" height="36" rx="5" fill="#C0392B"></rect><text x="22" y="27">Tm</text>
+<rect x="48" y="4" width="36" height="36" rx="5" fill="#C0392B"></rect><text x="66" y="27">Tm</text>
+<rect x="92" y="4" width="36" height="36" rx="5" fill="#C0392B"></rect><text x="110" y="27">Tm</text>
+<rect x="136" y="4" width="36" height="36" rx="5" fill="#3E8E41"></rect><text x="154" y="27">Ba</text>
+<rect x="180" y="4" width="80" height="80" rx="5" fill="#6B9E2F"></rect><text x="220" y="49">Lt 16</text>
+<rect x="268" y="4" width="80" height="80" rx="5" fill="#C9661A"></rect><text x="308" y="49">Ca 64</text>
+<rect x="136" y="92" width="80" height="80" rx="5" fill="#7D4E99"></rect><text x="176" y="137">On 36</text>
+<rect x="224" y="92" width="80" height="80" rx="5" fill="#6E6A5A"></rect><text x="264" y="137">Ga 36</text>
+</g>
+<rect x="177" y="1" width="86" height="86" rx="6" fill="none" stroke="#1F5BCC" stroke-width="2"></rect>
+</g>
+<g transform="translate(40 250)">
+<rect width="352" height="88" fill="#FFFFFF" stroke="#1B1C1A" stroke-width="1.5"></rect>
+<path d="M44 0 V88 M88 0 V88 M132 0 V88 M176 0 V88 M220 0 V88 M264 0 V88 M308 0 V88 M0 44 H352" stroke="#E6E6E2"></path>
+<g font-family="Geist, sans-serif" font-weight="700" font-size="13" text-anchor="middle" fill="#FFFFFF">
+<rect x="4" y="4" width="80" height="80" rx="5" fill="#4F8A2A"></rect><text x="44" y="49">Zu</text>
+<rect x="92" y="4" width="124" height="80" rx="5" fill="#2F7A4A"></rect><text x="154" y="49">Bb 54</text>
+</g>
+</g>
+<g transform="translate(470 60)"><circle cx="40" cy="40" r="40" fill="#FFFFFF" stroke="#1B1C1A" stroke-width="1.5"></circle><rect x="22" y="22" width="36" height="36" rx="5" fill="#2E8B57"></rect><text x="40" y="45" text-anchor="middle" fill="#FFFFFF" font-family="Geist, sans-serif" font-weight="700" font-size="13">Pp</text></g>
+</svg>
+<section aria-label="Season" style="border: 1px solid #E6E6E2; border-radius: 8px; padding: 10px 12px">
+<svg viewBox="0 0 780 96" role="img" aria-label="Thin season bars" style="display: block; width: 100%; height: auto">
+<rect x="90" y="0" width="149" height="96" fill="#EEF3FB"></rect><rect x="694" y="0" width="76" height="96" fill="#EEF3FB"></rect>
+<g font-family="Geist, sans-serif" font-size="12" fill="#1B1C1A"><text x="0" y="14">Tomato</text><text x="0" y="38">Lettuce</text><text x="0" y="62">Carrot</text><text x="0" y="86">Garlic</text></g>
+<rect x="293" y="7" width="332" height="8" rx="4" fill="#C0392B"></rect><rect x="213" y="31" width="194" height="8" rx="4" fill="#6B9E2F"></rect><rect x="511" y="31" width="162" height="8" rx="4" fill="#6B9E2F"></rect><rect x="226" y="55" width="218" height="8" rx="4" fill="#C9661A"></rect><rect x="90" y="79" width="345" height="8" rx="4" fill="#6E6A5A"></rect><rect x="634" y="79" width="136" height="8" rx="4" fill="#6E6A5A"></rect>
+<path d="M392 0 V96" stroke="#1F5BCC" stroke-width="1.5"></path>
+</svg>
+</section>
+</main>
+<aside aria-label="Selected planting" style="flex: 1 1 260px; max-width: 300px; padding: 16px; border-left: 1px solid #E6E6E2; display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">Lettuce, 16 plants</h2>
+<dl style="margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 12px">
+<dt style="color: #5C5D58">Sown</dt><dd style="margin: 0">Mar 29</dd>
+<dt style="color: #5C5D58">Pick</dt><dd style="margin: 0">May 18 to Jun 26</dd>
+<dt style="color: #5C5D58">Next round</dt><dd style="margin: 0">Apr 12</dd>
+<dt style="color: #5C5D58">Squares</dt><dd style="margin: 0">Bed 1, C1 to D2</dd>
+</dl>
+<button style="min-height: 38px; border: 0; border-radius: 6px; background: #1F7A4D; color: #FFFFFF; font: inherit; font-weight: 600">Log a harvest</button>
+</aside>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      plants: [
+        { code: 'Bb', name: 'Bush bean', when: 'Sow', bg: '#2F7A4A' },
+        { code: 'Ba', name: 'Basil', when: 'Plant', bg: '#3E8E41' },
+        { code: 'Be', name: 'Beet', when: 'Sow', bg: '#9B2F55' },
+        { code: 'Ca', name: 'Carrot', when: 'Sow', bg: '#C9661A' },
+        { code: 'Cu', name: 'Cucumber', when: 'Plant', bg: '#3A7F48' },
+        { code: 'Ga', name: 'Garlic', when: 'Oct', bg: '#6E6A5A' },
+        { code: 'Lt', name: 'Lettuce', when: 'Sow', bg: '#6B9E2F' },
+        { code: 'Ma', name: 'Marigold', when: 'Plant', bg: '#B8690A' },
+        { code: 'On', name: 'Onion', when: 'Feb', bg: '#7D4E99' },
+        { code: 'Zu', name: 'Zucchini', when: 'Plant', bg: '#4F8A2A' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

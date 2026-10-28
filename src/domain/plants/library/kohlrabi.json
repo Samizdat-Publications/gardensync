@@ -1,0 +1,93 @@
+{
+  "id": "kohlrabi",
+  "name": "Kohlrabi",
+  "latin": "Brassica oleracea var. gongylodes",
+  "category": "vegetable",
+  "family": "Brassicaceae",
+  "lifecycle": "annual",
+  "frost": "half-hardy",
+  "temp": {
+    "minC": 4,
+    "maxC": 24
+  },
+  "soilMinC": 4,
+  "sun": "full",
+  "water": "medium",
+  "density": {
+    "perSquare": 4
+  },
+  "spacingCm": {
+    "inRow": 15,
+    "betweenRows": 30
+  },
+  "container": {
+    "minLitres": 11,
+    "perVessel": 3
+  },
+  "canopy": "low",
+  "shadeTolerant": false,
+  "maturity": {
+    "days": 45,
+    "from": "sow"
+  },
+  "methods": {
+    "indoor": {
+      "ageWeeks": [
+        4,
+        6
+      ]
+    },
+    "transplant": {
+      "weeks": [
+        -2,
+        0
+      ]
+    },
+    "direct": {
+      "weeks": [
+        -3,
+        -1
+      ]
+    }
+  },
+  "fall": {
+    "windowWeeks": 3
+  },
+  "harvest": {
+    "type": "once",
+    "windowDays": 14
+  },
+  "yield": {
+    "amount": 140,
+    "unit": "g",
+    "per": "plant"
+  },
+  "glyph": { "form": "brassica", "color": "#9cc46a" },
+  "notes": {
+    "sowing": "Sow {cm:1.3} deep from 3 weeks before your last frost, or start indoors 4 to 6 weeks ahead. A week of nights below {c:10} can make young plants bolt later, so do not set them out too early.",
+    "care": "Keep growth fast and even with steady watering; drought and heat make the swollen stems tough and woody. For a fall crop, sow about 10 weeks before your first fall frost.",
+    "harvest": "Harvest when the swollen stem is {cm:5} to {cm:7.5} across. Larger stems turn woody, though fall crops can be left a little bigger."
+  },
+  "sources": [
+    {
+      "title": "University of Minnesota Extension: Growing kohlrabi in home gardens",
+      "url": "https://extension.umn.edu/vegetables/growing-kohlrabi"
+    },
+    {
+      "title": "Royal Horticultural Society: How to grow kohl rabi",
+      "url": "https://www.rhs.org.uk/vegetables/kohl-rabi/grow-your-own"
+    },
+    {
+      "title": "Utah State University Extension: How to Grow Kohlrabi in Your Garden",
+      "url": "https://extension.usu.edu/yardandgarden/research/kohlrabi-in-the-garden"
+    },
+    {
+      "title": "Colorado State University Extension: Vegetable Planting Guide",
+      "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/"
+    },
+    {
+      "title": "UC Cooperative Extension Placer and Nevada Counties: Vegetable Characteristics (optimum temperatures for different vegetables)",
+      "url": "https://projects.sare.org/wp-content/uploads/944820osa-43c-vegetable-characteristics.pdf"
+    }
+  ]
+}

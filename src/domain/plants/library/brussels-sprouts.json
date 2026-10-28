@@ -1,0 +1,92 @@
+{
+  "id": "brussels-sprouts",
+  "name": "Brussels sprouts",
+  "latin": "Brassica oleracea var. gemmifera",
+  "category": "vegetable",
+  "family": "Brassicaceae",
+  "lifecycle": "annual",
+  "frost": "hardy",
+  "temp": {
+    "minC": 4,
+    "maxC": 24
+  },
+  "soilMinC": 4,
+  "sun": "full",
+  "water": "medium",
+  "density": {
+    "perSquare": 1
+  },
+  "spacingCm": {
+    "inRow": 50,
+    "betweenRows": 60
+  },
+  "container": {
+    "minLitres": 19,
+    "perVessel": 1
+  },
+  "canopy": "tall",
+  "shadeTolerant": false,
+  "maturity": {
+    "days": 90,
+    "from": "transplant"
+  },
+  "methods": {
+    "indoor": {
+      "ageWeeks": [
+        4,
+        6
+      ]
+    },
+    "transplant": {
+      "weeks": [
+        -2,
+        2
+      ]
+    }
+  },
+  "fall": {
+    "windowWeeks": 3
+  },
+  "harvest": {
+    "type": "continuous",
+    "windowDays": 56,
+    "untilFrost": true
+  },
+  "support": "stake",
+  "soilPh": [
+    6,
+    7
+  ],
+  "yield": {
+    "amount": 450,
+    "unit": "g",
+    "per": "plant"
+  },
+  "glyph": {
+    "form": "brassica",
+    "color": "#5d8c3e"
+  },
+  "notes": {
+    "sowing": "Start indoors 4 to 6 weeks before planting out, {cm:1.3} deep. Sprouts need a long season and should mature in cool fall weather: plant out around your last frost where summers are cool, or set transplants out 14 to 16 weeks before your first fall frost where summers are hot.",
+    "care": "Firm the soil well and stake tall plants in windy sites. Water through dry spells. Sprouts are best when they swell in cool weather, and frost improves the flavor.",
+    "harvest": "Pick from the bottom up once sprouts are about {cm:2.5} across and tight, snapping them off. Plants stand frost to about {c:-6}; after a hard freeze, cut the whole stalk."
+  },
+  "sources": [
+    {
+      "title": "University of Minnesota Extension: Growing Brussels sprouts in home gardens",
+      "url": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-brussels-sprouts"
+    },
+    {
+      "title": "Royal Horticultural Society: How to grow Brussels sprouts",
+      "url": "https://www.rhs.org.uk/vegetables/brussels-sprouts/grow-your-own"
+    },
+    {
+      "title": "University of Minnesota Extension: Planting vegetables in midsummer for fall harvest",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/planting-vegetables-midsummer-fall-harvest"
+    },
+    {
+      "title": "UC Cooperative Extension Placer and Nevada Counties: Vegetable Characteristics (optimum temperatures for different vegetables)",
+      "url": "https://projects.sare.org/wp-content/uploads/944820osa-43c-vegetable-characteristics.pdf"
+    }
+  ]
+}

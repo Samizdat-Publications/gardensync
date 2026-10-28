@@ -1,0 +1,577 @@
+[
+  {
+    "a": "potato",
+    "b": "tomato",
+    "kind": "bad",
+    "reason": "Both are hosts of late blight, and many strains infect both. Spores travel on the wind, so blight in a potato patch can spread to tomatoes beside it. Keep them apart and rotate.",
+    "evidence": "tested",
+    "source": {
+      "title": "University of Minnesota Extension: Late blight of tomato and potato",
+      "url": "https://extension.umn.edu/disease-management/late-blight"
+    }
+  },
+  {
+    "a": "eggplant",
+    "b": "potato",
+    "kind": "bad",
+    "reason": "Colorado potato beetle feeds on both. A potato patch breeds beetles that then strip young eggplants nearby. Eggplant used as a trap crop did not cut beetle numbers in trials.",
+    "evidence": "tested",
+    "source": {
+      "title": "University of Minnesota Extension: Colorado potato beetle",
+      "url": "https://extension.umn.edu/yard-and-garden-insects/colorado-potato-beetles"
+    }
+  },
+  {
+    "a": "potato",
+    "b": "tomatillo",
+    "kind": "bad",
+    "reason": "Colorado potato beetle also feeds on tomatillo, so planting it beside potatoes gives the beetle a second host in the same bed.",
+    "evidence": "tested",
+    "source": {
+      "title": "University of Minnesota Extension: Colorado potato beetle",
+      "url": "https://extension.umn.edu/yard-and-garden-insects/colorado-potato-beetles"
+    }
+  },
+  {
+    "a": "sweet-corn",
+    "b": "tomato",
+    "kind": "bad",
+    "reason": "The corn earworm and the tomato fruitworm are the same caterpillar. It prefers corn, but late in the season, as the corn becomes less attractive, it may move into tomato fruit.",
+    "evidence": "tested",
+    "source": {
+      "title": "Wisconsin Horticulture: Corn Earworm, Helicoverpa zea",
+      "url": "https://hort.extension.wisc.edu/articles/corn-earworm-helicoverpa-zea/"
+    }
+  },
+  {
+    "a": "strawberry",
+    "b": "tomato",
+    "kind": "bad",
+    "reason": "Both get Verticillium wilt. Tomatoes build the fungus up in the soil, where it persists for years, and strawberries in that soil are at risk. Extension advice is not to plant strawberries after tomatoes.",
+    "evidence": "tested",
+    "source": {
+      "title": "Penn State Extension: Strawberry Disease - Verticillium Wilt",
+      "url": "https://extension.psu.edu/strawberry-disease-verticillium-wilt"
+    }
+  },
+  {
+    "a": "potato",
+    "b": "strawberry",
+    "kind": "bad",
+    "reason": "Both get Verticillium wilt. Potatoes build the fungus up in the soil, where it persists for years, so keep strawberries out of soil that has grown potatoes.",
+    "evidence": "tested",
+    "source": {
+      "title": "Penn State Extension: Strawberry Disease - Verticillium Wilt",
+      "url": "https://extension.psu.edu/strawberry-disease-verticillium-wilt"
+    }
+  },
+  {
+    "a": "eggplant",
+    "b": "strawberry",
+    "kind": "bad",
+    "reason": "Both get Verticillium wilt. Eggplant builds the fungus up in the soil, where it persists for years, so keep strawberries out of soil that has grown eggplant.",
+    "evidence": "tested",
+    "source": {
+      "title": "Penn State Extension: Strawberry Disease - Verticillium Wilt",
+      "url": "https://extension.psu.edu/strawberry-disease-verticillium-wilt"
+    }
+  },
+  {
+    "a": "raspberry",
+    "b": "tomato",
+    "kind": "bad",
+    "reason": "Raspberries get Verticillium wilt, which tomatoes build up in the soil for several years. Keep canes out of soil that grew tomatoes in the last 3 to 4 years.",
+    "evidence": "tested",
+    "source": {
+      "title": "Purdue Extension HO-44: Raspberries",
+      "url": "https://ag.purdue.edu/department/hla/extension/extension-publications-library/ext-pubs/ho-44-w.html"
+    }
+  },
+  {
+    "a": "potato",
+    "b": "raspberry",
+    "kind": "bad",
+    "reason": "Raspberries get Verticillium wilt, which potatoes build up in the soil for several years. Keep canes out of soil that grew potatoes in the last 3 to 4 years.",
+    "evidence": "tested",
+    "source": {
+      "title": "Purdue Extension HO-44: Raspberries",
+      "url": "https://ag.purdue.edu/department/hla/extension/extension-publications-library/ext-pubs/ho-44-w.html"
+    }
+  },
+  {
+    "a": "eggplant",
+    "b": "raspberry",
+    "kind": "bad",
+    "reason": "Raspberries get Verticillium wilt, which eggplant builds up in the soil for several years. Keep canes out of soil that grew eggplant in the last 3 to 4 years.",
+    "evidence": "tested",
+    "source": {
+      "title": "Purdue Extension HO-44: Raspberries",
+      "url": "https://ag.purdue.edu/department/hla/extension/extension-publications-library/ext-pubs/ho-44-w.html"
+    }
+  },
+  {
+    "a": "pepper",
+    "b": "raspberry",
+    "kind": "bad",
+    "reason": "Peppers host Verticillium wilt, which persists in soil for several years and also attacks raspberries. Extension guides advise not planting raspberries where peppers grew recently.",
+    "evidence": "tested",
+    "source": {
+      "title": "Purdue Extension HO-44: Raspberries",
+      "url": "https://ag.purdue.edu/department/hla/extension/extension-publications-library/ext-pubs/ho-44-w.html"
+    }
+  },
+  {
+    "a": "chili-pepper",
+    "b": "raspberry",
+    "kind": "bad",
+    "reason": "Chili peppers host Verticillium wilt, which persists in soil for several years and also attacks raspberries. Extension guides advise not planting raspberries where peppers grew recently.",
+    "evidence": "tested",
+    "source": {
+      "title": "Purdue Extension HO-44: Raspberries",
+      "url": "https://ag.purdue.edu/department/hla/extension/extension-publications-library/ext-pubs/ho-44-w.html"
+    }
+  },
+  {
+    "a": "raspberry",
+    "b": "strawberry",
+    "kind": "bad",
+    "reason": "Both get Verticillium wilt and can carry it in the soil. Extension guides advise planting raspberries only where strawberries have not grown for several years.",
+    "evidence": "tested",
+    "source": {
+      "title": "Illinois Extension: Growing Raspberries",
+      "url": "https://extension.illinois.edu/small-fruits/growing-raspberries"
+    }
+  },
+  {
+    "a": "cucumber",
+    "b": "rosemary",
+    "kind": "bad",
+    "reason": "Rosemary wants free-draining soil kept on the dry side and rots when wet; cucumbers need steady moisture. Watering for one harms the other. The claim that rosemary stunts cucumbers is lore.",
+    "evidence": "tested",
+    "source": {
+      "title": "RHS: How to grow rosemary",
+      "url": "https://www.rhs.org.uk/herbs/rosemary/grow-your-own"
+    }
+  },
+  {
+    "a": "cucumber",
+    "b": "sage",
+    "kind": "bad",
+    "reason": "Sage needs free-draining soil that never gets waterlogged; cucumbers need steady moisture. Watering for one harms the other. The claim that sage stunts cucumbers is lore.",
+    "evidence": "tested",
+    "source": {
+      "title": "RHS: How to grow sage",
+      "url": "https://www.rhs.org.uk/herbs/sage/grow-your-own"
+    }
+  },
+  {
+    "a": "cucumber",
+    "b": "thyme",
+    "kind": "bad",
+    "reason": "Thyme needs well-drained soil, and wet ground shortens its life; cucumbers need frequent watering. They are poorly matched in one bed.",
+    "evidence": "tested",
+    "source": {
+      "title": "Illinois Extension: Thyme",
+      "url": "https://extension.illinois.edu/herbs/thyme"
+    }
+  },
+  {
+    "a": "lettuce",
+    "b": "rosemary",
+    "kind": "bad",
+    "reason": "Lettuce needs even moisture to stay sweet, while rosemary is drought tolerant and its roots rot in wet soil. Give them separate beds or watering zones.",
+    "evidence": "tested",
+    "source": {
+      "title": "RHS: How to grow rosemary",
+      "url": "https://www.rhs.org.uk/herbs/rosemary/grow-your-own"
+    }
+  },
+  {
+    "a": "mint",
+    "b": "thyme",
+    "kind": "bad",
+    "reason": "Mint spreads fast by underground runners and will overrun low thyme, and it wants moister soil than thyme does. Grow mint in its own pot.",
+    "evidence": "tested",
+    "source": {
+      "title": "Illinois Extension: Mint",
+      "url": "https://extension.illinois.edu/herbs/mint"
+    }
+  },
+  {
+    "a": "mint",
+    "b": "sage",
+    "kind": "bad",
+    "reason": "Mint spreads fast by underground runners and will push into sage, which needs drier, free-draining soil. Grow mint in its own pot.",
+    "evidence": "tested",
+    "source": {
+      "title": "RHS: How to grow mint",
+      "url": "https://www.rhs.org.uk/herbs/mint/grow-your-own"
+    }
+  },
+  {
+    "a": "mint",
+    "b": "parsley",
+    "kind": "bad",
+    "reason": "Mint spreads fast by underground runners and will crowd out parsley. Grow mint in its own pot. The spreading is the real problem, not any chemical effect.",
+    "evidence": "tested",
+    "source": {
+      "title": "RHS: How to grow mint",
+      "url": "https://www.rhs.org.uk/herbs/mint/grow-your-own"
+    }
+  },
+  {
+    "a": "blueberry",
+    "b": "spinach",
+    "kind": "bad",
+    "reason": "Blueberries need acid soil, about pH 4.5 to 5.5, while spinach wants neutral to slightly alkaline soil. One bed cannot suit both.",
+    "evidence": "tested",
+    "source": {
+      "title": "Ontario Ministry of Agriculture: Growing blueberries for home gardens and small scale production",
+      "url": "https://www.ontario.ca/page/growing-blueberries-home-gardens-and-small-scale-production"
+    }
+  },
+  {
+    "a": "asparagus",
+    "b": "blueberry",
+    "kind": "bad",
+    "reason": "Blueberries need acid soil, about pH 4.5 to 5.5, while asparagus does poorly below about pH 6. Give them separate beds.",
+    "evidence": "tested",
+    "source": {
+      "title": "Ontario Ministry of Agriculture: Growing blueberries for home gardens and small scale production",
+      "url": "https://www.ontario.ca/page/growing-blueberries-home-gardens-and-small-scale-production"
+    }
+  },
+  {
+    "a": "marigold",
+    "b": "tomato",
+    "kind": "good",
+    "reason": "French marigolds grown among tomatoes all season slowed glasshouse whitefly build-up in trials, through the limonene they give off. Interplanted marigolds do little against root-knot nematodes.",
+    "evidence": "tested",
+    "source": {
+      "title": "Conboy et al. 2019, Companion planting with French marigolds protects tomato plants from glasshouse whiteflies through the emission of airborne limonene, PLOS ONE",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0213071"
+    }
+  },
+  {
+    "a": "basil",
+    "b": "tomato",
+    "kind": "good",
+    "reason": "Field and greenhouse studies found basil interplanted with tomatoes reduced thrips, and it may help tomato growth. The claim that basil improves tomato flavor is folklore.",
+    "evidence": "tested",
+    "source": {
+      "title": "University of Minnesota Extension: Companion planting in home gardens",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/companion-planting-home-gardens"
+    }
+  },
+  {
+    "a": "lettuce",
+    "b": "sweet-alyssum",
+    "kind": "good",
+    "reason": "Sweet alyssum flowers feed adult hoverflies, whose larvae eat aphids. In lettuce field trials, interplanted alyssum greatly reduced aphid numbers.",
+    "evidence": "tested",
+    "source": {
+      "title": "UC Davis: Aphid Relief from Sweet Alyssum",
+      "url": "https://www.ucdavis.edu/news/aphid-relief-sweet-alyssum"
+    }
+  },
+  {
+    "a": "cabbage",
+    "b": "collards",
+    "kind": "good",
+    "reason": "Collards planted around cabbage draw diamondback moths to lay their eggs on them instead. In field trials the cabbage needed far fewer sprays.",
+    "evidence": "tested",
+    "source": {
+      "title": "USDA ARS Agricultural Research: Trap Crops Prove Irresistible to Diamondbacks",
+      "url": "https://agresearchmag.ars.usda.gov/1999/mar/diam"
+    }
+  },
+  {
+    "a": "winter-squash",
+    "b": "zucchini",
+    "kind": "good",
+    "reason": "Blue Hubbard and other Cucurbita maxima squash attract striped cucumber beetles. As a border they can spare other squash, but only if the border plants are treated or hand-picked.",
+    "evidence": "tested",
+    "source": {
+      "title": "UMass Amherst: Using Perimeter Trap Crops to Manage Striped Cucumber Beetle and Bacterial Wilt",
+      "url": "https://www.umass.edu/agriculture-food-environment/vegetable/research-reports/using-perimeter-trap-crops-to-manage-striped-cucumber-beetle-bacterial-wilt"
+    }
+  },
+  {
+    "a": "nasturtium",
+    "b": "zucchini",
+    "kind": "good",
+    "reason": "Research supports nasturtium for reducing squash bug numbers, an old practice that has held up.",
+    "evidence": "tested",
+    "source": {
+      "title": "University of Minnesota Extension: Companion planting in home gardens",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/companion-planting-home-gardens"
+    }
+  },
+  {
+    "a": "nasturtium",
+    "b": "winter-squash",
+    "kind": "good",
+    "reason": "Research supports nasturtium for reducing squash bug numbers on squash, an old practice that has held up.",
+    "evidence": "tested",
+    "source": {
+      "title": "University of Minnesota Extension: Companion planting in home gardens",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/companion-planting-home-gardens"
+    }
+  },
+  {
+    "a": "nasturtium",
+    "b": "pumpkin",
+    "kind": "good",
+    "reason": "Research supports nasturtium for reducing squash bug numbers on squash and pumpkins, an old practice that has held up.",
+    "evidence": "tested",
+    "source": {
+      "title": "University of Minnesota Extension: Companion planting in home gardens",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/companion-planting-home-gardens"
+    }
+  },
+  {
+    "a": "broccoli",
+    "b": "nasturtium",
+    "kind": "good",
+    "reason": "In an Iowa study, nasturtium helped reduce cabbage looper and imported cabbageworm damage on broccoli. The evidence rests on that one study.",
+    "evidence": "tested",
+    "source": {
+      "title": "University of Minnesota Extension: Companion planting in home gardens",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/companion-planting-home-gardens"
+    }
+  },
+  {
+    "a": "cabbage",
+    "b": "nasturtium",
+    "kind": "good",
+    "reason": "In an Iowa study, nasturtium helped reduce cabbage looper and imported cabbageworm on cabbage. The evidence rests on that one study.",
+    "evidence": "tested",
+    "source": {
+      "title": "University of Minnesota Extension: Companion planting in home gardens",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/companion-planting-home-gardens"
+    }
+  },
+  {
+    "a": "broccoli",
+    "b": "thyme",
+    "kind": "good",
+    "reason": "In an Iowa study, thyme helped reduce cabbage looper and imported cabbageworm damage on broccoli. The evidence rests on that one study.",
+    "evidence": "tested",
+    "source": {
+      "title": "University of Minnesota Extension: Companion planting in home gardens",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/companion-planting-home-gardens"
+    }
+  },
+  {
+    "a": "broccoli",
+    "b": "onion",
+    "kind": "good",
+    "reason": "In an Iowa study, onions helped reduce cabbage looper and imported cabbageworm damage on broccoli. The evidence rests on that one study.",
+    "evidence": "tested",
+    "source": {
+      "title": "University of Minnesota Extension: Companion planting in home gardens",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/companion-planting-home-gardens"
+    }
+  },
+  {
+    "a": "cabbage",
+    "b": "onion",
+    "kind": "good",
+    "reason": "In an Iowa study, onions helped reduce cabbage looper and imported cabbageworm on cabbage. The evidence rests on that one study; onions do not reliably deter flea beetles.",
+    "evidence": "tested",
+    "source": {
+      "title": "University of Minnesota Extension: Companion planting in home gardens",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/companion-planting-home-gardens"
+    }
+  },
+  {
+    "a": "cabbage",
+    "b": "marigold",
+    "kind": "good",
+    "reason": "In an Iowa study, marigolds helped reduce cabbage looper and imported cabbageworm on cabbage. Marigolds do not deter flea beetles, despite the common advice.",
+    "evidence": "tested",
+    "source": {
+      "title": "University of Minnesota Extension: Companion planting in home gardens",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/companion-planting-home-gardens"
+    }
+  },
+  {
+    "a": "arugula",
+    "b": "broccoli",
+    "kind": "good",
+    "reason": "Arugula is an effective flea beetle trap crop and can draw beetles off broccoli. Treat it as a sacrifice: the arugula itself will be riddled with holes.",
+    "evidence": "tested",
+    "source": {
+      "title": "University of Minnesota Extension: Companion planting in home gardens",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/companion-planting-home-gardens"
+    }
+  },
+  {
+    "a": "arugula",
+    "b": "cabbage",
+    "kind": "good",
+    "reason": "Arugula is an effective flea beetle trap crop and can draw beetles off cabbage. Treat it as a sacrifice: the arugula itself will be riddled with holes.",
+    "evidence": "tested",
+    "source": {
+      "title": "University of Minnesota Extension: Companion planting in home gardens",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/companion-planting-home-gardens"
+    }
+  },
+  {
+    "a": "carrot",
+    "b": "radish",
+    "kind": "good",
+    "reason": "Radishes sprout in days and mark the row of slow carrots, which can take three weeks to come up. Pull the radishes as the carrots emerge to give them room.",
+    "evidence": "tested",
+    "source": {
+      "title": "University of Minnesota Extension: Growing carrots and parsnips in home gardens",
+      "url": "https://extension.umn.edu/vegetables/growing-carrots-and-parsnips"
+    }
+  },
+  {
+    "a": "parsnip",
+    "b": "radish",
+    "kind": "good",
+    "reason": "Radishes sprout quickly and mark the row of slow-germinating parsnips, and they are pulled before they can hinder the parsnips.",
+    "evidence": "tested",
+    "source": {
+      "title": "RHS: How to grow radishes",
+      "url": "https://www.rhs.org.uk/vegetables/radishes/grow-your-own"
+    }
+  },
+  {
+    "a": "lettuce",
+    "b": "sweet-corn",
+    "kind": "good",
+    "reason": "Lettuce sown between young sweetcorn is cut before the corn needs the space, and the corn gives the light summer shade that helps delay bolting.",
+    "evidence": "tested",
+    "source": {
+      "title": "RHS: How to grow lettuces",
+      "url": "https://www.rhs.org.uk/vegetables/lettuce/grow-your-own"
+    }
+  },
+  {
+    "a": "lettuce",
+    "b": "parsnip",
+    "kind": "good",
+    "reason": "Lettuce sown between slow-growing parsnips is harvested before the parsnips need the room, so the gap is not wasted.",
+    "evidence": "tested",
+    "source": {
+      "title": "RHS: How to grow lettuces",
+      "url": "https://www.rhs.org.uk/vegetables/lettuce/grow-your-own"
+    }
+  },
+  {
+    "a": "lettuce",
+    "b": "tomato",
+    "kind": "good",
+    "reason": "Lettuce planted early can share a bed with later tomato transplants: it is harvested as the tomato canopy fills in, which also helps keep weeds down.",
+    "evidence": "tested",
+    "source": {
+      "title": "University of Minnesota Extension: Companion planting in home gardens",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/companion-planting-home-gardens"
+    }
+  },
+  {
+    "a": "spinach",
+    "b": "tomato",
+    "kind": "good",
+    "reason": "Spinach sown early can share a bed with later tomato transplants: it is harvested as the tomato canopy fills in, which also helps keep weeds down.",
+    "evidence": "tested",
+    "source": {
+      "title": "University of Minnesota Extension: Companion planting in home gardens",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/companion-planting-home-gardens"
+    }
+  },
+  {
+    "a": "lettuce",
+    "b": "pepper",
+    "kind": "good",
+    "reason": "Lettuce planted early can share a bed with later pepper transplants: it is harvested as the peppers fill in, which also helps keep weeds down.",
+    "evidence": "tested",
+    "source": {
+      "title": "University of Minnesota Extension: Companion planting in home gardens",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/companion-planting-home-gardens"
+    }
+  },
+  {
+    "a": "pepper",
+    "b": "spinach",
+    "kind": "good",
+    "reason": "Spinach sown early can share a bed with later pepper transplants: it is harvested as the peppers fill in, which also helps keep weeds down.",
+    "evidence": "tested",
+    "source": {
+      "title": "University of Minnesota Extension: Companion planting in home gardens",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/companion-planting-home-gardens"
+    }
+  },
+  {
+    "a": "carrot",
+    "b": "onion",
+    "kind": "good",
+    "reason": "Traditional pairing said to confuse carrot fly. Trials found only a small cut in damage, mainly while the onions are young and outnumber the carrots.",
+    "evidence": "traditional",
+    "source": {
+      "title": "Varis 1991, Effect of intercropping carrots and onions on damage caused by the carrot fly, Agricultural and Food Science in Finland",
+      "url": "https://journal.fi/afs/article/view/72420"
+    }
+  },
+  {
+    "a": "pole-bean",
+    "b": "sweet-corn",
+    "kind": "good",
+    "reason": "Traditional three sisters pairing: beans climb the corn. Trials used tall field corn; shorter sweet corn may be pulled over by vigorous beans, so sow the beans once the corn is well up.",
+    "evidence": "traditional",
+    "source": {
+      "title": "Mt.Pleasant 2016, Food Yields and Nutrient Analyses of the Three Sisters: A Haudenosaunee Cropping System, Ethnobiology Letters",
+      "url": "https://ojs.ethnobiology.org/index.php/ebl/article/view/721"
+    }
+  },
+  {
+    "a": "pumpkin",
+    "b": "sweet-corn",
+    "kind": "good",
+    "reason": "Traditional three sisters pairing: squash leaves cover the ground under the corn. A trial with field corn grew more food per area than separate plots; garden sweet corn is less tested.",
+    "evidence": "traditional",
+    "source": {
+      "title": "Mt.Pleasant 2016, Food Yields and Nutrient Analyses of the Three Sisters: A Haudenosaunee Cropping System, Ethnobiology Letters",
+      "url": "https://ojs.ethnobiology.org/index.php/ebl/article/view/721"
+    }
+  },
+  {
+    "a": "sweet-corn",
+    "b": "winter-squash",
+    "kind": "good",
+    "reason": "Traditional three sisters pairing: squash leaves cover the ground under the corn. A trial with field corn grew more food per area than separate plots; garden sweet corn is less tested.",
+    "evidence": "traditional",
+    "source": {
+      "title": "Mt.Pleasant 2016, Food Yields and Nutrient Analyses of the Three Sisters: A Haudenosaunee Cropping System, Ethnobiology Letters",
+      "url": "https://ojs.ethnobiology.org/index.php/ebl/article/view/721"
+    }
+  },
+  {
+    "a": "pole-bean",
+    "b": "pumpkin",
+    "kind": "good",
+    "reason": "Traditional three sisters pairing, grown together under the corn. Bean and squash yields each fell in the mix; the gain was in total food from the plot.",
+    "evidence": "traditional",
+    "source": {
+      "title": "Mt.Pleasant 2016, Food Yields and Nutrient Analyses of the Three Sisters: A Haudenosaunee Cropping System, Ethnobiology Letters",
+      "url": "https://ojs.ethnobiology.org/index.php/ebl/article/view/721"
+    }
+  },
+  {
+    "a": "asparagus",
+    "b": "tomato",
+    "kind": "good",
+    "reason": "Traditional pairing: tomatoes are said to repel asparagus beetle. No trial evidence was found for it.",
+    "evidence": "traditional"
+  },
+  {
+    "a": "borage",
+    "b": "strawberry",
+    "kind": "good",
+    "reason": "Traditional pairing: borage is said to improve strawberry crops. Its flowers do draw bees, but the yield claim is untested.",
+    "evidence": "traditional"
+  }
+]

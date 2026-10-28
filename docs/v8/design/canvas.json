@@ -1,0 +1,47 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-10-28T07:05:00Z" },
+  "title": "GardenSync 8 design",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 1440, "h": 900, "title": "A. Plot: planner", "expand": "fill" },
+    "B-planner.dc.html": { "x": 1520, "y": 0, "w": 1440, "h": 900, "title": "B. Seed packet: planner", "expand": "fill" },
+    "C-planner.dc.html": { "x": 3040, "y": 0, "w": 1440, "h": 900, "title": "C. Quiet tool: planner", "expand": "fill" },
+    "A-setup.dc.html": { "x": 0, "y": 1280, "w": 1440, "h": 900, "title": "Plot: first run, where do you garden", "expand": "fill" },
+    "A-plants.dc.html": { "x": 1520, "y": 1280, "w": 1440, "h": 900, "title": "Plot: plant library and plant card", "expand": "fill" },
+    "A-week.dc.html": { "x": 3040, "y": 1280, "w": 1440, "h": 900, "title": "Plot: this week", "expand": "fill" },
+    "A-calendar.dc.html": { "x": 0, "y": 2300, "w": 1440, "h": 900, "title": "Plot: year calendar", "expand": "fill" },
+    "A-harvest.dc.html": { "x": 1520, "y": 2300, "w": 1440, "h": 900, "title": "Plot: harvest log", "expand": "fill" },
+    "A-settings.dc.html": { "x": 3040, "y": 2300, "w": 1440, "h": 900, "title": "Plot: settings and your climate", "expand": "fill" },
+    "A-phone-garden.dc.html": { "x": 0, "y": 3320, "w": 390, "h": 844, "title": "Plot: phone, garden" },
+    "A-phone-week.dc.html": { "x": 470, "y": 3320, "w": 390, "h": 844, "title": "Plot: phone, this week" },
+    "A-phone-place.dc.html": { "x": 940, "y": 3320, "w": 390, "h": 844, "title": "Plot: phone, placing a plant" },
+    "A-assistant.dc.html": { "x": 1410, "y": 3320, "w": 1440, "h": 900, "title": "Plot: assistant panel", "expand": "fill" },
+    "A-states.dc.html": { "x": 2930, "y": 3320, "w": 1440, "h": 900, "title": "Plot: empty, error and offline states", "expand": "fill" },
+    "A-system.dc.html": { "x": 0, "y": 4520, "w": 1440, "h": 1240, "title": "Plot: glyphs and tokens", "expand": "fill" }
+  },
+  "order": [
+    "Main.dc.html",
+    "B-planner.dc.html",
+    "C-planner.dc.html",
+    "A-setup.dc.html",
+    "A-plants.dc.html",
+    "A-week.dc.html",
+    "A-calendar.dc.html",
+    "A-harvest.dc.html",
+    "A-settings.dc.html",
+    "A-phone-garden.dc.html",
+    "A-phone-week.dc.html",
+    "A-phone-place.dc.html",
+    "A-assistant.dc.html",
+    "A-states.dc.html",
+    "A-system.dc.html"
+  ],
+  "notes": {
+    "dirs": { "x": 0, "y": -260, "text": "Three directions for the planner", "kind": "title1", "maxW": 4480 },
+    "setA": { "x": 0, "y": 1020, "text": "Direction A, Plot: the full screen set", "kind": "title1", "maxW": 4480 },
+    "small": { "x": 0, "y": 4260, "text": "Plot: glyphs, colour and type", "kind": "title1", "maxW": 1440 }
+  },
+  "designSystems": []
+}

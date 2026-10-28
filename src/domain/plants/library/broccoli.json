@@ -1,0 +1,100 @@
+{
+  "id": "broccoli",
+  "name": "Broccoli",
+  "latin": "Brassica oleracea var. italica",
+  "category": "vegetable",
+  "family": "Brassicaceae",
+  "lifecycle": "annual",
+  "frost": "half-hardy",
+  "temp": {
+    "minC": 4,
+    "maxC": 24
+  },
+  "soilMinC": 4,
+  "sun": "full",
+  "water": "medium",
+  "density": {
+    "perSquare": 1
+  },
+  "spacingCm": {
+    "inRow": 40,
+    "betweenRows": 60
+  },
+  "container": {
+    "minLitres": 19,
+    "perVessel": 1
+  },
+  "canopy": "mid",
+  "shadeTolerant": false,
+  "maturity": {
+    "days": 60,
+    "from": "transplant"
+  },
+  "methods": {
+    "indoor": {
+      "ageWeeks": [
+        5,
+        7
+      ]
+    },
+    "transplant": {
+      "weeks": [
+        -3,
+        0
+      ]
+    },
+    "direct": {
+      "weeks": [
+        -3,
+        -1
+      ]
+    }
+  },
+  "fall": {
+    "windowWeeks": 3
+  },
+  "harvest": {
+    "type": "continuous",
+    "windowDays": 42
+  },
+  "soilPh": [
+    6,
+    7
+  ],
+  "yield": {
+    "amount": 400,
+    "unit": "g",
+    "per": "plant"
+  },
+  "glyph": {
+    "form": "brassica",
+    "color": "#2e6b3a"
+  },
+  "notes": {
+    "sowing": "Start indoors 5 to 7 weeks before planting out, {cm:1} deep. Set plants out up to 3 weeks before your last frost. Heads form best as the weather cools, so a crop sown 12 to 14 weeks before your first fall frost is often the better one.",
+    "care": "Hot spells, around {c:30} by day and {c:25} at night, can stop heads forming or make them loose and bitter. Water deeply each week and mulch to keep the roots cool.",
+    "harvest": "Cut the main head while the buds are tight, before any yellow shows. Smaller side shoots follow for several more weeks."
+  },
+  "sources": [
+    {
+      "title": "University of Minnesota Extension: Growing broccoli in home gardens",
+      "url": "https://extension.umn.edu/vegetables/growing-broccoli"
+    },
+    {
+      "title": "Royal Horticultural Society: How to grow calabrese",
+      "url": "https://www.rhs.org.uk/vegetables/calabrese/grow-your-own"
+    },
+    {
+      "title": "Utah State University Extension: Broccoli in the Garden",
+      "url": "https://extension.usu.edu/yardandgarden/research/broccoli-in-the-garden"
+    },
+    {
+      "title": "Colorado State University Extension: Vegetable Planting Guide",
+      "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/"
+    },
+    {
+      "title": "UC Cooperative Extension Placer and Nevada Counties: Vegetable Characteristics (optimum temperatures for different vegetables)",
+      "url": "https://projects.sare.org/wp-content/uploads/944820osa-43c-vegetable-characteristics.pdf"
+    }
+  ]
+}

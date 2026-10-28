@@ -1,0 +1,51 @@
+.center-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-5);
+}
+.notice {
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-6);
+}
+.notice h1 {
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+.small {
+  font-size: var(--fs-sm);
+}
+.skip-link {
+  position: absolute;
+  left: -9999px;
+}
+.skip-link:focus {
+  left: var(--sp-3);
+  top: var(--sp-3);
+  z-index: 100;
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--c-panel);
+  border-radius: var(--r-control);
+}
+.placeholder {
+  padding: var(--sp-6) clamp(20px, 4vw, 56px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.placeholder h1 {
+  font-size: var(--fs-3xl);
+  font-weight: 800;
+}
+main h1:focus {
+  outline: none;
+}

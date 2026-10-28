@@ -1,0 +1,51 @@
+.DS_Store
+__pycache__/
+*.pyc
+
+# Garden saves and backups
+gardensync-backup-*.json
+
+# Screenshots and images
+*.png
+*.jpg
+
+# Claude session handoff docs (per-worktree, not project-tracked)
+whats-next.md
+
+# Environment / secrets
+.env
+.env.local
+js/supabase-config.js
+
+# Local-only artifacts
+node_modules/
+*.zip
+.claude/worktrees/
+
+# Deploy staging directory — rebuilt by deploy.sh
+dist/
+
+# Playwright MCP scratch output
+.playwright-mcp/
+
+# Wrangler build cache (contains the Cloudflare account id)
+.wrangler/
+
+# Landing page (site/): its media JPGs are committed; the built copy is not
+!site/media/*.jpg
+# README pictures
+!docs/media/*.jpg
+site-dist/
+
+# 8.0 build and test output
+test-results/
+playwright-report/
+review/shots/
+coverage/
+
+# Never commit: plugin databases (personal files on this PC are excluded in .git/info/exclude)
+.claude/data/
+
+# PWA icons are committed even though *.png is ignored above
+!public/icons/*.png
+tests/fixtures/local/

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GardenSync Plot: glyphs, colour and type</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=Atkinson+Hyperlegible+Next:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2E7D46}a:hover{color:#1F5C33}
+</style>
+</helmet>
+<div style="min-height: 1240px; padding: 40px clamp(20px, 4vw, 56px); box-sizing: border-box; background: #F3F4EF; color: #1C231D; font-family: 'Atkinson Hyperlegible Next', 'Segoe UI', system-ui, sans-serif; font-size: 15px; line-height: 1.5; display: flex; flex-direction: column; gap: 32px">
+<svg width="0" height="0" style="position: absolute" aria-hidden="true"><defs>
+<symbol id="s-rosette" viewBox="0 0 24 24"><g fill="currentColor"><ellipse cx="12" cy="7" rx="3.6" ry="5.5"></ellipse><ellipse cx="6.8" cy="12.5" rx="3.6" ry="5.5" transform="rotate(-62 6.8 12.5)"></ellipse><ellipse cx="17.2" cy="12.5" rx="3.6" ry="5.5" transform="rotate(62 17.2 12.5)"></ellipse><ellipse cx="8.6" cy="18" rx="3.2" ry="4.6" transform="rotate(-140 8.6 18)"></ellipse><ellipse cx="15.4" cy="18" rx="3.2" ry="4.6" transform="rotate(140 15.4 18)"></ellipse></g></symbol>
+<symbol id="s-root" viewBox="0 0 24 24"><path d="M12 23 L7.5 9.5 Q12 7.2 16.5 9.5 Z" fill="currentColor"></path><path d="M12 8.5 Q10 4.5 7.5 2 M12 8.5 Q12 4.5 12 1.2 M12 8.5 Q14 4.5 16.5 2" stroke="#3E8E41" stroke-width="1.7" fill="none" stroke-linecap="round"></path></symbol>
+<symbol id="s-fruiting" viewBox="0 0 24 24"><circle cx="12" cy="14.2" r="7.6" fill="currentColor"></circle><path d="M12 6.8 L10 3.6 M12 6.8 L14 3.6 M12 6.8 L8.6 7.6 M12 6.8 L15.4 7.6" stroke="#3E8E41" stroke-width="1.7" stroke-linecap="round"></path></symbol>
+<symbol id="s-vine" viewBox="0 0 24 24"><ellipse cx="11" cy="14.5" rx="8.4" ry="5.6" transform="rotate(-25 11 14.5)" fill="currentColor"></ellipse><path d="M17 7.5 q3.4 -1 3.2 -4.2 q-0.1 -1.4 -1.6 -1.4" stroke="#3E8E41" stroke-width="1.6" fill="none" stroke-linecap="round"></path></symbol>
+<symbol id="s-pod" viewBox="0 0 24 24"><path d="M3.5 19 Q6 8 20 4.5 Q14.5 16 3.5 19 Z" fill="currentColor"></path><g fill="#ffffff" opacity="0.45"><circle cx="8.8" cy="14.6" r="1.4"></circle><circle cx="12.4" cy="11.8" r="1.4"></circle><circle cx="15.7" cy="9" r="1.3"></circle></g></symbol>
+<symbol id="s-allium" viewBox="0 0 24 24"><path d="M12 22.5 C5.8 22.5 5.4 16.4 9 13.2 L11 10.4 L13 10.4 L15 13.2 C18.6 16.4 18.2 22.5 12 22.5 Z" fill="currentColor"></path><path d="M11 10.4 L8.8 2 M12 10.4 L12 1 M13 10.4 L15.2 2" stroke="#3E8E41" stroke-width="1.7" stroke-linecap="round"></path></symbol>
+<symbol id="s-brassica" viewBox="0 0 24 24"><rect x="11" y="15" width="2" height="7.5" fill="#3E8E41"></rect><g fill="currentColor"><circle cx="7.8" cy="11.2" r="4.1"></circle><circle cx="16.2" cy="11.2" r="4.1"></circle><circle cx="12" cy="7.4" r="4.3"></circle><circle cx="12" cy="13.2" r="4.1"></circle></g></symbol>
+<symbol id="s-sprig" viewBox="0 0 24 24"><path d="M12 22.5 V2.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path><g fill="currentColor"><ellipse cx="8.4" cy="16.4" rx="3.6" ry="1.8" transform="rotate(-30 8.4 16.4)"></ellipse><ellipse cx="15.6" cy="13.2" rx="3.6" ry="1.8" transform="rotate(30 15.6 13.2)"></ellipse><ellipse cx="8.7" cy="9.6" rx="3.1" ry="1.6" transform="rotate(-30 8.7 9.6)"></ellipse><ellipse cx="15.3" cy="6.4" rx="2.7" ry="1.4" transform="rotate(30 15.3 6.4)"></ellipse></g></symbol>
+<symbol id="s-flower" viewBox="0 0 24 24"><g fill="currentColor"><circle cx="12" cy="5.4" r="3.7"></circle><circle cx="18.3" cy="10" r="3.7"></circle><circle cx="15.9" cy="17.4" r="3.7"></circle><circle cx="8.1" cy="17.4" r="3.7"></circle><circle cx="5.7" cy="10" r="3.7"></circle></g><circle cx="12" cy="12.2" r="3.1" fill="#F2C94C"></circle></symbol>
+<symbol id="s-tuber" viewBox="0 0 24 24"><path d="M4.6 14.2 C3.6 8 10 4.8 15.2 6.8 C21.4 9.2 21.2 16.4 16.2 18.8 C11 21.4 5.6 19.4 4.6 14.2 Z" fill="currentColor"></path><g fill="#ffffff" opacity="0.4"><circle cx="10" cy="11" r="1.1"></circle><circle cx="15.2" cy="13.2" r="1.1"></circle><circle cx="11" cy="16.2" r="1.1"></circle></g></symbol>
+<symbol id="s-cane" viewBox="0 0 24 24"><g fill="currentColor"><circle cx="8.8" cy="15" r="3.5"></circle><circle cx="15.2" cy="15" r="3.5"></circle><circle cx="12" cy="19.6" r="3.4"></circle></g><path d="M12 12 Q12 5.8 18.5 2.8 Q16.4 9.4 12 12 Z" fill="#3E8E41"></path></symbol>
+<symbol id="s-stalk" viewBox="0 0 24 24"><g stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M9 22.5 V6.5"></path><path d="M15 22.5 V9.5"></path></g><path d="M9 6.5 l-2.2 -3.4 M9 6.5 l2.2 -3.4 M15 9.5 l-2.2 -3.4 M15 9.5 l2.2 -3.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></symbol>
+</defs></svg>
+
+<section aria-labelledby="gl" style="display: flex; flex-direction: column; gap: 14px">
+<h1 id="gl" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 34px; letter-spacing: -0.02em">Twelve plant forms</h1>
+<p style="margin: 0; max-width: 70ch; color: #4D584E">Every plant, including ones gardeners add themselves, is drawn from one of these forms in its own colour. They stay recognisable at 16 px on a phone and in a printed poster, and never rely on colour alone.</p>
+<ul style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(150px, 100%), 1fr)); gap: 10px">
+<sc-for list="{{forms}}" as="f" hint-placeholder-count="12">
+<li style="display: flex; flex-direction: column; gap: 10px; padding: 14px; border: 1px solid #D8DDD2; border-radius: 12px; background: #FFFFFF">
+<div style="display: flex; align-items: flex-end; gap: 12px">
+<svg width="56" height="56" aria-hidden="true" style="color: {{f.color}}"><use href="{{f.id}}"></use></svg>
+<svg width="24" height="24" aria-hidden="true" style="color: {{f.color}}"><use href="{{f.id}}"></use></svg>
+<svg width="16" height="16" aria-hidden="true" style="color: {{f.color}}"><use href="{{f.id}}"></use></svg>
+<span style="width: 40px; height: 40px; border-radius: 8px; background: #211C17; display: flex; align-items: center; justify-content: center"><svg width="28" height="28" aria-hidden="true" style="color: {{f.color}}"><use href="{{f.id}}"></use></svg></span>
+</div>
+<span style="font-weight: 700">{{f.name}}</span>
+<span style="font-size: 13px; color: #4D584E">{{f.examples}}</span>
+</li>
+</sc-for>
+</ul>
+</section>
+
+<section aria-labelledby="col" style="display: flex; flex-direction: column; gap: 14px">
+<h2 id="col" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 28px">Colour</h2>
+<p style="margin: 0; max-width: 70ch; color: #4D584E">The garden carries the colour: soil, timber and crops. The interface stays quiet around it. Friends and foes differ in shape and line, not just hue; frost is always blue.</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(520px, 100%), 1fr)); gap: 16px">
+<sc-for list="{{themes}}" as="th" hint-placeholder-count="2">
+<div style="padding: 16px; border-radius: 12px; background: {{th.bg}}; border: 1px solid #D8DDD2">
+<h3 style="margin: 0 0 10px; font-size: 16px; color: {{th.ink}}">{{th.name}}</h3>
+<ul style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 8px">
+<sc-for list="{{th.swatches}}" as="s" hint-placeholder-count="10">
+<li style="display: flex; flex-direction: column; gap: 4px"><span style="height: 40px; border-radius: 8px; background: {{s.hex}}; border: 1px solid {{th.edge}}"></span><span style="font-size: 13px; color: {{th.ink}}; font-weight: 700">{{s.name}}</span><span style="font-size: 12px; color: {{th.muted}}">{{s.hex}}</span></li>
+</sc-for>
+</ul>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section aria-labelledby="ty" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<h2 id="ty" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 28px">Type</h2>
+<p style="margin: 0; color: #4D584E">Bricolage Grotesque for headings: sturdy, a little hand-made, set tight. Atkinson Hyperlegible Next for everything you read: drawn for legibility, which matters in bright sun on a phone. Both self-hosted.</p>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 56px; line-height: 1; letter-spacing: -0.025em">Where do you garden?</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 38px; line-height: 1.05; letter-spacing: -0.02em">This week</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 22px">Later this week</span>
+<span style="font-size: 17px">Sow lettuce, round 2, in squares C3 and D3.</span>
+<span style="font-size: 15px">Two weeks after round 1, for steady salads until summer heat.</span>
+<span style="font-size: 13px; color: #4D584E">Night lows from the Open-Meteo forecast.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 28px">Shape and marks</h2>
+<dl style="margin: 0; display: grid; grid-template-columns: 150px 1fr; gap: 10px 16px; align-items: center">
+<dt style="font-weight: 700">Radius</dt><dd style="margin: 0; display: flex; gap: 10px; align-items: center"><span style="width: 36px; height: 36px; border: 2px solid #1C231D; border-radius: 4px"></span><span style="width: 36px; height: 36px; border: 2px solid #1C231D; border-radius: 8px"></span><span style="width: 36px; height: 36px; border: 2px solid #1C231D; border-radius: 12px"></span><span style="font-size: 13px; color: #4D584E">4 beds, 8 controls, 12 panels</span></dd>
+<dt style="font-weight: 700">Spacing</dt><dd style="margin: 0; font-size: 14px">4, 8, 12, 16, 24, 32, 48. Touch targets at least 44.</dd>
+<dt style="font-weight: 700">Good neighbour</dt><dd style="margin: 0"><svg width="120" height="20" aria-hidden="true"><path d="M4 10 H116" stroke="#2E7D46" stroke-width="3" stroke-linecap="round"></path><circle cx="60" cy="10" r="8" fill="#2E7D46"></circle><path d="M56 10 H64 M60 6 V14" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></path></svg></dd>
+<dt style="font-weight: 700">Bad neighbour</dt><dd style="margin: 0"><svg width="120" height="20" aria-hidden="true"><path d="M4 10 H116" stroke="#C2560C" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round"></path><circle cx="60" cy="10" r="8" fill="#C2560C"></circle><path d="M57 7 L63 13 M63 7 L57 13" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></path></svg></dd>
+<dt style="font-weight: 700">Frost</dt><dd style="margin: 0; display: flex; gap: 10px; align-items: center"><span style="width: 56px; height: 20px; background: #DCE6F7"></span><span style="font-size: 13px">likely</span><span style="width: 56px; height: 20px; background: repeating-linear-gradient(45deg, #DCE6F7 0 5px, #C3D3F2 5px 8px)"></span><span style="font-size: 13px">possible</span></dd>
+<dt style="font-weight: 700">Selection</dt><dd style="margin: 0"><span style="display: inline-block; width: 60px; height: 30px; border: 2.5px solid #1F5BCC; border-radius: 4px"></span></dd>
+</dl>
+</div>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      forms: [
+        { id: '#s-rosette', name: 'Rosette', examples: 'Lettuce, chard, spinach, bok choy', color: '#6fae3a' },
+        { id: '#s-root', name: 'Root', examples: 'Carrot, beet, radish, parsnip', color: '#e37b1c' },
+        { id: '#s-fruiting', name: 'Fruiting', examples: 'Tomato, pepper, eggplant, strawberry', color: '#d64545' },
+        { id: '#s-vine', name: 'Vine', examples: 'Cucumber, squash, melon, pumpkin', color: '#5e9a2e' },
+        { id: '#s-pod', name: 'Pod', examples: 'Beans, peas, fava', color: '#4a9a5a' },
+        { id: '#s-allium', name: 'Allium', examples: 'Onion, garlic, leek, chives', color: '#9b5fb5' },
+        { id: '#s-brassica', name: 'Brassica', examples: 'Cabbage, broccoli, kale, cauliflower', color: '#2e6b4f' },
+        { id: '#s-sprig', name: 'Sprig', examples: 'Basil, thyme, mint, dill', color: '#4f9d5a' },
+        { id: '#s-flower', name: 'Flower', examples: 'Marigold, zinnia, nasturtium', color: '#e98b0c' },
+        { id: '#s-tuber', name: 'Tuber', examples: 'Potato, sweet potato', color: '#a8865a' },
+        { id: '#s-cane', name: 'Cane and bush', examples: 'Raspberry, blueberry', color: '#c2185b' },
+        { id: '#s-stalk', name: 'Stalk', examples: 'Corn, asparagus, rhubarb', color: '#b5384a' }
+      ],
+      themes: [
+        { name: 'Light, for daylight', bg: '#F3F4EF', ink: '#1C231D', muted: '#4D584E', edge: '#D8DDD2', swatches: [
+          { name: 'Ground', hex: '#F3F4EF' }, { name: 'Panel', hex: '#FFFFFF' }, { name: 'Ink', hex: '#1C231D' }, { name: 'Muted ink', hex: '#4D584E' }, { name: 'Line', hex: '#D8DDD2' }, { name: 'Leaf, action', hex: '#2E7D46' }, { name: 'Frost', hex: '#2F64C8' }, { name: 'Caution, foe', hex: '#C2560C' }, { name: 'Soil', hex: '#6A4E38' }, { name: 'Timber', hex: '#A58259' }, { name: 'Graph paper', hex: '#EDF0E7' }, { name: 'Selection', hex: '#1F5BCC' }
+        ]},
+        { name: 'Dark, for evenings', bg: '#17130F', ink: '#EEE9E0', muted: '#BCB3A6', edge: '#3A332B', swatches: [
+          { name: 'Ground', hex: '#17130F' }, { name: 'Panel', hex: '#211C17' }, { name: 'Ink', hex: '#EEE9E0' }, { name: 'Muted ink', hex: '#BCB3A6' }, { name: 'Line', hex: '#3A332B' }, { name: 'Leaf, action', hex: '#7DD38B' }, { name: 'Frost', hex: '#8DB4FF' }, { name: 'Caution, foe', hex: '#F2A065' }, { name: 'Soil', hex: '#4B3727' }, { name: 'Timber', hex: '#7B6043' }, { name: 'Graph paper', hex: '#1D1915' }, { name: 'Selection', hex: '#86AEFF' }
+        ]}
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

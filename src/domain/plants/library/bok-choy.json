@@ -1,0 +1,96 @@
+{
+  "id": "bok-choy",
+  "name": "Bok choy",
+  "latin": "Brassica rapa subsp. chinensis",
+  "category": "vegetable",
+  "family": "Brassicaceae",
+  "lifecycle": "annual",
+  "frost": "half-hardy",
+  "temp": {
+    "minC": 4,
+    "maxC": 21
+  },
+  "soilMinC": 4,
+  "sun": "full",
+  "water": "high",
+  "density": {
+    "perSquare": 4
+  },
+  "spacingCm": {
+    "inRow": 20,
+    "betweenRows": 30
+  },
+  "container": {
+    "minLitres": 4,
+    "perVessel": 1
+  },
+  "canopy": "mid",
+  "shadeTolerant": true,
+  "maturity": {
+    "days": 50,
+    "from": "sow"
+  },
+  "methods": {
+    "indoor": {
+      "ageWeeks": [
+        3,
+        5
+      ]
+    },
+    "transplant": {
+      "weeks": [
+        0,
+        2
+      ]
+    },
+    "direct": {
+      "weeks": [
+        0,
+        2
+      ]
+    }
+  },
+  "fall": {
+    "windowWeeks": 4
+  },
+  "succession": {
+    "everyDays": 14
+  },
+  "harvest": {
+    "type": "once",
+    "windowDays": 14
+  },
+  "soilPh": [
+    6,
+    7.5
+  ],
+  "yield": {
+    "amount": 1,
+    "unit": "count",
+    "per": "plant"
+  },
+  "glyph": {
+    "form": "rosette",
+    "color": "#a8d58a"
+  },
+  "notes": {
+    "sowing": "Sow {cm:1.3} deep around your last frost date, or start in modules 3 to 5 weeks ahead. Do not rush spring plantings: a cold spell after planting out often makes bok choy bolt. Late summer sowings for a fall crop bolt least.",
+    "care": "Keep the soil steadily moist, since dry soil and heat both trigger bolting. Cover young plants with fine netting or row cover against flea beetles. Plants manage with a few hours of sun but grow more slowly.",
+    "harvest": "Snip baby leaves from about 30 days, or cut whole heads at the base when full size. Harvest any plant that starts to send up a flower stem before the buds open."
+  },
+  "sources": [
+    {
+      "title": "Royal Horticultural Society: How to grow pak choi",
+      "url": "https://www.rhs.org.uk/vegetables/pak-choi/grow-your-own"
+    },
+    {
+      "title": "North Carolina Extension Gardener Plant Toolbox: Bok Choy (Brassica rapa Chinensis Group)",
+      "url": "https://plants.ces.ncsu.edu/plants/brassica-rapa-chinensis-group/common-name/bok-choy/"
+    },
+    {
+      "title": "UC Cooperative Extension Placer and Nevada Counties: Vegetable Characteristics (optimum temperatures for different vegetables)",
+      "url": "https://projects.sare.org/wp-content/uploads/944820osa-43c-vegetable-characteristics.pdf"
+    },
+    { "title": "UF/IFAS Extension HS1337: Bok Choy, an Asian Leafy Green Vegetable Emerging in Florida", "url": "https://ask.ifas.ufl.edu/publication/HS1337" }
+  ]
+}

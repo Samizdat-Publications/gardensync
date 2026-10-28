@@ -1,0 +1,93 @@
+{
+  "id": "kale",
+  "name": "Kale",
+  "latin": "Brassica oleracea var. sabellica",
+  "category": "vegetable",
+  "family": "Brassicaceae",
+  "lifecycle": "annual",
+  "frost": "hardy",
+  "temp": {
+    "minC": 4,
+    "maxC": 24
+  },
+  "soilMinC": 4,
+  "sun": "full",
+  "water": "medium",
+  "density": {
+    "perSquare": 1
+  },
+  "spacingCm": {
+    "inRow": 40,
+    "betweenRows": 60
+  },
+  "container": {
+    "minLitres": 11,
+    "perVessel": 1
+  },
+  "canopy": "mid",
+  "shadeTolerant": true,
+  "maturity": {
+    "days": 55,
+    "from": "transplant"
+  },
+  "methods": {
+    "indoor": {
+      "ageWeeks": [
+        4,
+        6
+      ]
+    },
+    "transplant": {
+      "weeks": [
+        -4,
+        -2
+      ]
+    },
+    "direct": {
+      "weeks": [
+        -4,
+        -2
+      ]
+    }
+  },
+  "fall": {
+    "windowWeeks": 4
+  },
+  "harvest": {
+    "type": "continuous",
+    "windowDays": 120,
+    "untilFrost": true
+  },
+  "yield": {
+    "amount": 200,
+    "unit": "g",
+    "per": "plant"
+  },
+  "glyph": {
+    "form": "rosette",
+    "color": "#3d6b4f"
+  },
+  "notes": {
+    "sowing": "Start indoors 4 to 6 weeks before planting out, or sow {cm:1} deep outdoors. Set plants out 2 to 4 weeks before your last frost. For a fall crop, sow 10 to 12 weeks before your first fall frost.",
+    "care": "Kale grows best in cool weather; in heat above about {c:24} the leaves turn tough and bitter. Mulch to keep the roots cool and water in dry spells. Avoid ground where cabbage-family crops grew in recent years.",
+    "harvest": "Pick the lowest two or three leaves per plant at a time and leave the crown growing. Frost sweetens the leaves, and plants keep cropping well past the first fall frosts."
+  },
+  "sources": [
+    {
+      "title": "University of Minnesota Extension: Growing collards and kale in home gardens",
+      "url": "https://extension.umn.edu/vegetables/growing-collards-and-kale"
+    },
+    {
+      "title": "Royal Horticultural Society: How to grow kale",
+      "url": "https://www.rhs.org.uk/vegetables/kale/grow-your-own"
+    },
+    {
+      "title": "Utah State University Extension: How to Grow Kale in Your Garden",
+      "url": "https://extension.usu.edu/yardandgarden/research/kale-in-the-garden"
+    },
+    {
+      "title": "UC Cooperative Extension Placer and Nevada Counties: Vegetable Characteristics (optimum temperatures for different vegetables)",
+      "url": "https://projects.sare.org/wp-content/uploads/944820osa-43c-vegetable-characteristics.pdf"
+    }
+  ]
+}

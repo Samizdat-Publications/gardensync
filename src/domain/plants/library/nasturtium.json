@@ -1,0 +1,38 @@
+{
+  "id": "nasturtium",
+  "name": "Nasturtium",
+  "latin": "Tropaeolum majus",
+  "category": "flower",
+  "family": "Tropaeolaceae",
+  "lifecycle": "annual",
+  "frost": "tender",
+  "temp": { "minC": 13, "maxC": 25 },
+  "soilMinC": 16,
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 1 },
+  "spacingCm": { "inRow": 30, "betweenRows": 45 },
+  "container": { "minLitres": 7, "perVessel": 3 },
+  "canopy": "low",
+  "shadeTolerant": true,
+  "maturity": { "days": 60, "from": "sow" },
+  "methods": {
+    "indoor": { "ageWeeks": [3, 4] },
+    "transplant": { "weeks": [1, 3] },
+    "direct": { "weeks": [1, 3] }
+  },
+  "harvest": { "type": "continuous", "windowDays": 90 },
+  "purpose": ["food", "pollinators", "display"],
+  "yield": { "amount": 30, "unit": "count", "per": "plant" },
+  "glyph": { "form": "flower", "color": "#e8542a" },
+  "notes": {
+    "sowing": "Sow directly after your last frost, {cm:1} to {cm:2} deep, as the seed needs darkness to germinate. Plants dislike root disturbance, so start any indoors in individual pots only 3 to 4 weeks ahead.",
+    "care": "Poor to average, well-drained soil gives the most flowers; rich soil gives mostly leaves. Tolerates part shade. Check leaf undersides for cabbage white butterfly eggs and for blackfly, and pinch out badly infested tips. Climbing and trailing types need a support or room to sprawl.",
+    "harvest": "Flowers start about 8 weeks from sowing and continue until frost. The leaves, flowers, young buds and green seeds are edible; leaves can be picked at any time."
+  },
+  "sources": [
+    { "title": "Royal Horticultural Society: How to grow annual nasturtiums", "url": "https://www.rhs.org.uk/plants/nasturtiums/annual-nasturtiums/how-to-grow-annual-nasturtiums" },
+    { "title": "Johnny's Selected Seeds: Growing Nasturtium From Seed", "url": "https://www.johnnyseeds.com/nasturtium/nasturtium-key-growing-information.html" },
+    { "title": "Johnny's Selected Seeds: Jewel Mix Nasturtium Seed", "url": "https://www.johnnyseeds.com/flowers/nasturtium/jewel-mix-nasturtium-seed-1420.html" }
+  ]
+}

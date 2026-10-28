@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GardenSync: a garden planner that knows your frost dates</title>
+<meta name="description" content="Draw your beds, drop plants into the squares, and get a sowing, planting and harvest schedule worked out from 30 years of weather for your own town. Free, no account, works offline.">
+<meta name="theme-color" content="#2e7d46">
+<meta property="og:title" content="GardenSync">
+<meta property="og:description" content="Draw your beds, drop plants into the squares, and get a schedule worked out from 30 years of weather for your own town.">
+<meta property="og:image" content="media/og.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Crect x='1' y='1' width='28' height='28' rx='4' fill='%232e7d46'/%3E%3Cpath d='M15 24V14M15 15q-5-1-6-6 5 .5 6 5M15 13q4.5-2 6-6-4.5.5-6 5' stroke='%23fff' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preload" href="fonts/bricolage-grotesque-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<a class="skip" href="#features">Skip to the features</a>
+
+<header class="bar">
+  <a class="mark" href="#top">
+    <svg width="28" height="28" viewBox="0 0 30 30" aria-hidden="true"><rect x="1" y="1" width="28" height="28" rx="4" fill="var(--accent)"/><path d="M10 1v28M20 1v28M1 10h28M1 20h28" stroke="var(--accent-ink)" stroke-width="1" opacity="0.35"/><path d="M15 24V14M15 15q-5-1-6-6 5 .5 6 5M15 13q4.5-2 6-6-4.5.5-6 5" stroke="var(--accent-ink)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>GardenSync</span>
+  </a>
+  <nav class="bar-links" aria-label="Sections">
+    <a href="#features">What it does</a>
+    <a href="#more">And more</a>
+    <a href="#made">How it was made</a>
+  </nav>
+  <a class="btn btn-small" href="https://gardensync-e4e.pages.dev">Open GardenSync</a>
+</header>
+
+<main>
+
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <div class="hero-text">
+    <p class="pill"><span class="pill-dot"></span>Version 8.0: free and open source</p>
+    <h1 id="hero-title">Plan the bed.<br>Know the dates.</h1>
+    <p class="lede">Draw your beds, drop plants into the squares, and GardenSync tells you when to start, sow, plant out and pick, using frost dates worked out from 30 years of weather for your own town.</p>
+    <div class="cta">
+      <a class="btn" href="https://gardensync-e4e.pages.dev">Open GardenSync</a>
+      <a class="btn btn-ghost" href="https://github.com/Samizdat-Publications/gardensync">Source on GitHub</a>
+    </div>
+    <p class="note">No account and no server. Your garden stays in your browser and works offline.</p>
+  </div>
+  <figure class="frame hero-frame">
+    <div class="frame-bar" aria-hidden="true"><i></i><i></i><i></i><span>gardensync-e4e.pages.dev</span></div>
+    <video id="hero-video" muted loop playsinline autoplay preload="auto" poster="media/hero.jpg" aria-label="First run: frost dates are entered, the year's frost risk appears, and a starter bed opens planted with tomatoes, peppers, beans, greens and flowers.">
+      <source src="media/hero.mp4" type="video/mp4">
+    </video>
+  </figure>
+</section>
+
+<section class="facts" aria-label="At a glance">
+  <ul>
+    <li><b>30</b><span>years of daily weather behind every date</span></li>
+    <li><b>63</b><span>plants, every number checked and sourced</span></li>
+    <li><b>2</b><span>hemispheres, frost-free places included</span></li>
+    <li><b>0</b><span>accounts, servers or trackers</span></li>
+  </ul>
+</section>
+
+<div id="features">
+
+<section class="feature" aria-labelledby="f1">
+  <div class="feature-text">
+    <p class="label">01 · Where you garden</p>
+    <h2 id="f1">Your town sets every date</h2>
+    <p>Type your town, use your location, or type the frost dates you already know. GardenSync downloads 30 years of daily temperatures for that spot from Open-Meteo and works out your typical last and first frost, the date frost has passed in 9 years out of 10, your hardiness zone and your monthly temperatures.</p>
+    <p>It works in both hemispheres. Where frost is rare or never comes, the schedule follows temperature instead, and says so.</p>
+  </div>
+  <figure class="frame">
+    <img src="media/shot-first-run.jpg" alt="The first screen asks where you garden, with a town search, a use-my-location button and a way to type frost dates." loading="lazy" width="1280" height="720">
+  </figure>
+</section>
+
+<section class="feature flip" aria-labelledby="f2">
+  <div class="feature-text">
+    <p class="label">02 · The planner</p>
+    <h2 id="f2">Drop plants into the squares</h2>
+    <p>Beds, planters, window boxes, pots and grow bags are drawn to scale in feet or meters. Pick a plant and tap two squares: it takes its real square-foot footprint, sixteen carrots to a square or one squash to four, and goes in at the next window that suits it.</p>
+    <p>Friends and foes show in the bed, a taken square says when it frees up, and every change can be undone. Mouse, touch, pen and keyboard all work.</p>
+  </div>
+  <figure class="frame">
+    <video data-inview muted loop playsinline preload="none" poster="media/plan.jpg" aria-label="A new bed is added, then lettuce, carrots and bush beans are placed into its squares with the keyboard, each getting its planting dates.">
+      <source src="media/plan.mp4" type="video/mp4">
+    </video>
+  </figure>
+</section>
+
+<section class="feature" aria-labelledby="f3">
+  <div class="feature-text">
+    <p class="label">03 · The season</p>
+    <h2 id="f3">Dates it can explain</h2>
+    <p>Every planting knows when to start indoors, plant out, start picking and pull out, and says why: "6 to 8 weeks before your last frost, Apr 16". Tender crops wait for the frost risk to pass and the soil to warm. In hot places, summer crops skip the weeks too hot to set fruit. Fall crops are counted back from your first frost.</p>
+    <p>Drag the season slider to see the bed on any day, so lettuce in spring, beans in the same squares in summer and garlic over winter all fit.</p>
+  </div>
+  <figure class="frame">
+    <video data-inview muted loop playsinline preload="none" poster="media/schedule.jpg" aria-label="A tomato planting is selected and its dates and reasons appear; the season slider moves the bed through the year.">
+      <source src="media/schedule.mp4" type="video/mp4">
+    </video>
+  </figure>
+</section>
+
+<section class="feature flip" aria-labelledby="f4">
+  <div class="feature-text">
+    <p class="label">04 · This week and the year</p>
+    <h2 id="f4">What to do now, and what comes next</h2>
+    <p>This week lists the jobs due now, from hardening off seedlings to the first pick, each with its reason, and a 7-night forecast warns when frost threatens what is in the ground. The calendar shows the whole year for every planting, and prints on one page.</p>
+  </div>
+  <figure class="frame">
+    <video data-inview muted loop playsinline preload="none" poster="media/week.jpg" aria-label="This week's job list with reasons, then the year calendar with indoor, growing and picking bars for every planting.">
+      <source src="media/week.mp4" type="video/mp4">
+    </video>
+  </figure>
+</section>
+
+<section class="feature" aria-labelledby="f5">
+  <div class="feature-text">
+    <p class="label">05 · The plant library</p>
+    <h2 id="f5">A library worth reading</h2>
+    <p>Sixty-three vegetables, herbs, fruit and companion flowers, each one checked against university extension and RHS guidance, with the sources on every card and the dates worked out for your town. Companion pairings say whether trials back them or they are garden tradition.</p>
+    <p>Add your own varieties from a seed packet: anything you leave blank comes from the parent crop.</p>
+  </div>
+  <figure class="frame">
+    <video data-inview muted loop playsinline preload="none" poster="media/plants.jpg" aria-label="The plant library is searched for tomato and the tomato card opens with its dates, growing notes and sources.">
+      <source src="media/plants.mp4" type="video/mp4">
+    </video>
+  </figure>
+</section>
+
+</div>
+
+<section class="more" id="more" aria-labelledby="more-title">
+  <h2 id="more-title">And the rest of the shed</h2>
+  <ul class="more-list">
+    <li><h3>Harvest log</h3><p>Log each pick against its planting and see it beside what the plan expects.</p></li>
+    <li><h3>Several gardens</h3><p>The back garden, the allotment and the patio, each with its own plan.</p></li>
+    <li><h3>Print and share</h3><p>Print the plan as a poster, save it as a picture, or share a link that opens a copy.</p></li>
+    <li><h3>Works offline</h3><p>Install it like an app. Autosave and a daily backup kept for a week; download a copy any time.</p></li>
+    <li><h3>An optional assistant</h3><p>With your own Anthropic key it can answer questions, plan a bed for you to review, and read a seed packet photo. Nothing changes until you press Apply.</p></li>
+    <li><h3>Coming from version 7</h3><p>Open 8.0 in the same browser and your old garden comes across. The old save is left untouched.</p></li>
+  </ul>
+</section>
+
+<section class="gallery" aria-labelledby="gallery-title">
+  <h2 id="gallery-title">From the app</h2>
+  <div class="shots">
+    <figure class="wide"><img src="media/shot-garden.jpg" alt="The planner: the plant list on the left, a 4 by 8 bed planted with tomatoes, peppers, basil, beans, greens and flowers, and the season ribbon below." loading="lazy" width="1280" height="720"></figure>
+    <figure><img src="media/shot-selected.jpg" alt="A tomato planting selected, with its plant-out and picking dates and the reason for each." loading="lazy" width="1280" height="720"></figure>
+    <figure><img src="media/shot-week.jpg" alt="This week: the jobs due today and later this week, each with its reason, beside the coming weeks." loading="lazy" width="1280" height="720"></figure>
+    <figure><img src="media/shot-calendar.jpg" alt="The year at a glance: a bar for each planting showing seedlings indoors, growing and picking, over the blue frost bands." loading="lazy" width="1280" height="720"></figure>
+    <figure><img src="media/shot-plant.jpg" alt="The tomato card: its dates for this garden, spacing and growing notes, friends and foes, and its sources." loading="lazy" width="1280" height="720"></figure>
+  </div>
+</section>
+
+<section class="made" id="made" aria-labelledby="made-title">
+  <div class="made-head">
+    <p class="label">Build notes</p>
+    <h2 id="made-title">How it was made</h2>
+    <p class="lede">GardenSync started in early 2026. Version 8.0 is a ground-up rebuild for home gardeners anywhere, built with Claude.</p>
+  </div>
+  <div class="pillars">
+    <article>
+      <h3>Design first</h3>
+      <p>Three visual directions were drawn as live artboards, each over the same planner screen. The chosen one, "Plot", was then drawn out for every screen, with a glyph for each plant form, before any code was written.</p>
+    </article>
+    <article>
+      <h3>The maths, tested</h3>
+      <p>The climate and schedule code is pure TypeScript with about 750 unit tests, run in two time zones to catch date bugs. Planting windows for six places, from Ohio to Melbourne, Phoenix and Singapore, were checked against extension guidance and then frozen as readable goldens.</p>
+    </article>
+    <article>
+      <h3>Every number sourced</h3>
+      <p>Each plant's spacing, timing, temperatures and yield were checked against university extension services and the RHS. A lint test refuses a plant without sources, and companion claims must say whether they are tested or traditional.</p>
+    </article>
+    <article>
+      <h3>Checked the way people use it</h3>
+      <p>About a hundred end-to-end tests drive the app in three browsers with accessibility checks on every screen. Blind design critics reviewed screenshots of every screen at four sizes, and testing the live build with a southern-hemisphere town caught date bugs the tests had missed.</p>
+    </article>
+    <article>
+      <h3>Yours, and stays yours</h3>
+      <p>One immutable garden document, changed only through undoable edits and validated the same way whether it comes from storage, a file, a link or the assistant. No accounts, no analytics, no server.</p>
+    </article>
+    <article>
+      <h3>Filmed by script</h3>
+      <p>The clips and pictures on this page were recorded by a Playwright script against the app, with a fixed date and a starter garden, not by hand.</p>
+    </article>
+  </div>
+</section>
+
+<section class="credits" aria-labelledby="credits-title">
+  <h2 id="credits-title">Credits</h2>
+  <ul>
+    <li><b>Weather history, forecast and place search:</b> <a href="https://open-meteo.com">Open-Meteo</a>, licence CC BY 4.0.</li>
+    <li><b>Plant data:</b> university extension services and the RHS, cited plant by plant in the app.</li>
+    <li><b>Type:</b> Bricolage Grotesque and Atkinson Hyperlegible Next, licence SIL OFL.</li>
+    <li><b>Assistant:</b> runs on Anthropic's Claude through the gardener's own API key.</li>
+  </ul>
+</section>
+
+</main>
+
+<footer class="foot">
+  <p><b>GardenSync</b> by Samizdat Publications. Free and open source under the MIT license.</p>
+  <p><a href="https://gardensync-e4e.pages.dev">Open GardenSync</a> · <a href="https://github.com/Samizdat-Publications/gardensync">Source on GitHub</a> · <a href="https://samizdat-e0x.pages.dev/">More projects</a></p>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>

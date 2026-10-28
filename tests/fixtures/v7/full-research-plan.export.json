@@ -1,0 +1,1158 @@
+{
+  "version": 2,
+  "exportDate": "2026-04-12T00:00:00.000Z",
+  "app": "GardenSync",
+  "state": {
+    "containers": [
+      {
+        "id": "fp-bed-1",
+        "type": "raised-bed",
+        "name": "GREENS POWERHOUSE",
+        "canvasX": 120,
+        "canvasY": 40,
+        "w": 4,
+        "h": 8,
+        "diameter": null,
+        "plants": [
+          {
+            "id": "demo-kale-0-08689wy",
+            "plantId": "kale",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-kale-1-mxmnzcq",
+            "plantId": "kale",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-kale-2-84ubrzj",
+            "plantId": "kale",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-kale-3-dvdbjch",
+            "plantId": "kale",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-kale-4-txo5dh0",
+            "plantId": "kale",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-kale-5-81n83ef",
+            "plantId": "kale",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-swiss-chard-0-9pa12z0",
+            "plantId": "swiss-chard",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-swiss-chard-1-4q3lwuk",
+            "plantId": "swiss-chard",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-swiss-chard-2-xy342o2",
+            "plantId": "swiss-chard",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-swiss-chard-3-y1khvkb",
+            "plantId": "swiss-chard",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-swiss-chard-4-6b3fset",
+            "plantId": "swiss-chard",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-swiss-chard-5-zggtvjd",
+            "plantId": "swiss-chard",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-swiss-chard-6-y8vx68h",
+            "plantId": "swiss-chard",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-swiss-chard-7-ovr8avh",
+            "plantId": "swiss-chard",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-swiss-chard-8-0rw4fcn",
+            "plantId": "swiss-chard",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-swiss-chard-9-fj7t6zz",
+            "plantId": "swiss-chard",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-swiss-chard-10-zv5ku18",
+            "plantId": "swiss-chard",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-swiss-chard-11-4lt3wm4",
+            "plantId": "swiss-chard",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-collard-greens-0-sn2rdbh",
+            "plantId": "collard-greens",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-collard-greens-1-9nafkwq",
+            "plantId": "collard-greens",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-collard-greens-2-dtzsx21",
+            "plantId": "collard-greens",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-collard-greens-3-ugsb7ak",
+            "plantId": "collard-greens",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-lettuce-0-wtkhzym",
+            "plantId": "lettuce",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-lettuce-1-vgucw84",
+            "plantId": "lettuce",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-lettuce-2-gw0rmg3",
+            "plantId": "lettuce",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-lettuce-3-b6w2p5g",
+            "plantId": "lettuce",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-lettuce-4-5m50328",
+            "plantId": "lettuce",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-lettuce-5-8htba6u",
+            "plantId": "lettuce",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-spinach-0-usvru2x",
+            "plantId": "spinach",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-spinach-1-dg629m4",
+            "plantId": "spinach",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-spinach-2-0xmvgtr",
+            "plantId": "spinach",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-spinach-3-3mtgvdx",
+            "plantId": "spinach",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-spinach-4-6fru895",
+            "plantId": "spinach",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-spinach-5-yf72pwd",
+            "plantId": "spinach",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-parsley-0-7fudatd",
+            "plantId": "parsley",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-parsley-1-m2oqaek",
+            "plantId": "parsley",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-parsley-2-x2cet9y",
+            "plantId": "parsley",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-parsley-3-yzm04d5",
+            "plantId": "parsley",
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "notes": "Example notes for this bed.",
+        "volunteer": null,
+        "vertical": false
+      },
+      {
+        "id": "fp-bed-2",
+        "type": "raised-bed",
+        "name": "TOMATO & PEPPER HQ",
+        "canvasX": 120,
+        "canvasY": 400,
+        "w": 4,
+        "h": 8,
+        "diameter": null,
+        "plants": [
+          {
+            "id": "demo-tomato-0-u4oh281",
+            "plantId": "tomato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-tomato-1-289qykc",
+            "plantId": "tomato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-tomato-2-ji905wg",
+            "plantId": "tomato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-tomato-3-qo1hyq0",
+            "plantId": "tomato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-pepper-0-o9v2gzk",
+            "plantId": "pepper",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-pepper-1-6l14bp9",
+            "plantId": "pepper",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-pepper-2-f8wkja8",
+            "plantId": "pepper",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-pepper-3-ja4bdgh",
+            "plantId": "pepper",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-basil-0-74i8b7h",
+            "plantId": "basil",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-basil-1-g2igsbe",
+            "plantId": "basil",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-basil-2-rkfndgg",
+            "plantId": "basil",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-basil-3-0wsb28t",
+            "plantId": "basil",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-basil-4-b472ot5",
+            "plantId": "basil",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-basil-5-iuca3yx",
+            "plantId": "basil",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-marigold-0-dhbnxf9",
+            "plantId": "marigold",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-marigold-1-eieprmm",
+            "plantId": "marigold",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-marigold-2-2u9z4ws",
+            "plantId": "marigold",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-marigold-3-k05t2t8",
+            "plantId": "marigold",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-sweet-alyssum-0-usg1p3c",
+            "plantId": "sweet-alyssum",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-sweet-alyssum-1-cqcj3dy",
+            "plantId": "sweet-alyssum",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-sweet-alyssum-2-8mz51ok",
+            "plantId": "sweet-alyssum",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-sweet-alyssum-3-wzs14bw",
+            "plantId": "sweet-alyssum",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-sweet-alyssum-4-s7uyc30",
+            "plantId": "sweet-alyssum",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-sweet-alyssum-5-g8j3osa",
+            "plantId": "sweet-alyssum",
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "notes": "Example notes for this bed.",
+        "volunteer": null,
+        "vertical": false
+      },
+      {
+        "id": "fp-bed-3",
+        "type": "raised-bed",
+        "name": "UNDERGROUND VAULT",
+        "canvasX": 120,
+        "canvasY": 760,
+        "w": 4,
+        "h": 8,
+        "diameter": null,
+        "plants": [
+          {
+            "id": "demo-onion-0-erhxgy2",
+            "plantId": "onion",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-onion-1-x9t3gog",
+            "plantId": "onion",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-onion-2-1c2p6kx",
+            "plantId": "onion",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-onion-3-l33d9xy",
+            "plantId": "onion",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-onion-4-rqwlsrk",
+            "plantId": "onion",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-onion-5-x1852k7",
+            "plantId": "onion",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-onion-6-k3wa9le",
+            "plantId": "onion",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-onion-7-k4rwlw9",
+            "plantId": "onion",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-onion-8-crbvhj1",
+            "plantId": "onion",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-onion-9-s35pnj0",
+            "plantId": "onion",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-onion-10-wu2hjz8",
+            "plantId": "onion",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-onion-11-p98jkww",
+            "plantId": "onion",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-onion-12-547uz4y",
+            "plantId": "onion",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-onion-13-52x3iok",
+            "plantId": "onion",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-onion-14-k27z048",
+            "plantId": "onion",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-onion-15-z5q57lc",
+            "plantId": "onion",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-onion-16-ghh9wo9",
+            "plantId": "onion",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-onion-17-mlhhqdg",
+            "plantId": "onion",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-onion-18-jujf4qx",
+            "plantId": "onion",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-onion-19-bm2k7ek",
+            "plantId": "onion",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-carrot-0-prybhx2",
+            "plantId": "carrot",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-carrot-1-xfmpsd6",
+            "plantId": "carrot",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-carrot-2-d7dla13",
+            "plantId": "carrot",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-carrot-3-th7yhrb",
+            "plantId": "carrot",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-carrot-4-hmzy6m9",
+            "plantId": "carrot",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-carrot-5-lfijsbr",
+            "plantId": "carrot",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-carrot-6-vorui5t",
+            "plantId": "carrot",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-carrot-7-g8w7rkj",
+            "plantId": "carrot",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-carrot-8-lm73is9",
+            "plantId": "carrot",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-carrot-9-69xleox",
+            "plantId": "carrot",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-carrot-10-sa9o4nf",
+            "plantId": "carrot",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-carrot-11-2ry93e6",
+            "plantId": "carrot",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-carrot-12-nr6gj26",
+            "plantId": "carrot",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-carrot-13-wcl1dn6",
+            "plantId": "carrot",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-carrot-14-g0szky2",
+            "plantId": "carrot",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-beet-0-mzotaq8",
+            "plantId": "beet",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-beet-1-pv7b8tu",
+            "plantId": "beet",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-beet-2-w9x9t0i",
+            "plantId": "beet",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-beet-3-eot20mx",
+            "plantId": "beet",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-beet-4-n2ayb8g",
+            "plantId": "beet",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-beet-5-7cdf19h",
+            "plantId": "beet",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-beet-6-1fiofdb",
+            "plantId": "beet",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-beet-7-trjgabj",
+            "plantId": "beet",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-beet-8-3pzeeet",
+            "plantId": "beet",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-beet-9-w9aiq8h",
+            "plantId": "beet",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-beet-10-hznfzoa",
+            "plantId": "beet",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-beet-11-rl58s6z",
+            "plantId": "beet",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-chive-0-au93fpc",
+            "plantId": "chive",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-chive-1-5jtj0oo",
+            "plantId": "chive",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-chive-2-0zr7y8v",
+            "plantId": "chive",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-chive-3-ombyw0p",
+            "plantId": "chive",
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "notes": "Example notes for this bed.",
+        "volunteer": null,
+        "vertical": false
+      },
+      {
+        "id": "fp-bed-4",
+        "type": "raised-bed",
+        "name": "CALORIE CENTRAL",
+        "canvasX": 120,
+        "canvasY": 1120,
+        "w": 4,
+        "h": 8,
+        "diameter": null,
+        "plants": [
+          {
+            "id": "demo-potato-0-xs76mel",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-1-j4zyp3z",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-2-ys158qc",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-3-w3h441z",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-4-bsbhaf9",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-5-2fvi6h2",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-6-6ztk6ml",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-7-sg6knrj",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-8-frbme8a",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-9-drmino5",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-10-03f8m8b",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-11-whkjaru",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-12-fimlo48",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-13-a52te9h",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-14-egor5k2",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-15-fbq44h9",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-16-8fr0n5c",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-17-wr358z5",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-18-3ykpyow",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-19-x92otfd",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-20-acmgf46",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-21-gycrcfp",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-22-arzhfeh",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-potato-23-advdspc",
+            "plantId": "potato",
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "notes": "Example notes for this bed.",
+        "volunteer": null,
+        "vertical": false
+      },
+      {
+        "id": "fp-bed-5",
+        "type": "raised-bed",
+        "name": "STORAGE & PROTEIN",
+        "canvasX": 120,
+        "canvasY": 1480,
+        "w": 4,
+        "h": 8,
+        "diameter": null,
+        "plants": [
+          {
+            "id": "demo-butternut-squash-0-npd2bjk",
+            "plantId": "butternut-squash",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-butternut-squash-1-tbxwqm2",
+            "plantId": "butternut-squash",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-green-beans-0-6n63vai",
+            "plantId": "green-beans",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-green-beans-1-ipzbvg0",
+            "plantId": "green-beans",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-green-beans-2-n8ngrpk",
+            "plantId": "green-beans",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-green-beans-3-rxkxv8d",
+            "plantId": "green-beans",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-green-beans-4-gd2bgy1",
+            "plantId": "green-beans",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-green-beans-5-3bc3rl9",
+            "plantId": "green-beans",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-green-beans-6-2j4da7y",
+            "plantId": "green-beans",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-green-beans-7-49hj6b5",
+            "plantId": "green-beans",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-green-beans-8-8nyi1cq",
+            "plantId": "green-beans",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-green-beans-9-uq4en8p",
+            "plantId": "green-beans",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-green-beans-10-wh2kgrf",
+            "plantId": "green-beans",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-green-beans-11-3hivb6k",
+            "plantId": "green-beans",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-green-beans-12-jrhlw5w",
+            "plantId": "green-beans",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-green-beans-13-360gyhz",
+            "plantId": "green-beans",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-green-beans-14-rzxs064",
+            "plantId": "green-beans",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-green-beans-15-nwpk7y9",
+            "plantId": "green-beans",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-green-beans-16-004l2kk",
+            "plantId": "green-beans",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-green-beans-17-gkyar9z",
+            "plantId": "green-beans",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-cilantro-0-e3k0q10",
+            "plantId": "cilantro",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-cilantro-1-v7830bl",
+            "plantId": "cilantro",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-dill-0-df7ppi5",
+            "plantId": "dill",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-dill-1-oc13yfg",
+            "plantId": "dill",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-oregano-0-a67luhl",
+            "plantId": "oregano",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-oregano-1-3tvycpg",
+            "plantId": "oregano",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-thyme-0-l6z47tv",
+            "plantId": "thyme",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-thyme-1-9wd4v8v",
+            "plantId": "thyme",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-rosemary-0-blicdye",
+            "plantId": "rosemary",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-rosemary-1-72z5xpz",
+            "plantId": "rosemary",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-basil-0-namal5x",
+            "plantId": "basil",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-basil-1-lsobsjr",
+            "plantId": "basil",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-nasturtium-0-o4h973i",
+            "plantId": "nasturtium",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-nasturtium-1-mzs1pb3",
+            "plantId": "nasturtium",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-nasturtium-2-ehhb5ei",
+            "plantId": "nasturtium",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-nasturtium-3-go1efl6",
+            "plantId": "nasturtium",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-calendula-0-c73iaoq",
+            "plantId": "calendula",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "demo-borage-0-v1dziki",
+            "plantId": "borage",
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "notes": "Example notes for this bed.",
+        "volunteer": null,
+        "vertical": false
+      }
+    ],
+    "volunteers": [
+      {
+        "id": "vol-1",
+        "name": "Helper A",
+        "phone": "",
+        "availability": "high"
+      },
+      {
+        "id": "vol-2",
+        "name": "Helper A",
+        "phone": "",
+        "availability": "high"
+      },
+      {
+        "id": "vol-3",
+        "name": "Weekday Waterer",
+        "phone": "",
+        "availability": "low"
+      }
+    ]
+  },
+  "plantingLog": {},
+  "harvests": [],
+  "journal": {},
+  "completedTasks": {}
+}

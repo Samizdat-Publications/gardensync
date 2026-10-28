@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GardenSync planner, direction A: Plot</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=Atkinson+Hyperlegible+Next:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2E7D46}a:hover{color:#1F5C33}
+</style>
+</helmet>
+<div style="min-height: 900px; display: flex; flex-direction: column; background: {{t.bg}}; color: {{t.ink}}; font-family: 'Atkinson Hyperlegible Next', 'Segoe UI', system-ui, sans-serif; font-size: 15px; line-height: 1.45">
+
+<svg width="0" height="0" style="position: absolute" aria-hidden="true">
+<defs>
+<symbol id="g-rosette" viewBox="0 0 24 24"><g fill="currentColor"><ellipse cx="12" cy="7" rx="3.6" ry="5.5"></ellipse><ellipse cx="6.8" cy="12.5" rx="3.6" ry="5.5" transform="rotate(-62 6.8 12.5)"></ellipse><ellipse cx="17.2" cy="12.5" rx="3.6" ry="5.5" transform="rotate(62 17.2 12.5)"></ellipse><ellipse cx="8.6" cy="18" rx="3.2" ry="4.6" transform="rotate(-140 8.6 18)"></ellipse><ellipse cx="15.4" cy="18" rx="3.2" ry="4.6" transform="rotate(140 15.4 18)"></ellipse></g></symbol>
+<symbol id="g-root" viewBox="0 0 24 24"><path d="M12 23 L7.5 9.5 Q12 7.2 16.5 9.5 Z" fill="currentColor"></path><path d="M12 8.5 Q10 4.5 7.5 2 M12 8.5 Q12 4.5 12 1.2 M12 8.5 Q14 4.5 16.5 2" stroke="#3E8E41" stroke-width="1.7" fill="none" stroke-linecap="round"></path></symbol>
+<symbol id="g-fruiting" viewBox="0 0 24 24"><circle cx="12" cy="14.2" r="7.6" fill="currentColor"></circle><path d="M12 6.8 L10 3.6 M12 6.8 L14 3.6 M12 6.8 L8.6 7.6 M12 6.8 L15.4 7.6" stroke="#3E8E41" stroke-width="1.7" stroke-linecap="round"></path></symbol>
+<symbol id="g-vine" viewBox="0 0 24 24"><ellipse cx="11" cy="14.5" rx="8.4" ry="5.6" transform="rotate(-25 11 14.5)" fill="currentColor"></ellipse><path d="M17 7.5 q3.4 -1 3.2 -4.2 q-0.1 -1.4 -1.6 -1.4" stroke="#3E8E41" stroke-width="1.6" fill="none" stroke-linecap="round"></path></symbol>
+<symbol id="g-pod" viewBox="0 0 24 24"><path d="M3.5 19 Q6 8 20 4.5 Q14.5 16 3.5 19 Z" fill="currentColor"></path><g fill="#ffffff" opacity="0.45"><circle cx="8.8" cy="14.6" r="1.4"></circle><circle cx="12.4" cy="11.8" r="1.4"></circle><circle cx="15.7" cy="9" r="1.3"></circle></g></symbol>
+<symbol id="g-allium" viewBox="0 0 24 24"><path d="M12 22.5 C5.8 22.5 5.4 16.4 9 13.2 L11 10.4 L13 10.4 L15 13.2 C18.6 16.4 18.2 22.5 12 22.5 Z" fill="currentColor"></path><path d="M11 10.4 L8.8 2 M12 10.4 L12 1 M13 10.4 L15.2 2" stroke="#3E8E41" stroke-width="1.7" stroke-linecap="round"></path></symbol>
+<symbol id="g-brassica" viewBox="0 0 24 24"><rect x="11" y="15" width="2" height="7.5" fill="#3E8E41"></rect><g fill="currentColor"><circle cx="7.8" cy="11.2" r="4.1"></circle><circle cx="16.2" cy="11.2" r="4.1"></circle><circle cx="12" cy="7.4" r="4.3"></circle><circle cx="12" cy="13.2" r="4.1"></circle></g></symbol>
+<symbol id="g-sprig" viewBox="0 0 24 24"><path d="M12 22.5 V2.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path><g fill="currentColor"><ellipse cx="8.4" cy="16.4" rx="3.6" ry="1.8" transform="rotate(-30 8.4 16.4)"></ellipse><ellipse cx="15.6" cy="13.2" rx="3.6" ry="1.8" transform="rotate(30 15.6 13.2)"></ellipse><ellipse cx="8.7" cy="9.6" rx="3.1" ry="1.6" transform="rotate(-30 8.7 9.6)"></ellipse><ellipse cx="15.3" cy="6.4" rx="2.7" ry="1.4" transform="rotate(30 15.3 6.4)"></ellipse></g></symbol>
+<symbol id="g-flower" viewBox="0 0 24 24"><g fill="currentColor"><circle cx="12" cy="5.4" r="3.7"></circle><circle cx="18.3" cy="10" r="3.7"></circle><circle cx="15.9" cy="17.4" r="3.7"></circle><circle cx="8.1" cy="17.4" r="3.7"></circle><circle cx="5.7" cy="10" r="3.7"></circle></g><circle cx="12" cy="12.2" r="3.1" fill="#F2C94C"></circle></symbol>
+<symbol id="g-tuber" viewBox="0 0 24 24"><path d="M4.6 14.2 C3.6 8 10 4.8 15.2 6.8 C21.4 9.2 21.2 16.4 16.2 18.8 C11 21.4 5.6 19.4 4.6 14.2 Z" fill="currentColor"></path><g fill="#ffffff" opacity="0.4"><circle cx="10" cy="11" r="1.1"></circle><circle cx="15.2" cy="13.2" r="1.1"></circle><circle cx="11" cy="16.2" r="1.1"></circle></g></symbol>
+<symbol id="g-cane" viewBox="0 0 24 24"><g fill="currentColor"><circle cx="8.8" cy="15" r="3.5"></circle><circle cx="15.2" cy="15" r="3.5"></circle><circle cx="12" cy="19.6" r="3.4"></circle></g><path d="M12 12 Q12 5.8 18.5 2.8 Q16.4 9.4 12 12 Z" fill="#3E8E41"></path></symbol>
+<symbol id="g-stalk" viewBox="0 0 24 24"><g stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M9 22.5 V6.5"></path><path d="M15 22.5 V9.5"></path></g><path d="M9 6.5 l-2.2 -3.4 M9 6.5 l2.2 -3.4 M15 9.5 l-2.2 -3.4 M15 9.5 l2.2 -3.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></symbol>
+<pattern id="grid-paper" width="44" height="44" patternUnits="userSpaceOnUse"><rect width="44" height="44" fill="{{t.paper}}"></rect><path d="M44 0 H0 V44" fill="none" stroke="{{t.grid}}" stroke-width="1"></path><path d="M22 0 V44 M0 22 H44" fill="none" stroke="{{t.grid}}" stroke-width="0.5" opacity="0.6"></path></pattern>
+<pattern id="soil" width="12" height="12" patternUnits="userSpaceOnUse"><rect width="12" height="12" fill="{{t.soil}}"></rect><circle cx="3" cy="4" r="0.9" fill="{{t.soilDark}}"></circle><circle cx="9" cy="9" r="0.8" fill="{{t.soilDark}}"></circle><circle cx="8" cy="2.5" r="0.5" fill="{{t.soilLight}}"></circle></pattern>
+<pattern id="frost-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="{{t.frostSoft}}"></rect><path d="M0 0 V6" stroke="{{t.frost}}" stroke-width="1.6" opacity="0.55"></path></pattern>
+</defs>
+</svg>
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding: 10px 20px; border-bottom: 1px solid {{t.line}}; background: {{t.panel}}">
+<a href="#" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: {{t.ink}}">
+<svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect x="1" y="1" width="28" height="28" rx="4" fill="{{t.accent}}"></rect><path d="M10 1 V29 M20 1 V29 M1 10 H29 M1 20 H29" stroke="{{t.accentInk}}" stroke-width="1" opacity="0.35"></path><path d="M15 24 V14 M15 15 Q10 14 9 9 Q14 9.5 15 14 M15 13 Q19.5 11 21 7 Q16.5 7.5 15 12" stroke="{{t.accentInk}}" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', 'Segoe UI', sans-serif; font-weight: 800; font-size: 21px; letter-spacing: -0.01em">GardenSync</span>
+</a>
+<button style="display: flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 12px; border: 1px solid {{t.line}}; border-radius: 8px; background: {{t.raised}}; color: {{t.ink}}; font: inherit; font-weight: 500; cursor: pointer">Back garden<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 5.5 L7 9 L10.5 5.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"></path></svg></button>
+<nav aria-label="Main" style="display: flex; flex-wrap: wrap; gap: 4px; flex: 1 1 auto">
+<a href="#" aria-current="page" style="display: flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 8px; background: {{t.accentSoft}}; color: {{t.ink}}; font-weight: 700; text-decoration: none">Garden</a>
+<a href="A-week.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 8px; color: {{t.muted}}; text-decoration: none">This week</a>
+<a href="A-calendar.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 8px; color: {{t.muted}}; text-decoration: none">Calendar</a>
+<a href="A-plants.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 8px; color: {{t.muted}}; text-decoration: none">Plants</a>
+<a href="A-harvest.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 8px; color: {{t.muted}}; text-decoration: none">Harvest</a>
+</nav>
+<a href="A-settings.dc.html" style="display: flex; flex-direction: column; justify-content: center; min-height: 44px; padding: 2px 12px; border-radius: 8px; text-decoration: none; color: {{t.ink}}; line-height: 1.2">
+<span style="font-weight: 700; font-size: 14px">Portland, Oregon</span>
+<span style="font-size: 13px; color: {{t.muted}}">Frost-safe from Apr 14</span>
+</a>
+<a href="A-assistant.dc.html" style="display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border: 1px solid {{t.line}}; border-radius: 8px; color: {{t.ink}}; text-decoration: none; font-weight: 500"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 4.5 h12 a1.5 1.5 0 0 1 1.5 1.5 v6 a1.5 1.5 0 0 1 -1.5 1.5 H8 L4.5 16 V13.5 H3 A1.5 1.5 0 0 1 1.5 12 V6 A1.5 1.5 0 0 1 3 4.5 Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path></svg>Ask</a>
+</header>
+
+<div style="display: flex; flex-wrap: wrap; flex: 1 1 auto; min-height: 0">
+
+<aside aria-label="Plants" style="flex: 1 1 280px; max-width: 300px; display: flex; flex-direction: column; gap: 12px; padding: 16px; border-right: 1px solid {{t.line}}; background: {{t.panel}}">
+<label for="find" style="font-weight: 700; font-size: 14px">Find a plant</label>
+<input id="find" type="search" placeholder="Tomato, basil, peas" style="min-height: 42px; padding: 0 12px; border: 1px solid {{t.lineStrong}}; border-radius: 8px; background: {{t.raised}}; color: {{t.ink}}; font: inherit">
+<div role="group" aria-label="Kind of plant" style="display: flex; flex-wrap: wrap; gap: 6px">
+<button aria-pressed="true" style="min-height: 44px; padding: 0 14px; border: 1px solid {{t.ink}}; border-radius: 22px; background: {{t.ink}}; color: {{t.panel}}; font: inherit; font-size: 14px">All</button>
+<button aria-pressed="false" style="min-height: 44px; padding: 0 14px; border: 1px solid {{t.lineStrong}}; border-radius: 22px; background: transparent; color: {{t.ink}}; font: inherit; font-size: 14px">Vegetables</button>
+<button aria-pressed="false" style="min-height: 44px; padding: 0 14px; border: 1px solid {{t.lineStrong}}; border-radius: 22px; background: transparent; color: {{t.ink}}; font: inherit; font-size: 14px">Herbs</button>
+<button aria-pressed="false" style="min-height: 44px; padding: 0 14px; border: 1px solid {{t.lineStrong}}; border-radius: 22px; background: transparent; color: {{t.ink}}; font: inherit; font-size: 14px">Fruit</button>
+<button aria-pressed="false" style="min-height: 44px; padding: 0 14px; border: 1px solid {{t.lineStrong}}; border-radius: 22px; background: transparent; color: {{t.ink}}; font: inherit; font-size: 14px">Flowers</button>
+</div>
+<label style="display: flex; align-items: center; gap: 8px; min-height: 36px; font-size: 14px"><input type="checkbox" checked style="width: 18px; height: 18px; accent-color: {{t.accent}}">Can go in this week</label>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px">
+<sc-for list="{{plants}}" as="p" hint-placeholder-count="8">
+<li><button style="width: 100%; display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 6px 8px; border: 0; border-radius: 8px; background: transparent; color: {{t.ink}}; font: inherit; text-align: left; cursor: pointer">
+<svg width="30" height="30" aria-hidden="true" style="flex: 0 0 auto; color: {{p.color}}"><use href="{{p.glyph}}"></use></svg>
+<span style="display: flex; flex-direction: column; line-height: 1.25"><span style="font-weight: 700">{{p.name}}</span><span style="font-size: 13px; color: {{t.muted}}">{{p.hint}}</span></span>
+</button></li>
+</sc-for>
+</ul>
+</aside>
+
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 12px 20px">
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', 'Segoe UI', sans-serif; font-weight: 700; font-size: 26px; letter-spacing: -0.015em">Back garden on Jun 12</h1>
+<span style="display: flex; align-items: center; gap: 8px; padding: 4px 6px 4px 12px; border-radius: 22px; background: {{t.accentSoft}}; font-size: 14px">Looking ahead: today is Apr 12<button style="min-height: 36px; padding: 0 12px; border: 0; border-radius: 18px; background: {{t.ink}}; color: {{t.panel}}; font: inherit; font-size: 14px; font-weight: 700">Back to today</button></span>
+<div style="flex: 1 1 auto"></div>
+<div role="group" aria-label="Edit" style="display: flex; gap: 6px">
+<button aria-label="Undo" style="width: 44px; height: 44px; border: 1px solid {{t.line}}; border-radius: 8px; background: {{t.raised}}; color: {{t.ink}}"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M6 4 L2.5 7.5 L6 11 M3 7.5 H11 a4.5 4.5 0 0 1 0 9 H8" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+<button aria-label="Redo" style="width: 44px; height: 44px; border: 1px solid {{t.line}}; border-radius: 8px; background: {{t.raised}}; color: {{t.ink}}"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M12 4 L15.5 7.5 L12 11 M15 7.5 H7 a4.5 4.5 0 0 0 0 9 H10" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+<button style="min-height: 44px; padding: 0 14px; border: 1px solid {{t.line}}; border-radius: 8px; background: {{t.raised}}; color: {{t.ink}}; font: inherit; font-weight: 500">Add a bed or pot</button>
+</div>
+</div>
+
+<div style="position: relative; margin: 0 20px; border: 1px solid {{t.line}}; border-radius: 10px; overflow: hidden; background: {{t.paper}}">
+<svg viewBox="0 0 820 440" role="img" aria-label="Plan of the back garden: two raised beds and three pots, with lettuce selected" style="display: block; width: 100%; height: auto">
+<rect width="820" height="440" fill="url(#grid-paper)"></rect>
+
+<g transform="translate(44 44)">
+<rect x="-7" y="-7" width="366" height="190" rx="3" fill="{{t.timber}}"></rect>
+<rect width="352" height="176" fill="url(#soil)"></rect>
+<path d="M44 0 V176 M88 0 V176 M132 0 V176 M176 0 V176 M220 0 V176 M264 0 V176 M308 0 V176 M0 44 H352 M0 88 H352 M0 132 H352" stroke="{{t.soilGrid}}" stroke-width="1"></path>
+<text x="0" y="-26" fill="{{t.ink}}" font-family="Atkinson Hyperlegible Next, sans-serif" font-size="13" font-weight="700">Bed 1</text>
+<text x="352" y="-26" text-anchor="end" fill="{{t.muted}}" font-family="Atkinson Hyperlegible Next, sans-serif" font-size="12">4 by 8 ft</text>
+<g font-family="Atkinson Hyperlegible Next, sans-serif" font-size="11" fill="{{t.muted}}" text-anchor="middle"><text x="22" y="-11">A</text><text x="66" y="-11">B</text><text x="110" y="-11">C</text><text x="154" y="-11">D</text><text x="198" y="-11">E</text><text x="242" y="-11">F</text><text x="286" y="-11">G</text><text x="330" y="-11">H</text><text x="-17" y="26">1</text><text x="-17" y="70">2</text><text x="-17" y="114">3</text><text x="-17" y="158">4</text></g>
+
+<rect x="2" y="2" width="128" height="40" rx="3" fill="#d64545" opacity="0.16"></rect>
+<svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="6" y="4" width="36" height="36" style="color: #d64545"><use href="#g-fruiting"></use></svg>
+<svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="50" y="4" width="36" height="36" style="color: #d64545"><use href="#g-fruiting"></use></svg>
+<svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="94" y="4" width="36" height="36" style="color: #d64545"><use href="#g-fruiting"></use></svg>
+<rect x="134" y="2" width="40" height="40" rx="3" fill="#4f9d5a" opacity="0.18"></rect>
+<svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="137" y="5" width="16" height="16" style="color: #4f9d5a"><use href="#g-sprig"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="155" y="5" width="16" height="16" style="color: #4f9d5a"><use href="#g-sprig"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="137" y="23" width="16" height="16" style="color: #4f9d5a"><use href="#g-sprig"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="155" y="23" width="16" height="16" style="color: #4f9d5a"><use href="#g-sprig"></use></svg>
+
+<rect x="178" y="2" width="84" height="84" rx="3" fill="#8cc152" opacity="0.2"></rect>
+<g style="color: #6fae3a">
+<svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="183" y="7" width="16" height="16"><use href="#g-rosette"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="202" y="7" width="16" height="16"><use href="#g-rosette"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="227" y="7" width="16" height="16"><use href="#g-rosette"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="246" y="7" width="16" height="16"><use href="#g-rosette"></use></svg>
+<svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="183" y="26" width="16" height="16"><use href="#g-rosette"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="202" y="26" width="16" height="16"><use href="#g-rosette"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="227" y="26" width="16" height="16"><use href="#g-rosette"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="246" y="26" width="16" height="16"><use href="#g-rosette"></use></svg>
+<svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="183" y="51" width="16" height="16"><use href="#g-rosette"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="202" y="51" width="16" height="16"><use href="#g-rosette"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="227" y="51" width="16" height="16"><use href="#g-rosette"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="246" y="51" width="16" height="16"><use href="#g-rosette"></use></svg>
+<svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="183" y="68" width="16" height="16"><use href="#g-rosette"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="202" y="68" width="16" height="16"><use href="#g-rosette"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="227" y="68" width="16" height="16"><use href="#g-rosette"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="246" y="68" width="16" height="16"><use href="#g-rosette"></use></svg>
+</g>
+<rect x="175" y="-1" width="90" height="90" rx="4" fill="none" stroke="{{t.halo}}" stroke-width="6"></rect>
+<rect x="175" y="-1" width="90" height="90" rx="4" fill="none" stroke="{{t.select}}" stroke-width="2.5"></rect>
+<rect x="170" y="-6" width="10" height="10" rx="2" fill="{{t.panel}}" stroke="{{t.select}}" stroke-width="2"></rect><rect x="260" y="84" width="10" height="10" rx="2" fill="{{t.panel}}" stroke="{{t.select}}" stroke-width="2"></rect>
+
+<rect x="266" y="2" width="84" height="84" rx="3" fill="#ee8a2a" opacity="0.2"></rect>
+<g style="color: #e37b1c"><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="272" y="8" width="18" height="18"><use href="#g-root"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="295" y="8" width="18" height="18"><use href="#g-root"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="318" y="8" width="18" height="18"><use href="#g-root"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="272" y="54" width="18" height="18"><use href="#g-root"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="318" y="54" width="18" height="18"><use href="#g-root"></use></svg></g>
+<rect x="292" y="54" width="32" height="22" rx="11" fill="{{t.panel}}" opacity="0.92"></rect><text x="308" y="69" text-anchor="middle" fill="{{t.ink}}" font-family="Atkinson Hyperlegible Next, sans-serif" font-size="12" font-weight="700">64</text>
+
+<rect x="2" y="90" width="84" height="40" rx="3" fill="#2f9e6a" opacity="0.2"></rect>
+<svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="6" y="92" width="36" height="36" style="color: #2f9e6a"><use href="#g-fruiting"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="50" y="92" width="36" height="36" style="color: #2f9e6a"><use href="#g-fruiting"></use></svg>
+<rect x="90" y="90" width="40" height="40" rx="3" fill="#f39c12" opacity="0.22"></rect>
+<svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="94" y="94" width="32" height="32" style="color: #e98b0c"><use href="#g-flower"></use></svg>
+<rect x="134" y="90" width="84" height="84" rx="3" fill="#b07cc6" opacity="0.2"></rect>
+<g style="color: #9b5fb5"><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="140" y="96" width="20" height="20"><use href="#g-allium"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="166" y="96" width="20" height="20"><use href="#g-allium"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="192" y="96" width="20" height="20"><use href="#g-allium"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="140" y="148" width="20" height="20"><use href="#g-allium"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="192" y="148" width="20" height="20"><use href="#g-allium"></use></svg></g>
+<rect x="160" y="148" width="32" height="22" rx="11" fill="{{t.panel}}" opacity="0.92"></rect><text x="176" y="163" text-anchor="middle" fill="{{t.ink}}" font-family="Atkinson Hyperlegible Next, sans-serif" font-size="12" font-weight="700">36</text>
+<rect x="222" y="90" width="84" height="84" rx="3" fill="#d9d2c0" opacity="0.35"></rect>
+<g style="color: #e9e2cf"><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="228" y="96" width="20" height="20"><use href="#g-allium"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="254" y="96" width="20" height="20"><use href="#g-allium"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="280" y="96" width="20" height="20"><use href="#g-allium"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="228" y="148" width="20" height="20"><use href="#g-allium"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="280" y="148" width="20" height="20"><use href="#g-allium"></use></svg></g>
+<rect x="310" y="90" width="40" height="84" rx="3" fill="#5aa36a" opacity="0.22"></rect>
+<g style="color: #4a9a5a"><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="314" y="96" width="16" height="16"><use href="#g-pod"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="332" y="96" width="16" height="16"><use href="#g-pod"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="314" y="140" width="16" height="16"><use href="#g-pod"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="332" y="140" width="16" height="16"><use href="#g-pod"></use></svg></g>
+
+<g font-family="Atkinson Hyperlegible Next, sans-serif" font-size="11" font-weight="700" fill="{{t.label}}" stroke="{{t.halo}}" stroke-width="3" paint-order="stroke"><text x="6" y="40">Tomato</text><text x="137" y="40">Basil</text><text x="182" y="84">Lettuce</text><text x="270" y="84">Carrot</text><text x="6" y="128">Pepper</text><text x="137" y="172">Onion</text><text x="225" y="172">Garlic</text><text x="312" y="172">Bean</text></g>
+<path d="M112 22 Q133 22 154 22" stroke="{{t.friend}}" stroke-width="3" stroke-linecap="round" fill="none"></path>
+<circle cx="133" cy="22" r="9" fill="{{t.halo}}"></circle><circle cx="133" cy="22" r="7" fill="{{t.friend}}"></circle><path d="M129.5 22 H136.5 M133 18.5 V25.5" stroke="{{t.panel}}" stroke-width="1.8" stroke-linecap="round"></path>
+<path d="M300 132 Q309 132 322 132" stroke="{{t.foe}}" stroke-width="3" stroke-dasharray="5 4" stroke-linecap="round" fill="none"></path>
+<circle cx="309" cy="132" r="9" fill="{{t.halo}}"></circle><circle cx="309" cy="132" r="7" fill="{{t.foe}}"></circle><path d="M306.3 129.3 L311.7 134.7 M311.7 129.3 L306.3 134.7" stroke="{{t.panel}}" stroke-width="1.8" stroke-linecap="round"></path>
+</g>
+
+<g transform="translate(44 266)">
+<rect x="-7" y="-7" width="366" height="146" rx="3" fill="{{t.timber}}"></rect>
+<rect width="352" height="132" fill="url(#soil)"></rect>
+<path d="M44 0 V132 M88 0 V132 M132 0 V132 M176 0 V132 M220 0 V132 M264 0 V132 M308 0 V132 M0 44 H352 M0 88 H352" stroke="{{t.soilGrid}}" stroke-width="1"></path>
+<g font-family="Atkinson Hyperlegible Next, sans-serif" font-size="11" fill="{{t.muted}}" text-anchor="middle"><text x="22" y="-11">A</text><text x="66" y="-11">B</text><text x="110" y="-11">C</text><text x="154" y="-11">D</text><text x="198" y="-11">E</text><text x="242" y="-11">F</text><text x="286" y="-11">G</text><text x="330" y="-11">H</text><text x="-17" y="26">1</text><text x="-17" y="70">2</text><text x="-17" y="114">3</text></g>
+<g font-family="Atkinson Hyperlegible Next, sans-serif" font-size="11" font-weight="700" fill="{{t.label}}" stroke="{{t.halo}}" stroke-width="3" paint-order="stroke"><text x="6" y="126">Zucchini</text><text x="137" y="84">Bush bean</text><text x="269" y="84">Kale</text><text x="137" y="128">Swiss chard</text></g>
+<text x="0" y="148" fill="{{t.ink}}" font-family="Atkinson Hyperlegible Next, sans-serif" font-size="13" font-weight="700" dy="16">Bed 2</text>
+<text x="352" y="148" text-anchor="end" fill="{{t.muted}}" font-family="Atkinson Hyperlegible Next, sans-serif" font-size="12" dy="16">3 by 8 ft</text>
+<rect x="2" y="2" width="128" height="128" rx="3" fill="#7fb24a" opacity="0.2"></rect>
+<svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="22" y="22" width="88" height="88" style="color: #5e9a2e"><use href="#g-vine"></use></svg>
+<rect x="134" y="2" width="128" height="84" rx="3" fill="#5aa36a" opacity="0.22"></rect>
+<g style="color: #4a9a5a"><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="140" y="8" width="16" height="16"><use href="#g-pod"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="160" y="8" width="16" height="16"><use href="#g-pod"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="184" y="8" width="16" height="16"><use href="#g-pod"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="204" y="8" width="16" height="16"><use href="#g-pod"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="228" y="8" width="16" height="16"><use href="#g-pod"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="140" y="60" width="16" height="16"><use href="#g-pod"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="228" y="60" width="16" height="16"><use href="#g-pod"></use></svg></g>
+<rect x="181" y="56" width="32" height="22" rx="11" fill="{{t.panel}}" opacity="0.92"></rect><text x="197" y="71" text-anchor="middle" fill="{{t.ink}}" font-family="Atkinson Hyperlegible Next, sans-serif" font-size="12" font-weight="700">54</text>
+<rect x="266" y="2" width="84" height="84" rx="3" fill="#2e6b4f" opacity="0.25"></rect>
+<g style="color: #2e6b4f"><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="270" y="6" width="36" height="36"><use href="#g-brassica"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="310" y="6" width="36" height="36"><use href="#g-brassica"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="270" y="48" width="36" height="36"><use href="#g-brassica"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="310" y="48" width="36" height="36"><use href="#g-brassica"></use></svg></g>
+<rect x="134" y="90" width="216" height="40" rx="3" fill="#c84b77" opacity="0.18"></rect>
+<g style="color: #b63e69"><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="140" y="94" width="32" height="32"><use href="#g-rosette"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="184" y="94" width="32" height="32"><use href="#g-rosette"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="228" y="94" width="32" height="32"><use href="#g-rosette"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="272" y="94" width="32" height="32"><use href="#g-rosette"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="316" y="94" width="32" height="32"><use href="#g-rosette"></use></svg></g>
+</g>
+
+<g transform="translate(500 64)">
+<circle cx="40" cy="40" r="40" fill="{{t.pot}}"></circle><circle cx="40" cy="40" r="33" fill="url(#soil)"></circle>
+<svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="14" y="14" width="52" height="52" style="color: #2f9e6a"><use href="#g-fruiting"></use></svg>
+<text x="40" y="102" text-anchor="middle" fill="{{t.ink}}" font-family="Atkinson Hyperlegible Next, sans-serif" font-size="12" font-weight="700">Pot, 20 L</text>
+</g>
+<g transform="translate(620 64)">
+<circle cx="34" cy="34" r="34" fill="{{t.pot}}"></circle><circle cx="34" cy="34" r="28" fill="url(#soil)"></circle>
+<g style="color: #3d8f61"><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="10" y="10" width="24" height="24"><use href="#g-sprig"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="34" y="12" width="24" height="24"><use href="#g-sprig"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="22" y="32" width="24" height="24"><use href="#g-sprig"></use></svg></g>
+<text x="34" y="90" text-anchor="middle" fill="{{t.ink}}" font-family="Atkinson Hyperlegible Next, sans-serif" font-size="12" font-weight="700">Mint, kept apart</text>
+</g>
+<g transform="translate(500 220)">
+<rect x="0" y="0" width="200" height="56" rx="6" fill="{{t.bag}}"></rect><rect x="8" y="8" width="184" height="40" rx="4" fill="url(#soil)"></rect>
+<g style="color: #d94f6a"><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="14" y="12" width="32" height="32"><use href="#g-fruiting"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="58" y="12" width="32" height="32"><use href="#g-fruiting"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="102" y="12" width="32" height="32"><use href="#g-fruiting"></use></svg><svg stroke="{{t.edge}}" stroke-width="1" stroke-linejoin="round" x="146" y="12" width="32" height="32"><use href="#g-fruiting"></use></svg></g>
+<text x="0" y="76" fill="{{t.ink}}" font-family="Atkinson Hyperlegible Next, sans-serif" font-size="12" font-weight="700">Strawberry trough</text>
+</g>
+
+<g transform="translate(770 300)"><circle cx="0" cy="0" r="16" fill="{{t.panel}}" stroke="{{t.line}}"></circle><path d="M0 -11 L5 4 L0 1 L-5 4 Z" fill="{{t.ink}}"></path><text x="0" y="32" text-anchor="middle" fill="{{t.ink}}" font-family="Atkinson Hyperlegible Next, sans-serif" font-size="12" font-weight="700">N</text></g>
+<g transform="translate(686 400)">
+<rect x="0" y="-7" width="88" height="6" fill="{{t.ink}}"></rect><rect x="0" y="-7" width="44" height="6" fill="{{t.panel}}" stroke="{{t.ink}}" stroke-width="1"></rect>
+<text x="0" y="12" fill="{{t.muted}}" font-family="Atkinson Hyperlegible Next, sans-serif" font-size="12">1 square = 1 ft</text>
+</g>
+</svg>
+<div role="group" aria-label="Zoom" style="position: absolute; right: 12px; top: 12px; display: flex; flex-direction: column; gap: 4px">
+<button aria-label="Zoom in" style="width: 44px; height: 44px; border: 1px solid {{t.line}}; border-radius: 8px; background: {{t.panel}}; color: {{t.ink}}; font: inherit; font-size: 20px">+</button>
+<button aria-label="Zoom out" style="width: 44px; height: 44px; border: 1px solid {{t.line}}; border-radius: 8px; background: {{t.panel}}; color: {{t.ink}}; font: inherit; font-size: 20px">&#8722;</button>
+<button aria-label="Fit the garden" style="width: 44px; height: 44px; border: 1px solid {{t.line}}; border-radius: 8px; background: {{t.panel}}; color: {{t.ink}}"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 6 V2 H6 M12 2 H16 V6 M16 12 V16 H12 M6 16 H2 V12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"></path></svg></button>
+</div>
+</div>
+
+<section aria-label="Season" style="margin: 14px 20px 20px; padding: 14px 16px 10px; border: 1px solid {{t.line}}; border-radius: 10px; background: {{t.panel}}">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; margin-bottom: 6px">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', 'Segoe UI', sans-serif; font-weight: 700; font-size: 18px">The season in Bed 1</h2>
+<span style="font-size: 14px; color: {{t.muted}}">Move the marker to see the garden on any day. Blue is frost risk.</span>
+<div style="flex: 1 1 auto"></div>
+<button style="min-height: 36px; padding: 0 12px; border: 1px solid {{t.line}}; border-radius: 8px; background: {{t.raised}}; color: {{t.ink}}; font: inherit; font-size: 14px">Today</button>
+</div>
+<svg viewBox="0 0 780 150" role="img" aria-label="Season ribbon for 2027: tomato, lettuce in two rounds, carrot, garlic and bush bean, with frost risk until mid April and from late October" style="display: block; width: 100%; height: auto">
+<rect x="90" y="18" width="149" height="112" fill="{{t.frostSoft}}"></rect>
+<rect x="239" y="18" width="43" height="112" fill="url(#frost-hatch)"></rect>
+<rect x="654" y="18" width="40" height="112" fill="url(#frost-hatch)"></rect>
+<rect x="694" y="18" width="76" height="112" fill="{{t.frostSoft}}"></rect>
+<g font-family="Atkinson Hyperlegible Next, sans-serif" font-size="12" fill="{{t.muted}}">
+<text x="113" y="12" text-anchor="middle">Jan</text><text x="171" y="12" text-anchor="middle">Feb</text><text x="226" y="12" text-anchor="middle">Mar</text><text x="282" y="12" text-anchor="middle">Apr</text><text x="339" y="12" text-anchor="middle">May</text><text x="395" y="12" text-anchor="middle">Jun</text><text x="452" y="12" text-anchor="middle">Jul</text><text x="509" y="12" text-anchor="middle">Aug</text><text x="566" y="12" text-anchor="middle">Sep</text><text x="622" y="12" text-anchor="middle">Oct</text><text x="679" y="12" text-anchor="middle">Nov</text><text x="736" y="12" text-anchor="middle">Dec</text>
+</g>
+<g stroke="{{t.line}}" stroke-width="1"><path d="M147 18 V130 M199 18 V130 M255 18 V130 M310 18 V130 M367 18 V130 M423 18 V130 M480 18 V130 M537 18 V130 M594 18 V130 M650 18 V130 M707 18 V130"></path></g>
+<g font-family="Atkinson Hyperlegible Next, sans-serif" font-size="13" fill="{{t.ink}}">
+<text x="0" y="36">Tomato</text><text x="0" y="58" font-weight="700">Lettuce</text><text x="0" y="80">Carrot</text><text x="0" y="102">Garlic</text><text x="0" y="124">Bush bean</text>
+</g>
+<rect x="164" y="30" width="118" height="4" rx="2" fill="#d64545" opacity="0.5"></rect>
+<rect x="293" y="26" width="332" height="12" rx="6" fill="#d64545" opacity="0.3"></rect><rect x="427" y="26" width="198" height="12" rx="6" fill="#d64545"></rect>
+<rect x="213" y="48" width="194" height="12" rx="6" fill="#6fae3a" opacity="0.3"></rect><rect x="321" y="48" width="86" height="12" rx="6" fill="#6fae3a"></rect>
+<rect x="511" y="48" width="162" height="12" rx="6" fill="#6fae3a" opacity="0.3"></rect><rect x="599" y="48" width="74" height="12" rx="6" fill="#6fae3a"></rect>
+<rect x="226" y="70" width="218" height="12" rx="6" fill="#e37b1c" opacity="0.3"></rect><rect x="388" y="70" width="56" height="12" rx="6" fill="#e37b1c"></rect>
+<rect x="90" y="92" width="345" height="12" rx="6" fill="#9b8f6a" opacity="0.35"></rect><rect x="416" y="92" width="19" height="12" rx="6" fill="#9b8f6a"></rect><rect x="634" y="92" width="136" height="12" rx="6" fill="#9b8f6a" opacity="0.35"></rect>
+<rect x="314" y="114" width="206" height="12" rx="6" fill="#4a9a5a" opacity="0.3"></rect><rect x="427" y="114" width="93" height="12" rx="6" fill="#4a9a5a"></rect>
+<path d="M392 16 V134" stroke="{{t.ink}}" stroke-width="2"></path>
+<rect x="366" y="134" width="52" height="16" rx="8" fill="{{t.ink}}"></rect><text x="392" y="146" text-anchor="middle" fill="{{t.panel}}" font-family="Atkinson Hyperlegible Next, sans-serif" font-size="11" font-weight="700">Jun 12</text>
+</svg>
+<label for="day-shown" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Day shown in the garden</label>
+<input id="day-shown" type="range" min="1" max="365" value="163" aria-valuetext="June 12" style="width: 100%; margin: 4px 0 0; min-height: 28px; accent-color: {{t.ink}}">
+<div style="display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 6px; font-size: 13px; color: {{t.muted}}">
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 22px; height: 10px; border-radius: 5px; background: {{t.muted}}; opacity: 0.35"></span>In the ground</span>
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 22px; height: 10px; border-radius: 5px; background: {{t.muted}}"></span>Ready to pick</span>
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 22px; height: 4px; border-radius: 2px; background: {{t.muted}}; opacity: 0.5"></span>Seedlings indoors</span>
+</div>
+</section>
+</main>
+
+<aside aria-label="Selected planting" style="flex: 1 1 300px; max-width: 340px; display: flex; flex-direction: column; gap: 16px; padding: 18px; border-left: 1px solid {{t.line}}; background: {{t.panel}}">
+<div style="display: flex; gap: 12px; align-items: center">
+<svg width="44" height="44" aria-hidden="true" style="color: #6fae3a; flex: 0 0 auto"><use href="#g-rosette"></use></svg>
+<div style="display: flex; flex-direction: column; line-height: 1.2">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', 'Segoe UI', sans-serif; font-weight: 700; font-size: 22px">Lettuce</h2>
+<span style="color: {{t.muted}}; font-size: 14px">16 plants in Bed 1, 2 by 2 squares</span>
+</div>
+</div>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px">
+<li style="display: grid; grid-template-columns: 14px 1fr; gap: 2px 10px">
+<span style="margin-top: 5px; width: 12px; height: 12px; border-radius: 6px; background: {{t.accent}}"></span>
+<span style="font-weight: 700">Sown Mar 29, straight in the bed</span>
+<span></span><span style="font-size: 13px; color: {{t.muted}}">You marked it sown. The plan said Mar 8 to Apr 5: 2 weeks before to 2 weeks after your last frost.</span>
+</li>
+<li style="display: grid; grid-template-columns: 14px 1fr; gap: 2px 10px">
+<span style="margin-top: 5px; width: 12px; height: 12px; border-radius: 6px; border: 2px solid {{t.accent}}; box-sizing: border-box"></span>
+<span style="font-weight: 700">Pick from May 18 to Jun 26</span>
+<span></span><span style="font-size: 13px; color: {{t.muted}}">About 50 days from sowing. Picking ends early if the weather turns hot, because lettuce bolts above a daily average of {{hotC}}.</span>
+</li>
+<li style="display: grid; grid-template-columns: 14px 1fr; gap: 2px 10px">
+<span style="margin-top: 5px; width: 12px; height: 12px; border-radius: 6px; border: 2px solid {{t.muted}}; box-sizing: border-box"></span>
+<span style="font-weight: 700">Next round: sow Jun 19</span>
+<span></span><span style="font-size: 13px; color: {{t.muted}}">Every 2 weeks while days stay cool enough, then again from Aug 9 for fall.</span>
+</li>
+</ol>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<h3 style="margin: 0; font-size: 15px">Neighbours</h3>
+<p style="margin: 0; display: flex; gap: 8px; align-items: flex-start; font-size: 14px"><span aria-hidden="true" style="flex: 0 0 auto; width: 18px; height: 18px; border-radius: 9px; background: {{t.friend}}; color: {{t.panel}}; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px">+</span><span><strong>Carrot</strong>, next door. Shallow lettuce roots and deep carrot roots share a square without competing. <span style="color: {{t.muted}}">Traditional pairing.</span></span></p>
+<p style="margin: 0; display: flex; gap: 8px; align-items: flex-start; font-size: 14px"><span aria-hidden="true" style="flex: 0 0 auto; width: 18px; height: 18px; border-radius: 9px; background: {{t.friend}}; color: {{t.panel}}; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px">+</span><span><strong>Tomato</strong>, to the left. Will shade this square from July, which lettuce likes in summer.</span></p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto">
+<button style="min-height: 46px; border: 0; border-radius: 8px; background: {{t.accent}}; color: {{t.accentInk}}; font: inherit; font-weight: 700; font-size: 16px">Log a harvest</button>
+<div style="display: flex; gap: 8px">
+<button style="flex: 1 1 0; min-height: 42px; border: 1px solid {{t.line}}; border-radius: 8px; background: {{t.raised}}; color: {{t.ink}}; font: inherit">Change dates</button>
+<button style="flex: 1 1 0; min-height: 42px; border: 1px solid {{t.line}}; border-radius: 8px; background: {{t.raised}}; color: {{t.ink}}; font: inherit">Pull out</button>
+</div>
+</div>
+</aside>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"units":{"editor":"enum","options":["metric","imperial"],"default":"imperial"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const palettes = {
+      light: { bg: '#F3F4EF', panel: '#FFFFFF', raised: '#F8F9F5', ink: '#1C231D', muted: '#4D584E', line: '#D8DDD2', lineStrong: '#7E887A', accent: '#2E7D46', accentInk: '#FFFFFF', accentSoft: '#E1EFE3', paper: '#EDF0E7', grid: '#D9DFCF', soil: '#E7DCC9', soilDark: '#D3C3A9', soilLight: '#F2EADD', soilGrid: 'rgba(70,50,30,0.30)', timber: '#8E6B46', pot: '#A85A36', bag: '#4A4F45', select: '#1C231D', edge: '#2B2A24', halo: '#FFFFFF', label: '#1C231D', friend: '#2E7D46', foe: '#C2560C', frost: '#2F64C8', frostSoft: '#DCE6F7' },
+      dark: { bg: '#17130F', panel: '#211C17', raised: '#2A241D', ink: '#EEE9E0', muted: '#BCB3A6', line: '#3A332B', lineStrong: '#5A5146', accent: '#7DD38B', accentInk: '#10200F', accentSoft: '#25361F', paper: '#1D1915', grid: '#2D2720', soil: '#3B3026', soilDark: '#2E251D', soilLight: '#4A3D31', soilGrid: 'rgba(255,255,255,0.14)', timber: '#7B6043', pot: '#8E4E31', bag: '#3A3E36', select: '#EEE9E0', edge: '#F3EEE4', halo: '#17130F', label: '#EEE9E0', friend: '#7DD38B', foe: '#F2A065', frost: '#8DB4FF', frostSoft: '#1E283A' }
+    };
+    const theme = this.props.theme ?? 'light';
+    const metric = (this.props.units ?? 'imperial') === 'metric';
+    return {
+      t: palettes[theme] ?? palettes.light,
+      hotC: metric ? '24 °C' : '75 °F',
+      plants: [
+        { name: 'Bush bean', hint: 'Sow now, every 2 weeks', glyph: '#g-pod', color: '#4a9a5a' },
+        { name: 'Basil', hint: 'Plant out now', glyph: '#g-sprig', color: '#4f9d5a' },
+        { name: 'Beet', hint: 'Sow now', glyph: '#g-root', color: '#a33a5c' },
+        { name: 'Carrot', hint: 'Sow now', glyph: '#g-root', color: '#e37b1c' },
+        { name: 'Cucumber', hint: 'Sow or plant out now', glyph: '#g-vine', color: '#3f8f4f' },
+        { name: 'Lettuce', hint: 'Sow now, partly shaded', glyph: '#g-rosette', color: '#6fae3a' },
+        { name: 'Marigold', hint: 'Plant out now', glyph: '#g-flower', color: '#e98b0c' },
+        { name: 'Zucchini', hint: 'Sow or plant out now', glyph: '#g-vine', color: '#5e9a2e' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

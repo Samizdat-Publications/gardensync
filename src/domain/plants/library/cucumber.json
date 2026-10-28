@@ -1,0 +1,39 @@
+{
+  "id": "cucumber",
+  "name": "Cucumber",
+  "latin": "Cucumis sativus",
+  "category": "vegetable",
+  "family": "Cucurbitaceae",
+  "lifecycle": "annual",
+  "frost": "tender",
+  "temp": { "minC": 18, "maxC": 30 },
+  "fruitSetMaxC": 35,
+  "soilMinC": 18,
+  "sun": "full",
+  "water": "high",
+  "density": { "perSquare": 2 },
+  "spacingCm": { "inRow": 30, "betweenRows": 120 },
+  "container": { "minLitres": 20, "perVessel": 1 },
+  "canopy": "tall",
+  "shadeTolerant": false,
+  "maturity": { "days": 55, "from": "sow" },
+  "methods": {
+    "indoor": { "ageWeeks": [3, 4] },
+    "transplant": { "weeks": [1, 3] },
+    "direct": { "weeks": [1, 4] }
+  },
+  "harvest": { "type": "continuous", "windowDays": 42 },
+  "support": "trellis",
+  "yield": { "amount": 2000, "unit": "g", "per": "plant" },
+  "glyph": { "form": "vine", "color": "#2f7d32" },
+  "notes": {
+    "sowing": "Sow outdoors {cm:1.5} deep 1 to 4 weeks after your last frost, once the soil is at least {c:18}. For an earlier start, sow indoors in individual pots 3 to 4 weeks before planting out, and plant out without disturbing the roots.",
+    "care": "Train vines up a trellis about {cm:120} tall to save space and keep fruit clean. Water about {cm:2.5} a week, evenly and at the base of the plant. Mulch once the soil is warm.",
+    "harvest": "Pick slicers at {cm:20} to {cm:25} and picklers smaller, before the seeds swell and the skin yellows. Pick every day or two: fruit left on the vine slows new fruit."
+  },
+  "sources": [
+    { "title": "University of Minnesota Extension: Growing cucumbers in home gardens", "url": "https://extension.umn.edu/vegetables/growing-cucumbers" },
+    { "title": "Royal Horticultural Society: How to grow cucumbers", "url": "https://www.rhs.org.uk/vegetables/cucumbers/grow-your-own" },
+    { "title": "Colorado State University Extension: Vegetable Planting Guide", "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/" }
+  ]
+}

@@ -1,0 +1,277 @@
+.calendar {
+  padding: 24px clamp(16px, 3vw, 40px) 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.cal-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+}
+.cal-head h1,
+.calendar > h1 {
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+}
+.cal-spacer {
+  flex: 1 1 auto;
+}
+.cal-banner {
+  padding: var(--sp-3) var(--sp-4);
+  border: 2px solid var(--c-caution);
+  border-radius: var(--r-panel);
+  background: var(--c-caution-soft);
+}
+.cal-empty {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cal-scroll {
+  overflow-x: auto;
+}
+/* No min-width: the chart fills its container at every size so all 12 months fit without
+   horizontal page scroll. The label column shrinks on narrower screens via the media query
+   below. On very narrow screens the default is list view (see CalendarScreen.tsx). */
+.cal-chart {
+  padding: 12px 16px 16px;
+}
+.cal-months,
+.cal-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  align-items: center;
+}
+.cal-months {
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--c-line);
+  font-size: var(--fs-xs);
+  color: var(--c-muted);
+}
+.cal-track {
+  position: relative;
+  height: 18px;
+}
+.cal-month {
+  position: absolute;
+  top: 0;
+}
+.cal-body {
+  position: relative;
+}
+.cal-bands {
+  position: absolute;
+  inset: 0 0 0 180px;
+  pointer-events: none;
+}
+.cal-frost {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+.cal-frost-likely {
+  background: var(--c-frost-soft);
+  opacity: 0.7;
+}
+.cal-frost-possible {
+  background: repeating-linear-gradient(45deg, var(--c-frost-soft) 0 5px, var(--c-frost-hatch) 5px 8px);
+  opacity: 0.85;
+}
+.cal-today {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--c-ink);
+}
+.cal-group {
+  position: relative;
+  padding-top: 10px;
+}
+.cal-group-name {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--c-muted);
+  margin-bottom: 4px;
+}
+.cal-row {
+  min-height: 30px;
+  position: relative;
+}
+.cal-label {
+  font-size: var(--fs-sm);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 6px;
+}
+.cal-track .seg {
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 8px;
+}
+/* Dashed rectangle: seedlings started indoors before going into the bed. */
+.cal-track .seg-indoor {
+  top: 4px;
+  height: 10px;
+  border: 2px dashed;
+  border-radius: 4px;
+  background: transparent;
+}
+/* Outlined bar with 28% tinted fill (colour set inline); visible against any background. */
+.cal-track .seg-grow {
+  top: 1px;
+  height: 16px;
+  border: 2px solid;
+}
+/* Solid bar in the crop colour; sits on top of the growing bar where they overlap. */
+.cal-track .seg-pick {
+  top: 1px;
+  height: 16px;
+  border: 2px solid;
+}
+.cal-legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  font-size: var(--fs-sm);
+  color: var(--c-muted);
+}
+.cal-legend li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cal-legend .key {
+  display: inline-block;
+  width: 22px;
+  height: 12px;
+  border-radius: 6px;
+}
+/* Dashed rectangle to match the indoor bar shape. */
+.cal-legend .key-indoor {
+  border: 2px dashed var(--c-muted);
+  border-radius: 4px;
+  background: transparent;
+}
+/* Outlined box with a soft tint to represent the crop-coloured tinted fill of growing bars. */
+.cal-legend .key-grow {
+  border: 2px solid var(--c-muted);
+  background: var(--c-accent-soft);
+}
+/* Solid swatch using the accent colour as a representative crop colour. */
+.cal-legend .key-pick {
+  background: var(--c-accent);
+}
+.cal-legend .key-likely {
+  background: var(--c-frost-soft);
+  border-radius: 0;
+}
+.cal-legend .key-possible {
+  background: repeating-linear-gradient(45deg, var(--c-frost-soft) 0 5px, var(--c-frost-hatch) 5px 8px);
+  border-radius: 0;
+}
+/* Double-class selector (specificity 0,2,0) ensures this beats .key (0,1,0) so the
+   today swatch is a narrow vertical line matching the chart's today marker. */
+.cal-legend .key.key-today {
+  width: 2px;
+  height: 14px;
+  background: var(--c-ink);
+  border-radius: 0;
+}
+
+/* On screens narrower than 860 px (tablet and below) reduce the label column so all 12
+   months still fit the track without any horizontal scroll. */
+@media (max-width: 860px) {
+  .cal-months,
+  .cal-row {
+    grid-template-columns: 120px 1fr;
+  }
+  .cal-bands {
+    left: 120px;
+  }
+}
+
+/* ---- Stacked list view ------------------------------------------------------------ */
+/* Replaces the old scrollable table. Each planting is a self-contained card: name,
+   location, then only the date phases that are non-empty. No sideways scroll needed. */
+
+.cal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.cal-list section {
+  padding: 16px;
+}
+.cal-list h2 {
+  font-size: var(--fs-xl);
+  margin-bottom: 10px;
+}
+.cal-list-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.cal-list-item {
+  padding: 12px 0;
+  border-top: 1px solid var(--c-line);
+}
+.cal-list-item:first-child {
+  border-top: 0;
+  padding-top: 4px;
+}
+.cal-list-name {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+}
+.cal-list-where {
+  font-size: var(--fs-sm);
+  color: var(--c-muted);
+  margin-top: 2px;
+}
+/* Definition list: term (label) and description (date) sit on one line per pair. */
+.cal-list-dates {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 3px 12px;
+  margin: 6px 0 0;
+  font-size: var(--fs-sm);
+}
+.cal-list-dates dt {
+  color: var(--c-muted);
+  font-weight: 500;
+}
+.cal-list-dates dd {
+  margin: 0;
+}
+
+@media print {
+  .app-header,
+  .bottom-nav,
+  .cal-head .row,
+  .cal-head .btn,
+  .skip-link {
+    display: none !important;
+  }
+  .calendar {
+    padding: 0;
+  }
+  .cal-scroll {
+    overflow: visible;
+    border: 0;
+  }
+  .cal-track .seg,
+  .cal-frost,
+  .cal-legend .key {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

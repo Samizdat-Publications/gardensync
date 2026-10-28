@@ -1,0 +1,38 @@
+{
+  "id": "tomatillo",
+  "name": "Tomatillo",
+  "latin": "Physalis philadelphica",
+  "category": "vegetable",
+  "family": "Solanaceae",
+  "lifecycle": "annual",
+  "frost": "tender",
+  "temp": { "minC": 16, "maxC": 29 },
+  "fruitSetMaxC": 32,
+  "soilMinC": 16,
+  "sun": "full",
+  "water": "medium",
+  "density": { "squares": [2, 2] },
+  "spacingCm": { "inRow": 75, "betweenRows": 120 },
+  "container": { "minLitres": 20, "perVessel": 1 },
+  "canopy": "tall",
+  "shadeTolerant": false,
+  "maturity": { "days": 60, "from": "transplant" },
+  "methods": {
+    "indoor": { "ageWeeks": [4, 6] },
+    "transplant": { "weeks": [2, 4] }
+  },
+  "harvest": { "type": "continuous", "windowDays": 60 },
+  "support": "cage",
+  "yield": { "amount": 1000, "unit": "g", "per": "plant" },
+  "glyph": { "form": "fruiting", "color": "#a5c23a" },
+  "notes": {
+    "sowing": "Start seeds indoors 4 to 6 weeks before planting out, {cm:0.6} deep, at {c:24} to {c:29}. Plant out 2 to 4 weeks after your last frost, about a week after tomatoes, setting the stem deep. Grow at least two plants: a single plant rarely sets fruit.",
+    "care": "Stake or cage the sprawling plants, which take more room than tomatoes. They cope with heat and dry spells, but flowers drop above {c:32} or below {c:13}. Water deeply once or twice a week.",
+    "harvest": "Pick when the fruit fills its papery husk but is still green and firm. Harvest weekly with the husks on. Soft, yellowing fruit is overripe and splits."
+  },
+  "sources": [
+    { "title": "University of Minnesota Extension: Growing tomatillos and ground cherries in home gardens", "url": "https://extension.umn.edu/vegetables/growing-tomatillos-and-ground-cherries" },
+    { "title": "Johnny's Selected Seeds: Growing Tomatillos from Seed: Sowing, Care & Harvest", "url": "https://www.johnnyseeds.com/growers-library/vegetables/tomatillos/tomatillo-key-growing-information.html" },
+    { "title": "Johnny's Selected Seeds: Toma Verde Tomatillo Seed", "url": "https://www.johnnyseeds.com/vegetables/tomatillos/toma-verde-tomatillo-seed-791.html" }
+  ]
+}

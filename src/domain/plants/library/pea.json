@@ -1,0 +1,38 @@
+{
+  "id": "pea",
+  "name": "Pea",
+  "latin": "Pisum sativum",
+  "category": "vegetable",
+  "family": "Fabaceae",
+  "lifecycle": "annual",
+  "frost": "hardy",
+  "temp": { "minC": 10, "maxC": 21 },
+  "fruitSetMaxC": 29,
+  "soilMinC": 7,
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 8 },
+  "spacingCm": { "inRow": 8, "betweenRows": 60 },
+  "container": { "minLitres": 20, "perVessel": 10 },
+  "canopy": "tall",
+  "shadeTolerant": false,
+  "maturity": { "days": 60, "from": "sow" },
+  "methods": {
+    "direct": { "weeks": [-6, -2] }
+  },
+  "fall": { "windowWeeks": 3 },
+  "harvest": { "type": "continuous", "windowDays": 21 },
+  "support": "trellis",
+  "yield": { "amount": 50, "unit": "g", "per": "plant" },
+  "glyph": { "form": "pod", "color": "#9ccc3c" },
+  "notes": {
+    "sowing": "Sow outdoors 2 to 6 weeks before your last frost, as soon as the soil can be worked, {cm:2.5} to {cm:5} deep and {cm:7.5} apart. Seed sprouts slowly in soil below about {c:10}. For a fall crop, sow again in late summer.",
+    "care": "Put up netting or twiggy supports at sowing: tall varieties reach {cm:180}, dwarf ones about {cm:45}. Young plants take light frost, but flowering and pod set stop above {c:29}. Water well once flowering starts.",
+    "harvest": "Pick garden peas when pods are full but still bright green, snow peas while flat, and snap peas when plump and crisp. Quality fades within a day or two, so pick every couple of days."
+  },
+  "sources": [
+    { "title": "University of Minnesota Extension: Growing peas in home gardens", "url": "https://extension.umn.edu/vegetables/growing-peas" },
+    { "title": "Royal Horticultural Society: How to grow peas", "url": "https://www.rhs.org.uk/vegetables/peas/grow-your-own" },
+    { "title": "Colorado State University Extension: Vegetable Planting Guide", "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/" }
+  ]
+}

@@ -1,0 +1,208 @@
+.app-header {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-5);
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--c-line);
+  background: var(--c-panel);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--target);
+  color: var(--c-ink);
+  text-decoration: none;
+}
+.brand-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 21px;
+  letter-spacing: -0.01em;
+}
+.garden-name {
+  font-weight: 700;
+  color: var(--c-muted);
+}
+.garden-switch {
+  min-height: var(--target);
+  max-width: 14rem;
+  padding: 0 28px 0 10px;
+  border: 1px solid var(--c-control);
+  border-radius: var(--r-control);
+  background: var(--c-panel);
+  color: var(--c-ink);
+  font: inherit;
+  font-weight: 700;
+}
+.main-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1);
+  flex: 1 1 auto;
+}
+.main-nav a {
+  display: flex;
+  align-items: center;
+  min-height: var(--target);
+  padding: 0 14px;
+  border-radius: var(--r-control);
+  color: var(--c-muted);
+  text-decoration: none;
+}
+.main-nav a:hover {
+  background: var(--c-raised);
+  color: var(--c-ink);
+}
+.main-nav a[aria-current='page'] {
+  background: var(--c-accent-soft);
+  color: var(--c-ink);
+  font-weight: 700;
+}
+.place {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: var(--target);
+  padding: 2px 12px;
+  border-radius: var(--r-control);
+  color: var(--c-ink);
+  text-decoration: none;
+  line-height: 1.2;
+}
+.place:hover {
+  background: var(--c-raised);
+}
+.place-name {
+  font-weight: 700;
+  font-size: var(--fs-sm);
+}
+.place-sub {
+  font-size: var(--fs-xs);
+  color: var(--c-muted);
+}
+.save-status {
+  font-size: var(--fs-xs);
+  color: var(--c-muted);
+  min-width: 0;
+}
+.save-status:empty {
+  display: none;
+}
+
+/* Settings link: marked current when the user is on the settings screen. */
+.settings-link[aria-current='page'] {
+  background: var(--c-accent-soft);
+}
+
+/* Assistant button: icon-only by default; shows an "Ask" label at desktop widths. */
+.assistant-link {
+  width: var(--target);
+  padding: 0;
+  flex: 0 0 auto;
+}
+.ask-label {
+  display: none;
+}
+
+/* Laptop widths: keep the header on one line. The garden's name is in each screen's title anyway. */
+@media (max-width: 1180px) {
+  .app-header {
+    gap: var(--sp-2) var(--sp-3);
+  }
+  .main-nav a {
+    padding: 0 10px;
+  }
+  span.garden-name {
+    display: none;
+  }
+}
+
+/* Desktop widths above 1100px: show the "Ask" label on the assistant button. */
+@media (min-width: 1101px) {
+  .assistant-link {
+    width: auto;
+    padding: 0 var(--sp-3);
+    gap: var(--sp-2);
+  }
+  .ask-label {
+    display: inline;
+    font-weight: 500;
+  }
+}
+
+.bottom-nav {
+  display: none;
+}
+
+/* Tablet widths: the logo alone, and a place name that shortens rather than wrapping the header. */
+@media (max-width: 1100px) {
+  /* Visually hidden, so the logo link keeps its name for screen readers. */
+  .brand-name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .place {
+    min-width: 0;
+    flex: 0 1 auto;
+  }
+  .place-name,
+  .place-sub {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .main-nav {
+    flex-wrap: nowrap;
+  }
+}
+
+@media (max-width: 760px) {
+  .garden-switch {
+    display: none;
+  }
+  .app-header {
+    padding: 8px 14px;
+    gap: var(--sp-2) var(--sp-3);
+  }
+  .main-nav,
+  .garden-name {
+    display: none;
+  }
+  .place {
+    margin-left: auto;
+  }
+  .bottom-nav {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 20;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    padding-bottom: env(safe-area-inset-bottom);
+    border-top: 1px solid var(--c-line);
+    background: var(--c-panel);
+  }
+  .bottom-nav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-height: 56px;
+    color: var(--c-muted);
+    font-size: 12px;
+    text-decoration: none;
+  }
+  .bottom-nav a[aria-current='page'] {
+    color: var(--c-accent);
+    font-weight: 700;
+  }
+  body {
+    padding-bottom: calc(56px + env(safe-area-inset-bottom));
+  }
+}

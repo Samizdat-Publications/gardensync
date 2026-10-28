@@ -1,0 +1,87 @@
+{
+  "id": "leek",
+  "name": "Leek",
+  "latin": "Allium ampeloprasum (Porrum Group)",
+  "category": "vegetable",
+  "family": "Alliaceae",
+  "lifecycle": "annual",
+  "frost": "hardy",
+  "temp": {
+    "minC": 7,
+    "maxC": 29
+  },
+  "soilMinC": 4,
+  "sun": "full",
+  "water": "medium",
+  "density": {
+    "perSquare": 9
+  },
+  "spacingCm": {
+    "inRow": 15,
+    "betweenRows": 30
+  },
+  "container": {
+    "minLitres": 25,
+    "perVessel": 4
+  },
+  "canopy": "mid",
+  "shadeTolerant": false,
+  "maturity": {
+    "days": 100,
+    "from": "transplant"
+  },
+  "methods": {
+    "indoor": {
+      "ageWeeks": [
+        8,
+        12
+      ]
+    },
+    "transplant": {
+      "weeks": [
+        -2,
+        1
+      ]
+    }
+  },
+  "harvest": {
+    "type": "once",
+    "windowDays": 90
+  },
+  "yield": {
+    "amount": 200,
+    "unit": "g",
+    "per": "plant"
+  },
+  "glyph": {
+    "form": "allium",
+    "color": "#6f9e5a"
+  },
+  "notes": {
+    "sowing": "Start seed indoors 8 to 12 weeks before planting out, {cm:1.3} deep. Plant out from 2 weeks before to 1 week after your last frost, when seedlings are pencil thick, dropping each into a hole {cm:15} deep and watering it in.",
+    "care": "Leeks need a long season and steady moisture. Hill soil around the stems two or three times as they grow to lengthen the white shaft, keeping soil out of the leaf joints.",
+    "harvest": "Lift once stems are about {cm:2.5} across. Leeks stand frost, and hardy types can stay in the ground well into winter, dug as needed."
+  },
+  "sources": [
+    {
+      "title": "University of Minnesota Extension: Growing leeks in home gardens",
+      "url": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-leeks"
+    },
+    {
+      "title": "Royal Horticultural Society: How to grow leeks",
+      "url": "https://www.rhs.org.uk/vegetables/leeks/grow-your-own"
+    },
+    {
+      "title": "Utah State University Extension: How to Grow Leeks in Your Garden",
+      "url": "https://extension.usu.edu/yardandgarden/research/leeks-in-the-garden"
+    },
+    {
+      "title": "Colorado State University Extension: Vegetable Planting Guide",
+      "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/"
+    },
+    {
+      "title": "UC Cooperative Extension Placer and Nevada Counties: Vegetable Characteristics (optimum temperatures for different vegetables)",
+      "url": "https://projects.sare.org/wp-content/uploads/944820osa-43c-vegetable-characteristics.pdf"
+    }
+  ]
+}

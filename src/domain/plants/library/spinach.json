@@ -1,0 +1,92 @@
+{
+  "id": "spinach",
+  "name": "Spinach",
+  "latin": "Spinacia oleracea",
+  "category": "vegetable",
+  "family": "Amaranthaceae",
+  "lifecycle": "annual",
+  "frost": "hardy",
+  "temp": {
+    "minC": 4,
+    "maxC": 20
+  },
+  "soilMinC": 4,
+  "sun": "full",
+  "water": "medium",
+  "density": {
+    "perSquare": 9
+  },
+  "spacingCm": {
+    "inRow": 8,
+    "betweenRows": 30
+  },
+  "container": {
+    "minLitres": 11,
+    "perVessel": 6
+  },
+  "canopy": "low",
+  "shadeTolerant": true,
+  "maturity": {
+    "days": 45,
+    "from": "sow"
+  },
+  "methods": {
+    "direct": {
+      "weeks": [
+        -6,
+        -3
+      ]
+    }
+  },
+  "fall": {
+    "windowWeeks": 3
+  },
+  "succession": {
+    "everyDays": 10
+  },
+  "harvest": {
+    "type": "cut-and-come-again",
+    "windowDays": 21
+  },
+  "soilPh": [
+    6.5,
+    8
+  ],
+  "yield": {
+    "amount": 400,
+    "unit": "g",
+    "per": "square"
+  },
+  "glyph": {
+    "form": "rosette",
+    "color": "#2f7d32"
+  },
+  "notes": {
+    "sowing": "Sow {cm:1.3} deep as soon as the soil can be worked, 3 to 6 weeks before your last frost. Seed germinates poorly in soil above {c:27}. For fall, sow 6 to 8 weeks before your first fall frost once the weather has cooled.",
+    "care": "Long days and warmth make spinach bolt, so sow little and often in spring, about every 10 days, and stop once days regularly pass {c:24}. Plants with 4 or 5 true leaves by late fall can overwinter under mulch or row cover.",
+    "harvest": "Pick outer leaves at usable size, or cut the whole plant {cm:5} above the soil to regrow. Harvest the whole planting as soon as any plants start to bolt."
+  },
+  "sources": [
+    {
+      "title": "University of Minnesota Extension: Growing spinach and Swiss chard in home gardens",
+      "url": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-spinach-and-swiss-chard"
+    },
+    {
+      "title": "Royal Horticultural Society: How to grow spinach",
+      "url": "https://www.rhs.org.uk/vegetables/spinach/grow-your-own"
+    },
+    {
+      "title": "Utah State University Extension: How to Grow Spinach in Your Garden",
+      "url": "https://extension.usu.edu/yardandgarden/research/spinach-in-the-garden"
+    },
+    {
+      "title": "Colorado State University Extension: Vegetable Planting Guide",
+      "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/"
+    },
+    {
+      "title": "UC Cooperative Extension Placer and Nevada Counties: Vegetable Characteristics (optimum temperatures for different vegetables)",
+      "url": "https://projects.sare.org/wp-content/uploads/944820osa-43c-vegetable-characteristics.pdf"
+    },
+    { "title": "University of Tennessee Extension D 68: Leafy Crops for the Tennessee Vegetable Garden", "url": "https://uthort.tennessee.edu/wp-content/uploads/sites/228/2023/11/D68.pdf" }
+  ]
+}

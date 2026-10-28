@@ -1,0 +1,39 @@
+{
+  "id": "bush-bean",
+  "name": "Bush bean",
+  "latin": "Phaseolus vulgaris",
+  "category": "vegetable",
+  "family": "Fabaceae",
+  "lifecycle": "annual",
+  "frost": "tender",
+  "temp": { "minC": 16, "maxC": 26 },
+  "fruitSetMaxC": 32,
+  "soilMinC": 16,
+  "sun": "full",
+  "water": "medium",
+  "density": { "perSquare": 9 },
+  "spacingCm": { "inRow": 10, "betweenRows": 60 },
+  "container": { "minLitres": 15, "perVessel": 4 },
+  "canopy": "mid",
+  "shadeTolerant": false,
+  "maturity": { "days": 55, "from": "sow" },
+  "methods": {
+    "direct": { "weeks": [1, 4] }
+  },
+  "fall": { "windowWeeks": 4 },
+  "succession": { "everyDays": 14 },
+  "harvest": { "type": "continuous", "windowDays": 21 },
+  "yield": { "amount": 100, "unit": "g", "per": "plant" },
+  "glyph": { "form": "pod", "color": "#5aa832" },
+  "notes": {
+    "sowing": "Sow outdoors {cm:2.5} deep and {cm:10} apart from 1 to 4 weeks after your last frost, once the soil is at least {c:16}. Cold, wet soil rots the seed. Sow again every 2 weeks for a steady supply, until about 8 weeks before your first fall frost.",
+    "care": "Water evenly, especially during flowering: dry soil and days above {c:32} make flowers drop. Stay out of the rows while plants are wet, which spreads disease. No support is needed.",
+    "harvest": "Pick pods while slender and crisp, before the seeds bulge. Pick every few days: each sowing crops heavily for 2 to 3 weeks."
+  },
+  "sources": [
+    { "title": "University of Minnesota Extension: Growing beans in home gardens", "url": "https://extension.umn.edu/vegetables/growing-beans" },
+    { "title": "Royal Horticultural Society: How to grow French beans", "url": "https://www.rhs.org.uk/vegetables/french-beans/grow-your-own" },
+    { "title": "Clemson Cooperative Extension Home & Garden Information Center: Bush & Pole-Type Snap Beans", "url": "https://hgic.clemson.edu/factsheet/bush-pole-type-snap-beans/" },
+    { "title": "Colorado State University Extension: Vegetable Planting Guide", "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/" }
+  ]
+}

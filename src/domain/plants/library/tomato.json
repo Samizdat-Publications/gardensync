@@ -1,0 +1,80 @@
+{
+  "id": "tomato",
+  "name": "Tomato",
+  "latin": "Solanum lycopersicum",
+  "category": "vegetable",
+  "family": "Solanaceae",
+  "lifecycle": "annual",
+  "frost": "tender",
+  "temp": {
+    "minC": 16,
+    "maxC": 27
+  },
+  "fruitSetMaxC": 32,
+  "soilMinC": 16,
+  "sun": "full",
+  "water": "medium",
+  "density": {
+    "perSquare": 1
+  },
+  "spacingCm": {
+    "inRow": 60,
+    "betweenRows": 90
+  },
+  "container": {
+    "minLitres": 20,
+    "perVessel": 1
+  },
+  "canopy": "tall",
+  "shadeTolerant": false,
+  "maturity": {
+    "days": 70,
+    "from": "transplant"
+  },
+  "methods": {
+    "indoor": {
+      "ageWeeks": [
+        6,
+        8
+      ]
+    },
+    "transplant": {
+      "weeks": [
+        1,
+        4
+      ]
+    }
+  },
+  "fall": {
+    "windowWeeks": 4
+  },
+  "harvest": {
+    "type": "continuous",
+    "windowDays": 60
+  },
+  "support": "stake",
+  "yield": {
+    "amount": 4500,
+    "unit": "g",
+    "per": "plant"
+  },
+  "glyph": {
+    "form": "fruiting",
+    "color": "#d64545"
+  },
+  "notes": {
+    "sowing": "Start seeds indoors 6 to 8 weeks before you plan to plant out, {cm:0.6} deep, at {c:21} to {c:27}. Plant out once nights stay above {c:10}, burying the stem up to the first true leaves.",
+    "care": "Stake or cage at planting. Water deeply and evenly to prevent blossom-end rot, and mulch once the soil is warm. On staked vining types, pinch out side shoots.",
+    "harvest": "Pick when fully colored and slightly soft. Before the first fall frost, pick mature green fruit and ripen it indoors."
+  },
+  "sources": [
+    {
+      "title": "University of Minnesota Extension: Growing tomatoes in home gardens",
+      "url": "https://extension.umn.edu/vegetables/growing-tomatoes"
+    },
+    {
+      "title": "Royal Horticultural Society: How to grow tomatoes",
+      "url": "https://www.rhs.org.uk/vegetables/tomatoes/grow-your-own"
+    }
+  ]
+}

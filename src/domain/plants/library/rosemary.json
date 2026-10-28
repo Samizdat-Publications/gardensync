@@ -1,0 +1,36 @@
+{
+  "id": "rosemary",
+  "name": "Rosemary",
+  "latin": "Salvia rosmarinus",
+  "category": "herb",
+  "family": "Lamiaceae",
+  "lifecycle": "perennial",
+  "frost": "hardy",
+  "temp": { "minC": 13, "maxC": 30 },
+  "sun": "full",
+  "water": "low",
+  "density": { "squares": [2, 2] },
+  "spacingCm": { "inRow": 60, "betweenRows": 90 },
+  "container": { "minLitres": 20, "perVessel": 1 },
+  "canopy": "mid",
+  "shadeTolerant": false,
+  "maturity": { "days": 60, "from": "transplant" },
+  "methods": {
+    "plant": { "weeks": [0, 4], "what": "nursery plants or rooted cuttings" }
+  },
+  "harvest": { "type": "cut-and-come-again", "windowDays": 180 },
+  "winterMinC": -8,
+  "purpose": ["food"],
+  "yield": { "amount": 100, "unit": "g", "per": "plant" },
+  "glyph": { "form": "sprig", "color": "#5a7a6a" },
+  "notes": {
+    "sowing": "Plant nursery plants or rooted cuttings in spring once the soil has warmed, at least {cm:45} apart. Seed is very slow and takes years to give a usable plant.",
+    "care": "Needs full sun and light, free-draining soil. Established plants survive about {c:-8} but not hard winters; where winters are colder, grow it in a pot at least {cm:30} wide and bring it into a cool, bright room before frost, keeping the compost on the dry side.",
+    "harvest": "Snip shoot tips as needed; it is evergreen, so picking can go on year round. Soft new growth has the best flavor, and regular cutting keeps the plant compact."
+  },
+  "sources": [
+    { "title": "Royal Horticultural Society: How to grow rosemary", "url": "https://www.rhs.org.uk/herbs/rosemary/grow-your-own" },
+    { "title": "University of Illinois Extension: Rosemary", "url": "https://extension.illinois.edu/herbs/rosemary" },
+    { "title": "Royal Horticultural Society: Salvia rosmarinus (Ro), rosemary (plant profile)", "url": "https://www.rhs.org.uk/plants/384211/salvia-rosmarinus-ro/details" }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "id": "collards",
+  "name": "Collard greens",
+  "latin": "Brassica oleracea var. viridis",
+  "category": "vegetable",
+  "family": "Brassicaceae",
+  "lifecycle": "annual",
+  "frost": "hardy",
+  "temp": {
+    "minC": 4,
+    "maxC": 24
+  },
+  "soilMinC": 4,
+  "sun": "full",
+  "water": "medium",
+  "density": {
+    "perSquare": 1
+  },
+  "spacingCm": {
+    "inRow": 40,
+    "betweenRows": 75
+  },
+  "container": {
+    "minLitres": 19,
+    "perVessel": 1
+  },
+  "canopy": "mid",
+  "shadeTolerant": false,
+  "maturity": {
+    "days": 70,
+    "from": "sow"
+  },
+  "methods": {
+    "indoor": {
+      "ageWeeks": [
+        4,
+        6
+      ]
+    },
+    "transplant": {
+      "weeks": [
+        -4,
+        -1
+      ]
+    },
+    "direct": {
+      "weeks": [
+        -4,
+        -1
+      ]
+    }
+  },
+  "fall": {
+    "windowWeeks": 4
+  },
+  "harvest": {
+    "type": "continuous",
+    "windowDays": 120,
+    "untilFrost": true
+  },
+  "soilPh": [
+    6,
+    8
+  ],
+  "yield": {
+    "amount": 300,
+    "unit": "g",
+    "per": "plant"
+  },
+  "glyph": {
+    "form": "rosette",
+    "color": "#4a7a3a"
+  },
+  "notes": {
+    "sowing": "Start indoors 4 to 6 weeks before planting out, or sow {cm:1} deep outdoors 1 to 4 weeks before your last frost. For the main fall crop, sow about 12 weeks before your first fall frost.",
+    "care": "Collards take more heat than most cabbage-family crops, but they grow best and taste sweetest in cool weather. Water deeply in dry spells and avoid ground where cabbage-family crops grew recently.",
+    "harvest": "Pick leaves from the bottom up while young and tender, a few per plant at a time. Mature plants stand frost and light freezes, and the leaves sweeten after a frost."
+  },
+  "sources": [
+    {
+      "title": "University of Minnesota Extension: Growing collards and kale in home gardens",
+      "url": "https://extension.umn.edu/vegetables/growing-collards-and-kale"
+    },
+    {
+      "title": "Clemson Cooperative Extension Home and Garden Information Center: Collards",
+      "url": "https://hgic.clemson.edu/factsheet/collards/"
+    },
+    {
+      "title": "North Carolina Extension Gardener Plant Toolbox: Brassica oleracea Collards Group",
+      "url": "https://plants.ces.ncsu.edu/plants/brassica-oleracea-collards-group/"
+    },
+    {
+      "title": "University of Minnesota Extension: Planting vegetables in midsummer for fall harvest",
+      "url": "https://extension.umn.edu/planting-and-growing-guides/planting-vegetables-midsummer-fall-harvest"
+    },
+    {
+      "title": "UC Cooperative Extension Placer and Nevada Counties: Vegetable Characteristics (optimum temperatures for different vegetables)",
+      "url": "https://projects.sare.org/wp-content/uploads/944820osa-43c-vegetable-characteristics.pdf"
+    }
+  ]
+}

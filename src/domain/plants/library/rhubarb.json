@@ -1,0 +1,36 @@
+{
+  "id": "rhubarb",
+  "name": "Rhubarb",
+  "latin": "Rheum x hybridum",
+  "category": "vegetable",
+  "family": "Polygonaceae",
+  "lifecycle": "perennial",
+  "frost": "hardy",
+  "temp": { "minC": 7, "maxC": 21 },
+  "sun": "full",
+  "water": "medium",
+  "density": { "squares": [3, 3] },
+  "spacingCm": { "inRow": 90, "betweenRows": 90 },
+  "container": { "minLitres": 75, "perVessel": 1 },
+  "canopy": "mid",
+  "shadeTolerant": true,
+  "maturity": { "days": 365, "from": "transplant" },
+  "methods": {
+    "plant": { "weeks": [-4, 0], "what": "dormant crowns or divisions" }
+  },
+  "harvest": { "type": "continuous", "windowDays": 56 },
+  "yield": { "amount": 1800, "unit": "g", "per": "plant" },
+  "perennial": { "firstHarvestYear": 2, "harvestWeeks": [0, 8], "lifespanYears": 15 },
+  "glyph": { "form": "stalk", "color": "#c43c58" },
+  "notes": {
+    "sowing": "Plant dormant crowns or divisions in early spring, as soon as the soil can be worked, with the buds just at soil level. Allow about {cm:90} each way, as clumps grow large.",
+    "care": "Choose full sun or light shade and rich, moist, well-drained soil. Mulch with compost each spring, cut out flower stalks as they appear, and divide clumps every 5 to 10 years. Rhubarb needs a cold winter rest and does poorly where winters stay mild.",
+    "harvest": "Take no stalks in the first season and only a few in the second. After that, pull stalks at full length for 6 to 8 weeks, stopping by midsummer. The leaves are toxic: trim them off and never eat them."
+  },
+  "sources": [
+    { "title": "University of Minnesota Extension: Growing rhubarb in home gardens", "url": "https://extension.umn.edu/vegetables/growing-rhubarb" },
+    { "title": "Royal Horticultural Society: How to grow rhubarb", "url": "https://www.rhs.org.uk/vegetables/rhubarb/grow-your-own" },
+    { "title": "Utah State University Extension: How to Grow Rhubarb in Your Garden", "url": "https://extension.usu.edu/yardandgarden/research/rhubarb-in-the-garden.php" },
+    { "title": "University of Illinois Extension: To rhubarb or not to rhubarb?", "url": "https://extension.illinois.edu/blogs/good-growing/2023-06-08-rhubarb-or-not-rhubarb" }
+  ]
+}
