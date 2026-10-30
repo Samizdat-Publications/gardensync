@@ -151,7 +151,8 @@ export function startPlacing(plantId: string): void {
       if (choice) {
         const currentShown = viewDay.value ?? from;
         if (choice.bedIn !== currentShown) {
-          prePlacingViewDay.value = viewDay.value;
+          // Choosing another plant while already previewing keeps the day to go back to.
+          if (placingPreviewDay.value === null) prePlacingViewDay.value = viewDay.value;
           placingPreviewDay.value = choice.bedIn;
           viewDay.value = choice.bedIn;
         }

@@ -21,7 +21,7 @@ import { formatLength } from '../../domain/units';
 import { garden, units } from '../appState';
 import { Glyph } from '../components/Glyph';
 import { fmtDay, inSentence } from '../format';
-import { placingPlantId, selection } from '../uiState';
+import { placingPlantId, selection, shownDay } from '../uiState';
 import { candidate, type Candidate } from './candidate';
 import { containers, footprints, intervalOfP, phasesOfP, plantLookup, present } from './derived';
 import {
@@ -422,8 +422,6 @@ function drawLabels(i: LayerInput): JSX.Element {
           const pr = cellsRect(c, cellCm, tc);
           const info = takenInfo.get(t.planting.id)!;
           // Show "Tomato from May 4" or "Radish until Jun 9" — never bare dates.
-          const shownDay = i.cand ? undefined : undefined; // just used for logic below
-          void shownDay;
           let shortLabel: string;
           if (info.bedOut === null) {
             shortLabel = `${info.name} (perennial)`;
@@ -1080,7 +1078,7 @@ function computePaletteDragSnap(clientX: number, clientY: number, canvasEl: HTML
       const method = defaultMethod(plant);
       const iof = intervalOfP.value;
       void iof; // used inside propose via garden
-      const proposal = propose({ plant, method, bed: c, cells, from: 0 }, g, plantLookup.value);
+      const proposal = propose({ plant, method, bed: c, cells, from: shownDay.value }, g, plantLookup.value);
       return { containerId: c.id, cells, proposal };
     }
   }

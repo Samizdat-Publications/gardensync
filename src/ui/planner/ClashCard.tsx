@@ -4,6 +4,7 @@
 import { useEffect, useRef } from 'preact/hooks';
 import { COMPANIONS } from '../../domain/plants/library';
 import type { Planting } from '../../domain/doc/schema';
+import { squaresLabel } from '../../domain/layout/labels';
 import { fmtDay, inSentence } from '../format';
 import { garden, newId } from '../appState';
 import { selection } from '../uiState';
@@ -131,7 +132,7 @@ export function ClashCard() {
             class="btn"
             onClick={() => commitWith(reso.room!.planting, req.plant.name)}
           >
-            Find room: {reso.room.bed.name}
+            Find room: {reso.room.bed.name}, {squaresLabel(reso.room.planting.cells!)}
           </button>
         ) : null}
         {reso.replace.length > 0 ? (

@@ -1,12 +1,13 @@
 // What a tap, a click, a key or a button does in the planner. The canvas (pointer and keyboard),
 // the placement panel and the inspector all go through these, so every input does the same thing.
 import type { Cells, Container, Planting } from '../../domain/doc/schema';
+import { squaresLabel } from '../../domain/layout/labels';
 import { minCells } from '../../domain/layout/patch';
 import { fmtDay, inSentence } from '../format';
 import { garden, newId } from '../appState';
 import { selection, shownDay, viewDay } from '../uiState';
 import { candidate } from './candidate';
-import { footprints, present, plantLookup } from './derived';
+import { footprints, intervalOfP, present, plantLookup } from './derived';
 import { boundsOf, cellsBetween, fitView, type Cell } from './geometry';
 import { act, clashCard, draft, emptyDraft, showToast, stopPlacing, view, viewport } from './plannerState';
 import { defaultMethod } from './placement';
@@ -112,14 +113,22 @@ export function commitPlanting(planting: Omit<Planting, 'id'>, plantName: string
   const id = newId();
   const full: Planting = { ...planting, id };
   const name = inSentence(plantName);
+  // Say where it went and when it goes in, since a drop can land later in the season or elsewhere.
+  const g = garden.value;
+  const bed = g?.containers.find((c) => c.id === full.containerId);
+  const where = bed ? (full.cells ? ` in ${bed.name}, ${squaresLabel(full.cells)}` : ` in ${bed.name}`) : '';
+  const span = intervalOfP.value(full);
+  const when = span ? `, going in ${fmtDay(span.bedIn)}` : '';
   const res = act(
     { type: 'addPlanting', gardenId, planting: full },
     `plant ${full.count} ${name}`,
-    `Planted ${full.count} ${name} ${full.count === 1 ? 'plant' : 'plants'}.`,
+    `Planted ${full.count} ${name} ${full.count === 1 ? 'plant' : 'plants'}${where}${when}.`,
   );
   if (res.ok) {
     selection.value = { kind: 'planting', id };
     draft.value = emptyDraft();
+    // Show the day it goes in when that is not the day on screen, so the new patch is visible.
+    if (span && (span.bedIn > shownDay.value || (span.bedOut !== null && span.bedOut <= shownDay.value))) viewDay.value = span.bedIn;
   }
   // If not ok, the toast/error was already shown.
 }

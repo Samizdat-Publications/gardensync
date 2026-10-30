@@ -150,6 +150,15 @@ export function Palette({ onChosen, headingId }: { onChosen?: () => void; headin
   );
 }
 
+/**
+ * Starting a drag chooses the plant, as a tap would: the plan switches to the day it would go in,
+ * so the crops it would share the bed with are on screen while it is dragged, and the drop plants it.
+ */
+function beginDrag(plant: Plant, x: number, y: number): void {
+  if (placingPlantId.value !== plant.id) startPlacing(plant.id);
+  paletteDrag.value = { plant, screenX: x, screenY: y, snap: null };
+}
+
 /** One plant row in the palette with drag-from-palette support. */
 function PaletteItem({ plant, hint, on, onChoose }: { plant: Plant; hint: string; on: boolean; onChoose: () => void }) {
   const btn = useRef<HTMLButtonElement>(null);
@@ -173,7 +182,7 @@ function PaletteItem({ plant, hint, on, onChoose }: { plant: Plant; hint: string
           // Cancel the pending click so choosing does not fire.
           pressStart.current = null;
           el.releasePointerCapture(e.pointerId);
-          paletteDrag.value = { plant, screenX: e.clientX, screenY: e.clientY, snap: null };
+          beginDrag(plant, e.clientX, e.clientY);
         }, 350);
       }
       // Mouse/pen: track movement in pointermove; if 6px threshold exceeded, start drag.
@@ -197,7 +206,7 @@ function PaletteItem({ plant, hint, on, onChoose }: { plant: Plant; hint: string
         if (Math.hypot(dx, dy) >= 6) {
           pressStart.current = null;
           el.releasePointerCapture(e.pointerId);
-          paletteDrag.value = { plant, screenX: e.clientX, screenY: e.clientY, snap: null };
+          beginDrag(plant, e.clientX, e.clientY);
         }
       }
     };
