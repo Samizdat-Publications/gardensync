@@ -484,3 +484,47 @@ test('fall: a planting planned for next season can be picked on the plan', async
   await expect(page.locator('.patch-upcoming .ring-ink')).toHaveCount(1);
   await expect(page.locator('.ring-sel-bed')).toHaveCount(0);
 });
+
+test('dragging a corner handle of a selected patch resizes it', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'mouse drag test');
+  await startEmpty(page);
+  await choosePlant(page, 'Lettuce');
+  const a1 = await square(page, 'Bed 1', 0, 0, 8, 4);
+  await page.mouse.click(a1.x, a1.y);
+  await expect.poll(() => savedPlantings(page)).toBe(1);
+  // Escape stops placing; the new patch stays selected and shows its corner handles.
+  await page.keyboard.press('Escape');
+  await expect(page.locator('.resize-handle')).toHaveCount(4);
+  // The bottom-right corner of A1 sits half a square right of and below its middle.
+  const b2 = await square(page, 'Bed 1', 1, 1, 8, 4);
+  const corner = { x: (a1.x + b2.x) / 2, y: (a1.y + b2.y) / 2 };
+  const c2 = await square(page, 'Bed 1', 2, 1, 8, 4);
+  await page.mouse.move(corner.x, corner.y);
+  await page.mouse.down();
+  await page.mouse.move(c2.x, c2.y, { steps: 8 });
+  await page.mouse.up();
+  await expect(page.getByRole('status').filter({ hasText: /lettuce patch is now/ })).toBeVisible();
+  await expect
+    .poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('gardensync.v8.doc') ?? 'null')?.doc.gardens[0]?.plantings[0]?.cells))
+    .toEqual({ col: 0, row: 0, w: 3, h: 2 });
+});
+
+test('Shift and an arrow key makes a selected patch bigger, as one undo step', async ({ page }) => {
+  await startEmpty(page);
+  await choosePlant(page, 'Lettuce');
+  const a1 = await square(page, 'Bed 1', 0, 0, 8, 4);
+  await page.mouse.click(a1.x, a1.y);
+  await expect.poll(() => savedPlantings(page)).toBe(1);
+  await page.keyboard.press('Escape');
+  await page.getByRole('application', { name: /Plan of/ }).focus();
+  await page.keyboard.press('Shift+ArrowRight');
+  await page.keyboard.press('Shift+ArrowRight');
+  await expect(page.getByRole('status').filter({ hasText: /lettuce patch is now A1 to C1/ })).toBeVisible();
+  await expect
+    .poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('gardensync.v8.doc') ?? 'null')?.doc.gardens[0]?.plantings[0]?.cells))
+    .toEqual({ col: 0, row: 0, w: 3, h: 1 });
+  await page.keyboard.press('Control+z');
+  await expect
+    .poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('gardensync.v8.doc') ?? 'null')?.doc.gardens[0]?.plantings[0]?.cells))
+    .toEqual({ col: 0, row: 0, w: 1, h: 1 });
+});

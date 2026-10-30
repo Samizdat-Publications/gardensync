@@ -85,7 +85,7 @@ test('the starter bed shows its plantings, with no accessibility violations', as
 
 test('tapping a free square plants immediately, then undo and redo', async ({ page }) => {
   await startGarden(page, 'empty');
-  await expect(page.getByRole('heading', { name: 'Draw your first bed' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Add your first bed' })).toBeVisible();
   await addFirstBed(page);
   await choosePlant(page, 'Lettuce');
   // The plan switches to the next lettuce window; just tap a square to plant.

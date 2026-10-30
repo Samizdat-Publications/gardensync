@@ -29,8 +29,10 @@ const screens: { name: string; go: (page: Page) => Promise<void> }[] = [
     name: 'garden-selected',
     go: async (page) => {
       await startGarden(page);
-      await page.getByRole('application', { name: /Plan of/ }).focus();
-      await page.keyboard.press('Enter');
+      // Pick the first planting with the pointer, the way most people will.
+      const patch = page.locator('.patch-upcoming, .patch').first();
+      const box = await patch.boundingBox();
+      if (box) await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
     },
   },
   {
@@ -61,6 +63,10 @@ for (const screen of screens) {
         await screen.go(page);
         await page.waitForLoadState('networkidle');
         await page.waitForTimeout(300);
+        // No hover state left over from the last click, and the phone's fixed bottom bar at the
+        // bottom of a full-page capture rather than floating over the middle of it.
+        await page.mouse.move(0, 0);
+        await page.addStyleTag({ content: '.bottom-nav { position: static !important; }' });
         await page.screenshot({ path: `review/shots/${screen.name}-${size.name}-${theme}.png`, fullPage: true });
       });
     }

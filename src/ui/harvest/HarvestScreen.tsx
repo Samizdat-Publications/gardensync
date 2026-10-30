@@ -3,6 +3,7 @@
 import { useSignal } from '@preact/signals';
 import { toDay } from '../../domain/dates';
 import type { Harvest } from '../../domain/doc/schema';
+import type { Plant } from '../../domain/plants/schema';
 import { plantingPhases, seasonLabel, seasonOf } from '../../domain/schedule';
 import { formatWeight, parseWeight } from '../../domain/units';
 import { expectedYield, pickedSoFar, type Amount } from '../../domain/yield';
@@ -13,17 +14,27 @@ import { hrefOf } from '../router';
 import { plantOf } from '../uiState';
 import './Harvest.css';
 
+/** "1 lb 8 oz", "12 counted", or both: picks logged by weight and by count do not add up. */
 function amountText(a: Amount, u: 'imperial' | 'metric'): string {
   const parts: string[] = [];
   if (a.grams > 0) parts.push(formatWeight(a.grams, u));
-  if (a.count > 0) parts.push(`${Math.round(a.count)} picked`);
-  return parts.join(', ') || 'none yet';
+  if (a.count > 0) parts.push(`${Math.round(a.count)} counted`);
+  return parts.join(' and ') || 'nothing yet';
 }
 
-function expectedAmountText(e: Amount, u: 'imperial' | 'metric'): string {
+/**
+ * What a counted crop's count is a count of. Yields by count are blooms for flowers (the library's
+ * flower yields are flowers per plant); other counted crops (heads, ears, fruits) have no single
+ * noun, so they fall back to a plain verb.
+ */
+function countNoun(category: Plant['category']): string | null {
+  return category === 'flower' ? 'flowers' : null;
+}
+
+function expectedAmountText(e: Amount, u: 'imperial' | 'metric', noun: string | null): string {
   const parts: string[] = [];
   if (e.grams > 0) parts.push(formatWeight(e.grams, u));
-  if (e.count > 0) parts.push(`about ${Math.round(e.count)}`);
+  if (e.count > 0) parts.push(`about ${Math.round(e.count)} ${noun ?? 'to pick'}`);
   return parts.join(', ') || 'no estimate';
 }
 
@@ -36,7 +47,7 @@ export function HarvestScreen() {
   const inSeason = (iso: string) => (c ? seasonOf(c, toDay(iso)) === season : iso.startsWith(String(season)));
 
   // Crops in this season's plantings, with what they should give.
-  const crops = new Map<string, { name: string; color: string; form: Parameters<typeof Glyph>[0]['form']; expected: Amount }>();
+  const crops = new Map<string, { name: string; color: string; form: Parameters<typeof Glyph>[0]['form']; noun: string | null; expected: Amount }>();
   for (const p of g.plantings) {
     const plant = plantOf(p.plantId);
     if (!plant) continue;
@@ -48,6 +59,7 @@ export function HarvestScreen() {
       name: plant.name,
       color: plant.glyph.color,
       form: plant.glyph.form,
+      noun: countNoun(plant.category),
       expected: { grams: (prev?.expected.grams ?? 0) + e.grams, count: (prev?.expected.count ?? 0) + e.count },
     });
   }
@@ -63,7 +75,7 @@ export function HarvestScreen() {
         <p class="harvest-sub">
           {seasonHarvests.length === 0
             ? 'Nothing picked yet this season. Log your first pick with the form here, or from a planting in the garden.'
-            : `${amountText(total, u)} picked so far.${expectedTotal > 0 ? ` The plan expects about ${formatWeight(expectedTotal, u)} by the end of the season.` : ''}`}
+            : `Picked so far: ${amountText(total, u)}.${expectedTotal > 0 ? ` The plan expects about ${formatWeight(expectedTotal, u)} by the end of the season.` : ''}`}
         </p>
       </header>
       <div class="harvest-main">
@@ -79,7 +91,7 @@ export function HarvestScreen() {
                         <Glyph form={crop.form} color={crop.color} size={22} />
                         {crop.name}
                       </span>
-                      <span class="muted crop-plan-amt">{expectedAmountText(crop.expected, u)}</span>
+                      <span class="muted crop-plan-amt">{expectedAmountText(crop.expected, u, crop.noun)}</span>
                     </li>
                   ))}
                 </ul>
@@ -87,7 +99,7 @@ export function HarvestScreen() {
             ) : (
               <>
                 <h2 id="hv-crops">Picked so far, against what each crop should give</h2>
-                <ul>
+                <ul class="crop-list">
                   {[...crops.entries()].map(([id, crop]) => {
                     const got = pickedSoFar(seasonHarvests, (h) => h.plantId === id);
                     const byWeight = crop.expected.grams > 0;
@@ -96,7 +108,7 @@ export function HarvestScreen() {
                     const pct = exp > 0 ? Math.min(100, Math.round((have / exp) * 100)) : 0;
                     const text = byWeight
                       ? `${formatWeight(have, u)} of ${formatWeight(exp, u)}`
-                      : `${Math.round(have)} of ${Math.round(exp)} picked`;
+                      : `${Math.round(have)} of ${Math.round(exp)} ${crop.noun ?? 'picked'}`;
                     return (
                       <li key={id} class="crop-row">
                         <span class="crop-name">
@@ -177,7 +189,8 @@ function LogForm() {
     .map((p) => ({ p, plant: plantOf(p.plantId), container: g.containers.find((c) => c.id === p.containerId) }))
     .filter((o) => o.plant)
     .sort((a, b) => a.plant!.name.localeCompare(b.plant!.name));
-  const plantingId = useSignal(options[0]?.p.id ?? '');
+  // Starts empty: the gardener says what they picked rather than logging against the first name.
+  const plantingId = useSignal('');
   const amount = useSignal('');
   const count = useSignal('');
   const date = useSignal(today.value);
@@ -198,7 +211,10 @@ function LogForm() {
   function submit(e: Event) {
     e.preventDefault();
     const chosen = options.find((o) => o.p.id === plantingId.value);
-    if (!chosen) return;
+    if (!chosen) {
+      message.value = { ok: false, text: 'Choose what you picked.' };
+      return;
+    }
     const grams = amount.value.trim() ? parseWeight(amount.value, u === 'metric' ? 'g' : 'lb') : null;
     const n = count.value.trim() ? Number(count.value) : null;
     if (amount.value.trim() && grams === null) {
@@ -240,11 +256,14 @@ function LogForm() {
   }
 
   return (
-    <form class="panel log-form" onSubmit={submit} aria-labelledby="hv-log">
+    <form class="panel log-form" onSubmit={submit} aria-labelledby="hv-log" noValidate>
       <h2 id="hv-log">Log a harvest</h2>
       <div class="field">
         <label for="hv-planting">What did you pick?</label>
-        <select id="hv-planting" class="input" value={plantingId.value} onChange={(e) => (plantingId.value = (e.target as HTMLSelectElement).value)}>
+        <select id="hv-planting" class="input" required value={plantingId.value} onChange={(e) => (plantingId.value = (e.target as HTMLSelectElement).value)}>
+          <option value="" disabled>
+            Choose a planting
+          </option>
           {options.map((o) => (
             <option key={o.p.id} value={o.p.id}>
               {o.plant!.name}, {o.container?.name ?? ''}
@@ -259,7 +278,7 @@ function LogForm() {
         </div>
         <div class="field">
           <label for="hv-count">How many</label>
-          <input id="hv-count" class="input" inputMode="numeric" value={count.value} onInput={(e) => (count.value = (e.target as HTMLInputElement).value)} />
+          <input id="hv-count" class="input" inputMode="numeric" placeholder="12" value={count.value} onInput={(e) => (count.value = (e.target as HTMLInputElement).value)} />
         </div>
       </div>
       <div class="field">

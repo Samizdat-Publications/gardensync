@@ -43,21 +43,25 @@
   flex-direction: column;
   gap: 10px;
 }
-/* Compact plan list shown before the first pick. */
-.crop-plan-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+/* Compact plan list shown before the first pick. It flows into columns about 300 px wide, read
+   top to bottom, so each amount sits close to its crop's name instead of across a wide panel. */
+.harvest-crops ul.crop-plan-list {
+  display: block;
+  columns: 260px;
+  column-gap: 40px;
 }
 .crop-plan-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 4px 0;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--c-line);
+  break-inside: avoid;
+}
+/* Progress rows keep the bar, but not stretched across a very wide panel. */
+.harvest-crops ul.crop-list {
+  max-width: 760px;
 }
 .crop-plan-amt {
   font-size: var(--fs-sm);

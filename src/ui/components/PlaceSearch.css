@@ -1,6 +1,17 @@
 .place-search {
   max-width: 520px;
 }
+.place-search-row {
+  display: flex;
+  gap: var(--sp-2);
+}
+.place-search-row .input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.place-search-go {
+  flex: none;
+}
 .place-search-status {
   font-size: var(--fs-sm);
   min-height: 1.2em;

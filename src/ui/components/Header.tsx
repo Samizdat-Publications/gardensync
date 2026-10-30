@@ -106,16 +106,19 @@ export function Header() {
           class="btn btn-icon settings-link"
           href={hrefOf({ name: 'settings' })}
           aria-label="Settings"
+          title="Settings"
           aria-current={current === 'settings' ? 'page' : undefined}
         >
+          {/* A cog with eight teeth, so it cannot be mistaken for a sun (a light and dark switch). */}
           <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
-            <circle cx="10" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="1.6" />
             <path
-              d="M10 1.5v2.5M10 16v2.5M1.5 10H4M16 10h2.5M4 4l1.8 1.8M14.2 14.2 16 16M4 16l1.8-1.8M14.2 5.8 16 4"
+              d="M16.22 7.8 18.39 8.12v3.76l-2.17.32-.26.64 1.3 1.77-2.65 2.65-1.77-1.3-.64.26-.32 2.17H8.12l-.32-2.17-.64-.26-1.77 1.3-2.65-2.65 1.3-1.77-.26-.64-2.17-.32V8.12l2.17-.32.26-.64-1.3-1.77 2.65-2.65 1.77 1.3.64-.26.32-2.17h3.76l.32 2.17.64.26 1.77-1.3 2.65 2.65-1.3 1.77z"
+              fill="none"
               stroke="currentColor"
-              stroke-width="1.6"
-              stroke-linecap="round"
+              stroke-width="1.5"
+              stroke-linejoin="round"
             />
+            <circle cx="10" cy="10" r="2.7" fill="none" stroke="currentColor" stroke-width="1.5" />
           </svg>
         </a>
         <span class="save-status" role="status" aria-live="polite">

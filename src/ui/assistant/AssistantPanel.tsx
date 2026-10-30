@@ -1,4 +1,5 @@
-// The optional assistant: a side panel (full screen on a phone) where the gardener asks about their
+// The optional assistant: a modal side panel over a dimmed page (a near full-height sheet on a
+// phone) where the gardener asks about their
 // garden in words, or shows it a seed packet. Layout from A-assistant.dc.html.
 //
 // It needs the gardener's own Anthropic key; without one the panel explains what it is and asks for
@@ -64,10 +65,45 @@ export function AssistantPanel() {
     const onKey = (e: KeyboardEvent) => {
       // Only while the gardener is in the panel; Escape elsewhere belongs to that screen.
       if (e.key === 'Escape' && (panel.current?.contains(document.activeElement) || document.activeElement === document.body)) closePanel();
+      if (e.key === 'Tab') keepFocusInside(e);
     };
     addEventListener('keydown', onKey);
-    return () => removeEventListener('keydown', onKey);
+    // The page behind is dimmed and inert: hold it still where it was, and put it back on close.
+    const root = document.documentElement;
+    const y = scrollY;
+    document.body.style.setProperty('--as-lock-top', `${-y}px`);
+    root.classList.add('assistant-open');
+    return () => {
+      removeEventListener('keydown', onKey);
+      root.classList.remove('assistant-open');
+      document.body.style.removeProperty('--as-lock-top');
+      scrollTo(0, y);
+    };
   }, []);
+
+  /** Tab and Shift+Tab cycle through the panel's controls, since the page behind is covered. */
+  function keepFocusInside(e: KeyboardEvent) {
+    const box = panel.current;
+    if (!box) return;
+    const all = box.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    );
+    const items = Array.from(all).filter((el) => el.getClientRects().length > 0);
+    const first = items[0];
+    const last = items[items.length - 1];
+    if (!first || !last) return;
+    const at = document.activeElement;
+    if (!box.contains(at)) {
+      e.preventDefault();
+      first.focus();
+    } else if (e.shiftKey && (at === first || at === heading.current)) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && at === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
   useEffect(() => listEnd.current?.scrollIntoView({ block: 'end' }), [items.value.length, live.value, pending.value]);
 
   const g = garden.value;
@@ -243,145 +279,149 @@ export function AssistantPanel() {
   }
 
   return (
-    <div class="assistant" role="dialog" aria-labelledby="as-h" ref={panel}>
-      <header class="as-head">
-        <h2 id="as-h" tabIndex={-1} ref={heading}>
-          Ask about your garden
-        </h2>
-        {key.value && !setup.value && items.value.length > 0 ? (
-          <button class="btn btn-quiet" onClick={resetChat} disabled={busy.value}>
-            New chat
+    <>
+      {/* The dimmed page behind: a click on it closes the panel. Not focusable; Escape and the close button do the same. */}
+      <div class="as-scrim" aria-hidden="true" onClick={closePanel} />
+      <div class="assistant" role="dialog" aria-modal="true" aria-labelledby="as-h" ref={panel}>
+        <header class="as-head">
+          <h2 id="as-h" tabIndex={-1} ref={heading}>
+            Ask about your garden
+          </h2>
+          {key.value && !setup.value && items.value.length > 0 ? (
+            <button class="btn btn-quiet" onClick={resetChat} disabled={busy.value}>
+              New chat
+            </button>
+          ) : null}
+          {key.value && !setup.value ? (
+            <button class="btn btn-quiet" onClick={() => (setup.value = true)}>
+              Key and model
+            </button>
+          ) : null}
+          <button class="btn btn-icon" aria-label="Close the assistant" onClick={closePanel}>
+            <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+              <path d="M4 4l10 10M14 4 4 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
           </button>
-        ) : null}
-        {key.value && !setup.value ? (
-          <button class="btn btn-quiet" onClick={() => (setup.value = true)}>
-            Key and model
-          </button>
-        ) : null}
-        <button class="btn btn-icon" aria-label="Close the assistant" onClick={closePanel}>
-          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
-            <path d="M4 4l10 10M14 4 4 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-          </svg>
-        </button>
-      </header>
+        </header>
 
-      {setup.value ? (
-        <KeySetup
-          hasKey={key.value !== null}
-          onSaved={(k) => {
-            key.value = k;
-            setup.value = false;
-          }}
-          onForget={() => {
-            forgetKey();
-            resetChat();
-            key.value = null;
-          }}
-          onCancel={key.value ? () => (setup.value = false) : null}
-        />
-      ) : (
-        <>
-          <div class="as-log" aria-live="polite">
-            {items.value.length === 0 ? (
-              <p class="muted as-empty">
-                Ask for a plan ("lay out the new 4 by 4 bed for salsa"), a question about timing, or attach a photo of a seed packet to add that variety.
-              </p>
-            ) : null}
-            {items.value.map((it, i) =>
-              it.kind === 'user' ? (
-                <div key={i} class="as-msg as-user">
-                  {it.photo ? <img src={it.photo} alt="Your photo" class="as-photo" /> : null}
-                  {it.text ? <Paragraphs text={it.text} /> : null}
-                </div>
-              ) : it.kind === 'assistant' ? (
-                <div key={i} class="as-msg as-model">
-                  <Paragraphs text={it.text} />
-                </div>
-              ) : (
-                <p key={i} class={it.error ? 'as-note as-error' : 'as-note'} role={it.error ? 'alert' : undefined}>
-                  {it.text}
+        {setup.value ? (
+          <KeySetup
+            hasKey={key.value !== null}
+            onSaved={(k) => {
+              key.value = k;
+              setup.value = false;
+            }}
+            onForget={() => {
+              forgetKey();
+              resetChat();
+              key.value = null;
+            }}
+            onCancel={key.value ? () => (setup.value = false) : null}
+          />
+        ) : (
+          <>
+            <div class="as-log" aria-live="polite">
+              {items.value.length === 0 ? (
+                <p class="muted as-empty">
+                  Ask for a plan ("lay out the new 4 by 4 bed for salsa"), a question about timing, or attach a photo of a seed packet to add that variety.
                 </p>
-              ),
-            )}
-            {live.value ? (
-              <div class="as-msg as-model">
-                <Paragraphs text={live.value} />
-              </div>
-            ) : busy.value ? (
-              <p class="as-note">Thinking.</p>
-            ) : null}
-            {pending.value && pending.value.gardenId === g?.id ? (
-              <section class="as-changes" aria-labelledby="as-ch">
-                <h3 id="as-ch">Proposed changes</h3>
-                <ul>
-                  {pending.value.summaries.map((s, i) => (
-                    <li key={i} class={s.removes ? 'as-remove' : undefined}>
-                      {s.removes ? <strong>Remove: </strong> : null}
-                      {s.removes ? s.text.replace(/^Remove /, '') : s.text}
-                    </li>
-                  ))}
-                </ul>
-                <div class="row">
-                  <button class="btn btn-primary" onClick={apply} disabled={busy.value}>
-                    Apply to the garden
-                  </button>
-                  <button class="btn" onClick={discard} disabled={busy.value}>
-                    Discard
+              ) : null}
+              {items.value.map((it, i) =>
+                it.kind === 'user' ? (
+                  <div key={i} class="as-msg as-user">
+                    {it.photo ? <img src={it.photo} alt="Your photo" class="as-photo" /> : null}
+                    {it.text ? <Paragraphs text={it.text} /> : null}
+                  </div>
+                ) : it.kind === 'assistant' ? (
+                  <div key={i} class="as-msg as-model">
+                    <Paragraphs text={it.text} />
+                  </div>
+                ) : (
+                  <p key={i} class={it.error ? 'as-note as-error' : 'as-note'} role={it.error ? 'alert' : undefined}>
+                    {it.text}
+                  </p>
+                ),
+              )}
+              {live.value ? (
+                <div class="as-msg as-model">
+                  <Paragraphs text={live.value} />
+                </div>
+              ) : busy.value ? (
+                <p class="as-note">Thinking.</p>
+              ) : null}
+              {pending.value && pending.value.gardenId === g?.id ? (
+                <section class="as-changes" aria-labelledby="as-ch">
+                  <h3 id="as-ch">Proposed changes</h3>
+                  <ul>
+                    {pending.value.summaries.map((s, i) => (
+                      <li key={i} class={s.removes ? 'as-remove' : undefined}>
+                        {s.removes ? <strong>Remove: </strong> : null}
+                        {s.removes ? s.text.replace(/^Remove /, '') : s.text}
+                      </li>
+                    ))}
+                  </ul>
+                  <div class="row">
+                    <button class="btn btn-primary" onClick={apply} disabled={busy.value}>
+                      Apply to the garden
+                    </button>
+                    <button class="btn" onClick={discard} disabled={busy.value}>
+                      Discard
+                    </button>
+                  </div>
+                  <p class="muted small">You can undo this as one step.</p>
+                </section>
+              ) : null}
+              <div ref={listEnd} />
+            </div>
+
+            <form class="as-compose" onSubmit={send}>
+              {photo.value ? (
+                <div class="as-attached">
+                  <img src={photo.value.dataUrl} alt="Photo to send" />
+                  <button type="button" class="btn" onClick={() => (photo.value = null)}>
+                    Remove photo
                   </button>
                 </div>
-                <p class="muted small">You can undo this as one step.</p>
-              </section>
-            ) : null}
-            <div ref={listEnd} />
-          </div>
-
-          <form class="as-compose" onSubmit={send}>
-            {photo.value ? (
-              <div class="as-attached">
-                <img src={photo.value.dataUrl} alt="Photo to send" />
-                <button type="button" class="btn" onClick={() => (photo.value = null)}>
-                  Remove photo
-                </button>
-              </div>
-            ) : null}
-            <label for="as-input" class="visually-hidden">
-              Message
-            </label>
-            <textarea
-              id="as-input"
-              class="input as-input"
-              rows={2}
-              value={draft.value}
-              placeholder={g ? 'Message' : 'Add a garden first'}
-              disabled={!g}
-              onInput={(e) => (draft.value = (e.target as HTMLTextAreaElement).value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  (e.currentTarget.form as HTMLFormElement).requestSubmit();
-                }
-              }}
-            />
-            <div class="as-actions">
-              <label class="btn">
-                Add a photo
-                <input type="file" accept="image/*" class="visually-hidden" onChange={attach} />
+              ) : null}
+              <label for="as-input" class="visually-hidden">
+                Message
               </label>
-              {busy.value ? (
-                <button type="button" class="btn" onClick={() => abort.current?.abort()}>
-                  Stop
-                </button>
-              ) : (
-                <button type="submit" class="btn btn-primary" disabled={!g || (!draft.value.trim() && !photo.value)}>
-                  Send
-                </button>
-              )}
-            </div>
-            <p class="muted small">Runs on Claude with your own Anthropic key. Answers can be wrong; dates in your calendar come from GardenSync, not the chat.</p>
-          </form>
-        </>
-      )}
-    </div>
+              <textarea
+                id="as-input"
+                class="input as-input"
+                rows={2}
+                value={draft.value}
+                placeholder={g ? 'Message' : 'Add a garden first'}
+                disabled={!g}
+                onInput={(e) => (draft.value = (e.target as HTMLTextAreaElement).value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    (e.currentTarget.form as HTMLFormElement).requestSubmit();
+                  }
+                }}
+              />
+              <div class="as-actions">
+                <label class="btn">
+                  Add a photo
+                  <input type="file" accept="image/*" class="visually-hidden" onChange={attach} />
+                </label>
+                {busy.value ? (
+                  <button type="button" class="btn" onClick={() => abort.current?.abort()}>
+                    Stop
+                  </button>
+                ) : (
+                  <button type="submit" class="btn btn-primary" disabled={!g || (!draft.value.trim() && !photo.value)}>
+                    Send
+                  </button>
+                )}
+              </div>
+              <p class="muted small">Runs on Claude with your own Anthropic key. Answers can be wrong; dates in your calendar come from GardenSync, not the chat.</p>
+            </form>
+          </>
+        )}
+      </div>
+    </>
   );
 }
 

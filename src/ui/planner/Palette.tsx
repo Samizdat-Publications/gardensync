@@ -113,7 +113,7 @@ export function Palette({ onChosen, headingId }: { onChosen?: () => void; headin
         <input type="checkbox" checked={thisWeek.value} disabled={!climate} onChange={(e) => (thisWeek.value = (e.currentTarget as HTMLInputElement).checked)} />
         Can go in this week
       </label>
-      {!hintDismissed.value ? (
+      {!hintDismissed.value && (garden.value?.containers.length ?? 0) > 0 ? (
         <div class="palette-hint-banner" role="note">
           <span>Drag a plant onto a square, or tap it and then a square.</span>
           <button

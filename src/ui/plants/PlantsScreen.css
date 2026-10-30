@@ -120,15 +120,20 @@
 
 /* ---- Card ---- */
 
-.plant-card {
-  position: sticky;
-  top: 0;
-  /* The shared header (about 65 px) sits above; keep the whole card, and its action, on screen. */
-  max-height: calc(100vh - 66px);
-  overflow-y: auto;
-  padding: var(--sp-5);
+/* The card's column runs the full height of the screen, like a page beside the grid. */
+.plant-col {
+  align-self: stretch;
+  min-width: 0;
   border-left: 1px solid var(--c-line);
   background: var(--c-panel);
+}
+.plant-card {
+  /* No scroll box of its own: the card scrolls with the page. A card that fits the window stays at
+     the top while the grid scrolls; a longer one scrolls until its end is in view, then stays put.
+     --pc-h is the card's height, set from PlantsScreen. */
+  position: sticky;
+  top: min(0px, calc(100vh - var(--pc-h, 0px)));
+  padding: var(--sp-5);
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -329,19 +334,9 @@
 }
 
 .pc-add {
-  margin-top: auto;
+  align-self: stretch;
   min-height: 46px;
   font-size: var(--fs-lg);
-}
-/* Beside the grid the card scrolls on its own; keep its one action in reach. */
-@media (min-width: 1000px) {
-  .pc-add {
-    position: sticky;
-    bottom: 0;
-    /* A solid band as wide as the card's padding, so nothing scrolling behind shows around it. */
-    box-shadow: 0 0 0 var(--sp-5) var(--c-panel);
-    z-index: 1;
-  }
 }
 
 /* ---- Narrow: the card is its own view ---- */
@@ -365,11 +360,11 @@
     clip: rect(0 0 0 0);
     white-space: nowrap;
   }
+  .plant-col {
+    border-left: 0;
+  }
   .plant-card {
     position: static;
-    max-height: none;
-    overflow: visible;
-    border-left: 0;
     padding: var(--sp-3) var(--sp-4) var(--sp-6);
   }
   .plant-back {

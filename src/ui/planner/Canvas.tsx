@@ -16,7 +16,8 @@ import type { JSX } from 'preact';
 import type { Cells, Container, GridBed, Planting, Vessel } from '../../domain/doc/schema';
 import { COMPANIONS } from '../../domain/plants/library';
 import type { Plant } from '../../domain/plants/schema';
-import { minCells } from '../../domain/layout/patch';
+import { defaultCount, minCells } from '../../domain/layout/patch';
+import { squaresLabel } from '../../domain/layout/labels';
 import { formatLength } from '../../domain/units';
 import { garden, units } from '../appState';
 import { Glyph } from '../components/Glyph';
@@ -44,10 +45,27 @@ import {
 import { attemptPlant, clearSquares, finishPaint, fitAll, paintTo, placeAtCell, placeInVessel, selectAt, zoomBy } from './interactions';
 import { act, canvasFocused, clashCard, cursor, draft, dragPreview, lod, paletteDrag, plantingMove, stopPlacing, view, viewport, type Draft, type PaletteDragState } from './plannerState';
 import { defaultMethod } from './placement';
-import { propose, resolutions } from './resolve';
+import { propose, resolutions, type Proposal } from './resolve';
 
 const frameOf = (c: GridBed) => (c.kind === 'in-ground' ? 0 : c.kind === 'window-box' || c.kind === 'trough' ? 4 : 6);
 const frameFill = (c: GridBed) => (c.kind === 'window-box' ? 'var(--c-pot)' : c.kind === 'trough' ? 'var(--c-bag)' : 'var(--c-timber)');
+
+/** Which kinds of companion link the plan draws for the plantings shown: the legend keys only those. */
+function linkKinds(presentMap: Map<string, Planting[]>): { good: boolean; bad: boolean } {
+  const out = { good: false, bad: false };
+  for (const here of presentMap.values()) {
+    for (let a = 0; a < here.length; a++) {
+      for (let b = a + 1; b < here.length; b++) {
+        const pa = here[a]!;
+        const pb = here[b]!;
+        if (!pa.cells || !pb.cells || pa.containerId !== pb.containerId || pa.plantId === pb.plantId || !cellsNear(pa.cells, pb.cells, 1)) continue;
+        const comp = companionOf(pa.plantId, pb.plantId);
+        if (comp) out[comp.kind] = true;
+      }
+    }
+  }
+  return out;
+}
 
 function companionOf(a: string, b: string) {
   return COMPANIONS.find((x) => (x.a === a && x.b === b) || (x.a === b && x.b === a));
@@ -86,6 +104,22 @@ interface LayerInput {
   focused: boolean;
   palDrag: typeof paletteDrag.value;
   plantMove: typeof plantingMove.value;
+  placing: boolean;
+  /** Screen pixels per centimetre, to fit label text to a patch. */
+  scale: number;
+}
+
+/** Rough width in px of an 11 px italic label, padding included. */
+const labelPx = (text: string) => text.length * 6.8 + 14;
+
+/** The four corners of a patch on the plane, for the resize handles. */
+function cornersOf(r: { x: number; y: number; w: number; h: number }): { x: number; y: number }[] {
+  return [
+    { x: r.x, y: r.y },
+    { x: r.x + r.w, y: r.y },
+    { x: r.x, y: r.y + r.h },
+    { x: r.x + r.w, y: r.y + r.h },
+  ];
 }
 
 function drawLayer(i: LayerInput): JSX.Element {
@@ -155,7 +189,8 @@ function drawLayer(i: LayerInput): JSX.Element {
                 );
               })
           : null}
-        {level > 0 ? drawCompanions(c, here) : null}
+        {/* Friends and foes are about what is growing; while placing they only cover the labels. */}
+        {level > 0 && !i.placing && !i.palDrag ? drawCompanions(c, here) : null}
         {placingHere ? drawChosen(c, i.cand!) : null}
         {palSnap ? drawSnapPreview(c, palSnap.cells, palSnap.proposal.clashes.length > 0 ? 'clash' : 'free') : null}
         {moveSnap ? drawMovePreview(c, moveSnap.targetCells, moveSnap.proposal?.clashes.length ? 'clash' : 'free') : null}
@@ -181,7 +216,7 @@ function drawLayer(i: LayerInput): JSX.Element {
     const gs = single ? Math.min(Math.min(pr.w, pr.h) * 0.6, cellCm * 2) : cellCm * 0.62;
     return (
       <g key={p.id} class="patch" data-plant={p.plantId} data-planting-id={p.id}>
-        <rect x={pr.x + 2} y={pr.y + 2} width={pr.w - 4} height={pr.h - 4} rx={3} fill={color} fill-opacity={0.22} stroke={color} stroke-width={1.5} {...NS} />
+        <rect x={pr.x + 2} y={pr.y + 2} width={pr.w - 4} height={pr.h - 4} rx={3} fill={color} style={{ fillOpacity: 'var(--patch-alpha)' }} stroke={color} stroke-width={1.5} {...NS} />
         {single ? (
           <Glyph form={plant.glyph.form} color={color} x={pr.x + pr.w / 2 - gs / 2} y={pr.y + pr.h / 2 - gs / 2} size={gs} />
         ) : (
@@ -192,6 +227,7 @@ function drawLayer(i: LayerInput): JSX.Element {
         )}
         {sel ? <rect x={pr.x - 1} y={pr.y - 1} width={pr.w + 2} height={pr.h + 2} rx={4} fill="none" class="ring-halo" {...NS} /> : null}
         {sel ? <rect x={pr.x - 1} y={pr.y - 1} width={pr.w + 2} height={pr.h + 2} rx={4} fill="none" class="ring-ink" {...NS} /> : null}
+        {sel && !i.placing ? drawHandles(pr) : null}
       </g>
     );
   }
@@ -205,9 +241,22 @@ function drawLayer(i: LayerInput): JSX.Element {
     const sel = i.sel?.kind === 'planting' && i.sel.id === p.id;
     return (
       <g key={`up${p.id}`} class="patch-upcoming" data-plant={p.plantId} data-planting-id={p.id}>
-        <rect x={pr.x + 2} y={pr.y + 2} width={pr.w - 4} height={pr.h - 4} rx={3} fill={color} fill-opacity={0.12} stroke={color} stroke-opacity={0.45} stroke-width={1.5} stroke-dasharray="4 3" {...NS} />
+        <rect x={pr.x + 2} y={pr.y + 2} width={pr.w - 4} height={pr.h - 4} rx={3} fill={color} style={{ fillOpacity: 'var(--patch-alpha-planned)' }} stroke={color} stroke-opacity={0.45} stroke-width={1.5} stroke-dasharray="4 3" {...NS} />
+        {level > 0 ? (
+          // One faint icon says what is planned: in the last square of a wide patch, clear of its label.
+          <g opacity={0.5}>
+            <Glyph
+              form={plant.glyph.form}
+              color={color}
+              x={(p.cells.w >= 2 ? pr.x + pr.w - cellCm / 2 : pr.x + pr.w / 2) - (cellCm * 0.55) / 2}
+              y={pr.y + pr.h - cellCm / 2 - (cellCm * 0.55) / 2 + (p.cells.h >= 2 ? 0 : cellCm * 0.08)}
+              size={cellCm * 0.55}
+            />
+          </g>
+        ) : null}
         {sel ? <rect x={pr.x - 1} y={pr.y - 1} width={pr.w + 2} height={pr.h + 2} rx={4} fill="none" class="ring-halo" {...NS} /> : null}
         {sel ? <rect x={pr.x - 1} y={pr.y - 1} width={pr.w + 2} height={pr.h + 2} rx={4} fill="none" class="ring-ink" {...NS} /> : null}
+        {sel && !i.placing ? drawHandles(pr) : null}
       </g>
     );
   }
@@ -291,6 +340,11 @@ function drawLayer(i: LayerInput): JSX.Element {
         {...NS}
       />
     );
+  }
+
+  function drawHandles(pr: { x: number; y: number; w: number; h: number }): JSX.Element[] {
+    const r = cellCm * 0.11;
+    return cornersOf(pr).map((pt, k) => <circle key={`h${k}`} class="resize-handle" cx={pt.x} cy={pt.y} r={r} {...NS} />);
   }
 
   function drawMovePreview(c: GridBed, cells: Cells, state: 'free' | 'clash'): JSX.Element {
@@ -435,7 +489,9 @@ function drawLabels(i: LayerInput): JSX.Element {
             {name}
           </span>,
         );
-        if (level >= 2 || p.cells.w * p.cells.h >= 2) {
+        // Zoomed out, a one-row patch keeps its icons visible: the count waits for a closer zoom.
+        // While placing, the "until" labels sit where the counts go, and counts matter less then.
+        if (!i.placing && (level >= 2 || (p.cells.h >= 2 && p.cells.w * p.cells.h >= 2))) {
           out.push(
             <span key={`k${p.id}`} class="lbl lbl-count" style={at(pr.x + pr.w + off.dx, pr.y + pr.h + off.dy, -5, -5)}>
               {p.count}
@@ -458,7 +514,12 @@ function drawLabels(i: LayerInput): JSX.Element {
               class="lbl lbl-upcoming"
               style={{ ...at(pr2.x + off.dx, pr2.y + off.dy, 4, 4), maxWidth: `calc(${pr2.w} * var(--s) * 1px - 8px)` }}
             >
-              {plant2.name} from {fmtNear(interval2.bedIn, shownDay.value)}
+              {/* Planned patches go in within the next ten months, so "from May 4" is always the next May 4. */}
+              {(() => {
+                const room = pr2.w * i.scale;
+                const full = `${plant2.name} from ${fmtDay(interval2.bedIn)}`;
+                return labelPx(full) <= room ? full : labelPx(plant2.name) <= room ? plant2.name : initials(plant2.name);
+              })()}
             </span>,
           );
         }
@@ -644,15 +705,15 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
   }, []);
 
   const upcomingMap = upcoming.value;
-  const input: LayerInput = { cellCm: g.cellCm, list, presentMap, upcomingMap, plantOf, sel, cand, d, level, drag, cur, focused, palDrag: palDragState, plantMove: plantMoveState };
-  const layer = useMemo(() => drawLayer(input), [g, list, presentMap, upcomingMap, plantOf, sel, cand, d, level, drag, cur, focused, palDragState, plantMoveState]);
+  const input: LayerInput = { cellCm: g.cellCm, list, presentMap, upcomingMap, plantOf, sel, cand, d, level, drag, cur, focused, palDrag: palDragState, plantMove: plantMoveState, placing: placingPlantId.value !== null, scale: Math.round((v?.s ?? 1) * 20) / 20 };
+  const layer = useMemo(() => drawLayer(input), [g, list, presentMap, upcomingMap, plantOf, sel, cand, d, level, drag, cur, focused, palDragState, plantMoveState, input.placing]);
   // Beds show their size under the name; pots show what is in them on the day shown.
   const sizeText = (c: Container) => {
     if (c.form === 'grid') return `${formatLength(c.rows * g.cellCm, u)} by ${formatLength(c.cols * g.cellCm, u)}`;
     const here = presentMap.get(c.id) ?? [];
     return here.length ? here.map((p) => `${plantOf(p.plantId)?.name ?? 'Plant'} ${p.count}`).join(', ') : formatLength(c.diameterCm, u);
   };
-  const labels = useMemo(() => drawLabels(input), [g, list, presentMap, upcomingMap, plantOf, cand, level, drag, palDragState]);
+  const labels = useMemo(() => drawLabels(input), [g, list, presentMap, upcomingMap, plantOf, cand, level, drag, palDragState, input.scale]);
 
   const vb = v && size.w > 0 ? viewBoxOf(v, size) : { x: 0, y: 0, w: 100, h: 100 };
   const s = v?.s ?? 1;
@@ -668,6 +729,7 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
     | { kind: 'paint'; id: number; bedId: string }
     | { kind: 'move'; id: number; c: Container; cell: Cell | null; x: number; y: number }
     | { kind: 'move-planting'; id: number; plantingId: string; containerId: string; sourceCells: Cells; plant: Plant; grabOffsetCol: number; grabOffsetRow: number }
+    | { kind: 'resize-planting'; id: number; plantingId: string; c: GridBed; sourceCells: Cells; plant: Plant; anchor: Cell }
     | { kind: 'pinch'; dist: number; mid: { x: number; y: number }; view: NonNullable<typeof v> }
   >(null);
   const pointers = useRef(new Map<number, { x: number; y: number }>());
@@ -724,6 +786,53 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
     return null;
   };
 
+  /** What resizing a planting to `cells` would run into: too few squares, or other crops while it grows. */
+  const resizeProposal = (p0: Planting, c: GridBed, plant: Plant, cells: Cells): Proposal => {
+    const gardenVal = garden.value!;
+    const min = minCells(plant);
+    if (cells.w < min.w || cells.h < min.h) return { planting: null, problem: `${plant.name} needs at least ${min.w} by ${min.h} squares.`, clashes: [] };
+    const others = gardenVal.plantings.filter((x) => x.id !== p0.id);
+    return propose({ plant, method: p0.method, bed: c, cells, from: intervalOfP.value(p0)?.bedIn ?? 0 }, { ...gardenVal, plantings: others }, plantOf);
+  };
+
+  /** Commit a resize when nothing is in the way; otherwise say what is. One undo step. */
+  const finishResize = (plantingId: string, plant: Plant, cells: Cells, proposal: Proposal | null, coalesceKey?: string) => {
+    if (proposal?.problem) {
+      showToastMsg(proposal.problem);
+    } else if (proposal?.clashes.length) {
+      const names = [...new Set(proposal.clashes.map((x) => plantOf(x.with.plantId)?.name ?? 'Another crop'))].join(' and ');
+      showToastMsg(`${names} ${proposal.clashes.length === 1 ? 'is' : 'are'} in the way while ${inSentence(plant.name)} grows.`);
+    } else {
+      const count = Math.max(1, defaultCount(plant, cells));
+      const name = inSentence(plant.name);
+      act(
+        { type: 'updatePlanting', gardenId: g.id, plantingId, patch: { cells, count } },
+        `resize ${name}`,
+        `The ${name} patch is now ${squaresLabel(cells)}, ${count} ${count === 1 ? 'plant' : 'plants'}.`,
+        coalesceKey ? { coalesceKey } : {},
+      );
+    }
+  };
+
+  /** The selected planting's corner handle within `tolPx` screen pixels of the point, if any. */
+  const handleAt = (id: string, px: number, py: number, tolPx: number): { plantingId: string; c: GridBed; sourceCells: Cells; plant: Plant; anchor: Cell } | null => {
+    const p = garden.value?.plantings.find((x) => x.id === id);
+    const c = p && list.find((x) => x.id === p.containerId);
+    const plant = p && plantOf(p.plantId);
+    if (!p?.cells || c?.form !== 'grid' || !plant) return null;
+    const pr = cellsRect(c, g.cellCm, p.cells);
+    const tol = tolPx / (view.value?.s ?? 1);
+    const corners = cornersOf(pr);
+    for (const [k, pt] of corners.entries()) {
+      if (Math.hypot(px - pt.x, py - pt.y) > tol) continue;
+      // The corner across from the grabbed one stays put; half a square in from it is its cell.
+      const o = corners[3 - k]!;
+      const anchor = cellAt(c, g.cellCm, o.x + (o.x > pt.x ? -1 : 1) * g.cellCm / 2, o.y + (o.y > pt.y ? -1 : 1) * g.cellCm / 2);
+      if (anchor) return { plantingId: p.id, c, sourceCells: p.cells, plant, anchor };
+    }
+    return null;
+  };
+
   const setCursorFrom = (hit: Hit) => {
     if (!hit) return;
     if (hit.c.form === 'grid' && hit.cell) {
@@ -756,6 +865,17 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
     }
 
     const s0 = selection.value;
+
+    // A corner handle of the selected planting: drag it to make the patch bigger or smaller.
+    if (!placing && s0?.kind === 'planting') {
+      const grab = handleAt(s0.id, pl.x, pl.y, e.pointerType === 'touch' ? 22 : 12);
+      if (grab) {
+        gesture.current = { kind: 'resize-planting', id: e.pointerId, ...grab };
+        hoverInfo.value = null;
+        return;
+      }
+    }
+
     const underPointer = placing ? null : plantingAt(pl.x, pl.y);
 
     // Container move (mouse, selected container), but a drag that starts on a planting moves the
@@ -876,6 +996,22 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
       dragPreview.value = { id: gs.c.id, dx: Math.round((pl.x - gs.x) / step) * step, dy: Math.round((pl.y - gs.y) / step) * step };
       return;
     }
+    if (gs.kind === 'resize-planting') {
+      const pl = toPlane(p);
+      const fp = footprints.value.get(gs.c.id);
+      if (!fp) return;
+      // Clamp to the bed, so dragging past its edge stops at the edge.
+      const cx = Math.min(Math.max(pl.x, fp.x + 1), fp.x + fp.w - 1);
+      const cy = Math.min(Math.max(pl.y, fp.y + 1), fp.y + fp.h - 1);
+      const cell = cellAt(gs.c, g.cellCm, cx, cy);
+      const gardenVal = garden.value;
+      const p0 = gardenVal?.plantings.find((x) => x.id === gs.plantingId);
+      if (!cell || !gardenVal || !p0) return;
+      const targetCells = cellsBetween(gs.anchor, cell);
+      const proposal = resizeProposal(p0, gs.c, gs.plant, targetCells);
+      plantingMove.value = { plantingId: gs.plantingId, sourceContainerId: gs.c.id, sourceCells: gs.sourceCells, targetContainerId: gs.c.id, targetCells, proposal };
+      return;
+    }
     if (gs.kind === 'move-planting') {
       const pl = toPlane(p);
       const hit = hitTest(pl.x, pl.y);
@@ -958,6 +1094,16 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
       return;
     }
 
+    if (gs.kind === 'resize-planting') {
+      const mv = plantingMove.value;
+      plantingMove.value = null;
+      const sc = gs.sourceCells;
+      const tc = mv?.targetCells;
+      if (!mv || !tc || (tc.col === sc.col && tc.row === sc.row && tc.w === sc.w && tc.h === sc.h)) return;
+      finishResize(gs.plantingId, gs.plant, tc, mv.proposal);
+      return;
+    }
+
     if (gs.kind === 'move-planting') {
       const mv = plantingMove.value;
       plantingMove.value = null;
@@ -1032,6 +1178,20 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
     const k = e.key;
     const sel0 = selection.value;
 
+    // Shift and an arrow key on a selected patch moves its right or bottom edge: bigger or smaller.
+    if (e.shiftKey && k.startsWith('Arrow') && sel0?.kind === 'planting' && placingPlantId.value === null) {
+      const p0 = g.plantings.find((x) => x.id === sel0.id);
+      const c = p0 && g.containers.find((x) => x.id === p0.containerId);
+      const plant = p0 && plantOf(p0.plantId);
+      if (!p0?.cells || c?.form !== 'grid' || !plant) return;
+      e.preventDefault();
+      const dw = k === 'ArrowRight' ? 1 : k === 'ArrowLeft' ? -1 : 0;
+      const dh = k === 'ArrowDown' ? 1 : k === 'ArrowUp' ? -1 : 0;
+      const cells: Cells = { ...p0.cells, w: p0.cells.w + dw, h: p0.cells.h + dh };
+      if (cells.w < 1 || cells.h < 1 || cells.col + cells.w > c.cols || cells.row + cells.h > c.rows) return;
+      finishResize(p0.id, plant, cells, resizeProposal(p0, c, plant, cells), `resize-${p0.id}`);
+      return;
+    }
     if (e.shiftKey && k.startsWith('Arrow') && sel0?.kind === 'container' && placingPlantId.value === null) {
       const c = g.containers.find((x) => x.id === sel0.id);
       if (!c) return;
@@ -1137,7 +1297,7 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
           {layer}
         </svg>
         <span id="canvas-keys" class="visually-hidden">
-          Arrow keys (up, down, left, right) move between squares and from one bed or pot to the next. Enter or Space plants at the cursor while placing, or picks what is there. Escape cancels. Plus and minus zoom, 0 shows the whole garden. Shift and an arrow key moves a selected bed. Delete or Backspace pulls out the selected planting.
+          Arrow keys (up, down, left, right) move between squares and from one bed or pot to the next. Enter or Space plants at the cursor while placing, or picks what is there. Escape cancels. Plus and minus zoom, 0 shows the whole garden. Shift and an arrow key moves a selected bed, or makes a selected planting bigger or smaller. Delete or Backspace pulls out the selected planting.
         </span>
         <span class="visually-hidden" aria-live="polite">
           {focused ? announce : ''}
@@ -1187,7 +1347,7 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
           </svg>
         </button>
       </div>
-      <NorthAndScale cellCm={g.cellCm} s={s} />
+      <NorthAndScale cellCm={g.cellCm} s={s} links={level > 0 && !placing && !palDragState ? linkKinds(presentMap) : { good: false, bad: false }} />
       {hover ? (
         <div
           class="patch-tooltip"
@@ -1261,7 +1421,16 @@ function showToastMsg(text: string): void {
 
 const round2 = (x: number) => Math.round(x * 100) / 100;
 
-function NorthAndScale({ cellCm, s }: { cellCm: number; s: number }) {
+function LinkBadge({ good }: { good: boolean }) {
+  return (
+    <svg width="16" height="16" viewBox="-8 -8 16 16" aria-hidden="true" class={good ? 'link-friend' : 'link-foe'}>
+      <circle r="7" class="link-badge" />
+      <path d={good ? 'M-3.5 0H3.5M0 -3.5V3.5' : 'M-3 -3L3 3M3 -3L-3 3'} stroke="var(--c-panel)" stroke-width="1.8" stroke-linecap="round" />
+    </svg>
+  );
+}
+
+function NorthAndScale({ cellCm, s, links }: { cellCm: number; s: number; links: { good: boolean; bad: boolean } }) {
   const u = units.value;
   const steps = [1, 2, 5, 10, 20, 50, 100];
   const k = steps.find((n) => n * cellCm * s >= 48) ?? 100;
@@ -1280,6 +1449,20 @@ function NorthAndScale({ cellCm, s }: { cellCm: number; s: number }) {
         <span class="scale-bar" style={{ width: `${px}px` }} aria-hidden="true" />
         <span>1 square = {formatLength(cellCm, u)}</span>
       </div>
+      {links.good || links.bad ? (
+        <div class="link-key">
+          {links.good ? (
+            <span>
+              <LinkBadge good /> Good neighbors
+            </span>
+          ) : null}
+          {links.bad ? (
+            <span>
+              <LinkBadge good={false} /> Poor neighbors
+            </span>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }

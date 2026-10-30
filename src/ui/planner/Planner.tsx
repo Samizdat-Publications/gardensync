@@ -200,7 +200,7 @@ export function Planner() {
       <div class="planner-main">
         <div class="planner-bar">
           <h1 tabIndex={-1}>
-            {g.name} on {fmtDay(day)}
+            <span class="h1-garden">{g.name}</span> <span class="h1-day">on {fmtDay(day)}</span>
           </h1>
           <span class="bar-gap" />
           <div role="group" aria-label="Edit" class="bar-tools">
@@ -214,7 +214,7 @@ export function Planner() {
               <span class="btn-label-long">Add a bed or pot</span>
               <span class="btn-label-short" aria-hidden="true">Add</span>
             </button>
-            <details class="bar-more">
+            <details class="bar-more" hidden={!has}>
               <summary class="btn" aria-label="Print or save">
                 <span class="btn-label-long">Print or save</span>
                 <span class="btn-label-short" aria-hidden="true">Print</span>
@@ -291,7 +291,7 @@ export function Planner() {
               <path d="M2 42H218M2 82H218M56 2V118M110 2V118M164 2V118" stroke="var(--c-grid)" />
               <rect x="58" y="44" width="104" height="36" rx="3" fill="none" stroke="var(--c-accent)" stroke-width="2.5" stroke-dasharray="7 5" />
             </svg>
-            <h2 id="empty-title">Draw your first bed</h2>
+            <h2 id="empty-title">Add your first bed</h2>
             <p>Add a raised bed or a pot. Then pick plants to fill the squares, and GardenSync works out their dates.</p>
             <div class="row">
               <button type="button" class="btn btn-primary" onClick={addStarterBed}>
@@ -337,7 +337,11 @@ export function Planner() {
         ) : (
           <div class="side-hint">
             <h2>Details</h2>
-            <p class="muted small">Choose a plant to place it, or pick a planting, bed or pot on the plan to see its dates and change it.</p>
+            <p class="muted small">
+              {has
+                ? 'Choose a plant to place it, or pick a planting, bed or pot on the plan to see its dates and change it.'
+                : 'Add a bed or pot first. Its details, and those of each planting, show here.'}
+            </p>
           </div>
         )}
       </aside>

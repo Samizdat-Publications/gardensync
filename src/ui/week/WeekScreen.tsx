@@ -1,13 +1,13 @@
 // This week: the jobs for the gardener's plantings, worked out from the schedule (never typed),
 // each with its reason and a tick box. Layout from A-week.dc.html.
 import { computed } from '@preact/signals';
-import { addDays, startOfWeek, toDay, toIso, type DayNum } from '../../domain/dates';
+import { addDays, partsFromDay, startOfWeek, toDay, toIso, type DayNum } from '../../domain/dates';
 import { squaresLabel } from '../../domain/layout/labels';
 import type { Plant } from '../../domain/plants/schema';
 import { reasonText, tasksFor, type Task, type TaskKind } from '../../domain/schedule';
 import { garden, store, today, units } from '../appState';
 import { Glyph } from '../components/Glyph';
-import { fmtDay, fmtLong, fmtRange, inSentence, sentence } from '../format';
+import { fmtLong, fmtNear, fmtRange, fmtSpan, inSentence, sentence } from '../format';
 import { hrefOf } from '../router';
 import { gardenPlants } from '../uiState';
 import { FrostWatch } from './FrostWatch';
@@ -49,6 +49,25 @@ export function WeekScreen() {
   const later = tasks.filter((t) => t.date > todayDay && t.date <= weekEnd);
   const coming = tasks.filter((t) => t.date > weekEnd && !t.done);
   const open = now.filter((t) => !t.done).length + later.filter((t) => !t.done).length + overdue.length;
+  // One heading per day in "Coming up", so a busy day does not repeat its date on every line.
+  const comingDays: { day: DayNum; tasks: Task[] }[] = [];
+  for (const t of coming.slice(0, 8)) {
+    const last = comingDays[comingDays.length - 1];
+    if (last && last.day === t.date) last.tasks.push(t);
+    else comingDays.push({ day: t.date, tasks: [t] });
+  }
+  // When nothing falls in the next three weeks (a gardener starting in the fall), look further
+  // ahead so the page can still say when the next job is.
+  const next =
+    coming[0] ??
+    tasksFor(g, plants, addDays(weekEnd, 22), addDays(weekEnd, 400))
+      .filter((t) => !t.done && t.date > weekEnd)
+      .sort((a, b) => a.date - b.date || nameOf(a).localeCompare(nameOf(b)) || a.id.localeCompare(b.id))[0];
+  // Nothing at all this week: the main column says when the next job is, so the side panel need not.
+  const quiet = now.length === 0 && later.length === 0 && overdue.length === 0;
+  const startYear = partsFromDay(weekStart).year;
+  const endYear = partsFromDay(weekEnd).year;
+  const weekSpan = startYear === endYear ? `${fmtLong(weekStart)} to ${fmtLong(weekEnd)}, ${endYear}` : `${fmtLong(weekStart)}, ${startYear} to ${fmtLong(weekEnd)}, ${endYear}`;
 
   const toggle = (t: Task) =>
     t.done
@@ -61,7 +80,7 @@ export function WeekScreen() {
         <header class="week-head">
           <h1 tabIndex={-1}>This week</h1>
           <p class="muted week-sub">
-            {fmtLong(weekStart)} to {fmtLong(weekEnd)}. {open === 0
+            {weekSpan}. {open === 0
               ? 'Nothing left to do.'
               : `${open} ${open === 1 ? 'job' : 'jobs'} to do${overdue.length > 0 ? `, ${overdue.length} of them from earlier` : ''}.`}
           </p>
@@ -74,12 +93,12 @@ export function WeekScreen() {
         {overdue.length > 0 ? <TaskGroup id="overdue" heading="Still to do from earlier" tasks={overdue} plants={plants} onToggle={toggle} today={todayDay} /> : null}
         {now.length > 0 ? <TaskGroup id="today" heading="Today" tasks={now} plants={plants} onToggle={toggle} today={todayDay} /> : null}
         {later.length > 0 ? <TaskGroup id="later" heading="Later this week" tasks={later} plants={plants} onToggle={toggle} today={todayDay} /> : null}
-        {now.length === 0 && later.length === 0 && overdue.length === 0 ? (
+        {quiet ? (
           <section class="panel week-empty">
             <h2>Nothing to do this week</h2>
             <p class="muted">
-              {coming[0]
-                ? `The next job is on ${fmtDay(coming[0].date)}: ${inSentence(title(coming[0], plants.get(coming[0].plantId)))}.`
+              {next
+                ? `The next job is on ${fmtNear(next.date, todayDay)}: ${inSentence(title(next, plants.get(next.plantId)))}.`
                 : g.plantings.length === 0
                   ? 'Add plants to the garden and their jobs appear here.'
                   : 'No jobs in the next few weeks.'}
@@ -92,14 +111,26 @@ export function WeekScreen() {
         <FrostWatch />
         <section class="panel week-coming">
           <h2>Coming up</h2>
-          {coming.length === 0 ? <p class="muted">Nothing in the next three weeks.</p> : null}
-          <ul>
-            {coming.slice(0, 8).map((t) => (
-              <li key={t.id}>
-                <strong>{fmtDay(t.date)}:</strong> {inSentence(title(t, plants.get(t.plantId)))}
-              </li>
-            ))}
-          </ul>
+          {coming.length === 0 ? (
+            <p class="muted">
+              Nothing in the next three weeks.
+              {next && !quiet ? ` The next job is on ${fmtNear(next.date, todayDay)}: ${inSentence(title(next, plants.get(next.plantId)))}.` : ''}
+            </p>
+          ) : null}
+          {comingDays.length > 0 ? (
+            <ul class="coming-days">
+              {comingDays.map((d) => (
+                <li key={d.day}>
+                  <h3 class="coming-day">{fmtNear(d.day, todayDay)}</h3>
+                  <ul>
+                    {d.tasks.map((t) => (
+                      <li key={t.id}>{title(t, plants.get(t.plantId))}</li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          ) : null}
           <a href={hrefOf({ name: 'calendar' })}>See the whole year</a>
         </section>
       </aside>
@@ -121,7 +152,12 @@ function TaskGroup(props: { id: string; heading: string; tasks: Task[]; plants: 
             .filter(Boolean)
             .join(', ');
           const name = title(t, plant);
-          const when = t.until !== undefined && t.until !== t.date ? (t.until - t.date >= 364 ? 'Any time of year' : `Any day ${fmtRange(t.date, t.until)}`) : fmtDay(t.date);
+          const when =
+            t.until !== undefined && t.until !== t.date
+              ? t.until - t.date >= 364
+                ? 'Any time of year'
+                : `Any day ${sameYear(t.date, t.until, props.today) ? fmtRange(t.date, t.until) : fmtSpan(t.date, t.until, props.today)}`
+              : fmtNear(t.date, props.today);
           return (
             <li key={t.id} class="task" data-done={t.done}>
               <input type="checkbox" id={`task-${t.id}`} checked={t.done} onChange={() => props.onToggle(t)} />
@@ -140,6 +176,8 @@ function TaskGroup(props: { id: string; heading: string; tasks: Task[]; plants: 
     </section>
   );
 }
+
+const sameYear = (a: DayNum, b: DayNum, ref: DayNum) => partsFromDay(a).year === partsFromDay(ref).year && partsFromDay(b).year === partsFromDay(ref).year;
 
 /** Exposed for tests: the ISO date a checkbox would record. */
 export const tickDate = () => toIso(toDay(today.value));

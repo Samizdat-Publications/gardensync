@@ -274,6 +274,16 @@ details.backups[open] > summary::before {
     overflow-x: auto;
     scrollbar-width: none;
   }
+  /* A soft fade on whichever edge has more tabs beyond it. */
+  .settings-nav[data-more-end='true'] {
+    mask-image: linear-gradient(to right, #000 calc(100% - 48px), transparent);
+  }
+  .settings-nav[data-more-start='true'] {
+    mask-image: linear-gradient(to left, #000 calc(100% - 48px), transparent);
+  }
+  .settings-nav[data-more-start='true'][data-more-end='true'] {
+    mask-image: linear-gradient(to right, transparent, #000 48px, #000 calc(100% - 48px), transparent);
+  }
   .settings-nav a {
     flex: none;
     white-space: nowrap;

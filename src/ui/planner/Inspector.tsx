@@ -199,7 +199,7 @@ export function PlantingInspector({ p }: { p: Planting }) {
             <button type="button" class="link-btn" onClick={() => selectContainer(container.id)}>
               {where}
             </button>
-            {p.cells ? `, ${p.cells.w} by ${p.cells.h} ${p.cells.w * p.cells.h === 1 ? 'square' : 'squares'}` : ''}
+            {p.cells ? (p.cells.w * p.cells.h === 1 ? ', 1 square' : `, ${p.cells.w * p.cells.h} squares (${p.cells.w} by ${p.cells.h})`) : ''}
           </p>
           {!inGround && ph ? <p class="small muted">Not in the ground on {fmtDay(day)}.</p> : null}
         </div>

@@ -42,6 +42,9 @@
   --c-soil: #e7dcc9;
   --c-soil-speck: #d3c3a9;
   --c-soil-grid: rgba(70, 50, 30, 0.3);
+  /* How strongly a planting's crop colour fills its squares (planted, then planned). */
+  --patch-alpha: 0.22;
+  --patch-alpha-planned: 0.12;
   --c-timber: #8e6b46;
   --c-pot: #a85a36;
   --c-bag: #4a4f45;
@@ -108,6 +111,8 @@
     --c-soil: #3b3026;
     --c-soil-speck: #2e251d;
     --c-soil-grid: rgba(255, 255, 255, 0.14);
+  --patch-alpha: 0.42;
+  --patch-alpha-planned: 0.24;
     --c-timber: #7b6043;
     --c-pot: #8e4e31;
     --c-bag: #3a3e36;
@@ -144,6 +149,8 @@
   --c-soil: #3b3026;
   --c-soil-speck: #2e251d;
   --c-soil-grid: rgba(255, 255, 255, 0.14);
+  --patch-alpha: 0.42;
+  --patch-alpha-planned: 0.24;
   --c-timber: #7b6043;
   --c-pot: #8e4e31;
   --c-bag: #3a3e36;

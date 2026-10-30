@@ -32,3 +32,20 @@ test('This week lists spring jobs for the starter bed, and a tick survives a rel
   expect(axe.violations).toEqual([]);
   expect(errors).toEqual([]);
 });
+
+test('This week shows the year, and Coming up gives each day one heading', async ({ page }) => {
+  await page.clock.install({ time: new Date('2027-04-14T09:00:00') });
+  await startGarden(page);
+  await page.goto('/#/week');
+  await expect(page.locator('.week-sub')).toContainText('Sunday, April 18, 2027.');
+  const days = await page.locator('.week-coming .coming-day').allTextContents();
+  expect(days.length).toBeGreaterThan(0);
+  expect(new Set(days).size).toBe(days.length);
+});
+
+test('a gardener starting in the fall is told when the next job is, with its year', async ({ page }) => {
+  await page.clock.install({ time: new Date('2026-10-30T10:00:00') });
+  await startGarden(page);
+  await page.goto('/#/week');
+  await expect(page.locator('.week-empty')).toContainText(/The next job is on [A-Z][a-z]{2} \d{1,2}, 2027:/);
+});

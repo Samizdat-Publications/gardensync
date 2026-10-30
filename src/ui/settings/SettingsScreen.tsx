@@ -34,9 +34,31 @@ export function SettingsScreen() {
   useEffect(() => {
     if (r.name === 'settings' && r.section) document.getElementById(r.section)?.scrollIntoView({ block: 'start' });
   }, [active]);
+
+  // On phones the section list is a scrolling strip: mark which ends have more tabs past them, so
+  // the CSS can fade that edge instead of cutting a label off with no hint.
+  const nav = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = nav.current;
+    if (!el) return;
+    const mark = () => {
+      const more = el.scrollWidth - el.clientWidth > 1;
+      el.dataset['moreStart'] = String(more && el.scrollLeft > 1);
+      el.dataset['moreEnd'] = String(more && el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
+    };
+    mark();
+    el.addEventListener('scroll', mark, { passive: true });
+    const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(mark);
+    ro?.observe(el);
+    return () => {
+      el.removeEventListener('scroll', mark);
+      ro?.disconnect();
+    };
+  }, []);
+
   return (
     <div class="settings">
-      <nav aria-label="Settings sections" class="settings-nav">
+      <nav aria-label="Settings sections" class="settings-nav" ref={nav}>
         {SECTIONS.map(([id, label]) => (
           <a key={id} href={hrefOf({ name: 'settings', section: id })} aria-current={active === id ? 'true' : undefined}>
             {label}
@@ -130,7 +152,7 @@ function ClimateDetails({ climate: c, units: u, onChange }: { climate: ClimatePr
           <FrostPicker
             legend="Last spring frost, typical year"
             value={c.lastFrost.p50}
-            note={c.lastFrost.p90 ? `Tender plants wait for ${fmtMonthDay(c.lastFrost.p90)}, safe 9 years in 10` : ''}
+            note={c.lastFrost.p90 ? `Tender plants wait for ${fmtMonthDay(c.lastFrost.p90)}, safe 9\u00a0years in\u00a010` : ''}
             shiftedDays={adjusted?.lastFrost ?? 0}
             onShift={(d) => onChange(adjustFrost(c, 'lastFrost', d), 'move the last frost date')}
           />
@@ -139,7 +161,7 @@ function ClimateDetails({ climate: c, units: u, onChange }: { climate: ClimatePr
           <FrostPicker
             legend="First fall frost, typical year"
             value={c.firstFrost.p50}
-            note={c.firstFrost.p10 ? `Can come by ${fmtMonthDay(c.firstFrost.p10)} in 1 year in 10` : ''}
+            note={c.firstFrost.p10 ? `Can come by ${fmtMonthDay(c.firstFrost.p10)} in 1\u00a0year in\u00a010` : ''}
             shiftedDays={adjusted?.firstFrost ?? 0}
             onShift={(d) => onChange(adjustFrost(c, 'firstFrost', d), 'move the first frost date')}
           />

@@ -169,15 +169,29 @@ export function FirstRun() {
       <section class="fr-found" data-state={lookup.value.kind} aria-live="polite" aria-labelledby="fr-found-title">
         {lookup.value.kind === 'idle' ? (
           <div class="fr-empty">
-            <h2 id="fr-found-title" class="visually-hidden">Your frost dates</h2>
-            <p class="fr-preview-prompt muted">Pick your town to see your frost dates, season length and hardiness zone.</p>
-            {/* Ghost preview: pure shapes, no text, so no contrast requirement applies. aria-hidden keeps it out of the accessibility tree. */}
-            <div class="fr-preview" aria-hidden="true">
-              <div class="fr-fact fr-ghost-card"><div class="fr-ghost-label"></div><div class="fr-ghost-bar"></div></div>
-              <div class="fr-fact fr-ghost-card"><div class="fr-ghost-label"></div><div class="fr-ghost-bar"></div></div>
-              <div class="fr-fact fr-ghost-card"><div class="fr-ghost-label"></div><div class="fr-ghost-bar"></div></div>
-              <div class="fr-fact fr-ghost-card"><div class="fr-ghost-label"></div><div class="fr-ghost-bar"></div></div>
-            </div>
+            <h2 id="fr-found-title">What you will get</h2>
+            <p class="muted">Pick your town and GardenSync works out these four things for it. Every date in the app follows from them.</p>
+            <figure class="fr-example" aria-labelledby="fr-example-cap">
+              <figcaption id="fr-example-cap" class="fr-example-tag">Example, not your town</figcaption>
+              <dl class="fr-facts">
+                <div class="fr-fact">
+                  <dt>Last spring frost</dt>
+                  <dd class="fr-big">Around Apr 20</dd>
+                </div>
+                <div class="fr-fact">
+                  <dt>First fall frost</dt>
+                  <dd class="fr-big">Around Oct 15</dd>
+                </div>
+                <div class="fr-fact">
+                  <dt>Frost-free season</dt>
+                  <dd class="fr-big">178 days</dd>
+                </div>
+                <div class="fr-fact">
+                  <dt>Hardiness zone</dt>
+                  <dd class="fr-big">6b</dd>
+                </div>
+              </dl>
+            </figure>
           </div>
         ) : null}
         {lookup.value.kind === 'loading' ? (
@@ -271,14 +285,14 @@ function Found({ profile, units }: { profile: ClimateProfile; units: Units }) {
           <div class="fr-fact">
             <dt>Last spring frost</dt>
             <dd class="fr-big">{fmtMonthDay(lf.p50)}</dd>
-            {lf.p90 ? <dd class="muted fr-small">Safe for tender plants by {fmtMonthDay(lf.p90)} in 9 years out of 10</dd> : null}
+            {lf.p90 ? <dd class="muted fr-small">Safe for tender plants by {fmtMonthDay(lf.p90)} in 9&nbsp;years out of&nbsp;10</dd> : null}
           </div>
         ) : null}
         {ff.p50 ? (
           <div class="fr-fact">
             <dt>First fall frost</dt>
             <dd class="fr-big">{fmtMonthDay(ff.p50)}</dd>
-            {ff.p10 ? <dd class="muted fr-small">Can come by {fmtMonthDay(ff.p10)} in 1 year out of 10</dd> : null}
+            {ff.p10 ? <dd class="muted fr-small">Can come by {fmtMonthDay(ff.p10)} in 1&nbsp;year out of&nbsp;10</dd> : null}
           </div>
         ) : null}
         {season !== null ? (

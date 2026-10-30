@@ -1,5 +1,6 @@
 // Town search against the Open-Meteo geocoder, used by first run and by Settings. Results appear as
-// the gardener types; picking one calls onPick. Only the typed text goes to the geocoder.
+// the gardener types (or at once on Enter or the Search button); picking one calls onPick. Only the
+// typed text goes to the geocoder.
 import { useSignal } from '@preact/signals';
 import { useEffect, useRef } from 'preact/hooks';
 import { OpenMeteoError, searchPlaces, type PlaceHit } from '../../platform/openmeteo';
@@ -32,9 +33,14 @@ export function PlaceSearch({ id, label = 'Town or postal code', picked, onPick,
   const status = useSignal('');
   // Set when a place is picked: the box then shows its full name without searching for it again.
   const shown = useRef<string | null>(null);
+  // Bumped by Enter or the Search button: search now instead of waiting for typing to pause.
+  const asked = useSignal(0);
+  const now = useRef(false);
 
   useEffect(() => {
     const q = query.value.trim();
+    const delay = now.current ? 0 : 300;
+    now.current = false;
     if (shown.current !== null && query.value === shown.current) return;
     shown.current = null;
     if (q.length < 2) {
@@ -51,26 +57,47 @@ export function PlaceSearch({ id, label = 'Town or postal code', picked, onPick,
       } catch (err) {
         if (!ctl.signal.aborted) status.value = placeErrorText(err);
       }
-    }, 300);
+    }, delay);
     return () => {
       clearTimeout(t);
       ctl.abort();
     };
-  }, [query.value]);
+  }, [query.value, asked.value]);
+
+  function searchNow() {
+    if (shown.current !== null && query.value === shown.current) return;
+    if (query.value.trim().length < 2) {
+      status.value = 'Type at least two letters of a town, or a postal code.';
+      return;
+    }
+    now.current = true;
+    asked.value++;
+  }
 
   return (
     <div class="field place-search">
       <label for={id}>{label}</label>
-      <input
-        id={id}
-        class="input"
-        type="search"
-        autoComplete="off"
-        autoFocus={autoFocus}
-        value={query.value}
-        onInput={(e) => (query.value = (e.target as HTMLInputElement).value)}
-        aria-describedby={`${id}-status`}
-      />
+      <div class="place-search-row">
+        <input
+          id={id}
+          class="input"
+          type="search"
+          autoComplete="off"
+          autoFocus={autoFocus}
+          value={query.value}
+          onInput={(e) => (query.value = (e.target as HTMLInputElement).value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              searchNow();
+            }
+          }}
+          aria-describedby={`${id}-status`}
+        />
+        <button type="button" class="btn place-search-go" onClick={searchNow}>
+          Search
+        </button>
+      </div>
       <span id={`${id}-status`} class="muted place-search-status" role="status" aria-live="polite">
         {status.value}
       </span>

@@ -277,6 +277,11 @@ export function PlantCard({ resolved, headingRef }: Props) {
         ))}
       </ul>
 
+      {/* The one action sits up top, under the name, so a long card never hides it. */}
+      <button type="button" class="btn btn-primary pc-add" onClick={add}>
+        Add to the garden
+      </button>
+
       <When plant={plant} />
       <Neighbors plant={plant} {...(parentId && resolved.inheritedFrom === 'parent' ? { parentId } : {})} />
 
@@ -305,10 +310,6 @@ export function PlantCard({ resolved, headingRef }: Props) {
       ) : (
         <p class="pc-sources small muted">No sources: these values are general starting points, not researched advice for this plant.</p>
       )}
-
-      <button type="button" class="btn btn-primary pc-add" onClick={add}>
-        Add to the garden
-      </button>
     </article>
   );
 }

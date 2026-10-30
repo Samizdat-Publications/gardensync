@@ -1,4 +1,28 @@
-/* The assistant panel: docked on the right on wide screens, the whole screen on a phone. */
+/* The assistant panel: a drawer on the right over a dimmed page on wide screens, a sheet that
+   fills the phone screen below a sliver of dimmed page. Modal: the page behind is held still. */
+.as-scrim {
+  position: fixed;
+  z-index: 39;
+  inset: 0;
+  /* A shade, not a surface colour: the page dims the same way in light and dark. */
+  background: rgb(0 0 0 / 0.4);
+}
+html.assistant-open {
+  overflow: hidden;
+}
+html.assistant-open body {
+  position: fixed;
+  top: var(--as-lock-top, 0);
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+/* The page behind is cut to the window, so it adds nothing below the panel. Fixed children (the
+   panel and the scrim) are not clipped by this. */
+html.assistant-open #app {
+  height: 100%;
+  overflow: hidden;
+}
 .assistant {
   position: fixed;
   z-index: 40;
@@ -10,12 +34,47 @@
   flex-direction: column;
   border-left: 1px solid var(--c-line);
   background: var(--c-panel);
-  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.08);
+  box-shadow: -12px 0 32px rgba(0, 0, 0, 0.18);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .as-scrim {
+    animation: as-fade var(--t-med) var(--ease);
+  }
+  .assistant {
+    animation: as-slide var(--t-med) var(--ease);
+  }
+}
+@keyframes as-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes as-slide {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
 }
 @media (max-width: 640px) {
   .assistant {
-    width: 100vw;
+    top: calc(env(safe-area-inset-top) + 20px);
+    left: 0;
+    width: auto;
     border-left: 0;
+    border-top: 1px solid var(--c-line);
+    border-radius: var(--r-panel) var(--r-panel) 0 0;
+    box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.2);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .assistant {
+      animation-name: as-rise;
+    }
+  }
+}
+@keyframes as-rise {
+  from {
+    transform: translateY(32px);
+    opacity: 0;
   }
 }
 .as-head {
@@ -165,4 +224,12 @@
 }
 .as-changes li.as-remove {
   color: var(--c-caution);
+}
+
+/* Phones: keep the last controls clear of the home indicator. After the base padding, so it wins. */
+@media (max-width: 640px) {
+  .as-compose,
+  .as-setup {
+    padding-bottom: calc(var(--sp-4) + env(safe-area-inset-bottom));
+  }
 }

@@ -158,3 +158,17 @@
   color: var(--c-frost-ink);
   min-height: 1em;
 }
+/* Coming up: one date heading per day, its jobs listed under it. */
+.week-coming .coming-days {
+  gap: 12px;
+}
+.week-coming .coming-days ul {
+  gap: 2px;
+}
+.coming-day {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--c-muted);
+  margin-bottom: 2px;
+}

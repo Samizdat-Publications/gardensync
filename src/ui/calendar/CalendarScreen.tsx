@@ -3,7 +3,9 @@
 // today, a season switcher, a list view for screen readers and small screens, and print.
 // A-calendar.dc.html.
 import { useSignal } from '@preact/signals';
+import type { ClimateProfile as Climate } from '../../domain/climate/types';
 import { dayFromParts, partsFromDay, toDay, type DayNum } from '../../domain/dates';
+import type { Garden } from '../../domain/doc/schema';
 import { squaresLabel } from '../../domain/layout/labels';
 import { HALF_SEASON, plantingPhases, seasonLabel, seasonOf, seasonRefs, type PlantingPhases } from '../../domain/schedule';
 import { garden, today } from '../appState';
@@ -50,9 +52,55 @@ function successionLabel(name: string, phases: PlantingPhases): string {
   return `${name}, ${verb} ${fmtDay(phases.bedIn)}`;
 }
 
+interface Group {
+  id: string;
+  name: string;
+  rows: Row[];
+}
+
+/** The 365-day span the chart shows for a season, starting on the 1st of a month. */
+function spanOf(c: Climate, season: number): { start: DayNum; end: DayNum } {
+  // Align the calendar span to the same month boundary the planner's season strip uses so the
+  // first month label is January (northern hemisphere) or the warm-season start month (southern
+  // hemisphere) rather than mid-January. The span is always 365 days.
+  const start = nearestMonthStart(seasonRefs(c, season).W - HALF_SEASON);
+  return { start, end: start + 364 };
+}
+
+/** Every bed's plantings that show any phase inside the span, earliest first. */
+function groupsFor(g: Garden, c: Climate, span: { start: DayNum; end: DayNum }): Group[] {
+  return g.containers
+    .map((container) => {
+      const rows: Row[] = [];
+      for (const p of g.plantings.filter((q) => q.containerId === container.id)) {
+        const plant = plantOf(p.plantId);
+        if (!plant) continue;
+        const phases = plantingPhases(p, plant, c);
+        if (!phases) continue;
+        const end = phases.bedOut ?? span.end + 1;
+        const start = phases.indoor?.start ?? phases.bedIn;
+        if (!(end > span.start && start <= span.end)) continue;
+        rows.push({
+          key: p.id,
+          // P4: label succession rows by bed-in date to avoid confusing "round N" labels when
+          // earlier rounds were in a previous season.
+          label: successionLabel(plant.name, phases),
+          where: p.cells ? squaresLabel(p.cells) : `${p.count} in the ${container.kind.replace('-', ' ')}`,
+          color: plant.glyph.color,
+          phases,
+        });
+      }
+      rows.sort((a, b) => (a.phases.indoor?.start ?? a.phases.bedIn) - (b.phases.indoor?.start ?? b.phases.bedIn));
+      return { id: container.id, name: container.name, rows };
+    })
+    .filter((gr) => gr.rows.length > 0);
+}
+
 export function CalendarScreen() {
   const g = garden.value;
-  const offset = useSignal(0);
+  // Null until the gardener moves: the chart shows this season, or the next one when this season has
+  // nothing in it yet (a gardener planning in the fall wants to see next year's plan, not a blank).
+  const offset = useSignal<number | null>(null);
   // Default to list view on narrow screens so all 12 months need not fit horizontally.
   // The user can switch back to the chart at any time.
   const asList = useSignal(window.innerWidth < 600);
@@ -71,18 +119,17 @@ export function CalendarScreen() {
     );
   }
 
-  const season = seasonOf(c, todayDay) + offset.value;
+  const thisSeason = seasonOf(c, todayDay);
+  let shift = offset.value;
+  if (shift === null) {
+    shift = groupsFor(g, c, spanOf(c, thisSeason)).length === 0 && groupsFor(g, c, spanOf(c, thisSeason + 1)).length > 0 ? 1 : 0;
+  }
+  const season = thisSeason + shift;
   const refs = seasonRefs(c, season);
-
-  // Align the calendar span to the same month boundary the planner's season strip uses so the
-  // first month label is January (northern hemisphere) or the warm-season start month (southern
-  // hemisphere) rather than mid-January. The span is always 365 days.
-  const spanStart = nearestMonthStart(refs.W - HALF_SEASON);
-  const span = { start: spanStart, end: spanStart + 364 };
+  const span = spanOf(c, season);
   const days = span.end - span.start + 1; // always 365
   const pct = (d: DayNum) => `${(((Math.min(Math.max(d, span.start), span.end + 1) - span.start) / days) * 100).toFixed(3)}%`;
   const width = (a: DayNum, b: DayNum) => `${(((Math.min(b, span.end + 1) - Math.max(a, span.start)) / days) * 100).toFixed(3)}%`;
-  const visible = (a: DayNum, b: DayNum) => b > span.start && a <= span.end;
 
   // Month ticks: one per calendar month whose 1st falls within the span. Since the span starts at
   // a month boundary, the first tick is always at 0% (the left edge).
@@ -96,31 +143,8 @@ export function CalendarScreen() {
       });
   }
 
-  const groups = g.containers
-    .map((container) => {
-      const rows: Row[] = [];
-      for (const p of g.plantings.filter((q) => q.containerId === container.id)) {
-        const plant = plantOf(p.plantId);
-        if (!plant) continue;
-        const phases = plantingPhases(p, plant, c);
-        if (!phases) continue;
-        const end = phases.bedOut ?? span.end + 1;
-        const start = phases.indoor?.start ?? phases.bedIn;
-        if (!visible(start, end)) continue;
-        rows.push({
-          key: p.id,
-          // P4: label succession rows by bed-in date to avoid confusing "round N" labels when
-          // earlier rounds were in a previous season.
-          label: successionLabel(plant.name, phases),
-          where: p.cells ? squaresLabel(p.cells) : `${p.count} in the ${container.kind.replace('-', ' ')}`,
-          color: plant.glyph.color,
-          phases,
-        });
-      }
-      rows.sort((a, b) => (a.phases.indoor?.start ?? a.phases.bedIn) - (b.phases.indoor?.start ?? b.phases.bedIn));
-      return { id: container.id, name: container.name, rows };
-    })
-    .filter((gr) => gr.rows.length > 0);
+  const groups = groupsFor(g, c, span);
+  const anyIndoor = groups.some((gr) => gr.rows.some((r) => r.phases.indoor && r.phases.indoor.start <= span.end && r.phases.bedIn > span.start));
 
   const frost: { from: DayNum; to: DayNum; kind: 'likely' | 'possible' }[] = [];
   if (refs.LF50 !== null) frost.push({ from: span.start, to: refs.LF50, kind: 'likely' });
@@ -133,19 +157,19 @@ export function CalendarScreen() {
       <div class="cal-head">
         <h1 tabIndex={-1}>{seasonLabel(c, season)} at a glance</h1>
         <div role="group" aria-label="Season" class="row">
-          <button class="btn btn-icon" aria-label="Previous season" onClick={() => offset.value--}>
+          <button class="btn btn-icon" aria-label="Previous season" onClick={() => (offset.value = shift - 1)}>
             <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
               <path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </button>
-          <button class="btn btn-icon" aria-label="Next season" onClick={() => offset.value++}>
+          <button class="btn btn-icon" aria-label="Next season" onClick={() => (offset.value = shift + 1)}>
             <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
               <path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </button>
-          {offset.value !== 0 ? (
+          {season !== thisSeason ? (
             <button class="btn" onClick={() => (offset.value = 0)}>
-              This season
+              Back to {seasonLabel(c, thisSeason)}
             </button>
           ) : null}
         </div>
@@ -174,7 +198,8 @@ export function CalendarScreen() {
               <div class="cal-track">
                 {months.map((m) => (
                   <span key={m.day} class="cal-month" style={{ left: pct(m.day) }}>
-                    {m.label}
+                    <span class="cal-month-long">{m.label}</span>
+                    <span class="cal-month-short">{m.label.charAt(0)}</span>
                   </span>
                 ))}
               </div>
@@ -237,34 +262,42 @@ export function CalendarScreen() {
       )}
 
       {/* P2: legend belongs to the chart, not the list. Hidden in list view so it does not clutter
-          the stacked date cards. */}
-      {!asList.value ? (
-        <ul class="cal-legend" aria-label="Key">
-          <li>
-            <span class="key key-indoor" aria-hidden="true" />
-            Seedlings indoors
-          </li>
-          <li>
-            <span class="key key-grow" aria-hidden="true" />
-            Growing
-          </li>
-          <li>
-            <span class="key key-pick" aria-hidden="true" />
-            Ready to pick
-          </li>
-          <li>
-            <span class="key key-likely" aria-hidden="true" />
-            Frost likely
-          </li>
-          <li>
-            <span class="key key-possible" aria-hidden="true" />
-            Frost possible
-          </li>
-          <li>
-            <span class="key key-today" aria-hidden="true" />
-            Today, {fmtDay(todayDay)}
-          </li>
-        </ul>
+          the stacked date cards. Bars take each crop's color, so the key shows status by fill style
+          in a neutral color: dashed outline, outline, solid. */}
+      {!asList.value && groups.length > 0 ? (
+        <div class="cal-key">
+          <ul class="cal-legend" aria-label="Key">
+            {anyIndoor ? (
+              <li>
+                <span class="key key-indoor" aria-hidden="true" />
+                Dashed outline: seedlings indoors
+              </li>
+            ) : null}
+            <li>
+              <span class="key key-grow" aria-hidden="true" />
+              Outline: growing in the bed
+            </li>
+            <li>
+              <span class="key key-pick" aria-hidden="true" />
+              Solid: ready to pick
+            </li>
+            <li>
+              <span class="key key-likely" aria-hidden="true" />
+              Frost likely
+            </li>
+            <li>
+              <span class="key key-possible" aria-hidden="true" />
+              Frost possible
+            </li>
+            {todayDay >= span.start && todayDay <= span.end ? (
+              <li>
+                <span class="key key-today" aria-hidden="true" />
+                Today, {fmtDay(todayDay)}
+              </li>
+            ) : null}
+          </ul>
+          <p class="cal-key-note">Each bar takes its crop's color.</p>
+        </div>
       ) : null}
     </main>
   );

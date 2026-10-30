@@ -290,14 +290,24 @@ export function selectAt(c: Container, cell: Cell | null): void {
  * Show the whole garden. `bottomInset` is screen px at the bottom covered by a sheet (the phone's
  * placement sheet), so the garden fits in the part that is still visible.
  */
+/** How far the floating note reaches into the plan, in px (0 when it is not floating or empty). */
+function noteHeight(): number {
+  const note = document.querySelector<HTMLElement>('.plan-note');
+  const app = document.querySelector<HTMLElement>('.canvas-app');
+  if (!note || !app || getComputedStyle(note).position !== 'absolute' || note.childElementCount === 0) return 0;
+  return Math.max(0, note.getBoundingClientRect().bottom - app.getBoundingClientRect().top);
+}
+
 export function fitAll(bottomInset = 0): void {
   const r = boundsOf([...footprints.value.values()]);
   const size = viewport.value;
   if (size.w === 0) return;
   const inset = Math.min(Math.max(0, bottomInset), size.h * 0.6);
+  // A note about the day shown floats over the top of the plan on wider screens: fit below it.
+  const top = Math.min(noteHeight(), size.h * 0.3);
   // Leave room for the bed names and rulers around the edge.
-  const v = fitView(r ? { x: r.x - 20, y: r.y - 45, w: r.w + 40, h: r.h + 65 } : null, { w: size.w, h: size.h - inset }, 32);
-  view.value = { ...v, cy: v.cy + inset / 2 / v.s };
+  const v = fitView(r ? { x: r.x - 20, y: r.y - 45, w: r.w + 40, h: r.h + 65 } : null, { w: size.w, h: size.h - inset - top }, 32);
+  view.value = { ...v, cy: v.cy + (inset - top) / 2 / v.s };
 }
 
 export function zoomBy(factor: number): void {

@@ -104,7 +104,7 @@ test('calendar: narrow viewport defaults to list view', async ({ page }) => {
 test('calendar: chart starts in January and ends in December', async ({ page }) => {
   await openCalendar(page);
   await ensureChartVisible(page);
-  const monthLabels = await page.locator('.cal-month').allTextContents();
+  const monthLabels = await page.locator('.cal-month .cal-month-long').allTextContents();
   expect(monthLabels).toHaveLength(12);
   expect(monthLabels[0]).toBe('Jan');
   expect(monthLabels[monthLabels.length - 1]).toBe('Dec');
@@ -145,4 +145,33 @@ test('calendar: no accessibility violations', async ({ page }) => {
   await openCalendar(page);
   const axe = await new AxeBuilder({ page }).withTags(AXE_TAGS).analyze();
   expect(axe.violations).toEqual([]);
+});
+
+test('calendar: the key shows status by fill style and says bars take the crop color', async ({ page }) => {
+  await openCalendar(page);
+  await ensureChartVisible(page);
+  const key = page.locator('.cal-key');
+  await expect(key).toContainText('Outline: growing in the bed');
+  await expect(key).toContainText('Solid: ready to pick');
+  await expect(key).toContainText("Each bar takes its crop's color.");
+  // The starter's transplants are bought in spring, so no seedlings are raised indoors and the key
+  // does not list them.
+  await expect(page.locator('.seg-indoor')).toHaveCount(0);
+  await expect(key).not.toContainText('seedlings indoors');
+});
+
+test('calendar: in the fall it opens on next year, with seedlings indoors drawn dashed', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-10-30T10:00:00'));
+  await page.goto('/');
+  await page.getByRole('button', { name: 'I know my frost dates' }).click();
+  await page.getByLabel('Typical last spring frost').fill('2027-04-20');
+  await page.getByLabel('Typical first fall frost').fill('2027-10-15');
+  await page.getByRole('button', { name: 'Use these dates' }).click();
+  await page.getByRole('button', { name: 'Start planning' }).click();
+  await page.goto('/#/calendar');
+  await expect(page.getByRole('heading', { name: '2027 at a glance', level: 1 })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Back to 2026' })).toBeVisible();
+  await ensureChartVisible(page);
+  expect(await page.locator('.seg-indoor').count()).toBeGreaterThan(0);
+  await expect(page.locator('.cal-key')).toContainText('Dashed outline: seedlings indoors');
 });

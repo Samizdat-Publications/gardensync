@@ -2,7 +2,7 @@
 // this garden. With a plant chosen, its card sits beside the grid on wide screens; on narrow ones the
 // card is its own view with a link back (artboard A-plants, ledger items 2 to 20).
 import { signal } from '@preact/signals';
-import { useEffect, useMemo, useRef } from 'preact/hooks';
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'preact/hooks';
 import { PLANTS } from '../../domain/plants/library';
 import type { Category } from '../../domain/plants/schema';
 import { garden, today } from '../appState';
@@ -64,11 +64,31 @@ export function PlantsScreen({ plantId }: { plantId?: string }) {
   const cardHeading = useRef<HTMLHeadingElement>(null);
   const previous = useRef<string | undefined>(undefined);
   const mounted = useRef(false);
+
+  // Beside the grid the card reads like a page: it scrolls with the page and, once its end is in
+  // view, stays put while the grid scrolls on. CSS needs its height for that (see .plant-card).
+  const cardCol = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const col = cardCol.current;
+    const card = col?.firstElementChild;
+    if (!col || !(card instanceof HTMLElement)) return;
+    const measure = () => col.style.setProperty('--pc-h', `${Math.ceil(card.getBoundingClientRect().height)}px`);
+    measure();
+    if (typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(measure);
+    ro.observe(card);
+    return () => ro.disconnect();
+  }, [plantId, !!chosen]);
+
   useEffect(() => {
     const prev = previous.current;
     previous.current = plantId;
     if (plantId && (plantId !== prev || !mounted.current)) {
-      cardHeading.current?.focus();
+      const h = cardHeading.current;
+      h?.focus({ preventScroll: true });
+      // A card longer than the window may be resting with its end in view; open it at its top.
+      const r = h?.getBoundingClientRect();
+      if (r && (r.top < 0 || r.bottom > innerHeight)) scrollTo(0, 0);
     } else if (!plantId && prev && mounted.current) {
       document.querySelector<HTMLElement>(`[data-plant-link="${CSS.escape(prev)}"]`)?.focus();
     }
@@ -168,19 +188,21 @@ export function PlantsScreen({ plantId }: { plantId?: string }) {
         )}
       </section>
       {plantId ? (
-        chosen ? (
-          <PlantCard resolved={chosen} headingRef={cardHeading} />
-        ) : (
-          <article class="plant-card" aria-labelledby="pc-name">
-            <a class="plant-back" href={hrefOf({ name: 'plants' })}>
-              All plants
-            </a>
-            <h2 id="pc-name" ref={cardHeading} tabIndex={-1}>
-              Plant not found
-            </h2>
-            <p class="muted">This garden has no plant with that name. It may have been removed.</p>
-          </article>
-        )
+        <div class="plant-col" ref={cardCol}>
+          {chosen ? (
+            <PlantCard resolved={chosen} headingRef={cardHeading} />
+          ) : (
+            <article class="plant-card" aria-labelledby="pc-name">
+              <a class="plant-back" href={hrefOf({ name: 'plants' })}>
+                All plants
+              </a>
+              <h2 id="pc-name" ref={cardHeading} tabIndex={-1}>
+                Plant not found
+              </h2>
+              <p class="muted">This garden has no plant with that name. It may have been removed.</p>
+            </article>
+          )}
+        </div>
       ) : null}
     </main>
   );

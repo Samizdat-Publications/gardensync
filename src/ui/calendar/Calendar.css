@@ -59,6 +59,18 @@
   position: absolute;
   top: 0;
 }
+.cal-month-short {
+  display: none;
+}
+/* On a phone twelve month names do not fit the track: show their initials. */
+@media (max-width: 600px) {
+  .cal-month-long {
+    display: none;
+  }
+  .cal-month-short {
+    display: inline;
+  }
+}
 .cal-body {
   position: relative;
 }
@@ -134,6 +146,15 @@
   height: 16px;
   border: 2px solid;
 }
+.cal-key {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cal-key-note {
+  font-size: var(--fs-sm);
+  color: var(--c-muted);
+}
 .cal-legend {
   list-style: none;
   margin: 0;
@@ -161,14 +182,16 @@
   border-radius: 4px;
   background: transparent;
 }
-/* Outlined box with a soft tint to represent the crop-coloured tinted fill of growing bars. */
+/* Status keys are neutral: the bars take each crop's colour, so the key shows only the fill
+   style. Outline with a faint tint, matching the growing bars' 28% fill. */
 .cal-legend .key-grow {
   border: 2px solid var(--c-muted);
-  background: var(--c-accent-soft);
+  background: color-mix(in srgb, var(--c-muted) 28%, transparent);
 }
-/* Solid swatch using the accent colour as a representative crop colour. */
+/* Solid swatch: ready to pick. */
 .cal-legend .key-pick {
-  background: var(--c-accent);
+  border: 2px solid var(--c-muted);
+  background: var(--c-muted);
 }
 .cal-legend .key-likely {
   background: var(--c-frost-soft);
