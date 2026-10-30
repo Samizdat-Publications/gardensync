@@ -4,7 +4,18 @@ Newest first. Read this, then [PROGRESS.md](PROGRESS.md), then [docs/v8/PLAN.md]
 then [docs/STEWART_FEEDBACK.md](docs/STEWART_FEEDBACK.md) (Stewart's notes outrank any critic), then
 [review/LEDGER.md](review/LEDGER.md).
 
-## 8.1 released (2026-10-30): start here
+## 8.2 polish (2026-10-30): start here
+
+**State:** branch `polish-8.1` at the newest commit, pushed (also as `feature/polish-8.1`, which CI
+runs). Preview https://polish.gardensync-e4e.pages.dev. Production still runs 8.1. Findings and
+fixes: review/LEDGER.md 94 to 129. Open: ledger 118 (toast position on desktop) and 129 (some
+plant-out windows look short; a plant data question, not UI).
+
+**Next:** Stewart tries the preview. On his yes: merge to `master`, 8.2.0 with a CHANGELOG entry,
+production deploy, tag, GitHub release, landing page version line (landing deploys to branch
+`main` of `gardensync-landing`).
+
+## 8.1 released (2026-10-30)
 
 **State:** 8.1 (planting, rethought) is on `master` at 3210be2, tagged v8.1.0, released on GitHub,
 and live at https://gardensync-e4e.pages.dev; the landing page says 8.1. The landing project's

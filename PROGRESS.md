@@ -13,13 +13,18 @@ verified bundle in `C:\Users\stewa\Documents\Claude\_archives\`. Work continues 
 (remote `origin`). Hub media proposal: `C:\Users\stewa\Documents\Claude\Github Hub\proposals\gardensync.md`;
 showcase.json already points at the hub cut.
 
-**8.1 released (2026-10-30): planting, rethought.** Merged to `master` (3210be2), tag v8.1.0,
-GitHub release, live app and landing page deployed. Drag and drop from the list, drop to plant,
-paint patches, move any planting, a clash card with ways out, the plan showing the bed-in day while
-placing. Design: docs/v8/PLANTING_UX.md; ledger 84 to 93. Next: 8.1.x polish from ledger 91
-(corner resize handles) and 93.
+**8.1 released (2026-10-30): planting, rethought.** Live on `master` (tag v8.1.0).
+
+**8.2 polish (2026-10-30), waiting for Stewart:** branch `polish-8.1` (also pushed as
+`feature/polish-8.1` for CI), preview https://polish.gardensync-e4e.pages.dev. Patch resize
+handles, one shared "when can this go in" answer everywhere, shared gardens in a fresh browser,
+leap-year calendars, and every finding from two blind critics and two usability passes fixed or
+ledgered (review/LEDGER.md 94 to 129). `npm run check` ALL GREEN. Not merged or released.
 
 ## Done
+
+- 2026-10-30: 8.2 polish on `polish-8.1` (ledger 94 to 129): resize handles, plantStatus, share
+  link fix, leap-year fix, critic and usability fixes across every screen; ALL GREEN; preview.
 
 - 2026-10-30: Planting rethought (ledger 84 to 93): two usability passes, all P1s fixed, e2e tests
   for each. Released as 8.1 the same day after Stewart tried the preview; `npm run check` ALL GREEN.
