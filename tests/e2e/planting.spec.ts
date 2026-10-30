@@ -129,7 +129,7 @@ test('fall: choosing lettuce switches the view to when it would go in', async ({
   // Choose lettuce: the view should switch to when lettuce goes in.
   await choosePlant(page, 'Lettuce');
   // The bar span should now say "Showing ... when lettuce would go in".
-  await expect(page.locator('.planner-bar .ahead').filter({ hasText: /when lettuce would go in/i })).toBeVisible();
+  await expect(page.locator('.plan-note .ahead').filter({ hasText: /when lettuce would go in/i })).toBeVisible();
 
   const axe1 = await new AxeBuilder({ page }).withTags(AXE_TAGS).analyze();
   expect(axe1.violations).toEqual([]);
@@ -246,7 +246,7 @@ test('choosing a plant switches the view day to when it goes in', async ({ page 
   await expect(page.getByText(/Nothing is in the ground yet/)).toBeVisible();
   await choosePlant(page, 'Lettuce');
   // After choosing: the bar span shows when lettuce would go in.
-  await expect(page.locator('.planner-bar .ahead').filter({ hasText: /when lettuce would go in/i })).toBeVisible();
+  await expect(page.locator('.plan-note .ahead').filter({ hasText: /when lettuce would go in/i })).toBeVisible();
   // Stop placing restores the day.
   await page.getByRole('button', { name: 'Stop placing' }).first().click();
   // Bar returns to today view (heading shows Oct 30).
@@ -277,4 +277,46 @@ test('drag a selected planting to new squares commits the move', async ({ page }
 
   // After drag, plantings still exist (moved or stayed if clash).
   await expect.poll(() => savedPlantings(page)).toBeGreaterThan(0);
+});
+
+// ---- Drag from the plant list, with nothing chosen first (the real gesture) ----------------------
+
+/** Press on a plant in the list and drag it, in small steps as a hand does, to a point. */
+async function dragFromList(page: Page, name: string, to: { x: number; y: number }) {
+  const item = page.locator('.palette-item', { hasText: new RegExp(`^${name}`) }).first();
+  await item.scrollIntoViewIfNeeded();
+  const a = (await item.boundingBox())!;
+  await page.mouse.move(a.x + 40, a.y + a.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(a.x + 60, a.y + a.height / 2, { steps: 4 });
+  await page.mouse.move(to.x, to.y, { steps: 20 });
+  await page.mouse.up();
+}
+
+test('dragging a plant straight from the list onto a free square plants it', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'on phones the list is a sheet; touch drags are covered by the long-press path');
+  await startEmpty(page);
+  await expect.poll(() => savedPlantings(page)).toBe(0);
+  const before = await savedPlantings(page);
+  await dragFromList(page, 'Lettuce', await square(page, 'Bed 1', 2, 1, 8, 4));
+  await expect.poll(() => savedPlantings(page)).toBe(before + 1);
+  await expect(page.getByRole('status').filter({ hasText: /Planted 4 lettuce plants in Bed 1, C2/ })).toBeVisible();
+});
+
+test('fall: dragging lettuce onto a square planned for next season shows what is there and finds room', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'on phones the list is a sheet');
+  await startGarden(page, FALL);
+  await expect.poll(() => savedPlantings(page)).toBeGreaterThan(0);
+  const before = await savedPlantings(page);
+  // C2 is empty on Oct 30, but carrots are planned there next spring.
+  await dragFromList(page, 'Lettuce', await square(page, 'Bed 1', 2, 1, 8, 4));
+  const card = page.getByRole('dialog', { name: /clashes here/ });
+  await expect(card).toBeVisible();
+  await expect(card).toContainText(/Carrot is here/);
+  // The plan shows the day lettuce would go in, not today.
+  await expect(page.getByRole('heading', { level: 1 })).not.toHaveText(/Oct 30/);
+  await card.getByRole('button', { name: /^Find room: Bed 1, [A-H]\d/ }).click();
+  await expect.poll(() => savedPlantings(page)).toBe(before + 1);
+  const axe = await new AxeBuilder({ page }).withTags(AXE_TAGS).analyze();
+  expect(axe.violations).toEqual([]);
 });

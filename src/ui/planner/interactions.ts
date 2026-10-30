@@ -9,7 +9,7 @@ import { selection, shownDay, viewDay } from '../uiState';
 import { candidate } from './candidate';
 import { footprints, intervalOfP, present, plantLookup } from './derived';
 import { boundsOf, cellsBetween, fitView, type Cell } from './geometry';
-import { act, clashCard, draft, emptyDraft, showToast, stopPlacing, view, viewport } from './plannerState';
+import { act, clashCard, draft, emptyDraft, placingPreviewDay, showToast, stopPlacing, view, viewport } from './plannerState';
 import { defaultMethod } from './placement';
 import { propose, resolutions, type DropRequest } from './resolve';
 import { placingPlantId } from '../uiState';
@@ -128,7 +128,11 @@ export function commitPlanting(planting: Omit<Planting, 'id'>, plantName: string
     selection.value = { kind: 'planting', id };
     draft.value = emptyDraft();
     // Show the day it goes in when that is not the day on screen, so the new patch is visible.
-    if (span && (span.bedIn > shownDay.value || (span.bedOut !== null && span.bedOut <= shownDay.value))) viewDay.value = span.bedIn;
+    if (span && (span.bedIn > shownDay.value || (span.bedOut !== null && span.bedOut <= shownDay.value))) {
+      viewDay.value = span.bedIn;
+      // While placing, the note over the plan names the day shown; keep it in step.
+      if (placingPreviewDay.value !== null) placingPreviewDay.value = span.bedIn;
+    }
   }
   // If not ok, the toast/error was already shown.
 }

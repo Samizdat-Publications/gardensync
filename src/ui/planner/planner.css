@@ -1200,3 +1200,24 @@
     max-height: 100vh;
   }
 }
+
+/* Day notes float over the top of the plan instead of pushing it down. */
+.canvas-area {
+  position: relative;
+}
+.plan-note {
+  position: absolute;
+  z-index: 6;
+  top: var(--sp-3);
+  left: var(--sp-3);
+  right: 72px;
+  pointer-events: none;
+}
+.plan-note:empty {
+  display: none;
+}
+.plan-note .ahead {
+  pointer-events: auto;
+  max-width: 100%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+}

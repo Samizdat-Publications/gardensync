@@ -202,28 +202,6 @@ export function Planner() {
           <h1 tabIndex={-1}>
             {g.name} on {fmtDay(day)}
           </h1>
-          {placing && previewDay !== null && placingPlant ? (
-            <span class="ahead">
-              Showing {fmtDay(previewDay)}, when {placingPlant.name.toLowerCase()} would go in
-              <button type="button" class="btn ahead-btn" onClick={stopPlacing}>
-                Stop placing
-              </button>
-            </span>
-          ) : day !== todayDay ? (
-            <span class="ahead">
-              {day > todayDay ? 'Looking ahead' : 'Looking back'}: today is {fmtDay(todayDay)}
-              <button type="button" class="btn ahead-btn" onClick={() => (viewDay.value = null)}>
-                Back to today
-              </button>
-            </span>
-          ) : busiestAhead.value ? (
-            <span class="ahead">
-              Nothing is in the ground yet; the first planting goes in on {fmtDay(busiestAhead.value.first)}.
-              <button type="button" class="btn ahead-btn" onClick={() => (viewDay.value = busiestAhead.value!.best)}>
-                Show the garden on {fmtDay(busiestAhead.value.best)}
-              </button>
-            </span>
-          ) : null}
           <span class="bar-gap" />
           <div role="group" aria-label="Edit" class="bar-tools">
             <button type="button" class="btn btn-icon" aria-label="Undo" title={canUndoNow && store.undoLabel.value ? `Undo ${store.undoLabel.value}` : 'Nothing to undo'} disabled={!canUndoNow} onClick={undo}>
@@ -255,6 +233,31 @@ export function Planner() {
 
         {has ? (
           <div class="canvas-area">
+            {/* Notes about the day shown float over the plan, so the plan never moves under a drag. */}
+            <div class="plan-note">
+            {placing && previewDay !== null && placingPlant ? (
+              <span class="ahead">
+                Showing {fmtDay(previewDay)}, when {placingPlant.name.toLowerCase()} would go in
+                <button type="button" class="btn ahead-btn" onClick={stopPlacing}>
+                  Stop placing
+                </button>
+              </span>
+            ) : day !== todayDay ? (
+              <span class="ahead">
+                {day > todayDay ? 'Looking ahead' : 'Looking back'}: today is {fmtDay(todayDay)}
+                <button type="button" class="btn ahead-btn" onClick={() => (viewDay.value = null)}>
+                  Back to today
+                </button>
+              </span>
+            ) : busiestAhead.value ? (
+              <span class="ahead">
+                Nothing is in the ground yet; the first planting goes in on {fmtDay(busiestAhead.value.first)}.
+                <button type="button" class="btn ahead-btn" onClick={() => (viewDay.value = busiestAhead.value!.best)}>
+                  Show the garden on {fmtDay(busiestAhead.value.best)}
+                </button>
+              </span>
+            ) : null}
+            </div>
             <Canvas descriptionId="plan-desc" />
             <button
               type="button"
