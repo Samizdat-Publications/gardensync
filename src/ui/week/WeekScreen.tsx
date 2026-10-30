@@ -163,7 +163,10 @@ function TaskGroup(props: { id: string; heading: string; tasks: Task[]; plants: 
               <input type="checkbox" id={`task-${t.id}`} checked={t.done} onChange={() => props.onToggle(t)} />
               {plant ? <Glyph form={plant.glyph.form} color={plant.glyph.color} size={34} /> : <span class="task-glyph-gap" />}
               <label for={`task-${t.id}`} class="task-text">
-                <span class="task-title">{name}</span>
+                <span class="task-title">
+                  {name}
+                  {t.reason.code === 'late-planting' ? <span class="task-late">Late</span> : null}
+                </span>
                 <span>{where}</span>
                 <span class="muted task-why">
                   {when}. {sentence(reasonText(t.reason, units.value))}

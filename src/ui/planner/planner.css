@@ -1052,6 +1052,34 @@
   }
 }
 
+@media (max-width: 960px) {
+  /* Narrow plans (tablets and phones): two short lines for the title, so the day is never cut
+     off (the garden's name, then the day), and short button labels that never wrap. */
+  .planner-bar h1 {
+    line-height: 1.15;
+  }
+  .planner-bar .h1-garden {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--c-muted);
+  }
+  .planner-bar .h1-day {
+    display: block;
+  }
+  .btn-label-long {
+    display: none;
+  }
+  .btn-label-short {
+    display: inline;
+  }
+  .bar-tools .btn {
+    white-space: nowrap;
+  }
+}
+
 @media (max-width: 760px) {
   .planner {
     display: block;
@@ -1091,31 +1119,12 @@
     font-size: var(--fs-lg);
     line-height: 1.15;
   }
-  /* Two short lines on a phone, so the day is never cut off: the garden's name, then the day. */
-  .planner-bar .h1-garden {
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: var(--fs-sm);
-    font-weight: 600;
-    color: var(--c-muted);
-  }
-  .planner-bar .h1-day {
-    display: block;
-  }
   .bar-gap {
     display: none;
   }
   /* Keep toolbar right-aligned when bar-gap is hidden. */
   .bar-tools {
     margin-left: auto;
-  }
-  /* On phone show the short button label and hide the long one. */
-  .btn-label-long {
-    display: none;
-  }
-  .btn-label-short {
-    display: inline;
   }
   .canvas-area {
     margin: 0;
@@ -1233,9 +1242,16 @@
     display: block;
     width: 100%;
   }
+  /* The poster spans the page width. Only a poster taller than a page (is-tall, set by PlanPoster)
+     is held to one page, keeping its shape and its left edge. */
   .print-poster svg {
+    display: block;
     width: 100%;
     height: auto;
+  }
+  .print-poster svg.is-tall {
+    width: auto;
+    max-width: 100%;
     max-height: 100vh;
   }
 }

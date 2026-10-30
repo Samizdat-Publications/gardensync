@@ -78,7 +78,11 @@ export function Header() {
             </a>
           ))}
         </nav>
-        <a class="place" href={hrefOf({ name: 'settings', section: 'climate' })}>
+        <a class="place" href={hrefOf({ name: 'settings', section: 'climate' })} title="Your town and frost dates">
+          <svg class="place-icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M8 1.5v13M2.4 4.75l11.2 6.5M2.4 11.25l11.2-6.5M6.2 2.6 8 4.2l1.8-1.6M6.2 13.4 8 11.8l1.8 1.6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span class="place-text">
           {climate?.place ? (
             <>
               <span class="place-name">{climate.place.name}</span>
@@ -89,6 +93,7 @@ export function Header() {
           ) : (
             <span class="place-name">{climate ? 'Your frost dates' : 'Set your town'}</span>
           )}
+          </span>
         </a>
         <button
           class="btn assistant-link"

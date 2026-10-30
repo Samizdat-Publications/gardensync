@@ -78,6 +78,19 @@
   font-weight: 700;
   font-size: var(--fs-lg);
 }
+/* A job past its usual window: a small amber tag after the title. */
+.task-late {
+  display: inline-block;
+  margin-left: var(--sp-2);
+  padding: 1px 8px;
+  border: 1px solid var(--c-caution);
+  border-radius: 999px;
+  background: var(--c-caution-soft);
+  color: var(--c-ink);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  vertical-align: 2px;
+}
 .task-why {
   font-size: var(--fs-sm);
 }

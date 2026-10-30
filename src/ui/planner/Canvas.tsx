@@ -71,12 +71,6 @@ function companionOf(a: string, b: string) {
   return COMPANIONS.find((x) => (x.a === a && x.b === b) || (x.a === b && x.b === a));
 }
 
-function initials(name: string): string {
-  const words = name.split(/\s+/).filter(Boolean);
-  if (words.length >= 2) return (words[0]![0]! + words[1]![0]!).toUpperCase();
-  return name.slice(0, 2).replace(/^./, (c) => c.toUpperCase());
-}
-
 /** Cells of a patch to draw glyphs in: spread evenly, at most `cap`. */
 function glyphCells(cells: Cells, cap: number): Cell[] {
   const all: Cell[] = [];
@@ -482,13 +476,14 @@ function drawLabels(i: LayerInput): JSX.Element {
         const plant = i.plantOf(p.plantId);
         if (!plant || !p.cells || level === 0) continue;
         const pr = cellsRect(c, cellCm, p.cells);
-        const wide = p.cells.w >= 2 || level >= 3;
-        const name = level >= 2 && wide ? plant.name : initials(plant.name);
-        out.push(
-          <span key={`n${p.id}`} class="lbl lbl-name" style={{ ...at(pr.x + off.dx, pr.y + off.dy, 5, 4), maxWidth: `calc(${pr.w} * var(--s) * 1px - 10px)` }}>
-            {name}
-          </span>,
-        );
+        // The name when it fits; otherwise the patch's icons say what it is (never initials).
+        if (labelPx(plant.name) <= pr.w * i.scale) {
+          out.push(
+            <span key={`n${p.id}`} class="lbl lbl-name" style={{ ...at(pr.x + off.dx, pr.y + off.dy, 5, 4), maxWidth: `calc(${pr.w} * var(--s) * 1px - 10px)` }}>
+              {plant.name}
+            </span>,
+          );
+        }
         // Zoomed out, a one-row patch keeps its icons visible: the count waits for a closer zoom.
         // While placing, the "until" labels sit where the counts go, and counts matter less then.
         if (!i.placing && (level >= 2 || (p.cells.h >= 2 && p.cells.w * p.cells.h >= 2))) {
@@ -499,7 +494,7 @@ function drawLabels(i: LayerInput): JSX.Element {
           );
         }
       }
-      // Upcoming-planting labels: faint "Tomato from May 4".
+      // Upcoming-planting labels: faint "Tomato from May 4", or the name, or nothing but the icon.
       if (level >= 1) {
         const iof2 = intervalOfP.value;
         for (const p of i.upcomingMap.get(c.id) ?? []) {
@@ -508,6 +503,10 @@ function drawLabels(i: LayerInput): JSX.Element {
           const pr2 = cellsRect(c, cellCm, p.cells);
           const interval2 = iof2(p);
           if (!interval2) continue;
+          const room = pr2.w * i.scale;
+          const full = `${plant2.name} from ${fmtDay(interval2.bedIn)}`;
+          const text = labelPx(full) <= room ? full : labelPx(plant2.name) <= room ? plant2.name : null;
+          if (!text) continue;
           out.push(
             <span
               key={`ul${p.id}`}
@@ -515,11 +514,7 @@ function drawLabels(i: LayerInput): JSX.Element {
               style={{ ...at(pr2.x + off.dx, pr2.y + off.dy, 4, 4), maxWidth: `calc(${pr2.w} * var(--s) * 1px - 8px)` }}
             >
               {/* Planned patches go in within the next ten months, so "from May 4" is always the next May 4. */}
-              {(() => {
-                const room = pr2.w * i.scale;
-                const full = `${plant2.name} from ${fmtDay(interval2.bedIn)}`;
-                return labelPx(full) <= room ? full : labelPx(plant2.name) <= room ? plant2.name : initials(plant2.name);
-              })()}
+              {text}
             </span>,
           );
         }
@@ -534,17 +529,18 @@ function drawLabels(i: LayerInput): JSX.Element {
           if (tc.w === 1 && tc.h === 1 && level < 3) continue;
           const pr = cellsRect(c, cellCm, tc);
           const info = takenInfo.get(t.planting.id)!;
-          // Show "Tomato from May 4" or "Radish until Jun 9" — never bare dates.
+          // A planned patch already says "Tomato from May 4" at its top.
+          if (!shown.has(t.planting.id) && (i.upcomingMap.get(c.id) ?? []).some((u) => u.id === t.planting.id)) continue;
+          // A patch in the ground has its name at the top, so the bottom says only how long it stays.
           let shortLabel: string;
           if (info.bedOut === null) {
-            shortLabel = `${info.name} (perennial)`;
+            shortLabel = shown.has(t.planting.id) ? 'stays for good' : `${info.name} (perennial)`;
           } else if (!shown.has(t.planting.id)) {
-            // Planting is not in the ground on the shown day: show "from [bedIn]"
             shortLabel = `${info.name} from ${fmtDay(info.bedIn)}`;
           } else {
-            // Planting is in the ground but ends during the new one's time: show "until [bedOut]"
-            shortLabel = `${info.name} until ${fmtDay(info.bedOut)}`;
+            shortLabel = `until ${fmtDay(info.bedOut)}`;
           }
+          if (labelPx(shortLabel) > pr.w * i.scale) continue;
           out.push(
             <span
               key={`t${t.planting.id}`}

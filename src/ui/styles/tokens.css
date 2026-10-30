@@ -45,6 +45,8 @@
   /* How strongly a planting's crop colour fills its squares (planted, then planned). */
   --patch-alpha: 0.22;
   --patch-alpha-planned: 0.12;
+  /* Dims the page behind a panel that holds focus (the assistant). */
+  --c-scrim: rgb(0 0 0 / 0.4);
   --c-timber: #8e6b46;
   --c-pot: #a85a36;
   --c-bag: #4a4f45;
@@ -113,6 +115,7 @@
     --c-soil-grid: rgba(255, 255, 255, 0.14);
   --patch-alpha: 0.42;
   --patch-alpha-planned: 0.24;
+  --c-scrim: rgb(0 0 0 / 0.6);
     --c-timber: #7b6043;
     --c-pot: #8e4e31;
     --c-bag: #3a3e36;
@@ -151,6 +154,7 @@
   --c-soil-grid: rgba(255, 255, 255, 0.14);
   --patch-alpha: 0.42;
   --patch-alpha-planned: 0.24;
+  --c-scrim: rgb(0 0 0 / 0.6);
   --c-timber: #7b6043;
   --c-pot: #8e4e31;
   --c-bag: #3a3e36;

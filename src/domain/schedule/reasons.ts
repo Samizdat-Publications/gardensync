@@ -166,7 +166,7 @@ function reasonCore(r: Reason): string {
     case 'after-spring':
       return `not before ${formatDay(r.day)}, after the spring window`;
     case 'succession':
-      return `sow again every ${r.everyDays} days for a steady supply (${plural(r.count, 'sowing')})`;
+      return `a little more every ${r.everyDays} days keeps the supply steady, up to ${plural(r.count, 'sowing')} a season; add each one to the plan where there is room`;
     case 'succession-gap':
       return `no sowings from ${formatDay(r.from)} to ${formatDay(r.to)}: summer heat over ${c(r.tempC)} would make it bolt`;
     case 'season-long':

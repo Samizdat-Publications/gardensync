@@ -306,7 +306,15 @@ export function fitAll(bottomInset = 0): void {
   // A note about the day shown floats over the top of the plan on wider screens: fit below it.
   const top = Math.min(noteHeight(), size.h * 0.3);
   // Leave room for the bed names and rulers around the edge.
-  const v = fitView(r ? { x: r.x - 20, y: r.y - 45, w: r.w + 40, h: r.h + 65 } : null, { w: size.w, h: size.h - inset - top }, 32);
+  const box = r ? { x: r.x - 20, y: r.y - 45, w: r.w + 40, h: r.h + 65 } : null;
+  const room = size.h - inset - top;
+  const v = fitView(box, { w: size.w, h: room }, 32);
+  // A wide garden on a tall screen would float in the middle of empty grid: sit it near the top.
+  const spare = box ? room - box.h * v.s : 0;
+  if (box && spare > 160) {
+    view.value = { ...v, cy: box.y + (size.h / 2 - top - 32) / v.s };
+    return;
+  }
   view.value = { ...v, cy: v.cy + (inset - top) / 2 / v.s };
 }
 

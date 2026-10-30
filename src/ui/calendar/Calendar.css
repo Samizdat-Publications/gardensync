@@ -114,37 +114,45 @@
   min-height: 30px;
   position: relative;
 }
+/* Names are never cut: a long one wraps, and a succession's date sits on its own line. */
 .cal-label {
   font-size: var(--fs-sm);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  padding-right: 6px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  padding: 3px 8px 3px 0;
+}
+.cal-label-detail {
+  display: block;
+  font-size: var(--fs-xs);
+  color: var(--c-muted);
 }
 .cal-track .seg {
   position: absolute;
   box-sizing: border-box;
   border-radius: 8px;
 }
-/* Dashed rectangle: seedlings started indoors before going into the bed. */
+/* The three phases are drawn as in the garden's season strip, each in the crop's color (--crop,
+   set on the track). Dashed rectangle: seedlings started indoors before going into the bed. */
 .cal-track .seg-indoor {
   top: 4px;
   height: 10px;
-  border: 2px dashed;
+  border: 2px dashed var(--crop);
   border-radius: 4px;
   background: transparent;
 }
-/* Outlined bar with 28% tinted fill (colour set inline); visible against any background. */
+/* Outline on the panel color: growing in the bed. */
 .cal-track .seg-grow {
   top: 1px;
   height: 16px;
-  border: 2px solid;
+  border: 2px solid var(--crop);
+  background: var(--c-panel);
 }
-/* Solid bar in the crop colour; sits on top of the growing bar where they overlap. */
+/* Solid bar in the crop color: ready to pick. Sits on top of the growing bar where they overlap. */
 .cal-track .seg-pick {
   top: 1px;
   height: 16px;
-  border: 2px solid;
+  border: 2px solid var(--crop);
+  background: var(--crop);
 }
 .cal-key {
   display: flex;
@@ -183,10 +191,10 @@
   background: transparent;
 }
 /* Status keys are neutral: the bars take each crop's colour, so the key shows only the fill
-   style. Outline with a faint tint, matching the growing bars' 28% fill. */
+   style. A plain outline, matching the growing bars. */
 .cal-legend .key-grow {
   border: 2px solid var(--c-muted);
-  background: color-mix(in srgb, var(--c-muted) 28%, transparent);
+  background: var(--c-panel);
 }
 /* Solid swatch: ready to pick. */
 .cal-legend .key-pick {
@@ -211,14 +219,23 @@
 }
 
 /* On screens narrower than 860 px (tablet and below) reduce the label column so all 12
-   months still fit the track without any horizontal scroll. */
+   months still fit the track without any horizontal scroll. Labels wrap rather than cut. */
 @media (max-width: 860px) {
   .cal-months,
   .cal-row {
-    grid-template-columns: 120px 1fr;
+    grid-template-columns: 140px 1fr;
   }
   .cal-bands {
-    left: 120px;
+    left: 140px;
+  }
+}
+@media (max-width: 600px) {
+  .cal-months,
+  .cal-row {
+    grid-template-columns: 104px 1fr;
+  }
+  .cal-bands {
+    left: 104px;
   }
 }
 

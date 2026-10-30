@@ -27,7 +27,8 @@ describe('library timing line', () => {
   it('in the middle of a sowing window it says sow now until the end', () => {
     // Golden: canton-oh lettuce spring direct sow Mar 19 to May 14, transplant out Apr 02 to Apr 16.
     expect(timingLine(p('lettuce'), canton(), '2027-04-01')).toBe('Sow now until May 14');
-    expect(timingLine(p('lettuce'), canton(), '2027-04-05')).toBe('Plant out now until Apr 16');
+    // Both ways are open on Apr 5; the line names the planner's usual way for lettuce, sowing.
+    expect(timingLine(p('lettuce'), canton(), '2027-04-05')).toBe('Sow now until May 14');
     expect(timingLine(p('radish'), canton(), '2027-04-20')).toMatch(/^Sow now until /);
   });
 

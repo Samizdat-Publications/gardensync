@@ -36,6 +36,12 @@
   flex-direction: column;
   gap: 22px;
 }
+/* The page title, sized like the other screens' titles (This week, Harvest). */
+.settings-title {
+  font-size: var(--fs-3xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
 .settings-section {
   display: flex;
   flex-direction: column;
@@ -53,9 +59,6 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--sp-2);
-}
-.settings-head h2 {
-  font-size: var(--fs-2xl);
 }
 .settings-change {
   display: flex;

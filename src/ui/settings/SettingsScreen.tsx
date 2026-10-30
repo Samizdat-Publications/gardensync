@@ -66,7 +66,7 @@ export function SettingsScreen() {
         ))}
       </nav>
       <main class="settings-main">
-        <h1 tabIndex={-1} class="visually-hidden">
+        <h1 tabIndex={-1} class="settings-title">
           Settings
         </h1>
         <ClimateSection />
@@ -161,7 +161,7 @@ function ClimateDetails({ climate: c, units: u, onChange }: { climate: ClimatePr
           <FrostPicker
             legend="First fall frost, typical year"
             value={c.firstFrost.p50}
-            note={c.firstFrost.p10 ? `Can come by ${fmtMonthDay(c.firstFrost.p10)} in 1\u00a0year in\u00a010` : ''}
+            note={c.firstFrost.p10 ? `In 1\u00a0year in\u00a010 it came by ${fmtMonthDay(c.firstFrost.p10)}` : ''}
             shiftedDays={adjusted?.firstFrost ?? 0}
             onShift={(d) => onChange(adjustFrost(c, 'firstFrost', d), 'move the first frost date')}
           />

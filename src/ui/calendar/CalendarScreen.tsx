@@ -1,5 +1,5 @@
 // The year at a glance: every planting by bed across one growing season, with seedlings indoors
-// (dashed), growing (outlined tint) and picking (solid) told apart by shape, frost risk bands,
+// (dashed), growing (outlined) and picking (solid) told apart by shape, frost risk bands,
 // today, a season switcher, a list view for screen readers and small screens, and print.
 // A-calendar.dc.html.
 import { useSignal } from '@preact/signals';
@@ -16,18 +16,14 @@ import './Calendar.css';
 
 interface Row {
   key: string;
+  /** The full label for the list: "Radish, sow May 26". */
   label: string;
+  /** The chart splits the label: the plant's name, then the succession's date on a second line. */
+  name: string;
+  detail: string | null;
   where: string;
   color: string;
   phases: PlantingPhases;
-}
-
-/** Convert a #rrggbb hex color (plant.glyph.color schema) to rgba() with the given alpha (0-1). */
-function hexToRgba(hex: string, alpha: number): string {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return `rgba(${r},${g},${b},${alpha})`;
 }
 
 /**
@@ -46,10 +42,10 @@ function nearestMonthStart(d: DayNum): DayNum {
  * the label is self-contained: "Radish, round 5" is confusing when rounds 1-4 are in a previous
  * season, but "Radish, sow May 26" is unambiguous. The verb matches the planting method.
  */
-function successionLabel(name: string, phases: PlantingPhases): string {
-  if (phases.round === undefined) return name;
+function successionDetail(phases: PlantingPhases): string | null {
+  if (phases.round === undefined) return null;
   const verb = phases.method === 'direct' ? 'sow' : phases.method === 'plant' ? 'plant' : 'plant out';
-  return `${name}, ${verb} ${fmtDay(phases.bedIn)}`;
+  return `${verb} ${fmtDay(phases.bedIn)}`;
 }
 
 interface Group {
@@ -80,11 +76,14 @@ function groupsFor(g: Garden, c: Climate, span: { start: DayNum; end: DayNum }):
         const end = phases.bedOut ?? span.end + 1;
         const start = phases.indoor?.start ?? phases.bedIn;
         if (!(end > span.start && start <= span.end)) continue;
+        // P4: label succession rows by bed-in date to avoid confusing "round N" labels when
+        // earlier rounds were in a previous season.
+        const detail = successionDetail(phases);
         rows.push({
           key: p.id,
-          // P4: label succession rows by bed-in date to avoid confusing "round N" labels when
-          // earlier rounds were in a previous season.
-          label: successionLabel(plant.name, phases),
+          label: detail ? `${plant.name}, ${detail}` : plant.name,
+          name: plant.name,
+          detail,
           where: p.cells ? squaresLabel(p.cells) : `${p.count} in the ${container.kind.replace('-', ' ')}`,
           color: plant.glyph.color,
           phases,
@@ -216,8 +215,11 @@ export function CalendarScreen() {
                   <h2 class="cal-group-name">{gr.name}</h2>
                   {gr.rows.map((r) => (
                     <div key={r.key} class="cal-row">
-                      <span class="cal-label">{r.label}</span>
-                      <div class="cal-track">
+                      <span class="cal-label">
+                        {r.name}
+                        {r.detail ? <span class="cal-label-detail">{r.detail}</span> : null}
+                      </span>
+                      <div class="cal-track" style={{ '--crop': r.color }}>
                         {r.phases.indoor ? (
                           // P3: the indoor phase bar renders whenever plantingPhases gives a non-null
                           // indoor range. It is absent in the starter garden because the auto-starter
@@ -227,28 +229,18 @@ export function CalendarScreen() {
                           // spans from seed-start to the day the plant goes in the ground.
                           <span
                             class="seg seg-indoor"
-                            style={{ left: pct(r.phases.indoor.start), width: width(r.phases.indoor.start, r.phases.bedIn), borderColor: r.color }}
+                            style={{ left: pct(r.phases.indoor.start), width: width(r.phases.indoor.start, r.phases.bedIn) }}
                           />
                         ) : null}
-                        {/* Growing: outlined bar with 28% tinted fill so it is visible in both themes. */}
+                        {/* Growing: an outline in the crop's color on the panel, as in the garden's season strip. */}
                         <span
                           class="seg seg-grow"
-                          style={{
-                            left: pct(r.phases.bedIn),
-                            width: width(r.phases.bedIn, r.phases.bedOut ?? span.end + 1),
-                            borderColor: r.color,
-                            background: hexToRgba(r.color, 0.28),
-                          }}
+                          style={{ left: pct(r.phases.bedIn), width: width(r.phases.bedIn, r.phases.bedOut ?? span.end + 1) }}
                         />
                         {r.phases.harvest ? (
                           <span
                             class="seg seg-pick"
-                            style={{
-                              left: pct(r.phases.harvest.start),
-                              width: width(r.phases.harvest.start, r.phases.harvest.end + 1),
-                              background: r.color,
-                              borderColor: r.color,
-                            }}
+                            style={{ left: pct(r.phases.harvest.start), width: width(r.phases.harvest.start, r.phases.harvest.end + 1) }}
                           />
                         ) : null}
                       </div>

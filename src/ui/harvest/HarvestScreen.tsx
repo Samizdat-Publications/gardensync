@@ -71,7 +71,7 @@ export function HarvestScreen() {
   return (
     <main class="harvest">
       <header class="harvest-head">
-        <h1 tabIndex={-1}>Harvest, {c ? seasonLabel(c, season) : season}</h1>
+        <h1 tabIndex={-1}>{c ? seasonLabel(c, season) : season} harvest</h1>
         <p class="harvest-sub">
           {seasonHarvests.length === 0
             ? 'Nothing picked yet this season. Log your first pick with the form here, or from a planting in the garden.'

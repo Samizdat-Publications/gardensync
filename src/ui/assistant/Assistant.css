@@ -5,7 +5,7 @@
   z-index: 39;
   inset: 0;
   /* A shade, not a surface colour: the page dims the same way in light and dark. */
-  background: rgb(0 0 0 / 0.4);
+  background: var(--c-scrim);
 }
 html.assistant-open {
   overflow: hidden;

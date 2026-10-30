@@ -292,7 +292,7 @@ function Found({ profile, units }: { profile: ClimateProfile; units: Units }) {
           <div class="fr-fact">
             <dt>First fall frost</dt>
             <dd class="fr-big">{fmtMonthDay(ff.p50)}</dd>
-            {ff.p10 ? <dd class="muted fr-small">Can come by {fmtMonthDay(ff.p10)} in 1&nbsp;year out of&nbsp;10</dd> : null}
+            {ff.p10 ? <dd class="muted fr-small">In 1&nbsp;year in&nbsp;10 it came by {fmtMonthDay(ff.p10)}</dd> : null}
           </div>
         ) : null}
         {season !== null ? (

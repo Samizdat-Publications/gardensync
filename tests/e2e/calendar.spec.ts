@@ -34,15 +34,19 @@ test('calendar: no horizontal page overflow', async ({ page }) => {
   expect(overflow).toBe(false);
 });
 
-test('calendar: growing bars carry a visible tinted fill', async ({ page }) => {
+test('calendar: growing bars are an outline in the crop color, as in the season strip', async ({ page }) => {
   await openCalendar(page);
   await ensureChartVisible(page);
-  // Each .seg-grow has an inline background set by hexToRgba(color, 0.28).
-  const bg = await page.evaluate((): string => {
-    const el = document.querySelector('.seg-grow') as HTMLElement | null;
-    return el ? el.style.background : '';
+  // A solid border in the crop's color (--crop on the track) around the panel color, not a tint.
+  const s = await page.evaluate(() => {
+    const el = document.querySelector('.seg-grow') as HTMLElement;
+    const panel = document.querySelector('.cal-scroll') as HTMLElement;
+    const cs = getComputedStyle(el);
+    return { border: cs.borderTopStyle, borderColor: cs.borderTopColor, bg: cs.backgroundColor, panel: getComputedStyle(panel).backgroundColor };
   });
-  expect(bg).toMatch(/rgba\(\d+,\s*\d+,\s*\d+,\s*0\.\d+\)/);
+  expect(s.border).toBe('solid');
+  expect(s.bg).toBe(s.panel);
+  expect(s.borderColor).not.toBe(s.bg);
 });
 
 test('calendar: indoor phase bars render and have dashed borders', async ({ page }) => {
