@@ -8,7 +8,7 @@ import { starterOps } from '../../src/domain/doc/starters';
 import { plantById } from '../../src/domain/plants/library';
 import { plantingPhases, seasonOf } from '../../src/domain/schedule';
 import { pickedSoFar } from '../../src/domain/yield';
-import { cropRows, pickablePlantings } from '../../src/ui/harvest/model';
+import { cropRows, earlyPickNote, pickablePlantings, plantingOptionLabels } from '../../src/ui/harvest/model';
 
 const TODAY = '2027-07-15';
 const climate = manualProfile({ lastFrost: '04-16', firstFrost: '11-04', asOf: TODAY });
@@ -73,5 +73,53 @@ describe('harvest: one row per crop', () => {
     const rows = cropRows(g.plantings, [], plantById, climate, season);
     const planned = new Set(g.plantings.filter((p) => phasesOf(p.id).season === season).map((p) => p.plantId));
     expect(new Set(rows.map((r) => r.plantId))).toEqual(planned);
+  });
+});
+
+describe('harvest: telling plantings apart in the list', () => {
+  const fmt = (d: number) => `day ${d}`;
+  const lettuce = g.plantings.find((p) => p.plantId === 'lettuce')!;
+  const bed = g.containers.find((k) => k.id === lettuce.containerId)!;
+
+  it('names the squares a planting in a bed fills', () => {
+    const [label] = plantingOptionLabels([{ p: lettuce, plantName: 'Lettuce', containerName: bed.name, sowDay: null }], fmt);
+    expect(label).toBe(`Lettuce, ${bed.name}, A2 to B3`);
+  });
+
+  it('adds the sow date when two plantings would still read the same', () => {
+    const again = { ...lettuce, id: 'again' };
+    const labels = plantingOptionLabels(
+      [
+        { p: lettuce, plantName: 'Lettuce', containerName: bed.name, sowDay: 10 },
+        { p: again, plantName: 'Lettuce', containerName: bed.name, sowDay: 40 },
+      ],
+      fmt,
+    );
+    expect(labels).toEqual([`Lettuce, ${bed.name}, A2 to B3, sown day 10`, `Lettuce, ${bed.name}, A2 to B3, sown day 40`]);
+  });
+
+  it('a pot has no squares', () => {
+    const potted = { ...lettuce, cells: undefined };
+    expect(plantingOptionLabels([{ p: potted, plantName: 'Basil', containerName: 'Basil pot', sowDay: null }], fmt)).toEqual(['Basil, Basil pot']);
+  });
+});
+
+describe('harvest: a pick logged before its picking window', () => {
+  const radish = g.plantings.find((p) => p.plantId === 'radish')!;
+  const phases = phasesOf(radish.id);
+
+  it('the starter radish has a picking window', () => {
+    expect(phases.harvest).not.toBeNull();
+  });
+
+  it('notes a pick before the window, naming when picking usually starts', () => {
+    const note = earlyPickNote('Radish', phases, phases.bedIn, (d) => `day ${d}`);
+    expect(note).toBe(`Radish is usually picked from day ${phases.harvest!.start}; log it anyway?`);
+  });
+
+  it('says nothing from the first picking day on, or when there is no window', () => {
+    expect(earlyPickNote('Radish', phases, phases.harvest!.start, String)).toBeNull();
+    expect(earlyPickNote('Radish', { harvest: null }, phases.bedIn, String)).toBeNull();
+    expect(earlyPickNote('Radish', null, phases.bedIn, String)).toBeNull();
   });
 });

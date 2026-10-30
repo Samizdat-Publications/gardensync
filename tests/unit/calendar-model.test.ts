@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { manualProfile } from '../../src/domain/climate/manual';
 import { partsFromDay, toIso } from '../../src/domain/dates';
-import { BAR_GROUNDS, calendarSpan, contrastRatio, edgeColor, MIN_EDGE_CONTRAST, monthStarts, openingShift } from '../../src/ui/calendar/model';
+import { BAR_GROUNDS, calendarSpan, contrastRatio, edgeColor, indoorLabel, MIN_EDGE_CONTRAST, monthStarts, openingShift } from '../../src/ui/calendar/model';
 import { profileOf } from './schedule-helpers';
 
 const typed = manualProfile({ lastFrost: '04-16', firstFrost: '11-04', asOf: '2027-07-15' });
@@ -75,4 +75,13 @@ describe('bar edges on the frost bands', () => {
       });
     }
   }
+});
+
+describe('list view: the indoor dates say what they are', () => {
+  it('a planned start is when to start seeds, not how long they stay in', () => {
+    expect(indoorLabel(false)).toBe('Start seeds indoors');
+  });
+  it('a start already made says it was made', () => {
+    expect(indoorLabel(true)).toBe('Seeds started indoors');
+  });
 });

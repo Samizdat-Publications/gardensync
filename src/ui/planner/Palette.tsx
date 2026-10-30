@@ -10,10 +10,9 @@ import { toDay } from '../../domain/dates';
 import type { Category, Plant } from '../../domain/plants/schema';
 import { garden, today } from '../appState';
 import { Glyph } from '../components/Glyph';
-import { fmtDay } from '../format';
 import { gardenPlants, placingPlantId } from '../uiState';
-import { methodNow, paletteDrag, startPlacing, stopPlacing } from './plannerState';
-import { nextWindow, verbOf, WEEK_DAYS } from './placement';
+import { paletteDrag, startPlacing, stopPlacing } from './plannerState';
+import { plantStatus } from './placement';
 
 const HINT_KEY = 'gardensync.palette-drag-hint-dismissed';
 
@@ -59,11 +58,9 @@ export function Palette({ onChosen, headingId }: { onChosen?: () => void; headin
         out.set(r.plant.id, { soon: false, text: '' });
         continue;
       }
-      const m = methodNow(r.plant);
-      const win = nextWindow(r.plant, climate, m, todayDay);
-      if (!win) out.set(r.plant.id, { soon: false, text: 'No planting dates here' });
-      else if (win.bedIn < todayDay + WEEK_DAYS) out.set(r.plant.id, { soon: true, text: win.bedIn <= todayDay ? `${verbOf(m)} now${win.late ? ', late' : ''}` : `${verbOf(m)} ${fmtDay(win.bedIn)}` });
-      else out.set(r.plant.id, { soon: false, text: `${verbOf(m)} from ${fmtDay(win.bedIn)}` });
+      // The same line the library shows, from the one function placing uses too.
+      const st = plantStatus(r.plant, climate, todayDay);
+      out.set(r.plant.id, st ? { soon: st.soon, text: st.text } : { soon: false, text: 'No planting dates here' });
     }
     return out;
   }, [all, climate, todayDay]);

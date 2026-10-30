@@ -5,7 +5,7 @@ import type { Planting } from '../../src/domain/doc/schema';
 import { conflictsFor } from '../../src/domain/layout/occupancy';
 import { plantById } from '../../src/domain/plants/library';
 import { plantingPhases } from '../../src/domain/schedule';
-import { anchorFor, defaultMethod, makeIntervalOf, methodsFor, nextWindow, soonestWay, windowWords } from '../../src/ui/planner/placement';
+import { anchorFor, defaultMethod, makeIntervalOf, methodsFor, nextWindow, plantStatus, soonestWay, windowWords } from '../../src/ui/planner/placement';
 import { profileOf } from './schedule-helpers';
 
 const climate = manualProfile({ lastFrost: '04-20', firstFrost: '10-15', asOf: '2026-10-28' });
@@ -142,5 +142,39 @@ describe('a crop sown again and again (succession)', () => {
     const { c, ph } = phasesAt('lettuce', '2027-07-15');
     expect(c.bedIn).toBe(toDay('2027-07-15'));
     expect(ph?.bedIn).toBe(toDay('2027-07-15'));
+  });
+});
+
+describe('one status line for a plant, shared by the garden list, the library and placing', () => {
+  const at = (iso: string) => manualProfile({ lastFrost: '04-20', firstFrost: '10-15', asOf: iso });
+  const status = (id: string, iso: string) => plantStatus(plantById(id)!, at(iso), toDay(iso))!;
+
+  it('offers broccoli for fall in July, planted out, not next spring sown', () => {
+    const s = status('broccoli', '2027-07-15');
+    expect(s.choice.nextSeason).toBe(false);
+    // Too late to raise its seedlings by now, so bought ones are planted out.
+    expect(['transplant', 'bought']).toContain(s.method);
+    expect(s.text).toMatch(/^Plant out from Jul \d+ for fall$/);
+  });
+
+  it('says now while a window is open, and late when it is late', () => {
+    expect(status('carrot', '2027-07-15').text).toMatch(/^Sow now/);
+    expect(status('basil', '2027-05-20').text).toMatch(/now, late$/);
+  });
+
+  it('raises basil from seed while that still meets this season, and says when it goes out', () => {
+    const s = status('basil', '2027-04-10');
+    expect(s.choice.nextSeason).toBe(false);
+    if (s.method === 'transplant') {
+      const ph = plantingPhases({ id: 'x', containerId: 'b', plantId: 'basil', count: 1, method: 'transplant', anchor: s.choice.anchor }, plantById('basil')!, at('2027-04-10'));
+      // Its seeds are started today or later, never in the past.
+      expect(ph!.indoor!.start).toBeGreaterThanOrEqual(toDay('2027-04-10'));
+    } else {
+      expect(s.method).toBe('bought');
+    }
+  });
+
+  it('gives the year when the date is not this year', () => {
+    expect(status('tomato', '2027-07-15').text).toMatch(/2028/);
   });
 });

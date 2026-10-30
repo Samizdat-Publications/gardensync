@@ -3,6 +3,7 @@
 import type { ClimateProfile } from '../../domain/climate/types';
 import { dayFromParts, type DayNum } from '../../domain/dates';
 import type { Harvest, Planting } from '../../domain/doc/schema';
+import { squaresLabel } from '../../domain/layout/labels';
 import type { Plant } from '../../domain/plants/schema';
 import { plantingPhases, seasonRefs } from '../../domain/schedule';
 import { expectedYield, pickedSoFar, type Amount } from '../../domain/yield';
@@ -70,4 +71,36 @@ export function cropRows(plantings: readonly Planting[], seasonHarvests: readonl
   for (const h of seasonHarvests) row(h.plantId);
   for (const r of rows.values()) r.picked = pickedSoFar(seasonHarvests, (h) => h.plantId === r.plantId);
   return [...rows.values()];
+}
+
+export interface PlantingOption {
+  p: Planting;
+  plantName: string;
+  containerName: string;
+  /** The day it went into the bed, for telling apart two that would otherwise read the same. */
+  sowDay: DayNum | null;
+}
+
+/**
+ * What the "What did you pick?" list shows for each planting: "Lettuce, Bed 1, A2 to B3". Two that
+ * would still read the same (one bed, same squares, two sowings) also say when each was sown.
+ */
+export function plantingOptionLabels(options: readonly PlantingOption[], fmt: (d: DayNum) => string): string[] {
+  const base = options.map((o) => [o.plantName, o.containerName, o.p.cells ? squaresLabel(o.p.cells) : ''].filter(Boolean).join(', '));
+  const seen = new Map<string, number>();
+  for (const b of base) seen.set(b, (seen.get(b) ?? 0) + 1);
+  return base.map((b, i) => {
+    const day = options[i]!.sowDay;
+    return (seen.get(b) ?? 0) > 1 && day !== null ? `${b}, sown ${fmt(day)}` : b;
+  });
+}
+
+/**
+ * A gentle question when a pick is logged before the planting's picking window opens (a radish
+ * logged the day it was sown). Null when the day is in or after the window, or there is none.
+ */
+export function earlyPickNote(plantName: string, phases: { harvest: { start: DayNum } | null } | null, pickDay: DayNum, fmt: (d: DayNum) => string): string | null {
+  const from = phases?.harvest?.start;
+  if (from === undefined || pickDay >= from) return null;
+  return `${plantName} is usually picked from ${fmt(from)}; log it anyway?`;
 }

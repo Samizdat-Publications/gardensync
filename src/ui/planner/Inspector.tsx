@@ -54,12 +54,13 @@ const BED_IN_CODES = new Set<Reason['code']>([
 ]);
 const INDOOR_CODES = new Set<Reason['code']>(['indoor-start', 'harden-off']);
 
-type Step = { key: string; title: string; detail: string[]; state: 'done' | 'now' | 'later'; caution?: boolean };
+type Step = { key: string; title: string; detail: string[]; state: 'done' | 'past' | 'now' | 'later'; caution?: boolean };
 
 function stateOf(a: DayNum, b: DayNum | null, day: DayNum, done: boolean): Step['state'] {
   if (done) return 'done';
   if (day >= a && (b === null || day <= b)) return 'now';
-  return day > (b ?? a) ? 'done' : 'later';
+  // Its date has gone by but nobody ticked it: the plan cannot know it happened, so it never says done.
+  return day > (b ?? a) ? 'past' : 'later';
 }
 
 /** The planting's phases as a list of steps, each with the reason for its date. */
@@ -93,10 +94,15 @@ export function phaseSteps(p: Planting, plant: Plant, ph: PlantingPhases, day: D
     if (ph.bedIn > w.bedIn.end) {
       inDetail.push(sentence(reasonText({ code: 'late-planting', usualEnd: w.bedIn.end }, units.value)));
     } else {
-      inDetail.push(`In its ${windowWords({ kind: w.kind, nextSeason: false, anchor: p.anchor })}, ${fmtRange(w.bedIn.start, w.bedIn.end)}.`);
+      inDetail.push(
+        p.anchor.round !== undefined && p.anchor.round > 0
+          ? `A later sowing; sowings run ${fmtRange(w.bedIn.start, w.bedIn.end)}.`
+          : `In its ${windowWords({ kind: w.kind, nextSeason: false, anchor: p.anchor })}, ${fmtRange(w.bedIn.start, w.bedIn.end)}.`,
+      );
       for (const r of w.reasons) if (BED_IN_CODES.has(r.code)) inDetail.push(sentence(reasonText(r, units.value)));
     }
-    if (p.anchor.offsetDays !== 0 && ph.bedIn <= w.bedIn.end) {
+    // A repeat sowing counts its days from its own round, not from the start of the window.
+    if (p.anchor.offsetDays !== 0 && ph.bedIn <= w.bedIn.end && !(p.anchor.round !== undefined && p.anchor.round > 0)) {
       const n = Math.abs(p.anchor.offsetDays);
       inDetail.push(`Going in ${n} ${n === 1 ? 'day' : 'days'} ${p.anchor.offsetDays > 0 ? 'after the window opens' : 'before the window opens'}.`);
     }
@@ -135,6 +141,7 @@ function Steps({ steps }: { steps: Step[] }) {
             {s.caution ? <span class="visually-hidden">Warning: </span> : null}
             {s.title}
             {s.state === 'done' && !s.caution ? <span class="visually-hidden"> (done)</span> : null}
+            {s.state === 'past' && !s.caution ? <span class="step-past-note"> (not marked done)</span> : null}
           </span>
           {s.detail.length > 0 ? <span class="step-detail">{s.detail.join(' ')}</span> : null}
         </li>
@@ -246,9 +253,12 @@ export function PlantingInspector({ p }: { p: Planting }) {
       <CountField p={p} />
 
       <div class="insp-actions">
-        <button type="button" class="btn btn-primary" aria-expanded={panel.value === 'harvest'} onClick={() => (panel.value = panel.value === 'harvest' ? 'none' : 'harvest')}>
-          Log a harvest
-        </button>
+        {/* Nothing to pick before it goes in; the button returns once the planting is in the ground. */}
+        {ph && day < ph.bedIn ? null : (
+          <button type="button" class="btn btn-primary" aria-expanded={panel.value === 'harvest'} onClick={() => (panel.value = panel.value === 'harvest' ? 'none' : 'harvest')}>
+            Log a harvest
+          </button>
+        )}
         {panel.value === 'harvest' ? <HarvestForm p={p} plant={plant} onDone={() => (panel.value = 'none')} /> : null}
         <div class="row">
           <button type="button" class="btn grow" aria-expanded={panel.value === 'dates'} onClick={() => (panel.value = panel.value === 'dates' ? 'none' : 'dates')}>
@@ -411,7 +421,9 @@ function DatesForm({ p, ph, onDone }: { p: Planting; ph: PlantingPhases | null; 
               return;
             }
             if (p.anchor.kind !== 'auto') return;
-            done(act({ type: 'updatePlanting', gardenId: g.id, plantingId: p.id, patch: { anchor: { ...p.anchor, offsetDays: n } } }, 'shift the dates'));
+            const moved = { ...p, anchor: { ...p.anchor, offsetDays: n } };
+            const nowIn = phasesOfP.value(moved)?.bedIn;
+            done(act({ type: 'updatePlanting', gardenId: g.id, plantingId: p.id, patch: { anchor: moved.anchor } }, 'shift the dates', nowIn !== undefined ? `It goes in ${fmtDay(nowIn)} now.` : 'Dates shifted.'));
           }}
         >
           <div class="field">

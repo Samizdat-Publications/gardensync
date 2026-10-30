@@ -33,14 +33,15 @@ describe('library timing line', () => {
   });
 
   it('during the indoor start it says start indoors now', () => {
-    // Golden: tomato indoor Mar 22 to Apr 19, out May 17.
-    expect(timingLine(p('tomato'), canton(), '2027-04-01')).toBe('Start indoors now, plant out from May 17');
+    // Golden: tomato indoor Mar 22 to Apr 19, out May 17 at the earliest; seeds started on Apr 1
+    // are ready to plant out about 8 weeks later, so the line gives that day.
+    expect(timingLine(p('tomato'), canton(), '2027-04-01')).toBe('Start indoors now, plant out from May 27');
     expect(canGoInNow(p('tomato'), canton(), '2027-04-01')).toBe(true);
     expect(canGoInNow(p('tomato'), canton(), '2027-01-15')).toBe(false);
   });
 
   it('late in the year it looks ahead to next season', () => {
-    expect(timingLine(p('tomato'), canton(), '2026-11-20')).toMatch(/^Plant out from May \d+$/);
+    expect(timingLine(p('tomato'), canton(), '2026-11-20')).toMatch(/^Plant out from May \d+, 2027$/);
   });
 
   it('a plant with no window says so', () => {

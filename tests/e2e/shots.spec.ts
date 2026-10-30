@@ -21,6 +21,15 @@ async function startGarden(page: Page, starter?: RegExp) {
   await page.waitForTimeout(600);
 }
 
+/** The garden the week and calendar shots show (made Apr 14), seen again on Jun 1, so every shot agrees. */
+async function laterInSameGarden(page: Page) {
+  await page.clock.install({ time: new Date('2027-04-14T09:00:00') });
+  await startGarden(page);
+  await page.clock.setSystemTime(new Date('2027-06-01T09:00:00'));
+  await page.reload();
+  await page.waitForTimeout(600);
+}
+
 const screens: { name: string; go: (page: Page) => Promise<void> }[] = [
   { name: 'first-run', go: async (page) => page.goto('/').then(() => undefined) },
   { name: 'garden', go: (page) => startGarden(page) },
@@ -44,13 +53,13 @@ const screens: { name: string; go: (page: Page) => Promise<void> }[] = [
       await page.getByRole('button', { name: /^Bush bean/ }).first().click();
     },
   },
-  { name: 'print-poster', go: async (page) => { await page.clock.install({ time: new Date('2027-06-01T09:00:00') }); await startGarden(page); await page.emulateMedia({ media: 'print' }); } },
+  { name: 'print-poster', go: async (page) => { await laterInSameGarden(page); await page.emulateMedia({ media: 'print' }); } },
   { name: 'assistant', go: async (page) => { await startGarden(page); await page.getByRole('button', { name: 'Ask the assistant' }).click(); } },
   { name: 'plants', go: async (page) => { await startGarden(page); await page.goto('/#/plants'); } },
   { name: 'plant-tomato', go: async (page) => { await startGarden(page); await page.goto('/#/plants/tomato'); } },
   { name: 'week', go: async (page) => { await page.clock.install({ time: new Date('2027-04-14T09:00:00') }); await startGarden(page); await page.goto('/#/week'); } },
   { name: 'calendar', go: async (page) => { await page.clock.install({ time: new Date('2027-04-14T09:00:00') }); await startGarden(page); await page.goto('/#/calendar'); } },
-  { name: 'harvest', go: async (page) => { await page.clock.install({ time: new Date('2027-06-01T09:00:00') }); await startGarden(page); await page.goto('/#/harvest'); } },
+  { name: 'harvest', go: async (page) => { await laterInSameGarden(page); await page.goto('/#/harvest'); } },
   { name: 'settings', go: async (page) => { await startGarden(page); await page.goto('/#/settings'); } },
 ];
 
@@ -66,8 +75,10 @@ for (const screen of screens) {
         // No hover state left over from the last click, and the phone's fixed bottom bar at the
         // bottom of a full-page capture rather than floating over the middle of it.
         await page.mouse.move(0, 0);
-        await page.addStyleTag({ content: '.bottom-nav { position: static !important; }' });
-        await page.screenshot({ path: `review/shots/${screen.name}-${size.name}-${theme}.png`, fullPage: true });
+        // The plan on a phone is one screen with sheets fixed to its bottom: capture what is on screen.
+        const fullPage = !(size.name === 'phone' && screen.name.startsWith('garden'));
+        if (fullPage) await page.addStyleTag({ content: '.bottom-nav { position: static !important; }' });
+        await page.screenshot({ path: `review/shots/${screen.name}-${size.name}-${theme}.png`, fullPage });
       });
     }
   }

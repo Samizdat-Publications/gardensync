@@ -141,7 +141,9 @@ export function SeasonRibbon() {
     <section class="season panel" aria-labelledby="season-title">
       <div class="season-head">
         <h2 id="season-title">{headingText}</h2>
-        <p class="muted small season-hint">Move the marker to see the garden on any day. Blue is frost risk.</p>
+        <p class="muted small season-hint">
+          {todayDay >= start && todayDay < start + SPAN ? 'Move the marker' : 'Pick a day on the strip'} to see the garden on any day. Blue is frost risk.
+        </p>
         <div class="season-nav">
           <button type="button" class="btn btn-icon" aria-label="Previous season" title="Previous season" onClick={() => setDay(day - SPAN)}>
             <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">

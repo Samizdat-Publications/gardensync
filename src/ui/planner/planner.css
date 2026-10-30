@@ -786,6 +786,14 @@
   border-color: var(--c-accent);
   background: var(--c-accent);
 }
+.step-past .step-dot {
+  border-color: var(--c-muted);
+  border-style: dashed;
+}
+.step-past-note {
+  font-weight: 400;
+  color: var(--c-muted);
+}
 .step-now .step-dot {
   border-color: var(--c-accent);
 }

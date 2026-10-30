@@ -8,6 +8,7 @@ import type { ClimateProfile } from '../../domain/climate/types';
 import { circularDoy, isIsoDate, monthDayOf, toDay } from '../../domain/dates';
 import { exportFileName, parseImportFile, toExportFile } from '../../domain/doc/exportFile';
 import type { Op } from '../../domain/doc/ops';
+import type { GardenDoc } from '../../domain/doc/schema';
 import { encodeShare } from '../../domain/doc/share';
 import { formatTemp, type Units } from '../../domain/units';
 import { MODELS, forgetKey, readKey, readModel } from '../../platform/anthropic';
@@ -20,7 +21,7 @@ import { PlaceSearch, placeErrorText } from '../components/PlaceSearch';
 import { fmtMonthDay, fmtWithYear } from '../format';
 import { hrefOf, route } from '../router';
 import './Settings.css';
-import { keepLastExport, sectionInView } from './model';
+import { keepLastExport, openCopyQuestion, openErrorText, sectionInView } from './model';
 
 const SECTIONS = [
   ['climate', 'Your climate'],
@@ -98,6 +99,10 @@ export function SettingsScreen() {
 
   return (
     <div class="settings">
+      {/* The title comes first at every width, above the section list as well as the sections. */}
+      <h1 tabIndex={-1} class="settings-title">
+        Settings
+      </h1>
       <nav aria-label="Settings sections" class="settings-nav" ref={nav}>
         {SECTIONS.map(([id, label]) => (
           <a key={id} href={hrefOf({ name: 'settings', section: id })} aria-current={active === id ? 'true' : undefined}>
@@ -106,9 +111,6 @@ export function SettingsScreen() {
         ))}
       </nav>
       <main class="settings-main">
-        <h1 tabIndex={-1} class="settings-title">
-          Settings
-        </h1>
         <ClimateSection />
         <UnitsSection />
         <DataSection />
@@ -127,6 +129,8 @@ function ClimateSection() {
   const firstFrost = useSignal('');
   const busy = useSignal<string | null>(null);
   const error = useSignal<string | null>(null);
+  // Set after the town or the frost dates are applied here, so there is a way back to the garden.
+  const applied = useSignal<string | null>(null);
   if (!g) return null;
   const c = g.climate;
   const u = units.value;
@@ -141,6 +145,7 @@ function ClimateSection() {
       const profile = await profileForPlace(place, lastCompleteYears(today.value), today.value);
       set(profile, `move the garden to ${place.name}`);
       changing.value = false;
+      applied.value = `Dates now follow the weather in ${place.name}.`;
     } catch (err) {
       error.value = placeErrorText(err);
     } finally {
@@ -163,6 +168,7 @@ function ClimateSection() {
     set(profile, 'set the frost dates');
     manual.value = false;
     error.value = null;
+    applied.value = 'Frost dates set. Every date in the app now follows them.';
   }
 
   return (
@@ -206,6 +212,14 @@ function ClimateSection() {
           <PlaceSearch id="settings-town" onPick={pick} autoFocus />
           {busy.value ? <p role="status">Reading 30 years of weather records for {busy.value}.</p> : null}
           {error.value ? <p class="settings-error">{error.value} Your dates were not changed.</p> : null}
+        </div>
+      ) : null}
+      {applied.value && c ? (
+        <div class="settings-applied" role="status">
+          <p class="settings-ok">{applied.value}</p>
+          <a class="btn btn-primary" href={hrefOf({ name: 'garden' })}>
+            Go to the garden
+          </a>
         </div>
       ) : null}
       {c ? <ClimateDetails climate={c} units={u} onChange={set} /> : <p>No town or frost dates yet. Add your town, or type your frost dates, so every date fits your garden.</p>}
@@ -368,6 +382,8 @@ function UnitsSection() {
 function DataSection() {
   const fileInput = useRef<HTMLInputElement>(null);
   const message = useSignal<{ kind: 'ok' | 'error'; text: string } | null>(null);
+  // A saved copy read and checked, waiting for the gardener to say yes before it replaces anything.
+  const pending = useSignal<GardenDoc | null>(null);
   const backups = useSignal(listBackups(localStorage));
   const lastExport = store.doc.value.settings.lastExportAt;
 
@@ -388,20 +404,33 @@ function DataSection() {
   async function openFile(file: File) {
     const text = await file.text();
     const res = parseImportFile(text, { today: today.value, newId, tzOffsetMinutes: -new Date().getTimezoneOffset() });
+    pending.value = null;
     if (res.kind === 'error') {
-      message.value = { kind: 'error', text: res.message };
+      message.value = { kind: 'error', text: openErrorText(res.message) };
       return;
     }
-    takeSnapshot(localStorage, store.doc.value, 'before opening a copy', new Date().toISOString());
     if (res.kind === 'doc') {
-      adoptDoc(keepLastExport(res.doc, store.doc.value.settings.lastExportAt));
-      message.value = { kind: 'ok', text: 'Opened. What was here before is kept in Backups.' };
+      // A full copy replaces everything here, so ask first.
+      message.value = null;
+      pending.value = res.doc;
     } else {
+      // A 7.x garden is added beside the others, so nothing is lost and there is nothing to ask.
+      takeSnapshot(localStorage, store.doc.value, 'before opening a copy', new Date().toISOString());
       const d = store.doc.value;
       adoptDoc({ ...d, gardens: [...d.gardens, res.garden], settings: { ...d.settings, activeGardenId: res.garden.id } });
       message.value = { kind: 'ok', text: `Brought across a garden from version 7: ${res.report.containers} beds and pots, ${res.report.plants} plants.` };
+      backups.value = listBackups(localStorage);
     }
+  }
+
+  function confirmOpen() {
+    const doc = pending.value;
+    if (!doc) return;
+    takeSnapshot(localStorage, store.doc.value, 'before opening a copy', new Date().toISOString());
+    adoptDoc(keepLastExport(doc, store.doc.value.settings.lastExportAt));
+    pending.value = null;
     backups.value = listBackups(localStorage);
+    message.value = { kind: 'ok', text: 'Opened. What was here before is kept in Backups.' };
   }
 
   function restore(key: string) {
@@ -441,6 +470,25 @@ function DataSection() {
         <ShareButton />
       </div>
       <p class="muted small">{lastExport && isIsoDate(lastExport) ? `Last downloaded on ${fmtWithYear(toDay(lastExport))}.` : 'Not downloaded yet.'}</p>
+      {pending.value ? (
+        <div class="settings-confirm" role="group" aria-labelledby="open-copy-q">
+          <p id="open-copy-q">{openCopyQuestion(store.doc.value, pending.value)}</p>
+          <div class="row">
+            <button class="btn btn-primary" onClick={confirmOpen}>
+              Open the copy
+            </button>
+            <button
+              class="btn"
+              onClick={() => {
+                pending.value = null;
+                message.value = { kind: 'ok', text: 'Nothing was changed.' };
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ) : null}
       {message.value ? (
         <p role="status" class={message.value.kind === 'error' ? 'settings-error' : 'settings-ok'}>
           {message.value.text}

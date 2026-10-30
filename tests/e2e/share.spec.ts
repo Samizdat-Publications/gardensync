@@ -29,7 +29,8 @@ test('a share link opens a copy of the garden in a fresh browser', async ({ page
   await p2.getByLabel('Typical last spring frost').fill('2027-04-16');
   await p2.getByLabel('Typical first fall frost').fill('2027-11-04');
   await p2.getByRole('button', { name: 'Use these dates' }).click();
-  await p2.goto('http://localhost:4173/#/garden');
+  // Once the dates are set there is a clear way back to the garden.
+  await p2.getByRole('link', { name: 'Go to the garden' }).click();
   await expect(p2.locator('.patch, .patch-upcoming').first()).toBeVisible();
   await other.close();
 });

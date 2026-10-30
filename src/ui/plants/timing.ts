@@ -6,7 +6,7 @@ import type { ClimateProfile } from '../../domain/climate/types';
 import { inRange, toDay, yearOf, type DayNum, type DayRange, type IsoDate } from '../../domain/dates';
 import type { Plant } from '../../domain/plants/schema';
 import { formatTemp, type Units } from '../../domain/units';
-import { defaultMethod, nextWindow } from '../planner/placement';
+import { plantStatus } from '../planner/placement';
 import {
   formatDay,
   formatRange,
@@ -74,33 +74,14 @@ export function timingLine(plant: Plant, profile: ClimateProfile | null | undefi
       ? 'Dates could not be worked out'
       : 'Not suited to this climate';
   }
-  // Today is a day it can go in the way the planner would place it (a later sowing between rounds,
-  // or a late planting with time still to crop): say so, exactly as the garden's plant list does.
-  const placed = nextWindow(plant, profile, defaultMethod(plant), t);
-  if (placed && placed.bedIn <= t) {
-    const verb = VERB[placed.window.method];
-    return placed.late ? `${verb} now, late but with time to crop` : `${verb} now until ${formatDay(placed.window.bedIn.end)}`;
-  }
-  // When two ways open on the same day, name the one the planner uses by default, so the library
-  // and the garden's plant list say the same thing ("Sow from Mar 26", not "Plant out" in one place).
-  const usual = defaultMethod(plant);
-  windows.sort((a, b) => a.bedIn.start - b.bedIn.start || Number(a.method !== usual) - Number(b.method !== usual));
-  const now = windows.find((w) => inRange(w.bedIn, t));
-  if (now) return `${VERB[now.method]} now until ${formatDay(now.bedIn.end)}`;
-  const indoorNow = windows.find((w) => w.indoor && inRange(w.indoor, t));
-  if (indoorNow) return `Start indoors now, plant out from ${formatDay(indoorNow.bedIn.start)}`;
-  const next = windows.find((w) => w.bedIn.start > t);
-  if (next) return `${VERB[next.method]} from ${formatDay(next.bedIn.start)}${next.kind === 'fall' ? ' for fall' : ''}`;
-  return 'Not suited to this climate';
+  // The one answer the garden's plant list and placing give too.
+  return plantStatus(plant, profile, t)?.text ?? 'Not suited to this climate';
 }
 
-/** True when today falls in a window for sowing, planting out, planting or starting seeds indoors. */
+/** True when it can go in, or its seeds must be started, within the week: the same test as the garden's list. */
 export function canGoInNow(plant: Plant, profile: ClimateProfile | null | undefined, today: IsoDate): boolean {
   if (!hasSchedule(profile)) return false;
-  const t = toDay(today);
-  return nearSchedules(plant, profile, t).some((s) =>
-    s.windows.some((w) => inRange(w.bedIn, t) || (w.indoor !== undefined && inRange(w.indoor, t))),
-  );
+  return plantStatus(plant, profile, toDay(today))?.soon ?? false;
 }
 
 // ---- The plant card's "When" section ------------------------------------------------------------

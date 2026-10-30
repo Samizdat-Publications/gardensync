@@ -70,10 +70,11 @@ function companionOf(a: string, b: string) {
   return COMPANIONS.find((x) => (x.a === a && x.b === b) || (x.a === b && x.b === a));
 }
 
-/** Planned plantings to show in a bed: only where nothing is growing on the day shown. */
+const cellsOverlap = (a: Cells, b: Cells) => a.col < b.col + b.w && b.col < a.col + a.w && a.row < b.row + b.h && b.row < a.row + a.h;
+
+/** Planned plantings to label in a bed: only those clear of anything growing on the day shown. */
 function plannedShown(upcoming: readonly Planting[], present: readonly Planting[]): Planting[] {
-  const overlaps = (a: Cells, b: Cells) => a.col < b.col + b.w && b.col < a.col + a.w && a.row < b.row + b.h && b.row < a.row + a.h;
-  return upcoming.filter((u) => u.cells && !present.some((p) => p.cells && overlaps(u.cells!, p.cells)));
+  return upcoming.filter((u) => u.cells && !present.some((p) => p.cells && cellsOverlap(u.cells!, p.cells)));
 }
 
 /** Cells of a patch to draw glyphs in: spread evenly, at most `cap`. */
@@ -163,8 +164,9 @@ function drawLayer(i: LayerInput): JSX.Element {
         {t > 0 ? <rect x={r.x - t} y={r.y - t} width={r.w + 2 * t} height={r.h + 2 * t} rx={2} fill={frameFill(c)} /> : null}
         <rect class="bed-soil" x={r.x} y={r.y} width={r.w} height={r.h} fill={level === 0 ? 'var(--c-soil)' : 'url(#gs-soil)'} stroke={t === 0 ? 'var(--c-timber)' : 'none'} stroke-dasharray={t === 0 ? '6 4' : undefined} stroke-width={t === 0 ? 1.5 : 0} {...NS} />
         {grid ? <path d={grid} stroke="var(--c-soil-grid)" stroke-width={1} fill="none" {...NS} /> : null}
+        {/* Planned patches go under what is growing now; one partly covered keeps its outline but no icon. */}
+        {(i.upcomingMap.get(c.id) ?? []).map((p) => drawUpcomingPatch(c, p, !upcomingHere.includes(p)))}
         {here.map((p) => drawPatch(c, p, cap))}
-        {upcomingHere.map((p) => drawUpcomingPatch(c, p))}
         {i.cand
           ? i.cand.taken
               .filter((tk) => tk.planting.containerId === c.id && tk.planting.cells && taken.has(tk.planting.id))
@@ -231,7 +233,7 @@ function drawLayer(i: LayerInput): JSX.Element {
     );
   }
 
-  function drawUpcomingPatch(c: GridBed, p: Planting): JSX.Element | null {
+  function drawUpcomingPatch(c: GridBed, p: Planting, covered = false): JSX.Element | null {
     const plant = i.plantOf(p.plantId);
     if (!plant || !p.cells) return null;
     if (i.plantMove?.plantingId === p.id) return null;
@@ -241,7 +243,7 @@ function drawLayer(i: LayerInput): JSX.Element {
     return (
       <g key={`up${p.id}`} class="patch-upcoming" data-plant={p.plantId} data-planting-id={p.id}>
         <rect x={pr.x + 2} y={pr.y + 2} width={pr.w - 4} height={pr.h - 4} rx={3} fill={color} style={{ fillOpacity: 'var(--patch-alpha-planned)' }} stroke={color} stroke-opacity={0.45} stroke-width={1.5} stroke-dasharray="4 3" {...NS} />
-        {level > 0 ? (
+        {level > 0 && !covered ? (
           // One faint icon says what is planned: in the last square of a wide patch, clear of its label.
           <g opacity={0.5}>
             <Glyph
@@ -712,7 +714,10 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
   const sizeText = (c: Container) => {
     if (c.form === 'grid') return `${formatLength(c.rows * g.cellCm, u)} by ${formatLength(c.cols * g.cellCm, u)}`;
     const here = presentMap.get(c.id) ?? [];
-    return here.length ? here.map((p) => `${plantOf(p.plantId)?.name ?? 'Plant'} ${p.count}`).join(', ') : formatLength(c.diameterCm, u);
+    if (here.length) return here.map((p) => `${plantOf(p.plantId)?.name ?? 'Plant'} ${p.count}`).join(', ');
+    const next = (upcomingMap.get(c.id) ?? [])[0];
+    const nextIn = next ? intervalOfP.value(next)?.bedIn : undefined;
+    return next && nextIn !== undefined ? `${plantOf(next.plantId)?.name ?? 'Plant'} from ${fmtDay(nextIn)}` : formatLength(c.diameterCm, u);
   };
   const labels = useMemo(() => drawLabels(input), [g, list, presentMap, upcomingMap, plantOf, cand, level, drag, palDragState, input.scale]);
 

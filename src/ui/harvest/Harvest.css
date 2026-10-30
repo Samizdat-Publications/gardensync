@@ -141,6 +141,11 @@
   color: var(--c-accent);
   font-weight: 700;
 }
+/* A question, not an error: an early pick can still be logged. */
+.log-note {
+  color: var(--c-ink);
+  font-weight: 600;
+}
 @media (max-width: 560px) {
   .crop-row {
     grid-template-columns: 1fr;

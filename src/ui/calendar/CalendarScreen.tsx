@@ -12,7 +12,7 @@ import { garden, today } from '../appState';
 import { fmtDay, fmtRange } from '../format';
 import { hrefOf } from '../router';
 import { plantOf } from '../uiState';
-import { calendarSpan as spanOf, edgeColor, monthStarts, openingShift } from './model';
+import { calendarSpan as spanOf, edgeColor, indoorLabel, monthStarts, openingShift } from './model';
 import './Calendar.css';
 
 interface Row {
@@ -296,7 +296,7 @@ function CalendarList({ groups }: { groups: { id: string; name: string; rows: Ro
                 <dl class="cal-list-dates">
                   {r.phases.indoor ? (
                     <>
-                      <dt>Indoors</dt>
+                      <dt>{indoorLabel(r.phases.actual.indoor)}</dt>
                       <dd>{fmtRange(r.phases.indoor.start, r.phases.indoor.end)}</dd>
                     </>
                   ) : null}

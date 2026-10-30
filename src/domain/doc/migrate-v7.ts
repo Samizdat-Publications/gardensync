@@ -1143,7 +1143,7 @@ export function migrateV7Storage(raw: Readonly<Record<string, string | null>>, o
     let containers: unknown[];
     if (state) {
       const found = containersOf(state, bedNames, bedSizes);
-      if (!found) return { error: 'The saved GardenSync 7 garden is in a form this version does not recognise. Nothing was changed.' };
+      if (!found) return { error: 'The saved GardenSync 7 garden is in a form this version does not recognize. Nothing was changed.' };
       containers = found;
     } else {
       const anything = Object.values(side).some((x) => !isEmptyish(x)) || harvestGoal !== undefined;
@@ -1209,7 +1209,7 @@ export function migrateV7Export(json: unknown, opts: MigrateOptions): MigrationR
     if (!isObj(data) || !isObj(data.state)) return { error: 'This file is not a GardenSync 7 export.' };
     const state = data.state;
     const containers = containersOf(state, data.bedNames, data.bedSizes);
-    if (!containers) return { error: 'This GardenSync 7 export holds no beds this version recognises.' };
+    if (!containers) return { error: 'This GardenSync 7 export holds no beds this version recognizes.' };
 
     const extra: Obj = {};
     for (const [k, val] of Object.entries(data)) {
@@ -1310,7 +1310,7 @@ export function decodeV7ShareHash(hash: string, opts: MigrateOptions): Migration
         };
       });
     } else {
-      return { error: 'This GardenSync 7 share link is in a form this version does not recognise.' };
+      return { error: 'This GardenSync 7 share link is in a form this version does not recognize.' };
     }
 
     return buildGarden(

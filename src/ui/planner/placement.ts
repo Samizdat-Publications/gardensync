@@ -6,6 +6,7 @@
 // and the planner says which. Pure: no DOM, no signals.
 import type { ClimateProfile } from '../../domain/climate/types';
 import { toIso, type DayNum } from '../../domain/dates';
+import { fmtNear } from '../format';
 import type { Anchor, Planting } from '../../domain/doc/schema';
 import type { BedInterval, IntervalOf, PlantOf } from '../../domain/layout/occupancy';
 import type { Plant } from '../../domain/plants/schema';
@@ -41,18 +42,6 @@ export function defaultMethod(plant: Plant): PlaceMethod {
   if (ways.includes('direct') && !indoorTender) return 'direct';
   if (ways.includes('transplant')) return 'transplant';
   return ways[0] ?? 'direct';
-}
-
-/**
- * The way to place a plant from `day` on: the usual way, except that once the time to start seeds
- * indoors has passed for the next window, a plant that can be bought as seedlings is planted out
- * from bought plants (nobody can start seeds in the past).
- */
-export function placeMethod(plant: Plant, climate: ClimateProfile | null, day: DayNum): PlaceMethod {
-  const usual = defaultMethod(plant);
-  if (usual !== 'transplant' || !climate || !methodsFor(plant).includes('bought')) return usual;
-  const next = nextWindow(plant, climate, 'transplant', day);
-  return next?.window.indoor && next.window.indoor.end < day ? 'bought' : usual;
 }
 
 /** "Sow", "Plant out" or "Plant": the verb for putting it in the ground. */
@@ -144,3 +133,50 @@ export function soonestWay(plant: Plant, climate: ClimateProfile, from: DayNum):
 
 /** Days in "this week", counting today: the palette's "Can go in this week" filter. */
 export const WEEK_DAYS = 7;
+
+export interface PlantStatus {
+  /** The way it goes in from today: the soonest, the usual way when two tie, bought plants once seed-starting time is gone. */
+  method: PlaceMethod;
+  choice: WindowChoice;
+  /** "Sow now until May 14", "Plant out now, late", "Start indoors now, plant out from Jun 2", "Plant out from Jul 19 for fall". */
+  text: string;
+  /** It can go in, or its seeds must be started, within the week. */
+  soon: boolean;
+}
+
+/**
+ * One answer to "when can this go in?", from today, for the garden's plant list, the library and
+ * placing alike, so no two places in the app give a different way or day.
+ */
+export function plantStatus(plant: Plant, climate: ClimateProfile, today: DayNum): PlantStatus | null {
+  const usual = defaultMethod(plant);
+  const ways = methodsFor(plant);
+  let best: { method: PlaceMethod; choice: WindowChoice } | null = null;
+  // On the same day: the usual way, then bought seedlings for a plant usually raised indoors.
+  const rank = (m: PlaceMethod) => (m === usual ? 0 : usual === 'transplant' && m === 'bought' ? 1 : 2);
+  const consider = (method: PlaceMethod, c: WindowChoice | null) => {
+    if (c && (!best || c.bedIn < best.choice.bedIn || (c.bedIn === best.choice.bedIn && rank(method) < rank(best.method)))) best = { method, choice: c };
+  };
+  for (const m of ways) {
+    if (m === 'bought') continue;
+    // Seeds raised indoors start today at the earliest, so plant-out is at least their growing time away.
+    const c = nextWindow(plant, climate, m, today, m === 'transplant');
+    consider(m, c);
+    // Too late to raise them for this season's window: bought seedlings can still go in.
+    if (m === 'transplant' && ways.includes('bought') && (!c || c.nextSeason)) {
+      const b = nextWindow(plant, climate, 'bought', today);
+      if (b && (!c || b.bedIn < c.bedIn)) consider('bought', b);
+    }
+  }
+  if (!best) return null;
+  const { method, choice: c } = best as { method: PlaceMethod; choice: WindowChoice };
+  const indoor = c.window.indoor;
+  const verb = verbOf(method);
+  const when = (d: DayNum) => fmtNear(d, today);
+  const startNow = method === 'transplant' && indoor !== undefined && indoor.start <= today && today <= indoor.end;
+  let text: string;
+  if (c.bedIn <= today) text = c.late ? `${verb} now, late` : `${verb} now until ${when(c.window.bedIn.end)}`;
+  else if (startNow) text = `Start indoors now, plant out from ${when(c.bedIn)}`;
+  else text = `${verb} from ${when(c.bedIn)}${c.kind === 'fall' ? ' for fall' : ''}`;
+  return { method, choice: c, text, soon: c.bedIn < today + WEEK_DAYS || startNow };
+}

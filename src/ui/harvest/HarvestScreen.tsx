@@ -1,11 +1,11 @@
 // The harvest log: log a pick, see each crop picked so far against what its plantings should give,
 // and the recent picks with edit and delete. Layout from A-harvest.dc.html.
 import { useSignal } from '@preact/signals';
-import { toDay } from '../../domain/dates';
+import { isIsoDate, toDay } from '../../domain/dates';
 import type { Harvest } from '../../domain/doc/schema';
 import type { Plant } from '../../domain/plants/schema';
-import { seasonLabel, seasonOf } from '../../domain/schedule';
-import { formatWeight, parseWeight } from '../../domain/units';
+import { plantingPhases, seasonLabel, seasonOf } from '../../domain/schedule';
+import { formatWeight, formatWeightApprox, parseWeight } from '../../domain/units';
 import { pickedSoFar, type Amount } from '../../domain/yield';
 import { garden, newId, store, today, units } from '../appState';
 import { Glyph } from '../components/Glyph';
@@ -13,7 +13,7 @@ import { fmtDay, inSentence } from '../format';
 import { hrefOf } from '../router';
 import { plantOf } from '../uiState';
 import './Harvest.css';
-import { cropRows, pickablePlantings, type CropRow } from './model';
+import { cropRows, earlyPickNote, pickablePlantings, plantingOptionLabels, type CropRow } from './model';
 
 /** "1 lb 8 oz", "12 counted", or both: picks logged by weight and by count do not add up. */
 function amountText(a: Amount, u: 'imperial' | 'metric'): string {
@@ -69,7 +69,7 @@ export function HarvestScreen() {
         <p class="harvest-sub">
           {seasonHarvests.length === 0
             ? 'Nothing picked yet this season. Log your first pick with the form here, or from a planting in the garden.'
-            : `Picked so far: ${amountText(total, u)}.${expectedTotal > 0 ? ` The plan expects about ${formatWeight(expectedTotal, u)} by the end of the season.` : ''}`}
+            : `Picked so far: ${amountText(total, u)}.${expectedTotal > 0 ? ` The plan expects about ${formatWeightApprox(expectedTotal, u)} by the end of the season.` : ''}`}
         </p>
       </header>
       <div class="harvest-main">
@@ -182,17 +182,28 @@ function LogForm() {
   // Only plantings in the ground this season by today: one that goes in next year has nothing to pick.
   const c = g.climate;
   const todayDay = toDay(today.value);
-  const options = pickablePlantings(g.plantings, plantOf, c, c ? seasonOf(c, todayDay) : Number(today.value.slice(0, 4)), todayDay)
-    .map((p) => ({ p, plant: plantOf(p.plantId), container: g.containers.find((k) => k.id === p.containerId) }))
+  const found = pickablePlantings(g.plantings, plantOf, c, c ? seasonOf(c, todayDay) : Number(today.value.slice(0, 4)), todayDay)
+    .map((p) => {
+      const plant = plantOf(p.plantId);
+      return { p, plant, container: g.containers.find((k) => k.id === p.containerId), phases: plant ? plantingPhases(p, plant, c) : null };
+    })
     .filter((o) => o.plant)
-    .sort((a, b) => a.plant!.name.localeCompare(b.plant!.name));
+    .sort((a, b) => a.plant!.name.localeCompare(b.plant!.name) || (a.phases?.bedIn ?? 0) - (b.phases?.bedIn ?? 0));
+  // "Lettuce, Bed 1, A2 to B3": two lettuces in one bed must not read the same.
+  const labels = plantingOptionLabels(
+    found.map((o) => ({ p: o.p, plantName: o.plant!.name, containerName: o.container?.name ?? '', sowDay: o.phases?.bedIn ?? null })),
+    fmtDay,
+  );
+  const options = found.map((o, i) => ({ ...o, label: labels[i]! }));
   // Starts empty: the gardener says what they picked rather than logging against the first name.
   const plantingId = useSignal('');
   const amount = useSignal('');
   const count = useSignal('');
   const date = useSignal(today.value);
   const note = useSignal('');
-  const message = useSignal<{ ok: boolean; text: string } | null>(null);
+  const message = useSignal<{ ok: boolean | null; text: string } | null>(null);
+  // The planting and day the gardener already said yes to, after being told it is early to pick.
+  const earlyOk = useSignal('');
 
   if (options.length === 0) {
     return (
@@ -230,6 +241,13 @@ function LogForm() {
       message.value = { ok: false, text: 'Add a weight, a count, or both.' };
       return;
     }
+    // Picking before the usual window is allowed (a thinning, an early leaf), but asked about once.
+    const early = isIsoDate(date.value) ? earlyPickNote(chosen.plant!.name, chosen.phases, toDay(date.value), fmtDay) : null;
+    if (early && earlyOk.value !== `${chosen.p.id}@${date.value}`) {
+      earlyOk.value = `${chosen.p.id}@${date.value}`;
+      message.value = { ok: null, text: early };
+      return;
+    }
     const res = store.dispatch(
       {
         type: 'logHarvest',
@@ -251,10 +269,14 @@ function LogForm() {
       amount.value = '';
       count.value = '';
       note.value = '';
+      earlyOk.value = '';
     } else {
       message.value = { ok: false, text: res.error };
     }
   }
+
+  // Still asking about an early pick only while the planting and day are the ones asked about.
+  const asking = message.value?.ok === null && earlyOk.value === `${plantingId.value}@${date.value}`;
 
   return (
     <form class="panel log-form" onSubmit={submit} aria-labelledby="hv-log" noValidate>
@@ -267,7 +289,7 @@ function LogForm() {
           </option>
           {options.map((o) => (
             <option key={o.p.id} value={o.p.id}>
-              {o.plant!.name}, {o.container?.name ?? ''}
+              {o.label}
             </option>
           ))}
         </select>
@@ -293,10 +315,10 @@ function LogForm() {
         <input id="hv-note" class="input" value={note.value} onInput={(e) => (note.value = (e.target as HTMLInputElement).value)} />
       </div>
       <button class="btn btn-primary" type="submit">
-        Log harvest
+        {asking ? 'Log it anyway' : 'Log harvest'}
       </button>
-      <p role="status" class={message.value?.ok === false ? 'log-error' : 'log-ok'}>
-        {message.value?.text ?? ''}
+      <p role="status" class={message.value?.ok === false ? 'log-error' : message.value?.ok === null ? 'log-note' : 'log-ok'}>
+        {message.value?.ok === null && !asking ? '' : (message.value?.text ?? '')}
       </p>
     </form>
   );

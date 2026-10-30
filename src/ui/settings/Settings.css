@@ -38,6 +38,7 @@
 }
 /* The page title, sized like the other screens' titles (This week, Harvest). */
 .settings-title {
+  flex: 1 1 100%;
   font-size: var(--fs-3xl);
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -177,6 +178,28 @@
 .settings-ok {
   color: var(--c-accent);
   font-weight: 700;
+}
+/* Asked before a saved copy replaces what is here. */
+.settings-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  border: 1px solid var(--c-line);
+  border-radius: 10px;
+}
+.settings-confirm p {
+  margin: 0;
+}
+/* After the town or frost dates are set: the way back to the garden. */
+.settings-applied {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.settings-applied p {
+  margin: 0;
 }
 .backups ul {
   list-style: none;

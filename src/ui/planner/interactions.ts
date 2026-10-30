@@ -68,6 +68,10 @@ export function placeInVessel(containerId: string): void {
   } else if (c.problems.length > 0) {
     showToast(c.problems[0]!);
     draft.value = emptyDraft();
+  } else if (c.needsAnyway && c.load && !c.load.ok) {
+    // The pot is already full while this one would grow: say so rather than doing nothing.
+    showToast(`${c.load.reason ?? `${c.container?.name ?? 'That pot'} is full then.`} Try a bigger pot, or another one.`);
+    draft.value = emptyDraft();
   }
 }
 
@@ -304,11 +308,20 @@ function noteHeight(): number {
   return Math.max(0, note.getBoundingClientRect().bottom - app.getBoundingClientRect().top);
 }
 
+/** How far the scale and key card reaches up into the plan from its bottom edge, in px. */
+function legendHeight(): number {
+  const legend = document.querySelector<HTMLElement>('.canvas-legend');
+  const app = document.querySelector<HTMLElement>('.canvas-app');
+  if (!legend || !app) return 0;
+  return Math.max(0, app.getBoundingClientRect().bottom - legend.getBoundingClientRect().top);
+}
+
 export function fitAll(bottomInset = 0): void {
   const r = boundsOf([...footprints.value.values()]);
   const size = viewport.value;
   if (size.w === 0) return;
-  const inset = Math.min(Math.max(0, bottomInset), size.h * 0.6);
+  // Keep the garden clear of the scale and key card in the bottom corner, as well as any sheet.
+  const inset = Math.min(Math.max(0, bottomInset, legendHeight()), size.h * 0.6);
   // A note about the day shown floats over the top of the plan on wider screens: fit below it.
   const top = Math.min(noteHeight(), size.h * 0.3);
   // Leave room for the bed names and rulers around the edge.

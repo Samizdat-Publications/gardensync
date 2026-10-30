@@ -12,7 +12,7 @@ import { familyName } from './facts';
 export type FeatureFilter = 'now' | 'easy' | 'pots' | 'shade';
 
 export const FEATURE_FILTERS: readonly { id: FeatureFilter; label: string }[] = [
-  { id: 'now', label: 'Can go in now' },
+  { id: 'now', label: 'Can go in this week' },
   { id: 'easy', label: 'Easy first crops' },
   { id: 'pots', label: 'Good in pots' },
   { id: 'shade', label: 'Part shade' },

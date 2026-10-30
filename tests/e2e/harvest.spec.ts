@@ -17,9 +17,13 @@ test('logging a harvest shows it in the list and against the crop, and it is sav
   await expect(page.getByText('Choose what you picked.')).toBeVisible();
   // Counted crops say what they count.
   await expect(page.locator('.crop-plan-row', { hasText: 'French marigold' })).toContainText(/about \d+ flowers/);
-  await page.getByLabel('What did you pick?').selectOption({ label: 'Lettuce, Bed 1' });
+  // Each planting names its squares, so two of one crop in one bed can be told apart.
+  await page.getByLabel('What did you pick?').selectOption({ label: 'Lettuce, Bed 1, A2 to B3' });
   await page.getByLabel('Weight').fill('1.5 lb');
   await page.getByRole('button', { name: 'Log harvest' }).click();
+  // June 1 is before the lettuce's picking window: it asks once, and still logs the pick.
+  await expect(page.getByRole('status').filter({ hasText: /Lettuce is usually picked from .+; log it anyway\?/ })).toBeVisible();
+  await page.getByRole('button', { name: 'Log it anyway' }).click();
   await expect(page.getByRole('status').filter({ hasText: 'Logged lettuce' })).toBeVisible();
   await expect(page.getByRole('row', { name: /Lettuce/ })).toContainText('1 lb 8 oz');
   await expect(page.getByText('Picked so far: 1 lb 8 oz.')).toBeVisible();

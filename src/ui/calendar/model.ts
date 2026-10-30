@@ -62,7 +62,7 @@ export function openingShift(thisCount: number, nextCount: number, pastMidsummer
  */
 export const BAR_GROUNDS = {
   light: ['#ffffff', '#dce6f7', '#c3d3f2'],
-  dark: ['#211c17', '#1e283a', '#2a3a57'],
+  dark: ['#211c17', '#233350', '#36507c'],
 } as const;
 
 /** WCAG 2 non-text contrast: a bar's edge needs 3:1 against what it sits on. */
@@ -113,4 +113,12 @@ export function edgeColor(crop: string, theme: 'light' | 'dark'): string {
     if (ok(mixed)) return mixed;
   }
   return toHex([target, target, target]);
+}
+
+/**
+ * The list view's name for the indoor dates. They are the days to sow indoors (the seedlings then
+ * stay in until planting out), or, once sown, the day it was done.
+ */
+export function indoorLabel(started: boolean): string {
+  return started ? 'Seeds started indoors' : 'Start seeds indoors';
 }
