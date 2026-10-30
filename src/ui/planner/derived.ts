@@ -80,6 +80,28 @@ export const selectedContainer = computed<Container | null>(() => {
   return p ? (g.containers.find((c) => c.id === p.containerId) ?? null) : null;
 });
 
+/** Plantings not yet in the ground on the day shown but going in within the next 300 days. */
+export const upcoming = computed<Map<string, Planting[]>>(() => {
+  const g = garden.value;
+  const out = new Map<string, Planting[]>();
+  if (!g) return out;
+  const day = shownDay.value;
+  const iof = intervalOfP.value;
+  for (const c of g.containers) {
+    const list: Planting[] = [];
+    for (const p of g.plantings) {
+      if (p.containerId !== c.id) continue;
+      const interval = iof(p);
+      if (!interval) continue;
+      if (interval.bedIn > day && interval.bedIn <= day + 300) {
+        list.push(p);
+      }
+    }
+    if (list.length > 0) out.set(c.id, list);
+  }
+  return out;
+});
+
 /**
  * When nothing is in the ground today but plantings are coming (a garden started in the fall for
  * next spring), the day within the next ten months with the most plantings in the ground, so the

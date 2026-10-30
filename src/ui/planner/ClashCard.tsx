@@ -5,8 +5,9 @@ import { useEffect, useRef } from 'preact/hooks';
 import { COMPANIONS } from '../../domain/plants/library';
 import type { Planting } from '../../domain/doc/schema';
 import { squaresLabel } from '../../domain/layout/labels';
-import { fmtDay, inSentence } from '../format';
-import { garden, newId } from '../appState';
+import { toDay, yearOf } from '../../domain/dates';
+import { fmtDay, fmtWithYear, inSentence } from '../format';
+import { garden, newId, today } from '../appState';
 import { selection } from '../uiState';
 import { plantLookup, intervalOfP } from './derived';
 import { act, clashCard, showToast } from './plannerState';
@@ -35,15 +36,26 @@ export function ClashCard() {
 
   const plantOf = plantLookup.value;
   const iof = intervalOfP.value;
+  const thisYear = yearOf(toDay(today.value));
+  /** Format a day; include the year when it falls outside the current calendar year. */
+  const fmtMaybeYear = (d: number) => yearOf(d) === thisYear ? fmtDay(d) : fmtWithYear(d);
 
   // Describe each clash: "Tomato is here Apr 30 to Sep 12"
   const clashDescs = proposal.clashes.map((c) => {
     const name = plantOf(c.with.plantId)?.name ?? 'A plant';
     const i = iof(c.with);
     if (!i) return `${name} is here (dates unknown)`;
-    const end = i.bedOut !== null ? ` to ${fmtDay(i.bedOut)}` : ' (perennial)';
-    return `${name} is here ${fmtDay(i.bedIn)}${end}`;
+    const end = i.bedOut !== null ? ` to ${fmtMaybeYear(i.bedOut)}` : ' (perennial)';
+    return `${name} is here ${fmtMaybeYear(i.bedIn)}${end}`;
   });
+
+  // New plant's own growing stay, shown when it has a window.
+  const newInterval = proposal.planting ? iof(proposal.planting as Planting) : null;
+  const newStay = newInterval
+    ? newInterval.bedOut !== null
+      ? `${req.plant.name} would grow ${fmtMaybeYear(newInterval.bedIn)} to ${fmtMaybeYear(newInterval.bedOut)}.`
+      : `${req.plant.name} would go in ${fmtMaybeYear(newInterval.bedIn)} (perennial).`
+    : null;
 
   // Check whether any clash pair is a foe companion: if so, do not offer "Grow alongside".
   const hasFoe = proposal.clashes.some((c) => {
@@ -116,6 +128,7 @@ export function ClashCard() {
           {d}
         </p>
       ))}
+      {newStay ? <p class="clash-desc">{newStay}</p> : null}
       <div class="clash-actions">
         {reso.after ? (
           <button
@@ -123,7 +136,7 @@ export function ClashCard() {
             class="btn"
             onClick={() => commitWith(reso.after!.planting, req.plant.name)}
           >
-            Plant after it, from {fmtDay(reso.after.bedIn)}
+            Plant next season, from {fmtMaybeYear(reso.after.bedIn)}
           </button>
         ) : null}
         {reso.room ? (

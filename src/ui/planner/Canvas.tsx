@@ -23,7 +23,7 @@ import { Glyph } from '../components/Glyph';
 import { fmtDay, inSentence } from '../format';
 import { placingPlantId, selection, shownDay } from '../uiState';
 import { candidate, type Candidate } from './candidate';
-import { containers, footprints, intervalOfP, phasesOfP, plantLookup, present } from './derived';
+import { containers, footprints, intervalOfP, phasesOfP, plantLookup, present, upcoming } from './derived';
 import {
   cellAt,
   cellsBetween,
@@ -75,6 +75,7 @@ interface LayerInput {
   cellCm: number;
   list: Container[];
   presentMap: Map<string, Planting[]>;
+  upcomingMap: Map<string, Planting[]>;
   plantOf: (id: string) => Plant | undefined;
   sel: { kind: 'planting' | 'container'; id: string } | null;
   cand: Candidate | null;
@@ -115,6 +116,7 @@ function drawLayer(i: LayerInput): JSX.Element {
       for (let k = 1; k < sq.h; k++) grid += `M${r.x} ${r.y + k * cellCm}H${r.x + r.w}`;
     }
     const here = i.presentMap.get(c.id) ?? [];
+    const upcomingHere = i.upcomingMap.get(c.id) ?? [];
     const placingHere = i.cand && i.d.containerId === c.id && i.cand.cells;
     const selC = i.sel?.kind === 'container' && i.sel.id === c.id;
 
@@ -129,6 +131,7 @@ function drawLayer(i: LayerInput): JSX.Element {
         <rect class="bed-soil" x={r.x} y={r.y} width={r.w} height={r.h} fill={level === 0 ? 'var(--c-soil)' : 'url(#gs-soil)'} stroke={t === 0 ? 'var(--c-timber)' : 'none'} stroke-dasharray={t === 0 ? '6 4' : undefined} stroke-width={t === 0 ? 1.5 : 0} {...NS} />
         {grid ? <path d={grid} stroke="var(--c-soil-grid)" stroke-width={1} fill="none" {...NS} /> : null}
         {here.map((p) => drawPatch(c, p, cap))}
+        {upcomingHere.map((p) => drawUpcomingPatch(c, p))}
         {i.cand
           ? i.cand.taken
               .filter((tk) => tk.planting.containerId === c.id && tk.planting.cells && taken.has(tk.planting.id))
@@ -193,6 +196,18 @@ function drawLayer(i: LayerInput): JSX.Element {
     );
   }
 
+  function drawUpcomingPatch(c: GridBed, p: Planting): JSX.Element | null {
+    const plant = i.plantOf(p.plantId);
+    if (!plant || !p.cells) return null;
+    const pr = cellsRect(c, cellCm, p.cells);
+    const color = plant.glyph.color;
+    return (
+      <g key={`up${p.id}`} class="patch-upcoming" data-plant={p.plantId} data-planting-id={p.id}>
+        <rect x={pr.x + 2} y={pr.y + 2} width={pr.w - 4} height={pr.h - 4} rx={3} fill={color} fill-opacity={0.12} stroke={color} stroke-opacity={0.45} stroke-width={1.5} stroke-dasharray="4 3" {...NS} />
+      </g>
+    );
+  }
+
   function drawCompanions(c: GridBed, here: Planting[]): JSX.Element[] {
     const out: JSX.Element[] = [];
     for (let a = 0; a < here.length; a++) {
@@ -246,9 +261,22 @@ function drawLayer(i: LayerInput): JSX.Element {
 
   function drawSnapPreview(c: GridBed, cells: Cells, state: 'free' | 'clash'): JSX.Element {
     const cr = cellsRect(c, cellCm, cells);
+    if (state === 'clash') {
+      return (
+        <rect
+          class="snap-clash-strong"
+          x={cr.x + 1}
+          y={cr.y + 1}
+          width={cr.w - 2}
+          height={cr.h - 2}
+          rx={3}
+          {...NS}
+        />
+      );
+    }
     return (
       <rect
-        class={state === 'free' ? 'chosen snap-free' : 'chosen snap-clash chosen-bad'}
+        class="chosen snap-free"
         x={cr.x + 1}
         y={cr.y + 1}
         width={cr.w - 2}
@@ -411,6 +439,26 @@ function drawLabels(i: LayerInput): JSX.Element {
           );
         }
       }
+      // Upcoming-planting labels: faint "Tomato from May 4".
+      if (level >= 1) {
+        const iof2 = intervalOfP.value;
+        for (const p of i.upcomingMap.get(c.id) ?? []) {
+          const plant2 = i.plantOf(p.plantId);
+          if (!plant2 || !p.cells) continue;
+          const pr2 = cellsRect(c, cellCm, p.cells);
+          const interval2 = iof2(p);
+          if (!interval2) continue;
+          out.push(
+            <span
+              key={`ul${p.id}`}
+              class="lbl lbl-upcoming"
+              style={{ ...at(pr2.x + off.dx, pr2.y + off.dy, 4, 4), maxWidth: `calc(${pr2.w} * var(--s) * 1px - 8px)` }}
+            >
+              {plant2.name} from {fmtDay(interval2.bedIn)}
+            </span>,
+          );
+        }
+      }
       if (i.cand && level >= 2) {
         const shown = new Set((i.presentMap.get(c.id) ?? []).map((p) => p.id));
         for (const t of i.cand.taken) {
@@ -514,9 +562,19 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
     if (!el) return;
     const ro = new ResizeObserver(() => {
       const r = el.getBoundingClientRect();
+      const newW = Math.round(r.width);
+      const newH = Math.round(r.height);
       const was = viewport.value;
-      viewport.value = { w: Math.round(r.width), h: Math.round(r.height) };
-      if (!view.value || was.w === 0) fitAll();
+      const cv = view.value;
+      // Keep the viewBox top-left corner fixed when the canvas is already laid out, so the plan
+      // does not jump under the pointer when a drag from the palette opens the placement panel.
+      if (was.w !== 0 && cv) {
+        const oldVbX = cv.cx - was.w / 2 / cv.s;
+        const oldVbY = cv.cy - was.h / 2 / cv.s;
+        view.value = { ...cv, cx: oldVbX + newW / 2 / cv.s, cy: oldVbY + newH / 2 / cv.s };
+      }
+      viewport.value = { w: newW, h: newH };
+      if (!cv || was.w === 0) fitAll();
     });
     ro.observe(el);
     return () => ro.disconnect();
@@ -539,9 +597,13 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
   }, []);
 
   // Palette drag: global pointer listeners while dragging from the palette.
-  const isDraggingFromPalette = palDragState !== null;
+  // We use paletteDrag.subscribe() rather than a useEffect/useLayoutEffect so the listeners
+  // are registered synchronously the moment paletteDrag.value becomes non-null. Preact Signals
+  // defers component re-renders to requestAnimationFrame, so any effect hook fires too late:
+  // in WebKit, pointer events from the drag reach the document before the rAF fires and the
+  // listener is registered. signal.subscribe() fires synchronously inside the same JS task as
+  // the signal write, guaranteeing the listeners are in place for the very next pointer event.
   useEffect(() => {
-    if (!isDraggingFromPalette) return;
     const onMove = (e: PointerEvent) => {
       const state = paletteDrag.value;
       if (!state) return;
@@ -551,27 +613,42 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
     const onUp = (e: PointerEvent) => {
       const state = paletteDrag.value;
       paletteDrag.value = null;
-      if (state?.snap) {
-        attemptPlant(state.snap.containerId, state.snap.cells, e.clientX, e.clientY);
+      const snap = state?.snap ?? null;
+      if (snap) {
+        attemptPlant(snap.containerId, snap.cells, e.clientX, e.clientY);
       }
     };
-    document.addEventListener('pointermove', onMove);
-    document.addEventListener('pointerup', onUp);
+    let registered = false;
+    const unsubscribe = paletteDrag.subscribe((state) => {
+      if (state !== null && !registered) {
+        document.addEventListener('pointermove', onMove);
+        document.addEventListener('pointerup', onUp);
+        registered = true;
+      } else if (state === null && registered) {
+        document.removeEventListener('pointermove', onMove);
+        document.removeEventListener('pointerup', onUp);
+        registered = false;
+      }
+    });
     return () => {
-      document.removeEventListener('pointermove', onMove);
-      document.removeEventListener('pointerup', onUp);
+      unsubscribe();
+      if (registered) {
+        document.removeEventListener('pointermove', onMove);
+        document.removeEventListener('pointerup', onUp);
+      }
     };
-  }, [isDraggingFromPalette]);
+  }, []);
 
-  const input: LayerInput = { cellCm: g.cellCm, list, presentMap, plantOf, sel, cand, d, level, drag, cur, focused, palDrag: palDragState, plantMove: plantMoveState };
-  const layer = useMemo(() => drawLayer(input), [g, list, presentMap, plantOf, sel, cand, d, level, drag, cur, focused, palDragState, plantMoveState]);
+  const upcomingMap = upcoming.value;
+  const input: LayerInput = { cellCm: g.cellCm, list, presentMap, upcomingMap, plantOf, sel, cand, d, level, drag, cur, focused, palDrag: palDragState, plantMove: plantMoveState };
+  const layer = useMemo(() => drawLayer(input), [g, list, presentMap, upcomingMap, plantOf, sel, cand, d, level, drag, cur, focused, palDragState, plantMoveState]);
   // Beds show their size under the name; pots show what is in them on the day shown.
   const sizeText = (c: Container) => {
     if (c.form === 'grid') return `${formatLength(c.rows * g.cellCm, u)} by ${formatLength(c.cols * g.cellCm, u)}`;
     const here = presentMap.get(c.id) ?? [];
     return here.length ? here.map((p) => `${plantOf(p.plantId)?.name ?? 'Plant'} ${p.count}`).join(', ') : formatLength(c.diameterCm, u);
   };
-  const labels = useMemo(() => drawLabels(input), [g, list, presentMap, plantOf, cand, level, drag, palDragState]);
+  const labels = useMemo(() => drawLabels(input), [g, list, presentMap, upcomingMap, plantOf, cand, level, drag, palDragState]);
 
   const vb = v && size.w > 0 ? viewBoxOf(v, size) : { x: 0, y: 0, w: 100, h: 100 };
   const s = v?.s ?? 1;
@@ -579,15 +656,20 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
   const vars = `--vx:${vb.x};--vy:${vb.y};--s:${s}`;
 
   // ---- Pointer gestures -----------------------------------------------------------------------
+  /** Planting captured at mouse/pen pointerdown, stored until movement exceeds 6 px. */
+  interface TapPlantingTarget { planting: Planting; plant: Plant; c: GridBed; grabOffsetCol: number; grabOffsetRow: number }
   const gesture = useRef<
     | null
-    | { kind: 'tap'; id: number; x: number; y: number; moved: boolean; type: string }
+    | { kind: 'tap'; id: number; x: number; y: number; moved: boolean; type: string; plantingTarget?: TapPlantingTarget }
     | { kind: 'paint'; id: number; bedId: string }
     | { kind: 'move'; id: number; c: Container; cell: Cell | null; x: number; y: number }
-    | { kind: 'move-planting'; id: number; plantingId: string; containerId: string; sourceCells: Cells; plant: Plant }
+    | { kind: 'move-planting'; id: number; plantingId: string; containerId: string; sourceCells: Cells; plant: Plant; grabOffsetCol: number; grabOffsetRow: number }
     | { kind: 'pinch'; dist: number; mid: { x: number; y: number }; view: NonNullable<typeof v> }
   >(null);
   const pointers = useRef(new Map<number, { x: number; y: number }>());
+  // Touch long-press: 350 ms hold on a planting starts a move gesture.
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const longPressData = useRef<{ pointerId: number; planting: Planting; plant: Plant; c: GridBed; grabOffsetCol: number; grabOffsetRow: number } | null>(null);
 
   const local = (e: PointerEvent) => {
     const r = app.current!.getBoundingClientRect();
@@ -661,30 +743,15 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
     const hit = hitTest(pl.x, pl.y);
     const placing = placingPlantId.value !== null;
 
-    // While placing, mouse/pen pointerdown on a grid cell starts a paint gesture.
-    if (placing && hit?.c.form === 'grid' && hit.cell && e.pointerType !== 'touch') {
+    // While placing, any pointer on a grid cell starts a paint gesture (touch included).
+    if (placing && hit?.c.form === 'grid' && hit.cell) {
       draft.value = { ...draft.value, containerId: hit.c.id, start: hit.cell, end: hit.cell, phase: 'started' };
       gesture.current = { kind: 'paint', id: e.pointerId, bedId: hit.c.id };
       setCursorFrom(hit);
       return;
     }
 
-    // Not placing: check if pressing on a selected planting (mouse/pen only) to start a move.
     const s0 = selection.value;
-    if (!placing && e.pointerType === 'mouse' && s0?.kind === 'planting') {
-      const found = plantingAt(pl.x, pl.y);
-      if (found && found.planting.id === s0.id && found.planting.cells) {
-        gesture.current = {
-          kind: 'move-planting',
-          id: e.pointerId,
-          plantingId: found.planting.id,
-          containerId: found.c.id,
-          sourceCells: found.planting.cells,
-          plant: found.plant,
-        };
-        return;
-      }
-    }
 
     // Container move (mouse, selected container).
     if (!placing && hit && e.pointerType === 'mouse' && s0?.kind === 'container' && s0.id === hit.c.id) {
@@ -692,7 +759,56 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
       return;
     }
 
-    gesture.current = { kind: 'tap', id: e.pointerId, x: p.x, y: p.y, moved: false, type: e.pointerType };
+    // For mouse/pen, capture any planting under the pointer: if the pointer moves more than 6 px
+    // the tap gesture upgrades to move-planting; a click without moving selects normally.
+    let tapPlantingTarget: TapPlantingTarget | undefined;
+    if (!placing && (e.pointerType === 'mouse' || e.pointerType === 'pen')) {
+      const found = plantingAt(pl.x, pl.y);
+      if (found?.planting.cells) {
+        const grabbedCell = cellAt(found.c, g.cellCm, pl.x, pl.y);
+        tapPlantingTarget = {
+          planting: found.planting,
+          plant: found.plant,
+          c: found.c,
+          grabOffsetCol: grabbedCell ? grabbedCell.col - found.planting.cells.col : 0,
+          grabOffsetRow: grabbedCell ? grabbedCell.row - found.planting.cells.row : 0,
+        };
+      }
+    }
+
+    // Touch long-press (350 ms) on a planting starts a move-planting gesture.
+    if (!placing && e.pointerType === 'touch') {
+      const found = plantingAt(pl.x, pl.y);
+      if (found?.planting.cells) {
+        const grabbedCell = cellAt(found.c, g.cellCm, pl.x, pl.y);
+        longPressData.current = {
+          pointerId: e.pointerId,
+          planting: found.planting,
+          plant: found.plant,
+          c: found.c,
+          grabOffsetCol: grabbedCell ? grabbedCell.col - found.planting.cells.col : 0,
+          grabOffsetRow: grabbedCell ? grabbedCell.row - found.planting.cells.row : 0,
+        };
+        longPressTimer.current = setTimeout(() => {
+          const data = longPressData.current;
+          longPressData.current = null;
+          longPressTimer.current = null;
+          if (!data?.planting.cells) return;
+          gesture.current = {
+            kind: 'move-planting',
+            id: data.pointerId,
+            plantingId: data.planting.id,
+            containerId: data.c.id,
+            sourceCells: data.planting.cells,
+            plant: data.plant,
+            grabOffsetCol: data.grabOffsetCol,
+            grabOffsetRow: data.grabOffsetRow,
+          };
+        }, 350);
+      }
+    }
+
+    gesture.current = { kind: 'tap', id: e.pointerId, x: p.x, y: p.y, moved: false, type: e.pointerType, plantingTarget: tapPlantingTarget };
   };
 
   const onPointerMove = (e: PointerEvent) => {
@@ -712,7 +828,29 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
       return;
     }
     if (gs.kind === 'tap') {
-      if (!gs.moved && Math.hypot(p.x - gs.x, p.y - gs.y) < 6) return;
+      const dist = Math.hypot(p.x - gs.x, p.y - gs.y);
+      if (dist < 6) return;
+      // Cancel the touch long-press when the finger moves more than 8 px.
+      if (gs.type === 'touch' && longPressTimer.current !== null && dist > 8) {
+        clearTimeout(longPressTimer.current);
+        longPressTimer.current = null;
+        longPressData.current = null;
+      }
+      // First significant move on a planting (mouse/pen): become a move-planting gesture.
+      if (!gs.moved && gs.plantingTarget) {
+        const { planting, plant, c, grabOffsetCol, grabOffsetRow } = gs.plantingTarget;
+        gesture.current = {
+          kind: 'move-planting',
+          id: gs.id,
+          plantingId: planting.id,
+          containerId: c.id,
+          sourceCells: planting.cells!,
+          plant,
+          grabOffsetCol,
+          grabOffsetRow,
+        };
+        return;
+      }
       gs.moved = true;
       view.value = panBy(view.value!, p.x - prev.x, p.y - prev.y);
       hoverInfo.value = null;
@@ -737,7 +875,8 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
       const hit = hitTest(pl.x, pl.y);
       if (hit?.c.form === 'grid' && hit.cell) {
         const sc = gs.sourceCells;
-        const targetCells: Cells = { col: hit.cell.col, row: hit.cell.row, w: sc.w, h: sc.h };
+        // Keep the grabbed cell under the pointer by subtracting the grab offset.
+        const targetCells: Cells = { col: hit.cell.col - gs.grabOffsetCol, row: hit.cell.row - gs.grabOffsetRow, w: sc.w, h: sc.h };
         const gardenVal = garden.value;
         if (gardenVal) {
           const container = gardenVal.containers.find((c) => c.id === hit.c.id);
@@ -769,6 +908,12 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
   const onPointerUp = (e: PointerEvent) => {
     const gs = gesture.current;
     pointers.current.delete(e.pointerId);
+    // Cancel a pending long-press when the finger lifts.
+    if (longPressTimer.current !== null) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+      longPressData.current = null;
+    }
     if (!gs) return;
     if (gs.kind === 'pinch') {
       if (pointers.current.size === 0) gesture.current = null;
@@ -820,6 +965,9 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
         } else if (mv.proposal?.clashes.length) {
           showToastMsg(`${gs.plant.name} clashes at that spot.`);
         }
+      } else {
+        // No move: select the planting (handles long-press-then-lift and click-without-drag).
+        selection.value = { kind: 'planting', id: gs.plantingId };
       }
       return;
     }
@@ -1043,7 +1191,7 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
         >
           <strong>{hover.name}</strong>
           {hover.count > 0 ? <span>, {hover.count}</span> : null}
-          {hover.dates ? <span class="muted"> {hover.dates}</span> : null}
+          {hover.dates ? <span> {hover.dates}</span> : null}
         </div>
       ) : null}
     </div>
@@ -1064,7 +1212,21 @@ function computePaletteDragSnap(clientX: number, clientY: number, canvasEl: HTML
 
   const localX = clientX - rect.left;
   const localY = clientY - rect.top;
-  const vb = viewBoxOf(v, viewport.value);
+  // Compute the viewBox correctly even if the ResizeObserver has not yet updated view.value.
+  //
+  // Our ResizeObserver policy keeps the viewBox TOP-LEFT CORNER FIXED when the canvas resizes
+  // (see the ro = new ResizeObserver(…) block). So the top-left of the viewBox is invariant
+  // under resize, regardless of whether view.value has been updated yet.
+  //
+  // To exploit this: compute the stored top-left from view.value + viewport.value (which are
+  // always consistent with each other), then extend it to the live canvas size from
+  // getBoundingClientRect. This eliminates the race condition in WebKit where the ResizeObserver
+  // fires AFTER the pointer event, causing view.value to be stale relative to the live size.
+  const storedSize = viewport.value;
+  const storedVb = viewBoxOf(v, storedSize);
+  // storedVb.x/y is the invariant top-left corner; w/h use the live canvas pixel size.
+  const liveSize = { w: rect.width, h: rect.height };
+  const vb = { x: storedVb.x, y: storedVb.y, w: liveSize.w / v.s, h: liveSize.h / v.s };
   const planeX = vb.x + localX / v.s;
   const planeY = vb.y + localY / v.s;
 

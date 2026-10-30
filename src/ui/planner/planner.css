@@ -240,7 +240,7 @@
 }
 .planner-bar {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: var(--sp-2) var(--sp-4);
   padding: var(--sp-3) 20px;
@@ -248,6 +248,14 @@
 .planner-bar h1 {
   font-size: 26px;
   font-weight: 700;
+  /* Prevent the heading from growing wider than needed so the bar never wraps due to
+     a longer date string on one view vs a shorter one on the next (which would shift the
+     canvas position mid-drag). The heading can shrink; overflow is hidden gracefully. */
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .ahead {
   display: inline-flex;
@@ -1090,9 +1098,12 @@
     border-right: 0;
   }
   .add-plants {
-    position: absolute;
+    /* Fixed keeps the button in the viewport stacking context so the canvas SVG
+       (which is deeply nested in z-index:auto ancestors) cannot cover it. */
+    position: fixed;
     left: var(--sp-4);
-    bottom: var(--sp-3);
+    bottom: calc(56px + env(safe-area-inset-bottom) + var(--sp-3));
+    z-index: 30; /* above bottom-nav (20); below palette sheet (40) and side sheet (60) */
     display: inline-flex;
   }
   .planner > .planner-side.has-content {
@@ -1147,7 +1158,6 @@
 @keyframes sheet-in {
   from {
     transform: translateY(24px);
-    opacity: 0;
   }
 }
 
@@ -1220,4 +1230,56 @@
   pointer-events: auto;
   max-width: 100%;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+}
+
+/* On phones the note goes in flow above the canvas so column letters stay visible.
+   plan-note is first in the DOM, so position: static puts it above canvas-wrap without
+   flexbox reordering. Avoiding display:flex on canvas-area preserves the DOM-order stacking
+   that lets the absolutely-positioned add-plants button paint over the canvas SVG. */
+@media (max-width: 760px) {
+  .plan-note {
+    position: static;
+    top: auto;
+    left: auto;
+    right: auto;
+    padding: var(--sp-2) 0 0;
+    z-index: auto;
+  }
+  /* The bottom sheet shows the placing note; remove it from the flow. */
+  .is-placing .plan-note {
+    display: none;
+  }
+}
+
+/* Orange solid footprint for snap-clash (bolder than the dashed free-slot preview). */
+.snap-clash-strong {
+  fill: var(--c-caution);
+  fill-opacity: 0.25;
+  stroke: var(--c-caution);
+  stroke-width: 2;
+}
+
+/* Upcoming-planting labels on the canvas. */
+.lbl-upcoming {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--c-panel);
+  color: var(--c-muted);
+  font-size: 11px;
+  font-style: italic;
+  border: 1px dashed var(--c-muted);
+}
+
+/* Resize handles (corner grabs) on the selected planting. */
+.resize-handle {
+  fill: var(--c-panel);
+  stroke: var(--c-select);
+  stroke-width: 2;
+  cursor: nwse-resize;
+}
+.resize-handle:hover {
+  fill: var(--c-accent-soft);
 }

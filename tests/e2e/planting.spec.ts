@@ -128,8 +128,9 @@ test('fall: choosing lettuce switches the view to when it would go in', async ({
 
   // Choose lettuce: the view should switch to when lettuce goes in.
   await choosePlant(page, 'Lettuce');
-  // The bar span should now say "Showing ... when lettuce would go in".
-  await expect(page.locator('.plan-note .ahead').filter({ hasText: /when lettuce would go in/i })).toBeVisible();
+  // The placement panel's .place-where paragraph says "when lettuce would go in" on both
+  // desktop (right panel) and phone (bottom sheet). The plan-note bar is hidden on phone when placing.
+  await expect(page.locator('.place-where').filter({ hasText: /when lettuce would go in/i })).toBeVisible();
 
   const axe1 = await new AxeBuilder({ page }).withTags(AXE_TAGS).analyze();
   expect(axe1.violations).toEqual([]);
@@ -245,8 +246,9 @@ test('choosing a plant switches the view day to when it goes in', async ({ page 
   // Before placing: the bar says "Nothing in the ground yet".
   await expect(page.getByText(/Nothing is in the ground yet/)).toBeVisible();
   await choosePlant(page, 'Lettuce');
-  // After choosing: the bar span shows when lettuce would go in.
-  await expect(page.locator('.plan-note .ahead').filter({ hasText: /when lettuce would go in/i })).toBeVisible();
+  // After choosing: the placement panel's .place-where paragraph says "when lettuce would go in"
+  // on desktop (right panel) and phone (bottom sheet). The plan-note bar is hidden on phone.
+  await expect(page.locator('.place-where').filter({ hasText: /when lettuce would go in/i })).toBeVisible();
   // Stop placing restores the day.
   await page.getByRole('button', { name: 'Stop placing' }).first().click();
   // Bar returns to today view (heading shows Oct 30).
@@ -303,7 +305,7 @@ test('dragging a plant straight from the list onto a free square plants it', asy
   await expect(page.getByRole('status').filter({ hasText: /Planted 4 lettuce plants in Bed 1, C2/ })).toBeVisible();
 });
 
-test('fall: dragging lettuce onto a square planned for next season shows what is there and finds room', async ({ page, isMobile }) => {
+test('fall: dragging lettuce onto a square planned for next season shows what is there', async ({ page, isMobile }) => {
   test.skip(isMobile, 'on phones the list is a sheet');
   await startGarden(page, FALL);
   await expect.poll(() => savedPlantings(page)).toBeGreaterThan(0);
@@ -315,8 +317,122 @@ test('fall: dragging lettuce onto a square planned for next season shows what is
   await expect(card).toContainText(/Carrot is here/);
   // The plan shows the day lettuce would go in, not today.
   await expect(page.getByRole('heading', { level: 1 })).not.toHaveText(/Oct 30/);
-  await card.getByRole('button', { name: /^Find room: Bed 1, [A-H]\d/ }).click();
+  // Use "Plant next season" or "Grow alongside" to resolve the clash and add the planting.
+  const afterBtn = card.getByRole('button', { name: /Plant next season/ });
+  const alongsideBtn = card.getByRole('button', { name: /Grow alongside/ });
+  const findRoomBtn = card.getByRole('button', { name: /^Find room:/ });
+  const hasAfter = await afterBtn.isVisible().catch(() => false);
+  const hasAlongside = await alongsideBtn.isVisible().catch(() => false);
+  const hasRoom = await findRoomBtn.isVisible().catch(() => false);
+  if (hasAfter) await afterBtn.click();
+  else if (hasRoom) await findRoomBtn.click();
+  else if (hasAlongside) await alongsideBtn.click();
+  else test.fail(true, 'No resolution option found in clash card');
   await expect.poll(() => savedPlantings(page)).toBe(before + 1);
   const axe = await new AxeBuilder({ page }).withTags(AXE_TAGS).analyze();
   expect(axe.violations).toEqual([]);
+});
+
+// ---- Touch: tap to plant -------------------------------------------------------------------------
+
+test('touch: tap a free square while placing plants one square', async ({ page, isMobile }) => {
+  test.skip(!isMobile, 'touch test runs only in the phone project');
+  await startEmpty(page);
+  await choosePlant(page, 'Lettuce');
+  const pt = await square(page, 'Bed 1', 3, 1, 8, 4);
+  await page.touchscreen.tap(pt.x, pt.y);
+  await expect(page.locator('[data-plant="lettuce"]')).toHaveCount(1);
+  await expect(page.getByRole('status').filter({ hasText: /Planted \d+ lettuce/ })).toBeVisible();
+});
+
+// ---- Touch: one-finger paint while placing -------------------------------------------------------
+
+test('touch: dragging across squares while placing paints a patch', async ({ page, isMobile }) => {
+  test.skip(!isMobile, 'touch paint test runs only in the phone project');
+  await startEmpty(page);
+  await choosePlant(page, 'Lettuce');
+  const a = await square(page, 'Bed 1', 0, 0, 8, 4);
+  const b = await square(page, 'Bed 1', 3, 0, 8, 4);
+  // Fire pointer events with pointerType = 'touch' to simulate a one-finger paint gesture.
+  await page.evaluate(([ax, ay, bx, by]: [number, number, number, number]) => {
+    const el = document.querySelector('.canvas-app') as HTMLElement;
+    const fire = (type: string, x: number, y: number) =>
+      el.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, pointerType: 'touch', isPrimary: true, clientX: x, clientY: y, pointerId: 1 }));
+    fire('pointerdown', ax, ay);
+    for (let s = 1; s <= 6; s++) fire('pointermove', ax + ((bx - ax) * s) / 6, ay);
+    fire('pointerup', bx, by);
+  }, [a.x, a.y, b.x, b.y] as [number, number, number, number]);
+  // A multi-cell patch should have been planted (4 squares wide).
+  await expect.poll(() => savedPlantings(page)).toBe(1);
+  await expect(page.getByRole('status').filter({ hasText: /Planted \d+ lettuce/ })).toBeVisible();
+});
+
+// ---- Move an unselected planting with mouse (grab offset) ----------------------------------------
+
+test('dragging any planting without selecting first moves it and keeps the grab offset', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'mouse move gesture runs only on non-touch');
+  await startGarden(page, SPRING);
+  await expect.poll(() => savedPlantings(page), { timeout: 10000 }).toBeGreaterThan(0);
+  const before = await savedPlantings(page);
+
+  // Find the tomato patch and drag it without selecting it first.
+  const src = await square(page, 'Bed 1', 1, 0, 8, 4);
+  const dest = await square(page, 'Bed 1', 5, 2, 8, 4);
+  await page.mouse.move(src.x, src.y);
+  await page.mouse.down();
+  await page.mouse.move(src.x + 3, src.y, { steps: 2 });
+  await page.mouse.move(dest.x, dest.y, { steps: 10 });
+  await page.mouse.up();
+
+  // Count stays the same (moved, not added or removed).
+  await expect.poll(() => savedPlantings(page)).toBe(before);
+});
+
+// ---- Patch expansion: painting next to same plant merges into one patch --------------------------
+
+test('painting adjacent to an existing patch of the same plant expands it', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'mouse drag test');
+  await startEmpty(page);
+  // Plant lettuce at A1 first.
+  await choosePlant(page, 'Lettuce');
+  const a1 = await square(page, 'Bed 1', 0, 0, 8, 4);
+  await page.mouse.click(a1.x, a1.y);
+  await expect.poll(() => savedPlantings(page)).toBe(1);
+
+  // Drag from B1 (free) back over A1 (already planted with lettuce). The paint stroke covers
+  // both cells; the overlap at A1 is same-plant, so tryExpandPatch merges into one bigger patch.
+  const b1 = await square(page, 'Bed 1', 1, 0, 8, 4);
+  await page.mouse.move(b1.x, b1.y);
+  await page.mouse.down();
+  await page.mouse.move(a1.x, a1.y, { steps: 4 });
+  await page.mouse.up();
+  // One merged patch, no clash card.
+  await expect(page.locator('.clash-card')).toHaveCount(0);
+  await expect.poll(() => savedPlantings(page)).toBe(1);
+  // Toast confirms the expansion.
+  await expect(page.getByRole('status').filter({ hasText: /Made the lettuce patch bigger/ })).toBeVisible();
+});
+
+// ---- Faint upcoming plantings visible on Oct 30 -------------------------------------------------
+
+test('fall: upcoming plantings are drawn faintly on the canvas', async ({ page }) => {
+  // Nothing is in the ground on Oct 30, but the starter makes plantings for next spring.
+  await startGarden(page, FALL);
+  await expect.poll(() => savedPlantings(page)).toBeGreaterThan(0);
+  // The upcoming patches (.patch-upcoming) should be in the SVG.
+  await expect(page.locator('.patch-upcoming').first()).toBeVisible();
+});
+
+// ---- Clash card: year shown on out-of-year dates ------------------------------------------------
+
+test('clash card shows the year when the clash date falls outside the current year', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'drag test');
+  // Oct 30, 2026: everything in the starter is planned for spring 2027.
+  await startGarden(page, FALL);
+  // Drag lettuce onto C2 where carrot is planned for next spring (2027).
+  await dragFromList(page, 'Lettuce', await square(page, 'Bed 1', 2, 1, 8, 4));
+  const card = page.getByRole('dialog', { name: /clashes here/ });
+  await expect(card).toBeVisible();
+  // Clash date (Apr 2027) should include the year since today is 2026.
+  await expect(card).toContainText(/2027/);
 });

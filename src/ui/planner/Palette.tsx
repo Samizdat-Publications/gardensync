@@ -91,6 +91,15 @@ export function Palette({ onChosen, headingId }: { onChosen?: () => void; headin
           autocomplete="off"
           value={query.value}
           onInput={(e) => (query.value = (e.currentTarget as HTMLInputElement).value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && shown.length > 0) {
+              e.preventDefault();
+              const first = shown[0]!.plant;
+              if (placingPlantId.value === first.id) stopPlacing();
+              else startPlacing(first.id);
+              onChosen?.();
+            }
+          }}
         />
       </div>
       <div role="group" aria-label="Kind of plant" class="palette-kinds">

@@ -2,7 +2,7 @@
 // the placement panel and the inspector all go through these, so every input does the same thing.
 import type { Cells, Container, Planting } from '../../domain/doc/schema';
 import { squaresLabel } from '../../domain/layout/labels';
-import { minCells } from '../../domain/layout/patch';
+import { defaultCount, minCells } from '../../domain/layout/patch';
 import { fmtDay, inSentence } from '../format';
 import { garden, newId } from '../appState';
 import { selection, shownDay, viewDay } from '../uiState';
@@ -11,7 +11,7 @@ import { footprints, intervalOfP, present, plantLookup } from './derived';
 import { boundsOf, cellsBetween, fitView, type Cell } from './geometry';
 import { act, clashCard, draft, emptyDraft, placingPreviewDay, showToast, stopPlacing, view, viewport } from './plannerState';
 import { defaultMethod } from './placement';
-import { propose, resolutions, type DropRequest } from './resolve';
+import { propose, resolutions, type DropRequest, type Proposal } from './resolve';
 import { placingPlantId } from '../uiState';
 
 // ---- Tap and paint ------------------------------------------------------------------------------
@@ -98,14 +98,81 @@ export function attemptPlant(containerId: string, cells: Cells, screenX = 0, scr
   }
 
   if (proposal.clashes.length > 0) {
+    // When every clash is with the same plant in the same bed, try expanding the patch instead.
+    const allSamePlant = proposal.clashes.every((c) => c.with.plantId === plantId && c.with.containerId === containerId);
+    if (allSamePlant && tryExpandPatch(containerId, cells, proposal, g)) return;
+
     const reso = resolutions(req, proposal, g, plantLookup.value);
     clashCard.value = { req, proposal, reso, screenX, screenY };
+    // Clear placement state so the panel does not show spurious warnings while the card is open.
+    const prevMethod = draft.value.method;
+    draft.value = { ...emptyDraft(), method: prevMethod };
     return;
   }
 
   if (proposal.planting) {
     commitPlanting(proposal.planting, plant.name, g.id);
   }
+}
+
+/**
+ * When the dropped cells all clash with patches of the same plant, merge them into one bigger
+ * bounding rectangle patch. Returns true when done (so the caller skips the normal clash card).
+ * Never reports "Cilantro clashes with Cilantro".
+ */
+function tryExpandPatch(containerId: string, newCells: Cells, proposal: Proposal, g: NonNullable<typeof garden.value>): boolean {
+  const plantId = placingPlantId.value;
+  if (!plantId || !proposal.planting) return false;
+  const plant = plantLookup.value(plantId);
+  if (!plant) return false;
+  const container = g.containers.find((c) => c.id === containerId);
+  if (!container || container.form !== 'grid') return false;
+
+  const samePatches = proposal.clashes.map((c) => c.with).filter((p) => p.containerId === containerId && p.plantId === plantId && p.cells);
+  if (samePatches.length === 0) return false;
+
+  // Bounding rectangle that includes every existing patch plus the new cells.
+  let minCol = newCells.col, maxCol = newCells.col + newCells.w - 1;
+  let minRow = newCells.row, maxRow = newCells.row + newCells.h - 1;
+  for (const p of samePatches) {
+    const pc = p.cells!;
+    minCol = Math.min(minCol, pc.col);
+    maxCol = Math.max(maxCol, pc.col + pc.w - 1);
+    minRow = Math.min(minRow, pc.row);
+    maxRow = Math.max(maxRow, pc.row + pc.h - 1);
+  }
+  const bigCells: Cells = { col: minCol, row: minRow, w: maxCol - minCol + 1, h: maxRow - minRow + 1 };
+
+  // Check that the bounding rectangle does not conflict with other plants.
+  const sameIds = new Set(samePatches.map((p) => p.id));
+  const otherPlantings = g.plantings.filter((p) => !sameIds.has(p.id));
+  const method = draft.value.method ?? defaultMethod(plant);
+  const bigReq: DropRequest = { plant, method, bed: container, cells: bigCells, from: shownDay.value };
+  const bigProposal = propose(bigReq, { ...g, plantings: otherPlantings }, plantLookup.value);
+  if (bigProposal.problem || bigProposal.clashes.length > 0 || !bigProposal.planting) return false;
+
+  const newPlantingId = newId();
+  const count = Math.max(1, defaultCount(plant, bigCells));
+  const newPlanting: Planting = { ...bigProposal.planting, id: newPlantingId, count };
+  const removeOps = [...sameIds].map((id) => ({ type: 'removePlanting' as const, gardenId: g.id, plantingId: id }));
+  const addOp = { type: 'addPlanting' as const, gardenId: g.id, planting: newPlanting };
+
+  const plantName = inSentence(plant.name);
+  const res = act(
+    { type: 'batch', ops: [...removeOps, addOp] },
+    `expand ${plantName}`,
+    `Made the ${plantName} patch bigger.`,
+  );
+  if (res.ok) {
+    selection.value = { kind: 'planting', id: newPlantingId };
+    draft.value = emptyDraft();
+    const span = intervalOfP.value(newPlanting);
+    if (span && (span.bedIn > shownDay.value || (span.bedOut !== null && span.bedOut <= shownDay.value))) {
+      viewDay.value = span.bedIn;
+      if (placingPreviewDay.value !== null) placingPreviewDay.value = span.bedIn;
+    }
+  }
+  return res.ok;
 }
 
 /** Commit a planting derived from a proposal. The plant stays chosen so more can be dropped. */
