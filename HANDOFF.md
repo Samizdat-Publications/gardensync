@@ -4,15 +4,15 @@ Newest first. Read this, then [PROGRESS.md](PROGRESS.md), then [docs/v8/PLAN.md]
 then [docs/STEWART_FEEDBACK.md](docs/STEWART_FEEDBACK.md) (Stewart's notes outrank any critic), then
 [review/LEDGER.md](review/LEDGER.md).
 
-## Planting rethought, 8.1 work (2026-10-30): start here
+## 8.1 released (2026-10-30): start here
 
-**State:** branch `feature/planting-ux` (not merged). Preview https://planting.gardensync-e4e.pages.dev.
-The design is docs/v8/PLANTING_UX.md; findings and fixes are review/LEDGER.md 84 to 93. Two
-usability passes run; every P1 from the second one fixed or explained (ledger 90 is a test-harness
-quirk). Production still runs 8.0.
+**State:** 8.1 (planting, rethought) is on `master` at 3210be2, tagged v8.1.0, released on GitHub,
+and live at https://gardensync-e4e.pages.dev; the landing page says 8.1. The landing project's
+production branch is `main` (deploy `site-dist` with `--branch=main`). The design is
+docs/v8/PLANTING_UX.md; findings are review/LEDGER.md 84 to 93.
 
-**Next:** Stewart tries the preview. On his yes: merge to `master`, bump to 8.1.0, CHANGELOG,
-production deploy, tag. Deferred polish: ledger 91 (corner resize handles) and 93.
+**Next:** 8.1.x polish: ledger 91 (corner resize handles) and 93 (companion link key, phone title,
+phone icons on one-row patches). Check ledger 90 (taps after a touch paint) on a real phone.
 
 ## Release (2026-10-28)
 

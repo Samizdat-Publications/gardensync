@@ -13,15 +13,16 @@ verified bundle in `C:\Users\stewa\Documents\Claude\_archives\`. Work continues 
 (remote `origin`). Hub media proposal: `C:\Users\stewa\Documents\Claude\Github Hub\proposals\gardensync.md`;
 showcase.json already points at the hub cut.
 
-**8.1 in progress (2026-10-30): planting rethought** on branch `feature/planting-ux`, preview
-https://planting.gardensync-e4e.pages.dev, waiting for Stewart to try it. Drag and drop from the
-list, drop to plant, paint patches, move any planting, a clash card with ways out, the plan showing
-the bed-in day while placing. Design: docs/v8/PLANTING_UX.md; ledger 84 to 93.
+**8.1 released (2026-10-30): planting, rethought.** Merged to `master` (3210be2), tag v8.1.0,
+GitHub release, live app and landing page deployed. Drag and drop from the list, drop to plant,
+paint patches, move any planting, a clash card with ways out, the plan showing the bed-in day while
+placing. Design: docs/v8/PLANTING_UX.md; ledger 84 to 93. Next: 8.1.x polish from ledger 91
+(corner resize handles) and 93.
 
 ## Done
 
 - 2026-10-30: Planting rethought (ledger 84 to 93): two usability passes, all P1s fixed, e2e tests
-  for each; preview deployed from `feature/planting-ux`.
+  for each. Released as 8.1 the same day after Stewart tried the preview; `npm run check` ALL GREEN.
 
 - 2026-10-28: Plan approved. Decisions D-U01 to D-U04 recorded.
 - 2026-10-28: Tag `v7-final` on the last 7.x commit (`8d3f563`). Branch `v8` created. Old app removed
