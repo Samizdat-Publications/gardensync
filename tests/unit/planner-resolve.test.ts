@@ -5,6 +5,8 @@ import { applyOp } from '../../src/domain/doc/ops';
 import { emptyDoc, type Garden, type GridBed } from '../../src/domain/doc/schema';
 import { starterOps } from '../../src/domain/doc/starters';
 import { plantById } from '../../src/domain/plants/library';
+import { conflictsFor } from '../../src/domain/layout/occupancy';
+import { makeIntervalOf } from '../../src/ui/planner/placement';
 import { propose, resolutions, type DropRequest } from '../../src/ui/planner/resolve';
 
 const climate = manualProfile({ lastFrost: '04-20', firstFrost: '10-15', asOf: '2026-10-30' });
@@ -97,4 +99,19 @@ describe('the ways out of a clash', () => {
     expect(out.room?.planting.cells?.row).toBe(3);
     expect(out.room?.planting.cells?.col).toBe(1);
   });
+});
+
+describe('find room only offers empty squares', () => {
+  for (const [plantId, method, col, row] of [['basil', 'transplant', 0, 0], ['garlic', 'plant', 1, 3], ['lettuce', 'direct', 2, 1]] as const) {
+    it(`${plantId}: the offered squares hold nothing at all while it would grow`, () => {
+      const g = fallStarter();
+      const r = { ...req(g, plantId, col, row), method };
+      const p = propose(r, g, plantOf);
+      const out = resolutions(r, p, g, plantOf);
+      if (!out.room) return;
+      const iof = makeIntervalOf(climate, plantOf);
+      const overlaps = conflictsFor({ ...out.room.planting, id: 'probe' }, g.plantings, iof, plantOf);
+      expect(overlaps.map((c) => c.with.plantId)).toEqual([]);
+    });
+  }
 });

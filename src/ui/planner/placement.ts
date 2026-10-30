@@ -82,9 +82,13 @@ export function windowWords(choice: Pick<WindowChoice, 'kind' | 'nextSeason' | '
         ? 'overwinter'
         : choice.kind;
   if (choice.late) return `late in the ${base} window, with time still to crop`;
-  const round = choice.anchor.round !== undefined && choice.anchor.round > 0 ? `, sowing ${choice.anchor.round + 1}` : '';
-  if (choice.nextSeason) return choice.kind === 'spring' ? `next spring's window${round}` : `next season's ${base} window${round}`;
-  return `${base} window${round}`;
+  // A later sowing of a crop sown all season (lettuce, spinach in July) is not "spring" any more.
+  if (choice.anchor.round !== undefined && choice.anchor.round > 0) {
+    const n = choice.anchor.round + 1;
+    return choice.nextSeason ? `sowing ${n} of next season` : `sowing ${n} of the season`;
+  }
+  if (choice.nextSeason) return choice.kind === 'spring' ? "next spring's window" : `next season's ${base} window`;
+  return `${base} window`;
 }
 
 /** The anchor a new planting gets: the next viable window, or the day itself pinned when there is no climate. */

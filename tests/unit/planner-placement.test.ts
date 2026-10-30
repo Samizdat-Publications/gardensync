@@ -110,3 +110,14 @@ describe('a late planting after the window closes', () => {
     expect(ch === null || ch.nextSeason).toBe(true);
   });
 });
+
+describe('garlic planted late in the fall', () => {
+  it('still goes in this fall a week after its usual window, not next spring', () => {
+    const c = manualProfile({ lastFrost: '04-20', firstFrost: '10-15', asOf: '2026-10-30' });
+    const from = dayFromParts(2026, 10, 30);
+    const ch = nextWindow(plantById('garlic')!, c, 'plant', from)!;
+    expect(ch.kind).toBe('overwinter');
+    expect(ch.bedIn).toBe(from);
+    expect(ch.late).toBe(true);
+  });
+});

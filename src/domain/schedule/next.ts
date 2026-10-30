@@ -82,10 +82,9 @@ export function nextWindow(
     }
     // A window that closed in the last few weeks may still take a late planting today (peppers set
     // out in early June), as long as there is still a harvest before frost. It wins over waiting.
-    if (season === s0) {
-      const late = lateChoice(plant, climate, method, schedule.windows, m, season, from, startsFresh);
-      if (late && (!best || late.bedIn < best.bedIn)) best = late;
-    }
+    // (Overwinter crops such as garlic belong to next season's harvest, so check both seasons.)
+    const late = lateChoice(plant, climate, method, schedule.windows, m, season, from, startsFresh);
+    if (late && (!best || late.bedIn < best.bedIn)) best = { ...late, nextSeason: season !== s0 };
     if (best) return best;
   }
   return null;
@@ -102,7 +101,7 @@ function lateChoice(
   startsFresh: boolean,
 ): WindowChoice | null {
   for (const w of windows) {
-    if (w.method !== m || w.kind === 'overwinter' || w.kind === 'perennial') continue;
+    if (w.method !== m || w.kind === 'perennial') continue;
     // Seeds not yet started cannot be planted out late today.
     if (startsFresh && w.indoor) continue;
     if (w.bedIn.end >= from || from - w.bedIn.end > LATE_DAYS) continue;

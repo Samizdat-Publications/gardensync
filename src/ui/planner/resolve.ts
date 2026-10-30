@@ -49,6 +49,11 @@ function clashesOf(p: Omit<Planting, 'id'>, plantings: readonly Planting[], iof:
   return conflictsFor({ ...p, id: PROBE }, plantings, iof, plantOf).filter((c) => c.kind === 'conflict');
 }
 
+/** Anything at all in those squares while it would grow, even a crop it could share with. */
+function sharesWithAnything(p: Omit<Planting, 'id'>, plantings: readonly Planting[], iof: IntervalOf, plantOf: PlantOf): boolean {
+  return conflictsFor({ ...p, id: PROBE }, plantings, iof, plantOf).length > 0;
+}
+
 /** The planting a drop would make, and what it clashes with. */
 export function propose(req: DropRequest, garden: Garden, plantOf: PlantOf): Proposal {
   if (!cellsInBounds(req.bed, req.cells)) return { planting: null, problem: `That runs off ${req.bed.name}.`, clashes: [] };
@@ -91,7 +96,7 @@ function plantAfter(req: DropRequest, occupants: Planting[], garden: Garden, pla
     const choice = nextWindow(req.plant, climate, req.method, from);
     if (!choice) return null;
     const planting = buildAt(req, req.bed, req.cells, choice.anchor);
-    const clashes = clashesOf(planting, garden.plantings, iof, plantOf);
+    const clashes = conflictsFor({ ...planting, id: PROBE }, garden.plantings, iof, plantOf);
     if (clashes.length === 0) {
       const names = [...new Set(occupants.map((o) => plantOf(o.plantId)?.name ?? o.plantId))];
       return { planting, bedIn: choice.bedIn, afterNames: names };
@@ -114,7 +119,8 @@ function findRoom(req: DropRequest, anchor: Anchor, garden: Garden, plantOf: Pla
         const score = k === 0 ? Math.abs(col - req.cells.col) + Math.abs(row - req.cells.row) : 1000 * k + row * bed.cols + col;
         if (best && score >= best.score) continue;
         const planting = buildAt(req, bed, { col, row, w, h }, anchor);
-        if (clashesOf(planting, garden.plantings, iof, plantOf).length === 0) best = { planting, bed, score };
+        // "Find room" means empty squares, not squares it could share with another crop.
+        if (!sharesWithAnything(planting, garden.plantings, iof, plantOf)) best = { planting, bed, score };
       }
     }
   }
