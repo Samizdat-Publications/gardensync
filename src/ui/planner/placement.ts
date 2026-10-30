@@ -84,8 +84,7 @@ export function windowWords(choice: Pick<WindowChoice, 'kind' | 'nextSeason' | '
   if (choice.late) return `late in the ${base} window, with time still to crop`;
   // A later sowing of a crop sown all season (lettuce, spinach in July) is not "spring" any more.
   if (choice.anchor.round !== undefined && choice.anchor.round > 0) {
-    const n = choice.anchor.round + 1;
-    return choice.nextSeason ? `sowing ${n} of next season` : `sowing ${n} of the season`;
+    return choice.nextSeason ? "next season's repeat sowing window" : 'repeat sowing window';
   }
   if (choice.nextSeason) return choice.kind === 'spring' ? "next spring's window" : `next season's ${base} window`;
   return `${base} window`;

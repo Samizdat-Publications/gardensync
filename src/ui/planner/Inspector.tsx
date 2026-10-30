@@ -89,7 +89,7 @@ export function phaseSteps(p: Planting, plant: Plant, ph: PlantingPhases, day: D
     }
     if (p.anchor.offsetDays !== 0 && ph.bedIn <= w.bedIn.end) {
       const n = Math.abs(p.anchor.offsetDays);
-      inDetail.push(`Moved ${n} ${n === 1 ? 'day' : 'days'} ${p.anchor.offsetDays > 0 ? 'later' : 'earlier'} than the start of the window.`);
+      inDetail.push(`Going in ${n} ${n === 1 ? 'day' : 'days'} ${p.anchor.offsetDays > 0 ? 'after the window opens' : 'before the window opens'}.`);
     }
   }
   steps.push({

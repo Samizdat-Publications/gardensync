@@ -28,6 +28,20 @@ export function fmtWithYear(d: DayNum): string {
   return withYear.format(asDate(d));
 }
 
+const yearOfDay = (d: DayNum) => asDate(d).getUTCFullYear();
+
+/** "Apr 14" in the same calendar year as `ref`, otherwise "Apr 14, 2028". */
+export function fmtNear(d: DayNum, ref: DayNum): string {
+  return yearOfDay(d) === yearOfDay(ref) ? fmtDay(d) : fmtWithYear(d);
+}
+
+/** "Apr 14 to Sep 12", with years on both ends when either falls outside the year of `ref`. */
+export function fmtSpan(start: DayNum, end: DayNum, ref: DayNum): string {
+  const y = yearOfDay(ref);
+  const f = yearOfDay(start) === y && yearOfDay(end) === y ? fmtDay : fmtWithYear;
+  return `${f(start)} to ${f(end)}`;
+}
+
 /** "Apr 14 to Apr 28", or a single day when they match. */
 export function fmtRange(start: DayNum, end: DayNum): string {
   // A window that runs the whole year round would read "Jul 18 to Jul 17".

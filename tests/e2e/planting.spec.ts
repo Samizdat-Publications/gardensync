@@ -317,8 +317,8 @@ test('fall: dragging lettuce onto a square planned for next season shows what is
   await expect(card).toContainText(/Carrot is here/);
   // The plan shows the day lettuce would go in, not today.
   await expect(page.getByRole('heading', { level: 1 })).not.toHaveText(/Oct 30/);
-  // Use "Plant next season" or "Grow alongside" to resolve the clash and add the planting.
-  const afterBtn = card.getByRole('button', { name: /Plant next season/ });
+  // Use "Plant after" or "Grow alongside" to resolve the clash and add the planting.
+  const afterBtn = card.getByRole('button', { name: /Plant after/ });
   const alongsideBtn = card.getByRole('button', { name: /Grow alongside/ });
   const findRoomBtn = card.getByRole('button', { name: /^Find room:/ });
   const hasAfter = await afterBtn.isVisible().catch(() => false);
@@ -435,4 +435,52 @@ test('clash card shows the year when the clash date falls outside the current ye
   await expect(card).toBeVisible();
   // Clash date (Apr 2027) should include the year since today is 2026.
   await expect(card).toContainText(/2027/);
+});
+
+// ---- Usability pass 2 ---------------------------------------------------------------------------
+
+const savedDoc = (page: Page) =>
+  page.evaluate(() => JSON.parse(localStorage.getItem('gardensync.v8.doc') ?? 'null')?.doc.gardens[0] as { containers: { x: number; y: number }[]; plantings: { cells?: { col: number; row: number } }[] });
+
+test('tapping the square next to a patch of the same plant makes that patch bigger', async ({ page }) => {
+  await startEmpty(page);
+  await choosePlant(page, 'Lettuce');
+  const a1 = await square(page, 'Bed 1', 0, 0, 8, 4);
+  await page.mouse.click(a1.x, a1.y);
+  await expect.poll(() => savedPlantings(page)).toBe(1);
+  const b1 = await square(page, 'Bed 1', 1, 0, 8, 4);
+  await page.mouse.click(b1.x, b1.y);
+  await expect(page.getByRole('status').filter({ hasText: /Made the lettuce patch bigger/ })).toBeVisible();
+  await expect.poll(() => savedPlantings(page)).toBe(1);
+});
+
+test('a drag that starts on a planting in a selected bed never moves the bed', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'mouse move gesture runs only on non-touch');
+  await startGarden(page, SPRING);
+  await expect.poll(() => savedPlantings(page), { timeout: 10000 }).toBeGreaterThan(0);
+  const src = await square(page, 'Bed 1', 1, 0, 8, 4);
+  // A second click on the selected planting selects its bed.
+  await page.mouse.click(src.x, src.y);
+  await page.mouse.click(src.x, src.y);
+  await expect(page.locator('.ring-sel-bed')).toBeVisible();
+  const bedBefore = (await savedDoc(page)).containers[0]!;
+  const dest = await square(page, 'Bed 1', 5, 2, 8, 4);
+  await page.mouse.move(src.x, src.y);
+  await page.mouse.down();
+  await page.mouse.move(src.x + 3, src.y, { steps: 2 });
+  await page.mouse.move(dest.x, dest.y, { steps: 10 });
+  await page.mouse.up();
+  await page.waitForTimeout(500);
+  const bedAfter = (await savedDoc(page)).containers[0]!;
+  expect({ x: bedAfter.x, y: bedAfter.y }).toEqual({ x: bedBefore.x, y: bedBefore.y });
+  await expect(page.getByRole('status').filter({ hasText: /Moved Bed 1/ })).toHaveCount(0);
+});
+
+test('fall: a planting planned for next season can be picked on the plan', async ({ page }) => {
+  await startGarden(page, FALL);
+  await expect(page.locator('.patch-upcoming').first()).toBeVisible();
+  const pt = await square(page, 'Bed 1', 1, 0, 8, 4);
+  await page.mouse.click(pt.x, pt.y);
+  await expect(page.locator('.patch-upcoming .ring-ink')).toHaveCount(1);
+  await expect(page.locator('.ring-sel-bed')).toHaveCount(0);
 });

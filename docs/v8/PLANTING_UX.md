@@ -26,7 +26,11 @@ confirm step when the squares are free.
 - **Or tap:** tap a plant in the list, then tap a square: planted, same rules. Press and drag across
   squares to plant a bigger patch. The plant stays chosen so several patches can go in one after
   another; Escape or "Done" stops.
-- **Move a planting by dragging it** to other squares; it keeps its dates. Same clash rules.
+- **Move a planting by dragging it** to other squares; it keeps its dates. Same clash rules. A drag
+  that starts on a planting always moves the planting, never its bed; planned (dashed) plantings
+  are picked and moved the same way.
+- **Painting next to a patch of the same plant** that goes in on the same dates makes that patch
+  bigger instead of adding a second one.
 
 **The plan shows the bed when it matters.** While a plant is chosen, the plan shows the day it would
 go in (with a clear note and "Back to today"), so the crops it would share the bed with are drawn as
@@ -36,10 +40,10 @@ labelled with the crop: "Tomato from May 4".
 **A clash is a choice, not a dead end.** Dropping on taken squares plants nothing and opens a small
 card right there:
 
-- **Plant after it:** the next window for this plant once the squares are free ("Sow Jul 20, after
-  the radishes"), when there is one this season.
+- **Plant after it:** the next window for this plant once the squares are free ("Plant after the
+  radish: Jul 20"), with the year when it is not this year.
 - **Find room:** the nearest free squares of the same size, in this bed or another, for the same
-  dates; one click moves it there.
+  dates; one click moves it there. When no bed has room the card says so.
 - **Replace the tomatoes:** pulls them out and plants this instead (one undo step).
 - **Grow alongside:** the old "Interplant anyway", only offered when the pair is not a foe.
 

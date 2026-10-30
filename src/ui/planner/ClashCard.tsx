@@ -5,8 +5,8 @@ import { useEffect, useRef } from 'preact/hooks';
 import { COMPANIONS } from '../../domain/plants/library';
 import type { Planting } from '../../domain/doc/schema';
 import { squaresLabel } from '../../domain/layout/labels';
-import { toDay, yearOf } from '../../domain/dates';
-import { fmtDay, fmtWithYear, inSentence } from '../format';
+import { toDay } from '../../domain/dates';
+import { fmtNear, fmtSpan, inSentence } from '../format';
 import { garden, newId, today } from '../appState';
 import { selection } from '../uiState';
 import { plantLookup, intervalOfP } from './derived';
@@ -36,24 +36,24 @@ export function ClashCard() {
 
   const plantOf = plantLookup.value;
   const iof = intervalOfP.value;
-  const thisYear = yearOf(toDay(today.value));
-  /** Format a day; include the year when it falls outside the current calendar year. */
-  const fmtMaybeYear = (d: number) => yearOf(d) === thisYear ? fmtDay(d) : fmtWithYear(d);
+  const now = toDay(today.value);
+  // Dates carry their year when they fall outside this calendar year, on both ends of a span.
+  const fmtMaybeYear = (d: number) => fmtNear(d, now);
 
   // Describe each clash: "Tomato is here Apr 30 to Sep 12"
   const clashDescs = proposal.clashes.map((c) => {
     const name = plantOf(c.with.plantId)?.name ?? 'A plant';
     const i = iof(c.with);
     if (!i) return `${name} is here (dates unknown)`;
-    const end = i.bedOut !== null ? ` to ${fmtMaybeYear(i.bedOut)}` : ' (perennial)';
-    return `${name} is here ${fmtMaybeYear(i.bedIn)}${end}`;
+    if (i.bedOut === null) return `${name} is here from ${fmtMaybeYear(i.bedIn)} (perennial)`;
+    return `${name} is here ${fmtSpan(i.bedIn, i.bedOut, now)}`;
   });
 
   // New plant's own growing stay, shown when it has a window.
   const newInterval = proposal.planting ? iof(proposal.planting as Planting) : null;
   const newStay = newInterval
     ? newInterval.bedOut !== null
-      ? `${req.plant.name} would grow ${fmtMaybeYear(newInterval.bedIn)} to ${fmtMaybeYear(newInterval.bedOut)}.`
+      ? `${req.plant.name} would grow ${fmtSpan(newInterval.bedIn, newInterval.bedOut, now)}.`
       : `${req.plant.name} would go in ${fmtMaybeYear(newInterval.bedIn)} (perennial).`
     : null;
 
@@ -136,7 +136,7 @@ export function ClashCard() {
             class="btn"
             onClick={() => commitWith(reso.after!.planting, req.plant.name)}
           >
-            Plant next season, from {fmtMaybeYear(reso.after.bedIn)}
+            Plant after the {reso.after.afterNames.map(inSentence).join(' and ')}: {fmtMaybeYear(reso.after.bedIn)}
           </button>
         ) : null}
         {reso.room ? (
@@ -164,6 +164,7 @@ export function ClashCard() {
             Grow alongside anyway
           </button>
         ) : null}
+        {reso.room === null ? <p class="clash-no-options muted small">No bed has free squares for those dates.</p> : null}
         {reso.after === null && reso.room === null && reso.replace.length === 0 && hasFoe ? (
           <p class="clash-no-options muted small">No options: this combination is a poor pairing.</p>
         ) : null}

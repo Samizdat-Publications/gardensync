@@ -11,9 +11,17 @@ https://gardensync-landing.pages.dev; public repo https://github.com/Samizdat-Pu
 old history is the private `gardensync-v7-archive` (local remote `archive`, branch `v8`) plus a
 verified bundle in `C:\Users\stewa\Documents\Claude\_archives\`. Work continues on `master`
 (remote `origin`). Hub media proposal: `C:\Users\stewa\Documents\Claude\Github Hub\proposals\gardensync.md`;
-showcase.json already points at the hub cut. Next: 8.0.x polish from review/LEDGER.md item 82.
+showcase.json already points at the hub cut.
+
+**8.1 in progress (2026-10-30): planting rethought** on branch `feature/planting-ux`, preview
+https://planting.gardensync-e4e.pages.dev, waiting for Stewart to try it. Drag and drop from the
+list, drop to plant, paint patches, move any planting, a clash card with ways out, the plan showing
+the bed-in day while placing. Design: docs/v8/PLANTING_UX.md; ledger 84 to 93.
 
 ## Done
+
+- 2026-10-30: Planting rethought (ledger 84 to 93): two usability passes, all P1s fixed, e2e tests
+  for each; preview deployed from `feature/planting-ux`.
 
 - 2026-10-28: Plan approved. Decisions D-U01 to D-U04 recorded.
 - 2026-10-28: Tag `v7-final` on the last 7.x commit (`8d3f563`). Branch `v8` created. Old app removed

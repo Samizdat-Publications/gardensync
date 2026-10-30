@@ -7,7 +7,7 @@ import { fmtDay, inSentence } from '../format';
 import { garden, newId } from '../appState';
 import { selection, shownDay, viewDay } from '../uiState';
 import { candidate } from './candidate';
-import { footprints, intervalOfP, present, plantLookup } from './derived';
+import { footprints, intervalOfP, present, plantLookup, upcoming } from './derived';
 import { boundsOf, cellsBetween, fitView, type Cell } from './geometry';
 import { act, clashCard, draft, emptyDraft, placingPreviewDay, showToast, stopPlacing, view, viewport } from './plannerState';
 import { defaultMethod } from './placement';
@@ -100,7 +100,8 @@ export function attemptPlant(containerId: string, cells: Cells, screenX = 0, scr
   if (proposal.clashes.length > 0) {
     // When every clash is with the same plant in the same bed, try expanding the patch instead.
     const allSamePlant = proposal.clashes.every((c) => c.with.plantId === plantId && c.with.containerId === containerId);
-    if (allSamePlant && tryExpandPatch(containerId, cells, proposal, g)) return;
+    const same = proposal.clashes.map((c) => c.with).filter((p) => p.cells);
+    if (allSamePlant && tryExpandPatch(containerId, cells, same, g)) return;
 
     const reso = resolutions(req, proposal, g, plantLookup.value);
     clashCard.value = { req, proposal, reso, screenX, screenY };
@@ -111,24 +112,52 @@ export function attemptPlant(containerId: string, cells: Cells, screenX = 0, scr
   }
 
   if (proposal.planting) {
+    const neighbour = neighbourToJoin(containerId, cells, proposal.planting, g);
+    if (neighbour && tryExpandPatch(containerId, cells, [neighbour], g)) return;
     commitPlanting(proposal.planting, plant.name, g.id);
   }
 }
 
+/** Two patches that together make an exact rectangle: side by side with a whole edge shared. */
+function joinsInto(a: Cells, b: Cells): boolean {
+  const sideBySide = a.row === b.row && a.h === b.h && (a.col + a.w === b.col || b.col + b.w === a.col);
+  const stacked = a.col === b.col && a.w === b.w && (a.row + a.h === b.row || b.row + b.h === a.row);
+  return sideBySide || stacked;
+}
+
 /**
- * When the dropped cells all clash with patches of the same plant, merge them into one bigger
- * bounding rectangle patch. Returns true when done (so the caller skips the normal clash card).
- * Never reports "Cilantro clashes with Cilantro".
+ * A patch of the same plant, going in on the same dates, that the new squares extend into one
+ * bigger rectangle, so painting next to a patch makes it bigger rather than adding a second one.
  */
-function tryExpandPatch(containerId: string, newCells: Cells, proposal: Proposal, g: NonNullable<typeof garden.value>): boolean {
+function neighbourToJoin(containerId: string, cells: Cells, planting: Omit<Planting, 'id'>, g: NonNullable<typeof garden.value>): Planting | null {
+  const anchor = JSON.stringify(planting.anchor);
+  return (
+    g.plantings.find(
+      (p) =>
+        p.containerId === containerId &&
+        p.plantId === planting.plantId &&
+        p.method === planting.method &&
+        p.cells !== undefined &&
+        JSON.stringify(p.anchor) === anchor &&
+        joinsInto(p.cells, cells),
+    ) ?? null
+  );
+}
+
+/**
+ * Merge the dropped cells with patches of the same plant (ones they overlap, or one they extend)
+ * into one bigger rectangle patch. Returns true when done (so the caller skips the clash card or
+ * the separate planting). Never reports "Cilantro clashes with Cilantro".
+ */
+function tryExpandPatch(containerId: string, newCells: Cells, same: Planting[], g: NonNullable<typeof garden.value>): boolean {
   const plantId = placingPlantId.value;
-  if (!plantId || !proposal.planting) return false;
+  if (!plantId) return false;
   const plant = plantLookup.value(plantId);
   if (!plant) return false;
   const container = g.containers.find((c) => c.id === containerId);
   if (!container || container.form !== 'grid') return false;
 
-  const samePatches = proposal.clashes.map((c) => c.with).filter((p) => p.containerId === containerId && p.plantId === plantId && p.cells);
+  const samePatches = same.filter((p) => p.containerId === containerId && p.plantId === plantId && p.cells);
   if (samePatches.length === 0) return false;
 
   // Bounding rectangle that includes every existing patch plus the new cells.
@@ -241,7 +270,8 @@ export function clearSquares(): void {
 /** What a tap does when not placing: pick the planting under it, or its bed or pot. */
 export function selectAt(c: Container, cell: Cell | null): void {
   const s = selection.value;
-  const here = present.value.get(c.id) ?? [];
+  // Plantings in the ground on the day shown come first, then ones planned for those squares.
+  const here = [...(upcoming.value.get(c.id) ?? []), ...(present.value.get(c.id) ?? [])];
   let target: Planting | undefined;
   if (c.form === 'grid' && cell) {
     target = [...here].reverse().find((p) => p.cells && cell.col >= p.cells.col && cell.col < p.cells.col + p.cells.w && cell.row >= p.cells.row && cell.row < p.cells.row + p.cells.h);

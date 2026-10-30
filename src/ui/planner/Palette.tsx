@@ -62,7 +62,7 @@ export function Palette({ onChosen, headingId }: { onChosen?: () => void; headin
       const m = defaultMethod(r.plant);
       const win = nextWindow(r.plant, climate, m, todayDay);
       if (!win) out.set(r.plant.id, { soon: false, text: 'No planting dates here' });
-      else if (win.bedIn < todayDay + WEEK_DAYS) out.set(r.plant.id, { soon: true, text: `${verbOf(m)} now` });
+      else if (win.bedIn < todayDay + WEEK_DAYS) out.set(r.plant.id, { soon: true, text: win.bedIn <= todayDay ? `${verbOf(m)} now` : `${verbOf(m)} ${fmtDay(win.bedIn)}` });
       else out.set(r.plant.id, { soon: false, text: `${verbOf(m)} from ${fmtDay(win.bedIn)}` });
     }
     return out;

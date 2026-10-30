@@ -20,7 +20,7 @@ import { minCells } from '../../domain/layout/patch';
 import { formatLength } from '../../domain/units';
 import { garden, units } from '../appState';
 import { Glyph } from '../components/Glyph';
-import { fmtDay, inSentence } from '../format';
+import { fmtDay, fmtNear, fmtSpan, inSentence } from '../format';
 import { placingPlantId, selection, shownDay } from '../uiState';
 import { candidate, type Candidate } from './candidate';
 import { containers, footprints, intervalOfP, phasesOfP, plantLookup, present, upcoming } from './derived';
@@ -199,11 +199,15 @@ function drawLayer(i: LayerInput): JSX.Element {
   function drawUpcomingPatch(c: GridBed, p: Planting): JSX.Element | null {
     const plant = i.plantOf(p.plantId);
     if (!plant || !p.cells) return null;
+    if (i.plantMove?.plantingId === p.id) return null;
     const pr = cellsRect(c, cellCm, p.cells);
     const color = plant.glyph.color;
+    const sel = i.sel?.kind === 'planting' && i.sel.id === p.id;
     return (
       <g key={`up${p.id}`} class="patch-upcoming" data-plant={p.plantId} data-planting-id={p.id}>
         <rect x={pr.x + 2} y={pr.y + 2} width={pr.w - 4} height={pr.h - 4} rx={3} fill={color} fill-opacity={0.12} stroke={color} stroke-opacity={0.45} stroke-width={1.5} stroke-dasharray="4 3" {...NS} />
+        {sel ? <rect x={pr.x - 1} y={pr.y - 1} width={pr.w + 2} height={pr.h + 2} rx={4} fill="none" class="ring-halo" {...NS} /> : null}
+        {sel ? <rect x={pr.x - 1} y={pr.y - 1} width={pr.w + 2} height={pr.h + 2} rx={4} fill="none" class="ring-ink" {...NS} /> : null}
       </g>
     );
   }
@@ -454,7 +458,7 @@ function drawLabels(i: LayerInput): JSX.Element {
               class="lbl lbl-upcoming"
               style={{ ...at(pr2.x + off.dx, pr2.y + off.dy, 4, 4), maxWidth: `calc(${pr2.w} * var(--s) * 1px - 8px)` }}
             >
-              {plant2.name} from {fmtDay(interval2.bedIn)}
+              {plant2.name} from {fmtNear(interval2.bedIn, shownDay.value)}
             </span>,
           );
         }
@@ -702,11 +706,11 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
     return null;
   };
 
-  /** Find a planting under the plane point. */
+  /** Find a planting under the plane point: one in the ground on the day shown, else one planned there. */
   const plantingAt = (px: number, py: number): { planting: Planting; plant: Plant; c: GridBed } | null => {
     for (const c of list) {
       if (c.form !== 'grid') continue;
-      const here = presentMap.get(c.id) ?? [];
+      const here = [...(upcomingMap.get(c.id) ?? []), ...(presentMap.get(c.id) ?? [])];
       for (let k = here.length - 1; k >= 0; k--) {
         const p = here[k]!;
         if (!p.cells) continue;
@@ -752,9 +756,11 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
     }
 
     const s0 = selection.value;
+    const underPointer = placing ? null : plantingAt(pl.x, pl.y);
 
-    // Container move (mouse, selected container).
-    if (!placing && hit && e.pointerType === 'mouse' && s0?.kind === 'container' && s0.id === hit.c.id) {
+    // Container move (mouse, selected container), but a drag that starts on a planting moves the
+    // planting: the bed moves from its frame, label or empty squares.
+    if (!placing && hit && !underPointer && e.pointerType === 'mouse' && s0?.kind === 'container' && s0.id === hit.c.id) {
       gesture.current = { kind: 'move', id: e.pointerId, c: hit.c, cell: hit.cell, x: pl.x, y: pl.y };
       return;
     }
@@ -763,7 +769,7 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
     // the tap gesture upgrades to move-planting; a click without moving selects normally.
     let tapPlantingTarget: TapPlantingTarget | undefined;
     if (!placing && (e.pointerType === 'mouse' || e.pointerType === 'pen')) {
-      const found = plantingAt(pl.x, pl.y);
+      const found = underPointer;
       if (found?.planting.cells) {
         const grabbedCell = cellAt(found.c, g.cellCm, pl.x, pl.y);
         tapPlantingTarget = {
@@ -778,7 +784,7 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
 
     // Touch long-press (350 ms) on a planting starts a move-planting gesture.
     if (!placing && e.pointerType === 'touch') {
-      const found = plantingAt(pl.x, pl.y);
+      const found = underPointer;
       if (found?.planting.cells) {
         const grabbedCell = cellAt(found.c, g.cellCm, pl.x, pl.y);
         longPressData.current = {
@@ -944,6 +950,7 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
         act(
           { type: 'updateContainer', gardenId: g.id, containerId: c.id, patch: { x: round2(c.x + pv.dx), y: round2(c.y + pv.dy) } },
           `move ${c.name}`,
+          `Moved ${c.name}.`,
         );
       } else {
         selectAt(gs.c, gs.cell);
@@ -1006,8 +1013,7 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
       const phases = phasesOfP.value(found.planting);
       let dates = '';
       if (phases) {
-        dates = `${fmtDay(phases.bedIn)}`;
-        if (phases.bedOut !== null) dates += ` to ${fmtDay(phases.bedOut)}`;
+        dates = phases.bedOut !== null ? fmtSpan(phases.bedIn, phases.bedOut, shownDay.value) : `from ${fmtNear(phases.bedIn, shownDay.value)}`;
       }
       hoverInfo.value = { name: found.plant.name, count: found.planting.count, dates, x: e.clientX, y: e.clientY };
     } else {
