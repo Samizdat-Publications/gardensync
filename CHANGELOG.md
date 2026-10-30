@@ -8,6 +8,29 @@ Its sibling edition, *A Quiet Almanac*, now lives in its own repository:
 
 ---
 
+## v8.2 - 2026-10-30
+
+**Polish.** Four rounds of fixes from blind design reviews and new-gardener usability tests.
+
+- **Resize a patch.** Drag a corner of a selected planting, or use Shift and the arrow keys. It
+  checks for clashes, and Undo takes it back.
+- **One answer to "when can this go in?"** The garden's plant list, the plant library and placing
+  now share one rule: seeds start today at the earliest, bought seedlings are used once raising
+  your own would miss the window, and between repeat sowings a planting goes in today.
+- **Shared gardens open anywhere.** A share link without a town now asks a new browser for frost
+  dates first (Settings takes typed dates as well as a town), then shows the plantings.
+- **Leap years.** Calendars and the season strip for 2028 no longer start in February.
+- **A clearer plan.** A key explains planned patches and the neighbor links; labels never use
+  initials; a step nobody ticked says so; a missed seed-starting time says what to do instead; a
+  full pot says why nothing was planted.
+- **Every screen, tidied.** The calendar matches the season strip and a fall start opens on next
+  year; This week groups jobs by day and tags late ones; harvest totals add up; the plant card
+  scrolls as a page; first run shows a labelled example; Settings has a gear icon; opening a
+  saved copy asks before replacing your garden; the printed poster uses the app's fonts and fills
+  the page.
+
+---
+
 ## v8.1 - 2026-10-30
 
 **Planting, rethought.** Putting a plant in a bed is now drag and drop, and a clash is a choice
