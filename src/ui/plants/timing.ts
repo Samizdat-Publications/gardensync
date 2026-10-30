@@ -6,7 +6,7 @@ import type { ClimateProfile } from '../../domain/climate/types';
 import { inRange, toDay, yearOf, type DayNum, type DayRange, type IsoDate } from '../../domain/dates';
 import type { Plant } from '../../domain/plants/schema';
 import { formatTemp, type Units } from '../../domain/units';
-import { defaultMethod } from '../planner/placement';
+import { defaultMethod, nextWindow } from '../planner/placement';
 import {
   formatDay,
   formatRange,
@@ -73,6 +73,13 @@ export function timingLine(plant: Plant, profile: ClimateProfile | null | undefi
     return scheds.some((s) => s.notViable.some((n) => n.reason.code === 'schedule-error'))
       ? 'Dates could not be worked out'
       : 'Not suited to this climate';
+  }
+  // Today is a day it can go in the way the planner would place it (a later sowing between rounds,
+  // or a late planting with time still to crop): say so, exactly as the garden's plant list does.
+  const placed = nextWindow(plant, profile, defaultMethod(plant), t);
+  if (placed && placed.bedIn <= t) {
+    const verb = VERB[placed.window.method];
+    return placed.late ? `${verb} now, late but with time to crop` : `${verb} now until ${formatDay(placed.window.bedIn.end)}`;
   }
   // When two ways open on the same day, name the one the planner uses by default, so the library
   // and the garden's plant list say the same thing ("Sow from Mar 26", not "Plant out" in one place).

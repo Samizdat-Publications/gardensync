@@ -9,8 +9,7 @@ import { selection, shownDay, viewDay } from '../uiState';
 import { candidate } from './candidate';
 import { footprints, intervalOfP, present, plantLookup, upcoming } from './derived';
 import { boundsOf, cellsBetween, fitView, type Cell } from './geometry';
-import { act, clashCard, draft, emptyDraft, placingPreviewDay, showToast, stopPlacing, view, viewport } from './plannerState';
-import { defaultMethod } from './placement';
+import { act, clashCard, draft, emptyDraft, methodNow, placingPreviewDay, showToast, stopPlacing, view, viewport } from './plannerState';
 import { propose, resolutions, type DropRequest, type Proposal } from './resolve';
 import { placingPlantId } from '../uiState';
 
@@ -88,7 +87,7 @@ export function attemptPlant(containerId: string, cells: Cells, screenX = 0, scr
   const container = g.containers.find((c) => c.id === containerId);
   if (!container || container.form !== 'grid') return;
 
-  const method = draft.value.method ?? defaultMethod(plant);
+  const method = draft.value.method ?? methodNow(plant);
   const req: DropRequest = { plant, method, bed: container, cells, from: shownDay.value };
   const proposal = propose(req, g, plantLookup.value);
 
@@ -171,11 +170,18 @@ function tryExpandPatch(containerId: string, newCells: Cells, same: Planting[], 
     maxRow = Math.max(maxRow, pc.row + pc.h - 1);
   }
   const bigCells: Cells = { col: minCol, row: minRow, w: maxCol - minCol + 1, h: maxRow - minRow + 1 };
+  // Painting over squares one patch already covers changes nothing: say so rather than "bigger".
+  const only = samePatches.length === 1 ? samePatches[0]!.cells! : null;
+  if (only && only.col === bigCells.col && only.row === bigCells.row && only.w === bigCells.w && only.h === bigCells.h) {
+    showToast(`Those squares already have ${inSentence(plant.name)}.`);
+    draft.value = emptyDraft();
+    return true;
+  }
 
   // Check that the bounding rectangle does not conflict with other plants.
   const sameIds = new Set(samePatches.map((p) => p.id));
   const otherPlantings = g.plantings.filter((p) => !sameIds.has(p.id));
-  const method = draft.value.method ?? defaultMethod(plant);
+  const method = draft.value.method ?? methodNow(plant);
   const bigReq: DropRequest = { plant, method, bed: container, cells: bigCells, from: shownDay.value };
   const bigProposal = propose(bigReq, { ...g, plantings: otherPlantings }, plantLookup.value);
   if (bigProposal.problem || bigProposal.clashes.length > 0 || !bigProposal.planting) return false;

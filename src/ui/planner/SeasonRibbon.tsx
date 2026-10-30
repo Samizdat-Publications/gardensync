@@ -9,6 +9,7 @@ import { fmtDay, fmtRange } from '../format';
 import { selection, shownDay, viewDay } from '../uiState';
 import { containers, phasesOfP, plantLookup, plantingsByContainer, selectedContainer, selectedPlanting } from './derived';
 import { pastVerbOf, verbOf } from './placement';
+import { calendarSpan } from '../calendar/model';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const LONG = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', timeZone: 'UTC' });
@@ -21,13 +22,6 @@ export function fmtMonthDayLong(d: DayNum): string {
   return LONG.format(new Date(d * 86_400_000));
 }
 
-/** The first of the month nearest a day. */
-function nearestMonthStart(d: DayNum): DayNum {
-  const { year, month, day } = partsFromDay(d);
-  if (day <= 15) return dayFromParts(year, month, 1);
-  return month === 12 ? dayFromParts(year + 1, 1, 1) : dayFromParts(year, month + 1, 1);
-}
-
 /** The 365 days the ribbon shows: the growing season of the day shown, from a month start. */
 export function seasonSpan(day: DayNum, climate: Parameters<typeof seasonRefs>[0] | null): { start: DayNum; season: number; label: string } {
   if (!climate) {
@@ -35,8 +29,8 @@ export function seasonSpan(day: DayNum, climate: Parameters<typeof seasonRefs>[0
     return { start: dayFromParts(y, 1, 1), season: y, label: String(y) };
   }
   const season = seasonOf(climate, day);
-  const W = seasonRefs(climate, season).W;
-  return { start: nearestMonthStart(W - 182), season, label: seasonLabel(climate, season) };
+  // The same months as the calendar, so a leap year never starts the strip in February.
+  return { start: calendarSpan(climate, season).start, season, label: seasonLabel(climate, season) };
 }
 
 const pct = (d: DayNum, start: DayNum) => `${(Math.min(SPAN, Math.max(0, d - start)) / SPAN) * 100}%`;

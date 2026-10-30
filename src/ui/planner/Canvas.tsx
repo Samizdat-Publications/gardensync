@@ -43,8 +43,7 @@ import {
   type Rect,
 } from './geometry';
 import { attemptPlant, clearSquares, finishPaint, fitAll, paintTo, placeAtCell, placeInVessel, selectAt, zoomBy } from './interactions';
-import { act, canvasFocused, clashCard, cursor, draft, dragPreview, lod, paletteDrag, plantingMove, stopPlacing, view, viewport, type Draft, type PaletteDragState } from './plannerState';
-import { defaultMethod } from './placement';
+import { act, canvasFocused, clashCard, cursor, draft, dragPreview, lod, methodNow, paletteDrag, plantingMove, stopPlacing, view, viewport, type Draft, type PaletteDragState } from './plannerState';
 import { propose, resolutions, type Proposal } from './resolve';
 
 const frameOf = (c: GridBed) => (c.kind === 'in-ground' ? 0 : c.kind === 'window-box' || c.kind === 'trough' ? 4 : 6);
@@ -69,6 +68,12 @@ function linkKinds(presentMap: Map<string, Planting[]>): { good: boolean; bad: b
 
 function companionOf(a: string, b: string) {
   return COMPANIONS.find((x) => (x.a === a && x.b === b) || (x.a === b && x.b === a));
+}
+
+/** Planned plantings to show in a bed: only where nothing is growing on the day shown. */
+function plannedShown(upcoming: readonly Planting[], present: readonly Planting[]): Planting[] {
+  const overlaps = (a: Cells, b: Cells) => a.col < b.col + b.w && b.col < a.col + a.w && a.row < b.row + b.h && b.row < a.row + a.h;
+  return upcoming.filter((u) => u.cells && !present.some((p) => p.cells && overlaps(u.cells!, p.cells)));
 }
 
 /** Cells of a patch to draw glyphs in: spread evenly, at most `cap`. */
@@ -144,7 +149,7 @@ function drawLayer(i: LayerInput): JSX.Element {
       for (let k = 1; k < sq.h; k++) grid += `M${r.x} ${r.y + k * cellCm}H${r.x + r.w}`;
     }
     const here = i.presentMap.get(c.id) ?? [];
-    const upcomingHere = i.upcomingMap.get(c.id) ?? [];
+    const upcomingHere = plannedShown(i.upcomingMap.get(c.id) ?? [], i.presentMap.get(c.id) ?? []);
     const placingHere = i.cand && i.d.containerId === c.id && i.cand.cells;
     const selC = i.sel?.kind === 'container' && i.sel.id === c.id;
 
@@ -497,7 +502,7 @@ function drawLabels(i: LayerInput): JSX.Element {
       // Upcoming-planting labels: faint "Tomato from May 4", or the name, or nothing but the icon.
       if (level >= 1) {
         const iof2 = intervalOfP.value;
-        for (const p of i.upcomingMap.get(c.id) ?? []) {
+        for (const p of plannedShown(i.upcomingMap.get(c.id) ?? [], i.presentMap.get(c.id) ?? [])) {
           const plant2 = i.plantOf(p.plantId);
           if (!plant2 || !p.cells) continue;
           const pr2 = cellsRect(c, cellCm, p.cells);
@@ -1195,7 +1200,7 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
       const step = g.cellCm;
       const dx = k === 'ArrowLeft' ? -step : k === 'ArrowRight' ? step : 0;
       const dy = k === 'ArrowUp' ? -step : k === 'ArrowDown' ? step : 0;
-      act({ type: 'updateContainer', gardenId: g.id, containerId: c.id, patch: { x: round2(c.x + dx), y: round2(c.y + dy) } }, `move ${c.name}`, undefined, { coalesceKey: `move-${c.id}` });
+      act({ type: 'updateContainer', gardenId: g.id, containerId: c.id, patch: { x: round2(c.x + dx), y: round2(c.y + dy) } }, `move ${c.name}`, `Moved ${c.name}.`, { coalesceKey: `move-${c.id}` });
       return;
     }
     canvasFocused.value = true;
@@ -1245,7 +1250,7 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
     else if (k === '0') fitAll();
   };
 
-  const announce = cursorText(cur, list, presentMap, plantOf, g.cellCm, cand, d);
+  const announce = cursorText(cur, list, presentMap, plantOf, g.cellCm, cand, d, upcomingMap);
   const placing = placingPlantId.value !== null;
   const hover = hoverInfo.value;
 
@@ -1343,7 +1348,12 @@ export function Canvas({ descriptionId }: { descriptionId: string }) {
           </svg>
         </button>
       </div>
-      <NorthAndScale cellCm={g.cellCm} s={s} links={level > 0 && !placing && !palDragState ? linkKinds(presentMap) : { good: false, bad: false }} />
+      <NorthAndScale
+        cellCm={g.cellCm}
+        s={s}
+        links={level > 0 && !placing && !palDragState ? linkKinds(presentMap) : { good: false, bad: false }}
+        planned={level > 0 && [...upcomingMap.values()].some((l) => l.length > 0)}
+      />
       {hover ? (
         <div
           class="patch-tooltip"
@@ -1399,7 +1409,7 @@ function computePaletteDragSnap(clientX: number, clientY: number, canvasEl: HTML
       const plant = state.plant;
       const min = minCells(plant);
       const cells: Cells = { col: cell.col, row: cell.row, w: min.w, h: min.h };
-      const method = defaultMethod(plant);
+      const method = methodNow(plant);
       const iof = intervalOfP.value;
       void iof; // used inside propose via garden
       const proposal = propose({ plant, method, bed: c, cells, from: shownDay.value }, g, plantLookup.value);
@@ -1426,7 +1436,7 @@ function LinkBadge({ good }: { good: boolean }) {
   );
 }
 
-function NorthAndScale({ cellCm, s, links }: { cellCm: number; s: number; links: { good: boolean; bad: boolean } }) {
+function NorthAndScale({ cellCm, s, links, planned }: { cellCm: number; s: number; links: { good: boolean; bad: boolean }; planned: boolean }) {
   const u = units.value;
   const steps = [1, 2, 5, 10, 20, 50, 100];
   const k = steps.find((n) => n * cellCm * s >= 48) ?? 100;
@@ -1445,8 +1455,16 @@ function NorthAndScale({ cellCm, s, links }: { cellCm: number; s: number; links:
         <span class="scale-bar" style={{ width: `${px}px` }} aria-hidden="true" />
         <span>1 square = {formatLength(cellCm, u)}</span>
       </div>
-      {links.good || links.bad ? (
+      {links.good || links.bad || planned ? (
         <div class="link-key">
+          {planned ? (
+            <span>
+              <svg width="16" height="12" viewBox="0 0 16 12" aria-hidden="true">
+                <rect x="1" y="1" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-dasharray="3 2" />
+              </svg>{' '}
+              Planned, not in yet
+            </span>
+          ) : null}
           {links.good ? (
             <span>
               <LinkBadge good /> Good neighbors
@@ -1495,6 +1513,7 @@ function cursorText(
   cellCm: number,
   cand: Candidate | null,
   d: Draft,
+  upcomingMap: Map<string, Planting[]> = new Map(),
 ): string {
   void cellCm;
   if (!cur) return '';
@@ -1507,7 +1526,12 @@ function cursorText(
   }
   const cell = squareToCell(c, cur.sx, cur.sy);
   const p = here.find((x) => x.cells && cell.col >= x.cells.col && cell.col < x.cells.col + x.cells.w && cell.row >= x.cells.row && cell.row < x.cells.row + x.cells.h);
-  let text = `${c.name}, ${squareName(cell)}: ${p ? `${plantOf(p.plantId)?.name ?? 'a plant'}, ${p.count} plants` : 'free'}`;
+  const inSquare = (x: Planting) => x.cells && cell.col >= x.cells.col && cell.col < x.cells.col + x.cells.w && cell.row >= x.cells.row && cell.row < x.cells.row + x.cells.h;
+  const planned = p ? undefined : (upcomingMap.get(c.id) ?? []).find(inSquare);
+  const plants = (n: number) => `${n} ${n === 1 ? 'plant' : 'plants'}`;
+  let text = `${c.name}, ${squareName(cell)}: ${
+    p ? `${plantOf(p.plantId)?.name ?? 'a plant'}, ${plants(p.count)}` : planned ? `free now; ${plantOf(planned.plantId)?.name ?? 'a plant'} is planned here` : 'free'
+  }`;
   if (cand && d.containerId === c.id && cand.cells) text += `. Chosen ${cellsName(cand.cells)}, ${cand.count} ${inSentence(cand.plant.name)}`;
   return text;
 }

@@ -121,3 +121,26 @@ describe('garlic planted late in the fall', () => {
     expect(ch.late).toBe(true);
   });
 });
+
+describe('a crop sown again and again (succession)', () => {
+  const july = manualProfile({ lastFrost: '04-20', firstFrost: '10-15', asOf: '2027-07-15' });
+  const phasesAt = (id: string, day: string) => {
+    const plant = plantById(id)!;
+    const c = nextWindow(plant, july, 'direct', toDay(day))!;
+    const ph = plantingPhases({ id: 'x', containerId: 'b', plantId: id, count: 1, method: 'direct', anchor: c.anchor }, plant, july);
+    return { c, ph };
+  };
+
+  it('sows carrots today when today is after the last round but still inside the window', () => {
+    const { c, ph } = phasesAt('carrot', '2027-07-15');
+    expect(c.nextSeason).toBe(false);
+    expect(c.bedIn).toBe(toDay('2027-07-15'));
+    expect(ph?.bedIn).toBe(toDay('2027-07-15'));
+  });
+
+  it('sows lettuce today between two rounds rather than waiting for the next round', () => {
+    const { c, ph } = phasesAt('lettuce', '2027-07-15');
+    expect(c.bedIn).toBe(toDay('2027-07-15'));
+    expect(ph?.bedIn).toBe(toDay('2027-07-15'));
+  });
+});

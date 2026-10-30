@@ -132,11 +132,25 @@
   border-radius: 8px;
 }
 /* The three phases are drawn as in the garden's season strip, each in the crop's color (--crop,
-   set on the track). Dashed rectangle: seedlings started indoors before going into the bed. */
+   set on the track). The edge (--crop-edge) is the same color unless it would vanish on the panel
+   or the frost bands (a cream garlic on pale blue); then the screen sets a darker shade of it for
+   the light theme and a lighter one for the dark theme, each 3:1 or better. */
+.cal-track {
+  --crop-edge: var(--crop-edge-light, var(--crop));
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .cal-track {
+    --crop-edge: var(--crop-edge-dark, var(--crop));
+  }
+}
+:root[data-theme='dark'] .cal-track {
+  --crop-edge: var(--crop-edge-dark, var(--crop));
+}
+/* Dashed rectangle: seedlings started indoors before going into the bed. */
 .cal-track .seg-indoor {
   top: 4px;
   height: 10px;
-  border: 2px dashed var(--crop);
+  border: 2px dashed var(--crop-edge);
   border-radius: 4px;
   background: transparent;
 }
@@ -144,14 +158,14 @@
 .cal-track .seg-grow {
   top: 1px;
   height: 16px;
-  border: 2px solid var(--crop);
+  border: 2px solid var(--crop-edge);
   background: var(--c-panel);
 }
 /* Solid bar in the crop color: ready to pick. Sits on top of the growing bar where they overlap. */
 .cal-track .seg-pick {
   top: 1px;
   height: 16px;
-  border: 2px solid var(--crop);
+  border: 2px solid var(--crop-edge);
   background: var(--crop);
 }
 .cal-key {

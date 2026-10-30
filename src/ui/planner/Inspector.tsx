@@ -66,7 +66,16 @@ function stateOf(a: DayNum, b: DayNum | null, day: DayNum, done: boolean): Step[
 export function phaseSteps(p: Planting, plant: Plant, ph: PlantingPhases, day: DayNum): Step[] {
   const steps: Step[] = [];
   const w = ph.window;
-  if (ph.indoor) {
+  if (ph.indoor && !ph.actual.indoor && day > ph.indoor.end && day < ph.bedIn) {
+    // The time to start seeds has gone by but the planting is still ahead: say so, never "done".
+    steps.push({
+      key: 'indoor',
+      title: `Too late to start seeds indoors (${fmtRange(ph.indoor.start, ph.indoor.end)})`,
+      detail: ['Plant out bought seedlings instead: choose "Plant out bought plants" when placing, or change this planting below.'],
+      state: 'later',
+      caution: true,
+    });
+  } else if (ph.indoor) {
     steps.push({
       key: 'indoor',
       title: ph.actual.indoor ? `Started indoors ${fmtDay(ph.indoor.start)}` : `Start seeds indoors ${fmtRange(ph.indoor.start, ph.indoor.end)}`,
@@ -609,7 +618,7 @@ export function ContainerInspector({ c }: { c: Container }) {
             </button>
           ) : null}
         </div>
-        <p class="muted small">Or drag it with the mouse, or use Shift and the arrow keys on the plan.</p>
+        <p class="muted small">Or drag it on the plan, or use Shift and the arrow keys.</p>
       </div>
 
       <div class="insp-block">

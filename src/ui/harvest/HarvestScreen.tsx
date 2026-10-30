@@ -4,15 +4,16 @@ import { useSignal } from '@preact/signals';
 import { toDay } from '../../domain/dates';
 import type { Harvest } from '../../domain/doc/schema';
 import type { Plant } from '../../domain/plants/schema';
-import { plantingPhases, seasonLabel, seasonOf } from '../../domain/schedule';
+import { seasonLabel, seasonOf } from '../../domain/schedule';
 import { formatWeight, parseWeight } from '../../domain/units';
-import { expectedYield, pickedSoFar, type Amount } from '../../domain/yield';
+import { pickedSoFar, type Amount } from '../../domain/yield';
 import { garden, newId, store, today, units } from '../appState';
 import { Glyph } from '../components/Glyph';
 import { fmtDay, inSentence } from '../format';
 import { hrefOf } from '../router';
 import { plantOf } from '../uiState';
 import './Harvest.css';
+import { cropRows, pickablePlantings, type CropRow } from './model';
 
 /** "1 lb 8 oz", "12 counted", or both: picks logged by weight and by count do not add up. */
 function amountText(a: Amount, u: 'imperial' | 'metric'): string {
@@ -31,6 +32,14 @@ function countNoun(category: Plant['category']): string | null {
   return category === 'flower' ? 'flowers' : null;
 }
 
+/** "1 lb 8 oz of 10 lb", "4 of about 12 flowers", or just what was picked when nothing is planned. */
+function progressText(r: CropRow, u: 'imperial' | 'metric', noun: string | null): string {
+  const { expected: e, picked: got } = r;
+  if (e.grams > 0) return `${formatWeight(got.grams, u)} of ${formatWeight(e.grams, u)}${got.count > 0 ? `, and ${Math.round(got.count)} counted` : ''}`;
+  if (e.count > 0) return `${Math.round(got.count)} of ${Math.round(e.count)} ${noun ?? 'picked'}${got.grams > 0 ? `, and ${formatWeight(got.grams, u)}` : ''}`;
+  return `${amountText(got, u)}, not in this season's plan`;
+}
+
 function expectedAmountText(e: Amount, u: 'imperial' | 'metric', noun: string | null): string {
   const parts: string[] = [];
   if (e.grams > 0) parts.push(formatWeight(e.grams, u));
@@ -46,26 +55,11 @@ export function HarvestScreen() {
   const season = c ? seasonOf(c, toDay(today.value)) : Number(today.value.slice(0, 4));
   const inSeason = (iso: string) => (c ? seasonOf(c, toDay(iso)) === season : iso.startsWith(String(season)));
 
-  // Crops in this season's plantings, with what they should give.
-  const crops = new Map<string, { name: string; color: string; form: Parameters<typeof Glyph>[0]['form']; noun: string | null; expected: Amount }>();
-  for (const p of g.plantings) {
-    const plant = plantOf(p.plantId);
-    if (!plant) continue;
-    const phases = plantingPhases(p, plant, c);
-    if (phases && phases.season !== season) continue;
-    const e = expectedYield(p, plant);
-    const prev = crops.get(plant.id);
-    crops.set(plant.id, {
-      name: plant.name,
-      color: plant.glyph.color,
-      form: plant.glyph.form,
-      noun: countNoun(plant.category),
-      expected: { grams: (prev?.expected.grams ?? 0) + e.grams, count: (prev?.expected.count ?? 0) + e.count },
-    });
-  }
+  // One row per crop planned for this season or picked in it, so the rows add up to the total.
   const seasonHarvests = g.harvests.filter((h) => inSeason(h.date));
+  const crops = cropRows(g.plantings, seasonHarvests, plantOf, c, season);
   const total = pickedSoFar(seasonHarvests, () => true);
-  const expectedTotal = [...crops.values()].reduce((a, x) => a + x.expected.grams, 0);
+  const expectedTotal = crops.reduce((a, x) => a + x.expected.grams, 0);
   const recent = [...g.harvests].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 30);
 
   return (
@@ -79,19 +73,19 @@ export function HarvestScreen() {
         </p>
       </header>
       <div class="harvest-main">
-        {crops.size > 0 ? (
+        {crops.length > 0 ? (
           <section class="panel harvest-crops" aria-labelledby="hv-crops">
             {seasonHarvests.length === 0 ? (
               <>
                 <h2 id="hv-crops">What the plan should give this season</h2>
                 <ul class="crop-plan-list">
-                  {[...crops.entries()].map(([id, crop]) => (
-                    <li key={id} class="crop-plan-row">
+                  {crops.map((crop) => (
+                    <li key={crop.plantId} class="crop-plan-row">
                       <span class="crop-name">
-                        <Glyph form={crop.form} color={crop.color} size={22} />
-                        {crop.name}
+                        {crop.plant ? <Glyph form={crop.plant.glyph.form} color={crop.plant.glyph.color} size={22} /> : null}
+                        {crop.plant?.name ?? crop.plantId}
                       </span>
-                      <span class="muted crop-plan-amt">{expectedAmountText(crop.expected, u, crop.noun)}</span>
+                      <span class="muted crop-plan-amt">{expectedAmountText(crop.expected, u, crop.plant ? countNoun(crop.plant.category) : null)}</span>
                     </li>
                   ))}
                 </ul>
@@ -100,23 +94,23 @@ export function HarvestScreen() {
               <>
                 <h2 id="hv-crops">Picked so far, against what each crop should give</h2>
                 <ul class="crop-list">
-                  {[...crops.entries()].map(([id, crop]) => {
-                    const got = pickedSoFar(seasonHarvests, (h) => h.plantId === id);
+                  {crops.map((crop) => {
+                    const name = crop.plant?.name ?? crop.plantId;
+                    const color = crop.plant?.glyph.color ?? 'var(--c-muted)';
                     const byWeight = crop.expected.grams > 0;
                     const exp = byWeight ? crop.expected.grams : crop.expected.count;
-                    const have = byWeight ? got.grams : got.count;
-                    const pct = exp > 0 ? Math.min(100, Math.round((have / exp) * 100)) : 0;
-                    const text = byWeight
-                      ? `${formatWeight(have, u)} of ${formatWeight(exp, u)}`
-                      : `${Math.round(have)} of ${Math.round(exp)} ${crop.noun ?? 'picked'}`;
+                    const have = byWeight ? crop.picked.grams : crop.picked.count;
+                    // Picks of a crop with nothing planned this season fill the bar: there is no target.
+                    const pct = exp > 0 ? Math.min(100, Math.round((have / exp) * 100)) : 100;
+                    const text = progressText(crop, u, crop.plant ? countNoun(crop.plant.category) : null);
                     return (
-                      <li key={id} class="crop-row">
+                      <li key={crop.plantId} class="crop-row">
                         <span class="crop-name">
-                          <Glyph form={crop.form} color={crop.color} size={26} />
-                          {crop.name}
+                          {crop.plant ? <Glyph form={crop.plant.glyph.form} color={color} size={26} /> : null}
+                          {name}
                         </span>
-                        <span class="crop-bar" role="img" aria-label={`${crop.name}: ${text}`}>
-                          <span style={{ width: `${pct}%`, background: crop.color }} />
+                        <span class="crop-bar" role="img" aria-label={`${name}: ${text}`}>
+                          <span style={{ width: `${pct}%`, background: color }} />
                         </span>
                         <span class="muted crop-text">{text}</span>
                       </li>
@@ -185,8 +179,11 @@ function HarvestRow({ h }: { h: Harvest }) {
 function LogForm() {
   const g = garden.value!;
   const u = units.value;
-  const options = g.plantings
-    .map((p) => ({ p, plant: plantOf(p.plantId), container: g.containers.find((c) => c.id === p.containerId) }))
+  // Only plantings in the ground this season by today: one that goes in next year has nothing to pick.
+  const c = g.climate;
+  const todayDay = toDay(today.value);
+  const options = pickablePlantings(g.plantings, plantOf, c, c ? seasonOf(c, todayDay) : Number(today.value.slice(0, 4)), todayDay)
+    .map((p) => ({ p, plant: plantOf(p.plantId), container: g.containers.find((k) => k.id === p.containerId) }))
     .filter((o) => o.plant)
     .sort((a, b) => a.plant!.name.localeCompare(b.plant!.name));
   // Starts empty: the gardener says what they picked rather than logging against the first name.
@@ -201,9 +198,13 @@ function LogForm() {
     return (
       <section class="panel log-form">
         <h2>Log a harvest</h2>
-        <p class="muted">
-          Plant something in the <a href={hrefOf({ name: 'garden' })}>garden</a> first, then log what you pick here.
-        </p>
+        {g.plantings.length > 0 ? (
+          <p class="muted">Nothing in the garden is in the ground yet this season. Log a pick here once a planting has gone in.</p>
+        ) : (
+          <p class="muted">
+            Plant something in the <a href={hrefOf({ name: 'garden' })}>garden</a> first, then log what you pick here.
+          </p>
+        )}
       </section>
     );
   }

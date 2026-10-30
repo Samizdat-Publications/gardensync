@@ -22,6 +22,15 @@ test('a share link opens a copy of the garden in a fresh browser', async ({ page
   await p2.getByRole('button', { name: 'Add to my gardens' }).click();
   await expect(p2.getByRole('navigation', { name: 'Main' }).first()).toBeVisible();
   await expect.poll(() => p2.evaluate(() => JSON.parse(localStorage.getItem('gardensync.v8.doc') ?? 'null')?.doc.gardens.length ?? 0)).toBe(1);
+  // The link had no location and this browser has no garden of its own, so the plantings have no
+  // dates yet: the app goes straight to setting them, and then the plan shows the plantings.
+  await expect(p2).toHaveURL(/#\/settings\/climate/);
+  await p2.getByRole('button', { name: 'I know my frost dates' }).click();
+  await p2.getByLabel('Typical last spring frost').fill('2027-04-16');
+  await p2.getByLabel('Typical first fall frost').fill('2027-11-04');
+  await p2.getByRole('button', { name: 'Use these dates' }).click();
+  await p2.goto('http://localhost:4173/#/garden');
+  await expect(p2.locator('.patch, .patch-upcoming').first()).toBeVisible();
   await other.close();
 });
 

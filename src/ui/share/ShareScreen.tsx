@@ -89,7 +89,8 @@ export function ShareScreen({ payload, legacy }: { payload: string; legacy?: boo
     const next = { ...copy, climate, name: d.gardens.some((x) => x.name === copy.name) ? `${copy.name} (shared)` : copy.name };
     adoptDoc({ ...d, gardens: [...d.gardens, next], settings: { ...d.settings, activeGardenId: next.id } });
     history.replaceState(null, '', location.pathname);
-    navigate({ name: 'garden' });
+    // Without frost dates its plantings have no dates to show, so the first stop is setting them.
+    navigate(climate ? { name: 'garden' } : { name: 'settings', section: 'climate' });
   }
 
   return (
@@ -103,9 +104,11 @@ export function ShareScreen({ payload, legacy }: { payload: string; legacy?: boo
         <p class="muted">
           {g.climate?.place
             ? `It comes with frost dates for ${g.climate.place.name}.`
-            : mine?.climate
-              ? 'It has no location, so it will use your frost dates.'
-              : 'It has no location; set your town after adding it.'}{' '}
+            : g.climate
+              ? 'It comes with its own frost dates.'
+              : mine?.climate
+                ? 'It has no location, so it will use your frost dates.'
+                : 'It has no location: after adding it, set your town or frost dates and its plantings get their dates.'}{' '}
           Adding it keeps your own gardens as they are.
         </p>
         <div class="row">

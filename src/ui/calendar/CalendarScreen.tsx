@@ -4,14 +4,15 @@
 // A-calendar.dc.html.
 import { useSignal } from '@preact/signals';
 import type { ClimateProfile as Climate } from '../../domain/climate/types';
-import { dayFromParts, partsFromDay, toDay, type DayNum } from '../../domain/dates';
+import { toDay, type DayNum } from '../../domain/dates';
 import type { Garden } from '../../domain/doc/schema';
 import { squaresLabel } from '../../domain/layout/labels';
-import { HALF_SEASON, plantingPhases, seasonLabel, seasonOf, seasonRefs, type PlantingPhases } from '../../domain/schedule';
+import { plantingPhases, seasonLabel, seasonOf, seasonRefs, type PlantingPhases } from '../../domain/schedule';
 import { garden, today } from '../appState';
 import { fmtDay, fmtRange } from '../format';
 import { hrefOf } from '../router';
 import { plantOf } from '../uiState';
+import { calendarSpan as spanOf, edgeColor, monthStarts, openingShift } from './model';
 import './Calendar.css';
 
 interface Row {
@@ -24,17 +25,6 @@ interface Row {
   where: string;
   color: string;
   phases: PlantingPhases;
-}
-
-/**
- * Aligns a day to the nearest 1st of a month: days 1-15 snap to the current month, 16+ to the
- * next. Mirrors the same helper in SeasonRibbon so the calendar span starts on the same boundary
- * as the planner season strip.
- */
-function nearestMonthStart(d: DayNum): DayNum {
-  const { year, month, day } = partsFromDay(d);
-  if (day <= 15) return dayFromParts(year, month, 1);
-  return month === 12 ? dayFromParts(year + 1, 1, 1) : dayFromParts(year, month + 1, 1);
 }
 
 /**
@@ -52,15 +42,6 @@ interface Group {
   id: string;
   name: string;
   rows: Row[];
-}
-
-/** The 365-day span the chart shows for a season, starting on the 1st of a month. */
-function spanOf(c: Climate, season: number): { start: DayNum; end: DayNum } {
-  // Align the calendar span to the same month boundary the planner's season strip uses so the
-  // first month label is January (northern hemisphere) or the warm-season start month (southern
-  // hemisphere) rather than mid-January. The span is always 365 days.
-  const start = nearestMonthStart(seasonRefs(c, season).W - HALF_SEASON);
-  return { start, end: start + 364 };
 }
 
 /** Every bed's plantings that show any phase inside the span, earliest first. */
@@ -98,7 +79,8 @@ function groupsFor(g: Garden, c: Climate, span: { start: DayNum; end: DayNum }):
 export function CalendarScreen() {
   const g = garden.value;
   // Null until the gardener moves: the chart shows this season, or the next one when this season has
-  // nothing in it yet (a gardener planning in the fall wants to see next year's plan, not a blank).
+  // nothing in it yet, or only a few plantings after midsummer (a gardener starting in the fall
+  // wants to see next year's plan, not a chart with only the garlic on it).
   const offset = useSignal<number | null>(null);
   // Default to list view on narrow screens so all 12 months need not fit horizontally.
   // The user can switch back to the chart at any time.
@@ -121,26 +103,21 @@ export function CalendarScreen() {
   const thisSeason = seasonOf(c, todayDay);
   let shift = offset.value;
   if (shift === null) {
-    shift = groupsFor(g, c, spanOf(c, thisSeason)).length === 0 && groupsFor(g, c, spanOf(c, thisSeason + 1)).length > 0 ? 1 : 0;
+    const count = (s: number) => groupsFor(g, c, spanOf(c, s)).reduce((n, gr) => n + gr.rows.length, 0);
+    shift = openingShift(count(thisSeason), count(thisSeason + 1), todayDay > seasonRefs(c, thisSeason).W);
   }
   const season = thisSeason + shift;
   const refs = seasonRefs(c, season);
   const span = spanOf(c, season);
-  const days = span.end - span.start + 1; // always 365
+  const days = span.end - span.start + 1; // 365, or 366 when the span holds Feb 29
   const pct = (d: DayNum) => `${(((Math.min(Math.max(d, span.start), span.end + 1) - span.start) / days) * 100).toFixed(3)}%`;
   const width = (a: DayNum, b: DayNum) => `${(((Math.min(b, span.end + 1) - Math.max(a, span.start)) / days) * 100).toFixed(3)}%`;
+  // Whether [a, b) reaches into the span: a phase wholly in the next season draws nothing here.
+  const shows = (a: DayNum, b: DayNum) => b > span.start && a <= span.end;
 
-  // Month ticks: one per calendar month whose 1st falls within the span. Since the span starts at
-  // a month boundary, the first tick is always at 0% (the left edge).
-  const months: { day: DayNum; label: string }[] = [];
-  for (let d = span.start; d <= span.end; d++) {
-    const p = partsFromDay(d);
-    if (p.day === 1)
-      months.push({
-        day: d,
-        label: new Intl.DateTimeFormat('en-US', { month: 'short', timeZone: 'UTC' }).format(new Date(d * 86_400_000)),
-      });
-  }
+  // Month ticks: one per calendar month. The span starts on a 1st, so the first tick is at 0%.
+  const monthName = new Intl.DateTimeFormat('en-US', { month: 'short', timeZone: 'UTC' });
+  const months = monthStarts(span).map((day) => ({ day, label: monthName.format(new Date(day * 86_400_000)) }));
 
   const groups = groupsFor(g, c, span);
   const anyIndoor = groups.some((gr) => gr.rows.some((r) => r.phases.indoor && r.phases.indoor.start <= span.end && r.phases.bedIn > span.start));
@@ -219,8 +196,11 @@ export function CalendarScreen() {
                         {r.name}
                         {r.detail ? <span class="cal-label-detail">{r.detail}</span> : null}
                       </span>
-                      <div class="cal-track" style={{ '--crop': r.color }}>
-                        {r.phases.indoor ? (
+                      <div
+                        class="cal-track"
+                        style={{ '--crop': r.color, '--crop-edge-light': edgeColor(r.color, 'light'), '--crop-edge-dark': edgeColor(r.color, 'dark') }}
+                      >
+                        {r.phases.indoor && shows(r.phases.indoor.start, r.phases.bedIn) ? (
                           // P3: the indoor phase bar renders whenever plantingPhases gives a non-null
                           // indoor range. It is absent in the starter garden because the auto-starter
                           // switches tomatoes to method "bought" when it is too late to raise from
@@ -233,11 +213,13 @@ export function CalendarScreen() {
                           />
                         ) : null}
                         {/* Growing: an outline in the crop's color on the panel, as in the garden's season strip. */}
-                        <span
-                          class="seg seg-grow"
-                          style={{ left: pct(r.phases.bedIn), width: width(r.phases.bedIn, r.phases.bedOut ?? span.end + 1) }}
-                        />
-                        {r.phases.harvest ? (
+                        {shows(r.phases.bedIn, r.phases.bedOut ?? span.end + 1) ? (
+                          <span
+                            class="seg seg-grow"
+                            style={{ left: pct(r.phases.bedIn), width: width(r.phases.bedIn, r.phases.bedOut ?? span.end + 1) }}
+                          />
+                        ) : null}
+                        {r.phases.harvest && shows(r.phases.harvest.start, r.phases.harvest.end + 1) ? (
                           <span
                             class="seg seg-pick"
                             style={{ left: pct(r.phases.harvest.start), width: width(r.phases.harvest.start, r.phases.harvest.end + 1) }}

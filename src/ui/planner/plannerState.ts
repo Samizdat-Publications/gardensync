@@ -11,7 +11,7 @@ import type { Plant } from '../../domain/plants/schema';
 import { garden, store, today } from '../appState';
 import { placingPlantId, selection, viewDay } from '../uiState';
 import type { Cell, Size, View } from './geometry';
-import { defaultMethod, nextWindow, type PlaceMethod } from './placement';
+import { nextWindow, placeMethod, type PlaceMethod } from './placement';
 import type { DropRequest, Proposal, Resolutions } from './resolve';
 
 export const view = signal<View | null>(null);
@@ -133,6 +133,11 @@ export function act(op: Op, label: string, done?: string, opts: Omit<DispatchOpt
 
 // ---- Placement actions --------------------------------------------------------------------------
 
+/** The way a plant goes in when placed today: the usual way, or bought plants once seed-starting time has passed. */
+export function methodNow(plant: Plant): PlaceMethod {
+  return placeMethod(plant, garden.value?.climate ?? null, toDay(today.value));
+}
+
 export function startPlacing(plantId: string): void {
   placingPlantId.value = plantId;
   const d = draft.value;
@@ -145,7 +150,7 @@ export function startPlacing(plantId: string): void {
   if (g?.climate) {
     const resolved = resolvePlant(plantId, g.customPlants ?? []);
     if (resolved) {
-      const method = defaultMethod(resolved.plant);
+      const method = methodNow(resolved.plant);
       const from = toDay(today.value);
       const choice = nextWindow(resolved.plant, g.climate, method, from);
       if (choice) {

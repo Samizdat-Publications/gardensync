@@ -2,6 +2,7 @@
 // it in the middle, the inspector on the right. Below 1200 px the inspector becomes a sheet; on
 // phones (760 px and less) the canvas fills the screen and the palette is a sheet opened by "Add
 // plants" (A-phone-garden, A-phone-place). An empty garden shows the A-states empty state.
+import { hrefOf } from '../router';
 import { useSignal } from '@preact/signals';
 import { useEffect, useRef } from 'preact/hooks';
 import { toDay } from '../../domain/dates';
@@ -164,7 +165,12 @@ export function Planner() {
       'add Bed 1',
       'Added Bed 1. Now choose a plant and tap its squares.',
     );
-    if (res.ok) requestAnimationFrame(() => fitAll());
+    if (res.ok)
+      requestAnimationFrame(() => {
+        fitAll();
+        // The button that was pressed is gone; keep focus on the plan rather than the page body.
+        document.querySelector<HTMLElement>('.canvas-app')?.focus();
+      });
   };
 
   // The plan's text alternative: every bed and pot and what is in it on the day shown.
@@ -235,7 +241,15 @@ export function Planner() {
           <div class="canvas-area">
             {/* Notes about the day shown float over the plan, so the plan never moves under a drag. */}
             <div class="plan-note">
-            {placing && previewDay !== null && placingPlant ? (
+            {!g.climate && g.plantings.length > 0 ? (
+              // A garden without frost dates (a shared copy opened in a fresh browser) cannot date its plantings.
+              <span class="ahead">
+                These plantings need your frost dates before they show on the plan.
+                <a class="btn ahead-btn" href={hrefOf({ name: 'settings', section: 'climate' })}>
+                  Set your town
+                </a>
+              </span>
+            ) : placing && previewDay !== null && placingPlant ? (
               <span class="ahead">
                 Showing {fmtDay(previewDay)}, when {placingPlant.name.toLowerCase()} would go in
                 <button type="button" class="btn ahead-btn" onClick={stopPlacing}>
@@ -253,7 +267,7 @@ export function Planner() {
               <span class="ahead">
                 Nothing is in the ground yet; the first planting goes in on {fmtDay(busiestAhead.value.first)}.
                 <button type="button" class="btn ahead-btn" onClick={() => (viewDay.value = busiestAhead.value!.best)}>
-                  Show the garden on {fmtDay(busiestAhead.value.best)}
+                  Show it at its fullest, {fmtDay(busiestAhead.value.best)}
                 </button>
               </span>
             ) : null}

@@ -67,8 +67,22 @@ export function nextWindow(
       const lead = startsFresh && w.indoor ? w.bedIn.start - w.indoor.start : 0;
       const earliest = from + lead;
       if (w.rounds && w.rounds.length > 0) {
+        // Between two rounds, or after the last while the window is still open, sow on the day
+        // itself, counted from the round before, rather than waiting up to a fortnight (or a year).
+        // More than one interval after a round means a summer gap in the rounds: wait for the next.
+        const every = plant.succession?.everyDays ?? 0;
+        let r = -1;
+        for (let i = w.rounds.length - 1; i >= 0; i--) {
+          if (w.rounds[i]! <= earliest) {
+            r = i;
+            break;
+          }
+        }
         const k = w.rounds.findIndex((d) => d >= earliest);
-        if (k >= 0) {
+        if (r >= 0 && earliest - w.rounds[r]! < every && earliest <= w.bedIn.end && w.rounds[r] !== earliest) {
+          day = earliest;
+          anchor = { kind: 'auto', window: name, season, round: r, offsetDays: earliest - w.rounds[r]! };
+        } else if (k >= 0) {
           day = w.rounds[k]!;
           anchor = { kind: 'auto', window: name, season, round: k, offsetDays: 0 };
         }

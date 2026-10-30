@@ -68,6 +68,22 @@
   border: 1px solid var(--c-line);
   border-radius: 10px;
 }
+/* Typed frost dates, for a garden with no climate yet (a shared garden opened in a new browser). */
+.settings-manual {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  border: 1px solid var(--c-line);
+  border-radius: 10px;
+}
+.settings-manual > p,
+.settings-manual > button {
+  grid-column: 1 / -1;
+}
+.settings-manual > button {
+  justify-self: start;
+}
 .settings-place {
   color: var(--c-ink);
 }

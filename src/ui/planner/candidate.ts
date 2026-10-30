@@ -12,8 +12,8 @@ import { garden, units } from '../appState';
 import { placingPlantId, shownDay } from '../uiState';
 import { intervalOfP, plantLookup } from './derived';
 import { cellsBetween } from './geometry';
-import { draft } from './plannerState';
-import { anchorFor, defaultMethod, windowWords, type PlaceMethod, type WindowChoice } from './placement';
+import { draft, methodNow } from './plannerState';
+import { anchorFor, windowWords, type PlaceMethod, type WindowChoice } from './placement';
 
 export interface Taken {
   planting: Planting;
@@ -58,7 +58,7 @@ export const candidate = computed<Candidate | null>(() => {
   const plant = plantLookup.value(plantId);
   if (!plant) return null;
   const d = draft.value;
-  const method = d.method ?? defaultMethod(plant);
+  const method = d.method ?? methodNow(plant);
   const from = shownDay.value;
   const climate = g.climate;
   const iof = intervalOfP.value;

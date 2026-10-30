@@ -97,7 +97,11 @@ export function ClashCard() {
   // Position: near the drop point, clamped within the viewport.
   const W = 280;
   const left = Math.min(Math.max(8, screenX + 10), (typeof window !== 'undefined' ? window.innerWidth : 800) - W - 8);
-  const top = Math.min(Math.max(8, screenY + 10), (typeof window !== 'undefined' ? window.innerHeight : 600) - 8);
+  // Below the drop point in the top half of the screen, above it in the bottom half, so the whole
+  // card is always on screen; it scrolls inside itself if the screen is very short.
+  const vh = typeof window !== 'undefined' ? window.innerHeight : 600;
+  const below = screenY < vh / 2;
+  const place = below ? { top: `${Math.max(8, screenY + 10)}px` } : { bottom: `${Math.max(8, vh - screenY + 10)}px` };
 
   return (
     <div
@@ -107,7 +111,7 @@ export function ClashCard() {
       aria-label={`Conflict: ${req.plant.name} clashes here`}
       aria-modal="false"
       tabIndex={-1}
-      style={{ position: 'fixed', left: `${left}px`, top: `${top}px`, width: `${W}px`, zIndex: 200 }}
+      style={{ position: 'fixed', left: `${left}px`, ...place, width: `${W}px`, maxHeight: 'calc(100dvh - 16px)', overflowY: 'auto', zIndex: 200 }}
       onKeyDown={(e) => {
         if (e.key === 'Escape') {
           e.stopPropagation();

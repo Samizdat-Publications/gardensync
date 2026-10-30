@@ -43,6 +43,18 @@ export function defaultMethod(plant: Plant): PlaceMethod {
   return ways[0] ?? 'direct';
 }
 
+/**
+ * The way to place a plant from `day` on: the usual way, except that once the time to start seeds
+ * indoors has passed for the next window, a plant that can be bought as seedlings is planted out
+ * from bought plants (nobody can start seeds in the past).
+ */
+export function placeMethod(plant: Plant, climate: ClimateProfile | null, day: DayNum): PlaceMethod {
+  const usual = defaultMethod(plant);
+  if (usual !== 'transplant' || !climate || !methodsFor(plant).includes('bought')) return usual;
+  const next = nextWindow(plant, climate, 'transplant', day);
+  return next?.window.indoor && next.window.indoor.end < day ? 'bought' : usual;
+}
+
 /** "Sow", "Plant out" or "Plant": the verb for putting it in the ground. */
 export function verbOf(method: PlaceMethod): string {
   if (method === 'direct') return 'Sow';

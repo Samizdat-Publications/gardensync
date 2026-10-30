@@ -1135,6 +1135,10 @@
     border-left: 0;
     border-right: 0;
   }
+  /* Toasts sit above the floating "Add plants" button and the bottom bar, never over them. */
+  .toast-region {
+    bottom: calc(56px + env(safe-area-inset-bottom) + var(--sp-3) + 56px);
+  }
   .add-plants {
     /* Fixed keeps the button in the viewport stacking context so the canvas SVG
        (which is deeply nested in z-index:auto ancestors) cannot cover it. */
@@ -1173,9 +1177,6 @@
   .ribbon-slider input {
     width: 100%;
     margin-left: 0;
-  }
-  .toast-region {
-    bottom: calc(56px + var(--sp-3) + env(safe-area-inset-bottom));
   }
   .empty {
     margin: var(--sp-4);

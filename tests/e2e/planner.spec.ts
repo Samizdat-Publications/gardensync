@@ -222,7 +222,7 @@ test('a garden started in the fall says when its plantings go in, and shows that
   await page.getByRole('button', { name: 'Start planning' }).click();
   const hint = page.getByText(/Nothing is in the ground yet; the first planting goes in on/);
   await expect(hint).toBeVisible();
-  await page.getByRole('button', { name: /^Show the garden on [A-Z][a-z]{2} \d+$/ }).click();
+  await page.getByRole('button', { name: /^Show it at its fullest, [A-Z][a-z]{2} \d+$/ }).click();
   await expect(page.getByText(/Looking ahead: today is Oct 28/)).toBeVisible();
   await expect(hint).toHaveCount(0);
 });

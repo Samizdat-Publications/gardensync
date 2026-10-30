@@ -3,8 +3,9 @@
 import { useSignal } from '@preact/signals';
 import { useEffect, useRef } from 'preact/hooks';
 import { adjustFrost, resetFrost } from '../../domain/climate/adjust';
+import { manualProfile } from '../../domain/climate/manual';
 import type { ClimateProfile } from '../../domain/climate/types';
-import { circularDoy } from '../../domain/dates';
+import { circularDoy, isIsoDate, monthDayOf, toDay } from '../../domain/dates';
 import { exportFileName, parseImportFile, toExportFile } from '../../domain/doc/exportFile';
 import type { Op } from '../../domain/doc/ops';
 import { encodeShare } from '../../domain/doc/share';
@@ -16,9 +17,10 @@ import { APP_VERSION } from '../../version';
 import { adoptDoc, garden, newId, store, today, units } from '../appState';
 import { openAssistant } from '../assistant/open';
 import { PlaceSearch, placeErrorText } from '../components/PlaceSearch';
-import { fmtMonthDay } from '../format';
+import { fmtMonthDay, fmtWithYear } from '../format';
 import { hrefOf, route } from '../router';
 import './Settings.css';
+import { keepLastExport, sectionInView } from './model';
 
 const SECTIONS = [
   ['climate', 'Your climate'],
@@ -30,10 +32,48 @@ const SECTIONS = [
 
 export function SettingsScreen() {
   const r = route.value;
-  const active = r.name === 'settings' ? r.section ?? 'climate' : 'climate';
+  const requested = r.name === 'settings' ? r.section ?? null : null;
+  // The section in view as the page scrolls; null until the first measure.
+  const spied = useSignal<string | null>(null);
+  const active = spied.value ?? requested ?? 'climate';
   useEffect(() => {
-    if (r.name === 'settings' && r.section) document.getElementById(r.section)?.scrollIntoView({ block: 'start' });
-  }, [active]);
+    if (requested) document.getElementById(requested)?.scrollIntoView({ block: 'start' });
+  }, [requested]);
+
+  // Scroll-spy: mark the section being read, not the one last linked to.
+  useEffect(() => {
+    let frame = 0;
+    const measure = () => {
+      frame = 0;
+      const els = SECTIONS.map(([id]) => document.getElementById(id));
+      if (els.some((el) => !el)) return;
+      const navBox = nav.current?.getBoundingClientRect();
+      const h = window.innerHeight;
+      // On phones the menu is a strip across the page: read below it while it is on screen.
+      const strip = navBox && navBox.width > window.innerWidth / 2 ? Math.max(0, navBox.bottom) : 0;
+      const root = document.scrollingElement ?? document.documentElement;
+      const atBottom = root.scrollHeight - root.scrollTop - root.clientHeight < 2;
+      const want = requested ? SECTIONS.findIndex(([id]) => id === requested) : -1;
+      const tops = els.map((el) => el!.getBoundingClientRect().top);
+      spied.value = SECTIONS[sectionInView(tops, strip, strip + (h - strip) * 0.3, atBottom, want >= 0 ? want : null, h)]![0];
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(measure);
+    };
+    measure();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    // A panel opening or closing moves the sections below it without any scrolling.
+    const main = document.querySelector('.settings-main');
+    const ro = typeof ResizeObserver === 'undefined' || !main ? null : new ResizeObserver(onScroll);
+    if (main) ro?.observe(main);
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      ro?.disconnect();
+    };
+  }, [requested]);
 
   // On phones the section list is a scrolling strip: mark which ends have more tabs past them, so
   // the CSS can fade that edge instead of cutting a label off with no hint.
@@ -82,6 +122,9 @@ export function SettingsScreen() {
 function ClimateSection() {
   const g = garden.value;
   const changing = useSignal(false);
+  const manual = useSignal(false);
+  const lastFrost = useSignal('');
+  const firstFrost = useSignal('');
   const busy = useSignal<string | null>(null);
   const error = useSignal<string | null>(null);
   if (!g) return null;
@@ -105,14 +148,59 @@ function ClimateSection() {
     }
   }
 
+  // Typed frost dates, as on the first-run screen: needs no network, and is one undo step.
+  function useManual(e: Event) {
+    e.preventDefault();
+    if (!isIsoDate(lastFrost.value) || !isIsoDate(firstFrost.value)) {
+      error.value = 'Type both frost dates.';
+      return;
+    }
+    const profile = manualProfile({
+      lastFrost: monthDayOf(toDay(lastFrost.value)),
+      firstFrost: monthDayOf(toDay(firstFrost.value)),
+      asOf: today.value,
+    });
+    set(profile, 'set the frost dates');
+    manual.value = false;
+    error.value = null;
+  }
+
   return (
     <section id="climate" class="panel settings-section" aria-labelledby="climate-h">
       <div class="settings-head">
         <h2 id="climate-h">Your climate</h2>
-        <button class="btn" onClick={() => (changing.value = !changing.value)} aria-expanded={changing.value}>
-          {garden.value?.climate?.place ? 'Change town' : 'Add your town'}
-        </button>
+        <span class="row">
+          <button class="btn" onClick={() => (changing.value = !changing.value)} aria-expanded={changing.value}>
+            {garden.value?.climate?.place ? 'Change town' : 'Add your town'}
+          </button>
+          {!c ? (
+            <button class="btn" onClick={() => (manual.value = !manual.value)} aria-expanded={manual.value}>
+              I know my frost dates
+            </button>
+          ) : null}
+        </span>
       </div>
+      {!c && manual.value ? (
+        <form class="settings-manual" onSubmit={useManual} noValidate>
+          <div class="field">
+            <label for="settings-lf">Typical last spring frost</label>
+            <input id="settings-lf" class="input" type="date" required value={lastFrost.value} onInput={(e) => (lastFrost.value = (e.target as HTMLInputElement).value)} />
+          </div>
+          <div class="field">
+            <label for="settings-ff">Typical first fall frost</label>
+            <input id="settings-ff" class="input" type="date" required value={firstFrost.value} onInput={(e) => (firstFrost.value = (e.target as HTMLInputElement).value)} />
+          </div>
+          <p class="muted small">Any year will do; only the month and day are used. Without a town, GardenSync cannot allow for summer heat.</p>
+          <button class="btn btn-primary" type="submit">
+            Use these dates
+          </button>
+          {error.value && !changing.value ? (
+            <p role="alert" class="settings-error">
+              {error.value}
+            </p>
+          ) : null}
+        </form>
+      ) : null}
       {changing.value ? (
         <div class="settings-change">
           <PlaceSearch id="settings-town" onPick={pick} autoFocus />
@@ -120,7 +208,7 @@ function ClimateSection() {
           {error.value ? <p class="settings-error">{error.value} Your dates were not changed.</p> : null}
         </div>
       ) : null}
-      {c ? <ClimateDetails climate={c} units={u} onChange={set} /> : <p>No town yet. Choose one so every date fits your garden.</p>}
+      {c ? <ClimateDetails climate={c} units={u} onChange={set} /> : <p>No town or frost dates yet. Add your town, or type your frost dates, so every date fits your garden.</p>}
     </section>
   );
 }
@@ -284,7 +372,9 @@ function DataSection() {
   const lastExport = store.doc.value.settings.lastExportAt;
 
   function download() {
-    const text = toExportFile(store.doc.value, new Date().toISOString(), APP_VERSION);
+    // The copy records its own download, so opening it later does not say it was never downloaded.
+    const d = store.doc.value;
+    const text = toExportFile({ ...d, settings: { ...d.settings, lastExportAt: today.value } }, new Date().toISOString(), APP_VERSION);
     const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
     const a = document.createElement('a');
     a.href = url;
@@ -304,7 +394,7 @@ function DataSection() {
     }
     takeSnapshot(localStorage, store.doc.value, 'before opening a copy', new Date().toISOString());
     if (res.kind === 'doc') {
-      adoptDoc(res.doc);
+      adoptDoc(keepLastExport(res.doc, store.doc.value.settings.lastExportAt));
       message.value = { kind: 'ok', text: 'Opened. What was here before is kept in Backups.' };
     } else {
       const d = store.doc.value;
@@ -318,7 +408,7 @@ function DataSection() {
     const doc = readBackup(localStorage, key);
     if (!doc) return;
     takeSnapshot(localStorage, store.doc.value, 'before restoring a backup', new Date().toISOString());
-    adoptDoc(doc);
+    adoptDoc(keepLastExport(doc, store.doc.value.settings.lastExportAt));
     backups.value = listBackups(localStorage);
     message.value = { kind: 'ok', text: 'Restored. What was here before is kept in Backups.' };
   }
@@ -350,7 +440,7 @@ function DataSection() {
         />
         <ShareButton />
       </div>
-      <p class="muted small">{lastExport ? `Last downloaded on ${lastExport}.` : 'Not downloaded yet.'}</p>
+      <p class="muted small">{lastExport && isIsoDate(lastExport) ? `Last downloaded on ${fmtWithYear(toDay(lastExport))}.` : 'Not downloaded yet.'}</p>
       {message.value ? (
         <p role="status" class={message.value.kind === 'error' ? 'settings-error' : 'settings-ok'}>
           {message.value.text}

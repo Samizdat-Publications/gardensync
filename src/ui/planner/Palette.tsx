@@ -12,8 +12,8 @@ import { garden, today } from '../appState';
 import { Glyph } from '../components/Glyph';
 import { fmtDay } from '../format';
 import { gardenPlants, placingPlantId } from '../uiState';
-import { paletteDrag, startPlacing, stopPlacing } from './plannerState';
-import { defaultMethod, nextWindow, verbOf, WEEK_DAYS } from './placement';
+import { methodNow, paletteDrag, startPlacing, stopPlacing } from './plannerState';
+import { nextWindow, verbOf, WEEK_DAYS } from './placement';
 
 const HINT_KEY = 'gardensync.palette-drag-hint-dismissed';
 
@@ -59,10 +59,10 @@ export function Palette({ onChosen, headingId }: { onChosen?: () => void; headin
         out.set(r.plant.id, { soon: false, text: '' });
         continue;
       }
-      const m = defaultMethod(r.plant);
+      const m = methodNow(r.plant);
       const win = nextWindow(r.plant, climate, m, todayDay);
       if (!win) out.set(r.plant.id, { soon: false, text: 'No planting dates here' });
-      else if (win.bedIn < todayDay + WEEK_DAYS) out.set(r.plant.id, { soon: true, text: win.bedIn <= todayDay ? `${verbOf(m)} now` : `${verbOf(m)} ${fmtDay(win.bedIn)}` });
+      else if (win.bedIn < todayDay + WEEK_DAYS) out.set(r.plant.id, { soon: true, text: win.bedIn <= todayDay ? `${verbOf(m)} now${win.late ? ', late' : ''}` : `${verbOf(m)} ${fmtDay(win.bedIn)}` });
       else out.set(r.plant.id, { soon: false, text: `${verbOf(m)} from ${fmtDay(win.bedIn)}` });
     }
     return out;
