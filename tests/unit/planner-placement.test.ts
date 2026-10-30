@@ -95,9 +95,9 @@ describe('the schedule as occupancy intervals', () => {
 
 describe('a late planting after the window closes', () => {
   const c = manualProfile({ lastFrost: '04-20', firstFrost: '10-15', asOf: '2027-05-20' });
-  it('offers peppers bought in late May this season, late, rather than next year', () => {
+  it('offers peppers bought in late June this season, late, rather than next year', () => {
     const pepper = plantById('pepper')!;
-    const from = dayFromParts(2027, 5, 28);
+    const from = dayFromParts(2027, 6, 25);
     const ch = nextWindow(pepper, c, 'bought', from)!;
     expect(ch.nextSeason).toBe(false);
     expect(ch.bedIn).toBe(from);
@@ -175,6 +175,6 @@ describe('one status line for a plant, shared by the garden list, the library an
   });
 
   it('gives the year when the date is not this year', () => {
-    expect(status('tomato', '2027-07-15').text).toMatch(/2028/);
+    expect(status('tomato', '2027-08-15').text).toMatch(/2028/);
   });
 });

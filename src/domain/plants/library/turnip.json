@@ -8,7 +8,7 @@
   "frost": "hardy",
   "temp": {
     "minC": 4,
-    "maxC": 24
+    "maxC": 22
   },
   "soilMinC": 4,
   "sun": "full",

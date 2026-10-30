@@ -49,8 +49,8 @@ describe('library timing line', () => {
   });
 
   it('with no climate it gives the guide offset in words', () => {
-    expect(timingLine(p('tomato'), null, '2027-01-15')).toBe('Plant out 1 to 4 weeks after your last frost');
-    expect(offsetLine(p('tomato'))).toBe('Plant out 1 to 4 weeks after your last frost');
+    expect(timingLine(p('tomato'), null, '2027-01-15')).toBe('Plant out 1 to 7 weeks after your last frost');
+    expect(offsetLine(p('tomato'))).toBe('Plant out 1 to 7 weeks after your last frost');
     expect(weeksPhrase([-6, -6])).toBe('6 weeks before your last frost');
     expect(weeksPhrase([-6, -2])).toBe('2 to 6 weeks before your last frost');
     expect(offsetRows(p('tomato')).map((r) => r.action)).toEqual(['Start seeds indoors', 'Plant out']);
@@ -67,10 +67,12 @@ describe('plant card when section', () => {
     const sched = cardSchedule(p('tomato'), canton(), '2027-01-15');
     expect(sched.season).toBe(2027);
     const s = whenSection(p('tomato'), sched);
+    // One window, so no heading: tomatoes in Canton have no separate fall planting.
+    expect(s.blocks).toHaveLength(1);
     const spring = s.blocks[0]!;
-    expect(spring.title).toBe('Spring');
+    expect(spring.title).toBeNull();
     expect(spring.rows.map((r) => r.kind)).toEqual(['indoor', 'bed', 'pick']);
-    expect(spring.rows[1]!.dates).toBe('May 17 to May 31');
+    expect(spring.rows[1]!.dates).toBe('May 17 to Jun 4');
     expect(spring.rows[1]!.why).toMatch(/last frost/);
     for (const r of spring.rows) expect(r.why.length).toBeGreaterThan(10);
     expect(spring.warnings.some((w) => w.frost && /^Frost possible from/.test(w.text))).toBe(true);

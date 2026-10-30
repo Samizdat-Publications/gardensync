@@ -55,10 +55,12 @@ describe('harvest: what a pick can be logged against', () => {
 describe('harvest: one row per crop', () => {
   it('every pick lands in a row, so the rows add up to the total, even for a crop planned for next year', () => {
     const nextYear = g.plantings.find((p) => phasesOf(p.id).season !== season)!;
+    const thisYear = g.plantings.find((p) => phasesOf(p.id).season === season && p.plantId !== nextYear.plantId)!;
     expect(nextYear).toBeDefined();
+    expect(thisYear).toBeDefined();
     const picks: Harvest[] = [
       { id: 'h1', plantId: nextYear.plantId, plantingId: nextYear.id, date: TODAY, grams: 907 },
-      { id: 'h2', plantId: g.plantings[0]!.plantId, plantingId: g.plantings[0]!.id, date: TODAY, grams: 680, count: 3 },
+      { id: 'h2', plantId: thisYear.plantId, plantingId: thisYear.id, date: TODAY, grams: 680, count: 3 },
       { id: 'h3', plantId: 'a-deleted-variety', date: TODAY, count: 2 },
     ];
     const rows = cropRows(g.plantings, picks, plantById, climate, season);

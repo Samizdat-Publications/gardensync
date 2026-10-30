@@ -22,7 +22,7 @@
   "support": "trellis",
   "spreads": true,
   "yield": { "amount": 1500, "unit": "g", "per": "plant" },
-  "perennial": { "firstHarvestYear": 2, "harvestWeeks": [6, 12], "lifespanYears": 10 },
+  "perennial": { "firstHarvestYear": 2, "harvestWeeks": [6, 12], "lifespanYears": 10, "needsChill": true },
   "glyph": { "form": "cane", "color": "#c21f5b" },
   "notes": {
     "sowing": "Plant dormant canes in early spring, as soon as the soil can be worked, with the top roots no more than {cm:5} below the surface. Space plants {cm:40} to {cm:60} apart in rows about {cm:200} apart.",

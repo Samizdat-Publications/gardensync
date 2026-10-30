@@ -19,10 +19,10 @@
   "maturity": { "days": 100, "from": "sow" },
   "methods": {
     "indoor": { "ageWeeks": [3, 4] },
-    "transplant": { "weeks": [1, 3] },
-    "direct": { "weeks": [1, 3] }
+    "transplant": { "weeks": [1, 6] },
+    "direct": { "weeks": [1, 8] }
   },
-  "harvest": { "type": "once", "windowDays": 21 },
+  "harvest": { "type": "once", "windowDays": 21, "untilFrost": true },
   "yield": { "amount": 2, "unit": "count", "per": "plant" },
   "glyph": { "form": "vine", "color": "#f47a1f" },
   "notes": {
@@ -34,6 +34,7 @@
     { "title": "University of Minnesota Extension: Growing pumpkins and winter squash in home gardens", "url": "https://extension.umn.edu/vegetables/growing-pumpkins-and-winter-squash-home-gardens" },
     { "title": "Royal Horticultural Society: How to grow pumpkins", "url": "https://www.rhs.org.uk/vegetables/pumpkins/grow-your-own" },
     { "title": "Colorado State University Extension: Vegetable Planting Guide", "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/" },
-    { "title": "Johnny's Selected Seeds: Howden Pumpkin Seed", "url": "https://www.johnnyseeds.com/vegetables/pumpkins/jack-o-lanterns/howden-pumpkin-seed-603.html" }
+    { "title": "Johnny's Selected Seeds: Howden Pumpkin Seed", "url": "https://www.johnnyseeds.com/vegetables/pumpkins/jack-o-lanterns/howden-pumpkin-seed-603.html" },
+    { "title": "University of Illinois Extension: When to plant vegetables", "url": "https://extension.illinois.edu/gardening/when-plant" }
   ]
 }

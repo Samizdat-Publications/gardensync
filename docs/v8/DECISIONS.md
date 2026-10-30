@@ -57,3 +57,10 @@ D-A decision; it then becomes a D-U entry.
 - **D-A14 Several gardens:** listed in Settings (open, rename, add, delete) and switchable from the
   header on wider screens. A new garden starts with the current garden's climate. Delete is offered
   only when there is more than one garden and asks first.
+- **D-A15 Plant data review with a second model (2026-10-30).** The whole library, the companion
+  table, the schedule spec and the six golden schedules were sent to Gemini 4 Argon for a critique,
+  alongside my own read of the goldens. Every finding was checked against extension guidance before
+  it changed anything; findings are review/LEDGER.md 130 onward. Maths changes are listed under "Plant
+  data review (8.3)" in docs/v8/SCHEDULE_SPEC.md. The prompt and script live outside the repo; the key
+  came from another local project's `.env` and was never written anywhere. Reverse: revert the
+  commit; the goldens show every date that moved.

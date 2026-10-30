@@ -37,7 +37,8 @@
   },
   "harvest": {
     "type": "once",
-    "windowDays": 90
+    "windowDays": 90,
+    "untilFrost": true
   },
   "soilPh": [
     6,

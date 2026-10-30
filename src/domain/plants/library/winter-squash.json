@@ -19,10 +19,10 @@
   "maturity": { "days": 95, "from": "sow" },
   "methods": {
     "indoor": { "ageWeeks": [3, 4] },
-    "transplant": { "weeks": [1, 3] },
-    "direct": { "weeks": [1, 3] }
+    "transplant": { "weeks": [1, 6] },
+    "direct": { "weeks": [1, 7] }
   },
-  "harvest": { "type": "once", "windowDays": 21 },
+  "harvest": { "type": "once", "windowDays": 21, "untilFrost": true },
   "yield": { "amount": 3, "unit": "count", "per": "plant" },
   "glyph": { "form": "vine", "color": "#c98a2e" },
   "notes": {
@@ -34,6 +34,7 @@
     { "title": "University of Minnesota Extension: Growing pumpkins and winter squash in home gardens", "url": "https://extension.umn.edu/vegetables/growing-pumpkins-and-winter-squash-home-gardens" },
     { "title": "Royal Horticultural Society: How to grow squashes", "url": "https://www.rhs.org.uk/vegetables/squash/grow-your-own" },
     { "title": "Colorado State University Extension: Vegetable Planting Guide", "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/" },
-    { "title": "Johnny's Selected Seeds: Waltham Butternut Squash Seed", "url": "https://www.johnnyseeds.com/vegetables/squash/winter-squash/waltham-butternut-butternut-squash-seed-671.html" }
+    { "title": "Johnny's Selected Seeds: Waltham Butternut Squash Seed", "url": "https://www.johnnyseeds.com/vegetables/squash/winter-squash/waltham-butternut-butternut-squash-seed-671.html" },
+    { "title": "University of Illinois Extension: When to plant vegetables", "url": "https://extension.illinois.edu/gardening/when-plant" }
   ]
 }

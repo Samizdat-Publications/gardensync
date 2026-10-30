@@ -41,7 +41,7 @@
     "transplant": {
       "weeks": [
         1,
-        4
+        7
       ]
     }
   },
@@ -50,7 +50,8 @@
   },
   "harvest": {
     "type": "continuous",
-    "windowDays": 60
+    "windowDays": 60,
+    "untilFrost": true
   },
   "support": "stake",
   "yield": {
@@ -75,6 +76,10 @@
     {
       "title": "Royal Horticultural Society: How to grow tomatoes",
       "url": "https://www.rhs.org.uk/vegetables/tomatoes/grow-your-own"
+    },
+    {
+      "title": "University of Illinois Extension: When to plant vegetables",
+      "url": "https://extension.illinois.edu/gardening/when-plant"
     }
   ]
 }

@@ -21,7 +21,7 @@
     "transplant": { "weeks": [0, 2] },
     "direct": { "weeks": [-2, 0] }
   },
-  "harvest": { "type": "continuous", "windowDays": 100 },
+  "harvest": { "type": "continuous", "windowDays": 100, "untilFrost": true },
   "purpose": ["display", "cut-flowers", "food"],
   "yield": { "amount": 20, "unit": "count", "per": "plant" },
   "glyph": { "form": "flower", "color": "#f5a623" },

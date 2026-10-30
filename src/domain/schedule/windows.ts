@@ -66,6 +66,8 @@ const IN_RANGE_SHARE = 0.85;
 const NEAR_PEAK_C = 2;
 /** A spring window pushed past its published end keeps this many days (section 5.4). */
 const MIN_WINDOW_DAYS = 14;
+/** A tender planting is too cool when more than this share of its days to harvest sit below its range. */
+const COOL_SHARE = 0.5;
 
 // ---- Context --------------------------------------------------------------------------------------
 
@@ -230,7 +232,7 @@ function harvestFor(ctx: Ctx, refs: SeasonRefs, method: Method, d: DayNum, fall:
     end = M + plant.harvest.windowDays;
     cap = { day: end + 1, kind: 'window', estimated: false };
   }
-  if (fs !== undefined && temps && plant.harvest.type !== 'once') {
+  if (fs !== undefined && temps && (plant.harvest.type !== 'once' || plant.harvest.untilFrost)) {
     for (let x = M + 1; x <= end; x++) {
       if (tMax(temps, x) > fs + HEAT_CAP_MARGIN_C) {
         end = x - 1;
@@ -239,8 +241,9 @@ function harvestFor(ctx: Ctx, refs: SeasonRefs, method: Method, d: DayNum, fall:
       }
     }
   }
-  if (fs === undefined && temps && plant.harvest.type !== 'once') {
+  if (fs === undefined && temps && (plant.harvest.type !== 'once' || plant.harvest.untilFrost)) {
     // Leafy crops: a mean this far above their range makes them bolt or burn (Phoenix kale in May).
+    // So do roots and stems left standing for the frost (Phoenix leeks in June).
     for (let x = M + 1; x <= end; x++) {
       if (tMean(temps, x) > plant.temp.maxC + HEAT_CAP_MARGIN_C) {
         end = x - 1;
@@ -276,6 +279,31 @@ function heatFail(ctx: Ctx, method: Method, d: DayNum, fall: boolean): HeatFail 
   let hot = 0;
   for (let x = from; x <= M; x++) if (tMean(temps, x) > plant.temp.maxC) hot++;
   return hot > BOLT_SHARE * (M - from + 1) ? { what: 'bolting', tempC: plant.temp.maxC } : null;
+}
+
+/**
+ * A tender crop bedded in on day d that would grow mostly below its range: more than half the days to
+ * harvest under temp.minC - 1, the same test as the cool-summer warning. Late and fall plantings that
+ * fail it are not offered (sweet corn sown in an Edinburgh July, tomatoes planted out for a cool autumn).
+ */
+function tooCool(ctx: Ctx, method: Method, d: DayNum, fall: boolean): boolean {
+  const { plant, temps } = ctx;
+  if (plant.frost !== 'tender' || !temps) return false;
+  const M = d + daysToHarvest(plant, method) + (fall ? FALL_EXTRA_DAYS : 0);
+  let cool = 0;
+  for (let x = d; x <= M; x++) if (tMean(temps, x) < plant.temp.minC - 1) cool++;
+  return cool > COOL_SHARE * (M - d + 1);
+}
+
+/**
+ * Soil warmth a bed-in waits for, or null (section 5.3): direct sowing of seed that needs 10 C or more,
+ * and tender transplants and plantings, which cold soil stalls.
+ */
+function soilNeed(plant: Plant, method: Method): number | null {
+  const soil = plant.soilMinC;
+  if (soil === undefined) return null;
+  if (method === 'direct') return soil >= 10 ? soil : null;
+  return plant.frost === 'tender' ? soil : null;
 }
 
 /** First day in [from, to] whose mean temperature reaches t, or null. */
@@ -368,8 +396,8 @@ function springWindow(ctx: Ctx, method: Method, out: Built): ScheduleWindow | nu
   }
 
   // Soil guard. Direct sowing: spec 5.3. Tender transplants and plantings: the same cold soil stalls them.
-  const soil = plant.soilMinC;
-  if (temps && soil !== undefined && ((method === 'direct' && soil >= 10) || (tender && method !== 'direct'))) {
+  const soil = soilNeed(plant, method);
+  if (temps && soil !== null) {
     const warm = firstMeanAtLeast(temps, refs.start, refs.W, soil);
     if (warm === null) {
       if (method === 'direct') {
@@ -411,12 +439,16 @@ function springWindow(ctx: Ctx, method: Method, out: Built): ScheduleWindow | nu
 
   let firstFail: HeatFail = null;
   let lastBad: HarvestBad | null = null;
+  // Where even the first day is cool (Edinburgh), the window stays, with the cool-summer warning; elsewhere
+  // a window that runs on into cooling weather ends where the crop would no longer ripen.
+  const coolFromStart = tooCool(ctx, method, start, false);
   const run = earliestRun(start, end, (d) => {
     const f = heatFail(ctx, method, d, false);
     if (f) {
       firstFail ??= f;
       return false;
     }
+    if (!coolFromStart && tooCool(ctx, method, d, false)) return false;
     const h = harvestFor(ctx, refs, method, d, false);
     if (!h.ok) {
       lastBad ??= h;
@@ -475,10 +507,19 @@ function fallBounds(ctx: Ctx, method: Method): { ref: FallRef; need: number; lat
   return { ref, need, latest, earliest: latest - 7 * plant.fall.windowWeeks };
 }
 
+/** The spring planting's harvest was cut short by summer heat, or heat ruled it out altogether. */
+function springEndedByHeat(spring: ScheduleWindow | undefined, out: Built, method: Method): boolean {
+  if (!spring) return out.notViable.some((n) => n.kind === 'spring' && n.method === method && n.reason.code === 'too-hot');
+  return spring.reasons.some((r) => r.code === 'heat-trimmed' || (r.code === 'harvest-until' && (r.cap === 'heat' || r.cap === 'bolting-heat')));
+}
+
 function fallWindow(ctx: Ctx, method: Method, spring: ScheduleWindow | undefined, out: Built): ScheduleWindow | null {
   const { plant, refs } = ctx;
   const b = fallBounds(ctx, method);
   if (!b) return null;
+  // A tender crop gets a second, fall planting only where summer heat ends the first (Phoenix
+  // tomatoes). Elsewhere a later planting is just a late spring one, which the spring window covers.
+  if (plant.frost === 'tender' && !springEndedByHeat(spring, out, method)) return null;
   const reasons: Reason[] = [
     { code: 'fall-count-back', ref: b.ref.day, refKind: b.ref.kind, days: b.need, pickingDays: b.need - daysToHarvest(plant, method) - FALL_EXTRA_DAYS, estimated: b.ref.estimated },
   ];
@@ -501,10 +542,15 @@ function fallWindow(ctx: Ctx, method: Method, spring: ScheduleWindow | undefined
   }
   let firstFail: HeatFail = null;
   let bad: HarvestBad | null = null;
+  let cool = false;
   const run = earliestRun(earliest, b.latest, (d) => {
     const f = heatFail(ctx, method, d, true);
     if (f) {
       firstFail ??= f;
+      return false;
+    }
+    if (tooCool(ctx, method, d, true)) {
+      cool = true;
       return false;
     }
     const h = harvestFor(ctx, refs, method, d, true);
@@ -517,7 +563,8 @@ function fallWindow(ctx: Ctx, method: Method, spring: ScheduleWindow | undefined
   if (!run) {
     const fail = firstFail as HeatFail;
     const why = bad as HarvestBad | null;
-    out.notViable.push({ kind: 'fall', method, reason: fail ? tooHot(fail) : (why?.reason ?? { code: 'no-room', ref: b.ref.day }) });
+    const coolReason: Reason = { code: 'too-cool', tempC: plant.temp.minC };
+    out.notViable.push({ kind: 'fall', method, reason: fail ? tooHot(fail) : (why?.reason ?? (cool ? coolReason : { code: 'no-room', ref: b.ref.day })) });
     return null;
   }
   if (run.start > earliest && firstFail) reasons.push(heatReason(firstFail));
@@ -561,7 +608,7 @@ function addSuccession(ctx: Ctx, windows: ScheduleWindow[]): void {
     const warmOk = warm === null || d >= warm;
     const heat = heatFail(ctx, method, d, fallSide);
     const h = harvestFor(ctx, refs, method, d, fallSide);
-    if (tenderOk && warmOk && !heat && h.ok) {
+    if (tenderOk && warmOk && !heat && !tooCool(ctx, method, d, fallSide) && h.ok) {
       if (pendingGap && current.length === 0 && groups.length > 0) {
         gaps.push({ from: pendingGap.from, to: d - 1, tempC: pendingGap.tempC });
       }
@@ -737,6 +784,12 @@ function perennialWindow(ctx: Ctx, out: Built): ScheduleWindow | null {
   const lifespan = Math.min(per.lifespanYears ?? MAX_YEARLY, MAX_YEARLY);
   const yearly: { season: number; harvest: DayRange }[] = [];
   const firstSeason = ctx.season + per.firstHarvestYear - 1;
+  // Fruit and crowns that need a cold winter rest fail where no month averages 10 C or less.
+  const run = per.needsChill ? coolestRun(profile) : null;
+  if (run && run.coolestMeanC > CHILL_MEAN_C) {
+    out.notViable.push({ kind: 'perennial', method, reason: { code: 'no-chill', coolestC: run.coolestMeanC } });
+    return null;
+  }
 
   if (ctx.mode === 'temperature') {
     if (!temps) return null;
@@ -824,6 +877,9 @@ function temperatureWindows(ctx: Ctx, method: Method, out: Built): ScheduleWindo
   const fs = plant.fruitSetMaxC;
   const viable = (d: DayNum): boolean => {
     const M = d + days;
+    // The bolting guard frost mode uses: no broccoli or cilantro heading into a Brisbane summer.
+    // Perennial herbs do not bolt.
+    if (fs === undefined && plant.lifecycle !== 'perennial' && heatFail(ctx, method, d, false)) return false;
     let n = 0;
     for (let x = d; x <= M; x++) if (inRange(plant, tMean(temps, x))) n++;
     if (n < IN_RANGE_SHARE * (M - d + 1)) return false;

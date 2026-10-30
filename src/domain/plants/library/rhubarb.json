@@ -20,7 +20,7 @@
   },
   "harvest": { "type": "continuous", "windowDays": 56 },
   "yield": { "amount": 1800, "unit": "g", "per": "plant" },
-  "perennial": { "firstHarvestYear": 2, "harvestWeeks": [0, 8], "lifespanYears": 15 },
+  "perennial": { "firstHarvestYear": 2, "harvestWeeks": [0, 8], "lifespanYears": 15, "needsChill": true },
   "glyph": { "form": "stalk", "color": "#c43c58" },
   "notes": {
     "sowing": "Plant dormant crowns or divisions in early spring, as soon as the soil can be worked, with the buds just at soil level. Allow about {cm:90} each way, as clumps grow large.",

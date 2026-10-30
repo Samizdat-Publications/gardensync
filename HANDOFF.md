@@ -9,7 +9,9 @@ then [docs/STEWART_FEEDBACK.md](docs/STEWART_FEEDBACK.md) (Stewart's notes outra
 **State:** 8.2 is on `master`, tagged v8.2.0, released on GitHub, live at
 https://gardensync-e4e.pages.dev; the landing page says 8.2. The `polish-8.1` branch is merged.
 
-**Next:** plant data review (ledger 129 and a Gemini 4 Argon critique of the whole library).
+**Plant data review:** on branch `plant-data-review` (ledger 129 to 140; raw critique in
+review/plant-data-argon-2026-10-30.json). Every changed date shows in the six goldens. Next: Stewart
+says whether it ships as 8.3 (merge, version bump, CHANGELOG, deploy, tag, release).
 
 ## 8.2 polish (2026-10-30)
 

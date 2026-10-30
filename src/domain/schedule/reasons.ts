@@ -40,6 +40,7 @@ export type Reason =
   // Why a window is not viable
   | { code: 'too-hot'; tempC: number }
   | { code: 'too-cool'; tempC: number }
+  | { code: 'no-chill'; coolestC: number }
   | { code: 'too-short'; day: DayNum; cap: CapKind }
   | { code: 'soil-never-warm'; tempC: number; method: Method }
   | { code: 'warmest-weeks'; day: DayNum; tempC: number }
@@ -193,6 +194,8 @@ function reasonCore(r: Reason): string {
       return `too warm here: the average temperature stays above ${c(r.tempC)}, so it bolts or fails; try heat-tolerant kinds or another crop`;
     case 'too-cool':
       return `too cool here: the average temperature stays below ${c(r.tempC)} for too long`;
+    case 'no-chill':
+      return `winters here are too mild: it needs a cold winter rest, and the coolest month averages ${c(Math.round(r.coolestC))}`;
     case 'too-short':
       return `not viable here: too little time to mature and give a week of harvest before ${formatDay(r.day)}, ${CAP_TEXT[r.cap]}`;
     case 'soil-never-warm':

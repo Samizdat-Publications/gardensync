@@ -22,7 +22,7 @@
     "direct": { "weeks": [0, 4] },
     "plant": { "weeks": [-4, 0], "what": "divisions of 4 to 6 bulbs" }
   },
-  "harvest": { "type": "cut-and-come-again", "windowDays": 150 },
+  "harvest": { "type": "cut-and-come-again", "windowDays": 150, "untilFrost": true },
   "winterMinC": -20,
   "purpose": ["food", "pollinators"],
   "yield": { "amount": 100, "unit": "g", "per": "plant" },

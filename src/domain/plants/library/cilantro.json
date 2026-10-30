@@ -6,7 +6,7 @@
   "family": "Apiaceae",
   "lifecycle": "annual",
   "frost": "half-hardy",
-  "temp": { "minC": 7, "maxC": 24 },
+  "temp": { "minC": 7, "maxC": 21 },
   "soilMinC": 7,
   "sun": "full",
   "water": "medium",

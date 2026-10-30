@@ -19,8 +19,8 @@
   "maturity": { "days": 50, "from": "sow" },
   "methods": {
     "indoor": { "ageWeeks": [3, 4] },
-    "transplant": { "weeks": [1, 3] },
-    "direct": { "weeks": [1, 4] }
+    "transplant": { "weeks": [1, 6] },
+    "direct": { "weeks": [1, 10] }
   },
   "harvest": { "type": "continuous", "windowDays": 60 },
   "yield": { "amount": 3000, "unit": "g", "per": "plant" },
@@ -33,6 +33,7 @@
   "sources": [
     { "title": "University of Minnesota Extension: Growing summer squash and zucchini in home gardens", "url": "https://extension.umn.edu/vegetables/growing-summer-squash-and-zucchini" },
     { "title": "Royal Horticultural Society: How to grow courgettes", "url": "https://www.rhs.org.uk/vegetables/courgettes/grow-your-own" },
-    { "title": "Colorado State University Extension: Vegetable Planting Guide", "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/" }
+    { "title": "Colorado State University Extension: Vegetable Planting Guide", "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/" },
+    { "title": "University of Illinois Extension: When to plant vegetables", "url": "https://extension.illinois.edu/gardening/when-plant" }
   ]
 }

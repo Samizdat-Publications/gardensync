@@ -22,7 +22,7 @@
     "direct": { "weeks": [-2, 4] }
   },
   "fall": { "windowWeeks": 4 },
-  "harvest": { "type": "cut-and-come-again", "windowDays": 120 },
+  "harvest": { "type": "cut-and-come-again", "windowDays": 120, "untilFrost": true },
   "purpose": ["food"],
   "yield": { "amount": 150, "unit": "g", "per": "plant" },
   "glyph": { "form": "sprig", "color": "#2a7d34" },

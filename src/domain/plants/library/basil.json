@@ -21,7 +21,7 @@
     "transplant": { "weeks": [1, 3] },
     "direct": { "weeks": [2, 4] }
   },
-  "harvest": { "type": "cut-and-come-again", "windowDays": 90 },
+  "harvest": { "type": "cut-and-come-again", "windowDays": 90, "untilFrost": true },
   "purpose": ["food"],
   "yield": { "amount": 200, "unit": "g", "per": "plant" },
   "glyph": { "form": "sprig", "color": "#3d9a4b" },

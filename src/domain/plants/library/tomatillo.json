@@ -21,7 +21,7 @@
     "indoor": { "ageWeeks": [4, 6] },
     "transplant": { "weeks": [2, 4] }
   },
-  "harvest": { "type": "continuous", "windowDays": 60 },
+  "harvest": { "type": "continuous", "windowDays": 60, "untilFrost": true },
   "support": "cage",
   "yield": { "amount": 1000, "unit": "g", "per": "plant" },
   "glyph": { "form": "fruiting", "color": "#a5c23a" },

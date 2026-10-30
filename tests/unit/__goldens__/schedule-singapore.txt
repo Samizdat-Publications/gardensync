@@ -3,7 +3,7 @@ singapore asparagus perennial plant: not viable (too-hot)
 singapore basil temperature transplant: indoor Oct 04 2026 to Oct 17, out Nov 15 2026 to Nov 14, pick Jan 01 to Apr 01
 singapore basil temperature direct: sow Nov 15 2026 to Nov 14, pick Jan 22 to Apr 22
 singapore beet temperature direct: not viable (too-hot)
-singapore blueberry perennial plant: plant Nov 15 2026 to Dec 13 2026, pick May 10 2029 to Jun 28 2029, yearly from 2029
+singapore blueberry perennial plant: not viable (no-chill)
 singapore bok-choy temperature transplant: not viable (too-hot)
 singapore bok-choy temperature direct: not viable (too-hot)
 singapore borage temperature direct: not viable (too-hot)
@@ -33,12 +33,12 @@ singapore eggplant temperature transplant: indoor Sep 06 2026 to Sep 19, out Nov
 singapore fava-bean overwinter direct: not viable (too-hot)
 singapore marigold temperature transplant: indoor Oct 04 2026 to Oct 17, out Nov 15 2026 to Nov 14, pick Dec 19 2026 to Mar 29
 singapore marigold temperature direct: sow Nov 15 2026 to Nov 14, pick Jan 09 to Apr 19
-singapore garlic overwinter plant: plant Sep 13 2026 to Oct 11 2026, pick May 17 to Jun 07
+singapore garlic overwinter plant: not viable (too-hot)
 singapore kale temperature transplant: not viable (too-hot)
 singapore kale temperature direct: not viable (too-hot)
 singapore kohlrabi temperature transplant: not viable (too-hot)
 singapore kohlrabi temperature direct: not viable (too-hot)
-singapore leek temperature transplant: indoor Aug 23 2026 to Sep 19, out Nov 15 2026 to Nov 14, pick Feb 23 to May 24
+singapore leek temperature transplant: not viable (too-hot)
 singapore lettuce temperature transplant: not viable (too-hot)
 singapore lettuce temperature direct: not viable (too-hot)
 singapore melon temperature transplant: indoor Oct 18 2026 to Oct 24, out Nov 15 2026 to Nov 14, pick Jan 30 to Feb 20
@@ -48,9 +48,9 @@ singapore nasturtium temperature transplant: not viable (too-hot)
 singapore nasturtium temperature direct: not viable (too-hot)
 singapore okra temperature transplant: indoor Oct 04 2026 to Oct 17, out Nov 15 2026 to Nov 14, pick Dec 24 2026 to Mar 14
 singapore okra temperature direct: sow Nov 15 2026 to Nov 14, pick Jan 14 to Apr 04
-singapore onion temperature transplant: indoor Aug 23 2026 to Sep 19, out Nov 15 2026 to Nov 14, pick Feb 23 to Mar 09
-singapore onion temperature direct: sow Nov 15 2026 to Nov 14, pick Apr 20 to May 04
-singapore onion temperature plant: plant Nov 15 2026 to Nov 14, pick Feb 23 to Mar 09
+singapore onion temperature transplant: not viable (too-hot)
+singapore onion temperature direct: not viable (too-hot)
+singapore onion temperature plant: not viable (too-hot)
 singapore oregano temperature transplant: indoor Sep 20 2026 to Oct 03, out Nov 15 2026 to Nov 14, pick Jan 14 to Jun 13
 singapore parsley temperature transplant: not viable (too-hot)
 singapore parsley temperature direct: not viable (too-hot)
@@ -62,11 +62,11 @@ singapore potato temperature plant: not viable (too-hot)
 singapore pumpkin temperature transplant: indoor Oct 18 2026 to Oct 24, out Nov 15 2026 to Nov 14, pick Feb 09 to Mar 02
 singapore pumpkin temperature direct: sow Nov 15 2026 to Nov 14, pick Feb 23 to Mar 16
 singapore radish temperature direct: not viable (too-hot)
-singapore raspberry perennial plant: not viable (too-hot)
-singapore rhubarb perennial plant: not viable (too-hot)
+singapore raspberry perennial plant: not viable (no-chill)
+singapore rhubarb perennial plant: not viable (no-chill)
 singapore rosemary temperature plant: plant Nov 15 2026 to Nov 14, pick Jan 14 to Jul 13
 singapore sage temperature transplant: indoor Sep 20 2026 to Oct 03, out Nov 15 2026 to Nov 14, pick Jan 14 to Jul 13, warn hot-weather-shade
-singapore scallion temperature direct: sow Nov 15 2026 to Nov 14, pick Jan 14 to Feb 13
+singapore scallion temperature direct: not viable (too-hot)
 singapore spinach temperature direct: not viable (too-hot)
 singapore strawberry perennial plant: not viable (too-hot)
 singapore sunflower temperature direct: sow Nov 15 2026 to Nov 14, pick Jan 24 to Feb 07

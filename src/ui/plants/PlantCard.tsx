@@ -101,13 +101,14 @@ function Suggestion({ plant, reason, season }: { plant: Plant; reason: Reason; s
 const NOT_VIABLE_TITLE: Partial<Record<Reason['code'], string>> = {
   'too-hot': 'Too warm here',
   'too-cool': 'Too cool here',
+  'no-chill': 'Winters are too mild here',
   'too-short': 'The season is too short here',
   'soil-never-warm': 'The soil stays too cool here',
 };
 
 /** "Too warm here: the average..." under the heading "Too warm here" reads "The average...". */
 function withoutTitle(text: string): string {
-  const rest = text.replace(/^Too (warm|cool) here: /, '');
+  const rest = text.replace(/^(Too (warm|cool) here|Winters here are too mild): /, '');
   return rest === text ? text : rest.charAt(0).toUpperCase() + rest.slice(1);
 }
 

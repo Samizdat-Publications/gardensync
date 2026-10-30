@@ -19,9 +19,9 @@
   "maturity": { "days": 70, "from": "transplant" },
   "methods": {
     "indoor": { "ageWeeks": [8, 10] },
-    "transplant": { "weeks": [2, 4] }
+    "transplant": { "weeks": [2, 8] }
   },
-  "harvest": { "type": "continuous", "windowDays": 60 },
+  "harvest": { "type": "continuous", "windowDays": 60, "untilFrost": true },
   "support": "stake",
   "yield": { "amount": 1000, "unit": "g", "per": "plant" },
   "glyph": { "form": "pepper", "color": "#3f9b3a" },
@@ -34,6 +34,7 @@
     { "title": "University of Minnesota Extension: Growing peppers in home gardens", "url": "https://extension.umn.edu/vegetables/growing-peppers" },
     { "title": "Royal Horticultural Society: How to grow sweet peppers", "url": "https://www.rhs.org.uk/vegetables/peppers/grow-your-own" },
     { "title": "Colorado State University Extension: Vegetable Planting Guide", "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/" },
-    { "title": "Johnny's Selected Seeds: Ace (F1) Bell Pepper Seed", "url": "https://www.johnnyseeds.com/vegetables/peppers/sweet-bell-peppers/ace-f1-bell-pepper-seed-574.html" }
+    { "title": "Johnny's Selected Seeds: Ace (F1) Bell Pepper Seed", "url": "https://www.johnnyseeds.com/vegetables/peppers/sweet-bell-peppers/ace-f1-bell-pepper-seed-574.html" },
+    { "title": "University of Illinois Extension: When to plant vegetables", "url": "https://extension.illinois.edu/gardening/when-plant" }
   ]
 }

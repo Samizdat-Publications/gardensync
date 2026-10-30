@@ -46,10 +46,11 @@ describe('goldens: every plant, every fixture place, season 2027', () => {
 
 describe('Canton, Ohio (frost mode)', () => {
   it('tomato goes out in mid to late May, seeds started from late March', () => {
-    // OSU HYG-1624: central Ohio transplant about May 20, northern Ohio a week later.
+    // OSU HYG-1624: central Ohio transplant about May 20, northern Ohio a week later. The Illinois
+    // planting table runs to about 7 weeks after the last frost (Jun 1 central, Jun 15 north).
     const w = win(sched('tomato', 'canton-oh'), 'spring', 'transplant')!;
     expect(isoOf(w.bedIn.start)).toBe('2027-05-17');
-    expect(w.bedIn.end).toBeLessThanOrEqual(d('2027-05-31'));
+    expect(isoOf(w.bedIn.end)).toBe('2027-06-04');
     expect(isoOf(w.indoor!.start)).toBe('2027-03-22');
     expect(codes(w.reasons)).toContain('soil-warm');
     expect(codes(w.warnings)).toContain('frost-possible');
@@ -114,6 +115,24 @@ describe('Canton, Ohio (frost mode)', () => {
     // Picking ends the day before the median -5 C freeze (Dec 1).
     expect(win(s, 'spring', 'transplant')!.harvest.end).toBe(d('2027-11-30'));
     expect(covers(win(s, 'fall', 'direct'), '2027-08-10')).toBe(true);
+  });
+
+  it('tomatoes: one spring window, picked until the first frost; no second fall planting', () => {
+    const s = sched('tomato', 'canton-oh');
+    expect(win(s, 'fall')).toBeUndefined();
+    expect(isoOf(win(s, 'spring', 'transplant')!.harvest.end)).toBe('2027-11-03');
+  });
+
+  it('roots and herbs that stand frost are picked until the hard frost', () => {
+    for (const id of ['parsnip', 'leek']) expect(isoOf(sched(id, 'canton-oh').windows[0]!.harvest.end)).toBe('2027-11-30');
+  });
+
+  it('cilantro and turnips: spring and late summer sowings, none in midsummer', () => {
+    for (const id of ['cilantro', 'turnip']) {
+      const days = sowingDays(sched(id, 'canton-oh'), 'direct');
+      expect(days.some((x) => x >= d('2027-06-01') && x <= d('2027-07-31'))).toBe(false);
+      expect(win(sched(id, 'canton-oh'), 'fall', 'direct')).toBeDefined();
+    }
   });
 
   it('every window says why, in plain words with no em dash', () => {
@@ -183,12 +202,36 @@ describe('Phoenix (heat is the limit)', () => {
     expect(days.some((x) => x >= d('2027-06-01') && x <= d('2027-07-31'))).toBe(false);
   });
 
+  it('sweet potato thrives in the summer heat', () => {
+    expect(win(sched('sweet-potato', 'phoenix'), 'spring', 'plant')).toBeDefined();
+  });
+
+  it('rhubarb, highbush blueberry and raspberry get no winter rest', () => {
+    for (const id of ['rhubarb', 'blueberry', 'raspberry']) expect(sched(id, 'phoenix').notViable[0]?.reason.code).toBe('no-chill');
+  });
+
+  it('leeks left standing come out before the summer heat', () => {
+    expect(sched('leek', 'phoenix').windows[0]!.harvest.end).toBeLessThan(d('2027-06-15'));
+  });
+
   it('kale harvest stops in the heat of late spring', () => {
     expect(win(sched('kale', 'phoenix'), 'spring', 'transplant')!.harvest.end).toBeLessThan(d('2027-06-15'));
   });
 });
 
 describe('Brisbane (frost-free)', () => {
+  it('broccoli and cilantro are not sown into the summer', () => {
+    for (const id of ['broccoli', 'cilantro']) {
+      const days = sowingDays(sched(id, 'brisbane'), 'direct');
+      expect(days).not.toContain(d('2027-12-15'));
+      expect(days).toContain(d('2028-05-15'));
+    }
+  });
+
+  it('garlic needs pre-chilling', () => {
+    expect(codes(win(sched('garlic', 'brisbane'), 'overwinter')!.reasons)).toContain('pre-chill');
+  });
+
   it('lettuce is viable in May, not in January', () => {
     const days = sowingDays(sched('lettuce', 'brisbane'), 'direct');
     expect(days).toContain(d('2028-05-15'));
@@ -206,9 +249,12 @@ describe('Singapore (equatorial)', () => {
     }
   });
 
-  it('garlic needs pre-chilling', () => {
-    const w = win(sched('garlic', 'singapore'), 'overwinter')!;
-    expect(codes(w.reasons)).toContain('pre-chill');
+  it('garlic, onions and leeks are too hot to bulb here', () => {
+    for (const id of ['garlic', 'onion', 'leek']) expect(sched(id, 'singapore').windows).toHaveLength(0);
+  });
+
+  it('highbush blueberry, raspberry and rhubarb get no winter rest', () => {
+    for (const id of ['blueberry', 'raspberry', 'rhubarb']) expect(sched(id, 'singapore').notViable[0]?.reason.code).toBe('no-chill');
   });
 });
 
@@ -216,6 +262,11 @@ describe('Edinburgh (short, cool season)', () => {
   it('tomato only with a cool-summer warning', () => {
     const w = win(sched('tomato', 'edinburgh'), 'spring', 'transplant')!;
     expect(codes(w.warnings)).toContain('cool-summer');
+  });
+
+  it('no tender crop is planted out for a cool autumn: no corn rounds, no fall tomatoes', () => {
+    expect(win(sched('sweet-corn', 'edinburgh'), 'spring', 'transplant')!.rounds ?? []).toHaveLength(0);
+    expect(win(sched('tomato', 'edinburgh'), 'fall')).toBeUndefined();
   });
 
   it('peas and potatoes are fine', () => {

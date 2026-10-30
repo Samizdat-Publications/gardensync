@@ -1,0 +1,184 @@
+{
+  "model": "gemini-4-argon",
+  "date": "2026-10-30",
+  "note": "Raw critique of the plant library, companions and goldens. Verdicts: review/LEDGER.md 130 to 140.",
+  "findings": [
+    {
+      "id": 1,
+      "severity": "high",
+      "plant": "schedule-maths",
+      "field": "schedule-edinburgh.txt: edinburgh sweet-corn spring transplant",
+      "current": "out Jun 15 to Aug 10, pick Aug 20 to Aug 30, rounds Jun 15, Jun 29, Jul 13, Jul 27, Aug 10",
+      "problem": "The schedule recommends transplanting sweet corn in Edinburgh until August 10 (with five succession rounds through summer), which would put maturity in mid-October when Edinburgh's daily mean is 9.8 C and pollination/ripening is impossible. Even the first planting on Jun 15 barely matures by late August in a 14.7 C peak summer, and succession rounds appear to bypass or ignore the cool-summer constraint and realistic autumn heat-unit needs.",
+      "suggested": "In schedule maths (Section 7 / Section 5.5), do not generate succession rounds after midsummer for tender crops when the cool-summer warning is active or when the second half of [d, M(d)] falls below temp.minC, and remove methods.indoor/succession interaction that stretches transplant windows into August in marginal cool climates.",
+      "basis": "RHS 'How to grow sweetcorn' and Scottish (RBGE / Beechgrove) guidance: sweet corn in Scotland must be planted out in late May or early June under fleece using extra-early varieties; July/August plantings cannot mature.",
+      "confidence": 0.98
+    },
+    {
+      "id": 2,
+      "severity": "high",
+      "plant": "tomato",
+      "field": "fall.windowWeeks / schedule-edinburgh.txt & schedule-canton-oh.txt: tomato fall transplant",
+      "current": "edinburgh tomato fall transplant: out Jun 30 to Jul 16, pick Sep 22 to Nov 14; canton-oh: out Jun 15 to Jul 13",
+      "problem": "Because tomato has `fall: {windowWeeks: 4}`, the frost-mode schedule generates a 'fall transplant' window in cool and temperate climates (planting out in July in Edinburgh and mid-June to mid-July in Canton). In Edinburgh, planting tomatoes outdoors in July to ripen between late September and November (mean temp 6.4 C to 9.8 C) will fail completely.",
+      "suggested": "Either remove `fall` from tomato (relying on temperature mode's bimodal windows in hot climates) or add a guard in Section 6 (Fall window) requiring that fall plantings of tender fruiting crops have a summer heat gap (i.e. spring harvest was cut short by `fruitSetMaxC`) before a separate fall crop is offered.",
+      "basis": "RHS and OSU Extension: in northern US (Zone 6) and UK climates, tomatoes are a single-season spring-planted crop; late-summer/fall tomato transplants are only viable in long-season, hot-summer climates (Zones 8-10 like Phoenix or Texas).",
+      "confidence": 0.96
+    },
+    {
+      "id": 3,
+      "severity": "high",
+      "plant": "alliums (garlic, onion, leek, scallion)",
+      "field": "temp.maxC / schedule-singapore.txt & schedule-brisbane.txt",
+      "current": "temp.maxC: 29; singapore garlic/onion/leek viable all year",
+      "problem": "Garlic, onion, leek, and scallion all have `temp.maxC: 29` (taken from a UC table's upper germination or extreme range rather than optimal daily mean growth temperature, which is 13-24 C). Because 29 C is a daily mean, `29 + 1 = 30 C` exceeds Singapore's 27.4 C monthly mean, causing the schedule to claim bulb onions, leeks, and overwintered garlic can be grown year-round in equatorial Singapore (and bulb onions sown through mid-summer in Brisbane and Canton).",
+      "suggested": "Lower `temp.maxC` for garlic, onion, and leek to 24 C (and scallion to 25-26 C), and for `overwinter` in temperature mode (Section 8), require the coolest month to be below ~18 C (even with pre-chilling, garlic and temperate bulb onions fail to bulb or rot in equatorial 27 C climates with 12-hour daylengths).",
+      "basis": "University of Minnesota, Penn State, and UC Davis extension guides: optimum daily mean temperature for onion/garlic/leek growth and bulbing is 13-24 C (55-75 F); bulb onions and garlic also require specific daylength and cool establishment not met in equatorial tropics.",
+      "confidence": 0.95
+    },
+    {
+      "id": 4,
+      "severity": "high",
+      "plant": "blueberry",
+      "field": "temp.maxC / schedule-singapore.txt & schedule-phoenix.txt: blueberry perennial plant",
+      "current": "temp.maxC: 27; singapore blueberry: plant Nov 15 to Dec 13, pick May 10 2029 to Jun 28 2029",
+      "problem": "Blueberry (`Vaccinium corymbosum`, highbush blueberry) has `temp.maxC: 27` (daily mean) and no chill-hour check in Section 9 (Perennials). As a result, Singapore is given a viable perennial schedule for highbush blueberries (since Singapore's 27.4 C warmest month is within `maxC + 1 = 28`), and Phoenix is scheduled to plant unshaded blueberries in desert heat without a chill or heat warning.",
+      "suggested": "Lower `blueberry.temp.maxC` to 23 or 24 (daily mean), and in `SCHEDULE_SPEC.md` Section 9 require perennials (like blueberry, rhubarb, raspberry, asparagus) to either have `chillWeeks` or check that the coldest month mean is below a dormancy threshold (e.g., 12 C) so temperate deciduous perennials are marked `not viable (too-hot)` in tropical Singapore.",
+      "basis": "RHS and Ontario Ministry of Agriculture: highbush blueberries require winter chilling (typically 400-1000+ hours below 7 C; even low-chill Southern highbush need 150-400 hours) and fail in equatorial climates like Singapore.",
+      "confidence": 0.96
+    },
+    {
+      "id": 5,
+      "severity": "high",
+      "plant": "sweet-potato",
+      "field": "temp.maxC / schedule-phoenix.txt: phoenix sweet-potato spring plant",
+      "current": "temp.maxC: 29; phoenix sweet-potato spring plant: not viable (too-hot)",
+      "problem": "Sweet potato has `temp.maxC: 29` (daily mean) and no `fruitSetMaxC`, so the schedule maths applies the leafy-crop bolting guard (Section 5.5: mean temperature over `[d, M(d)]` exceeds `temp.maxC` on more than 25% of days) and marks sweet potato `not viable (too-hot)` in Phoenix. In reality, sweet potato is one of the most heat-tolerant summer crops and thrives in Phoenix when planted in spring.",
+      "suggested": "Raise `sweet-potato.temp.maxC` to 34 or 35 C (daily mean), or exempt non-bolting tropical root crops from the 25% bolting heat guard in Section 5.5.",
+      "basis": "University of Arizona Cooperative Extension (Maricopa County Planting Calendar az1005) and Clemson HGIC: sweet potatoes thrive in hot desert summers (planted March-May in Phoenix) and do not bolt from heat.",
+      "confidence": 0.98
+    },
+    {
+      "id": 6,
+      "severity": "high",
+      "plant": "schedule-maths",
+      "field": "SCHEDULE_SPEC.md Section 10 / schedule-brisbane.txt (tomato, sweet-corn, pumpkin, zucchini, bush-bean, cucumber)",
+      "current": "brisbane tomato/sweet-corn/pumpkin/bush-bean out Jul 18 to Jul 16 2028 (365-day window)",
+      "problem": "In Brisbane, warm-season frost-tender crops with `temp.minC: 16` (tomato, tomatillo, basil, bush-bean, pole-bean, sweet-corn, pumpkin, winter-squash, zucchini) are given a 365-day planting window starting July 18 (mid-winter), because Temperature Mode (Section 10) only checks if 85% of `[d, M(d)]` has a daily mean >= `temp.minC - 1` (15.0 C, while Brisbane's July mean is 15.1 C) and ignores `soilMinC` (16-18 C) and winter night minimums (10.0 C).",
+      "suggested": "In Temperature Mode (Section 10), enforce the `soilMinC` rule (air mean >= `soilMinC` at planting day `d`, not just 85% of `[d, M]` >= `temp.minC - 1`), so crops requiring 16-18 C soil like pumpkin, sweet corn, and beans cannot be sown in mid-winter (July) when Brisbane's mean temperature is 15.1 C.",
+      "basis": "Queensland Department of Agriculture and Gardening Australia (subtropical zone): in Brisbane, July is the coldest month (nights 10 C); sowing sweet corn, pumpkins, and beans or transplanting tomatoes in mid-July is too cold - spring planting begins in August/September.",
+      "confidence": 0.94
+    },
+    {
+      "id": 7,
+      "severity": "high",
+      "plant": "schedule-maths",
+      "field": "SCHEDULE_SPEC.md Section 10 / schedule-brisbane.txt & schedule-melbourne.txt (broccoli, brussels-sprouts, cabbage, parsnip, leek)",
+      "current": "brisbane & melbourne brussels-sprouts/broccoli/cabbage/parsnip/leek: out Jul 18 to Jul 16 2028 (all year)",
+      "problem": "In Brisbane, cool-season brassicas (broccoli, cabbage, brussels sprouts, kale, collards, beet, carrot, parsnip) are given a 365-day year-round planting window (`out Jul 18 to Jul 16 2028`), telling gardeners to plant Brussels sprouts and broccoli in the middle of a humid subtropical January summer (mean 24.9 C, max 28.8 C). This happens because `temp.maxC` is 24 C and Temperature Mode allows `temp.maxC + 1` (25.0 C), which just clears Brisbane's 24.9 C January mean, while the bolting heat guard in Section 5.5 uses `temp.maxC` (24.0 C) only on >25% of `[d, M]` (and for transplants with 60-day maturity planted in late summer, or in Melbourne's 26 C January max, fails to block summer planting of heading brassicas).",
+      "suggested": "Lower `temp.maxC` for cool-season heading brassicas (`brussels-sprouts`, `broccoli`, `cabbage`) and `parsnip` from 24 C to 20-21 C (matching `spinach`, `pea`, `bok-choy`, `arugula`), or tighten Temperature Mode's upper threshold from `temp.maxC + 1` to `temp.maxC`.",
+      "basis": "Queensland DPI / Gardening Australia and UC Extension: broccoli, cabbage, and especially Brussels sprouts require cool weather (15-20 C mean) to form tight heads and will bolt, form loose curds, or get overrun by pests if planted in mid-summer (Dec-Feb) in subtropical Brisbane.",
+      "confidence": 0.95
+    },
+    {
+      "id": 8,
+      "severity": "medium",
+      "plant": "cilantro",
+      "field": "temp.maxC / schedule-canton-oh.txt & schedule-brisbane.txt: cilantro",
+      "current": "temp.maxC: 24; canton-oh rounds Jun 04, Jun 25, Jul 16; brisbane sow Jul 18 to Jul 16 2028",
+      "problem": "Cilantro has `temp.maxC: 24` (higher than lettuce at 22, arugula at 21, and spinach at 20), even though its own care note states 'Cilantro bolts quickly in hot weather and long days'. Because `temp.maxC` is 24 C, Canton's July mean (22.9 C) and Brisbane's January mean (24.9 C, within `maxC + 1`) never trigger a summer gap, so the schedule tells gardeners to sow cilantro every 3 weeks right through June and July in Ohio and year-round in Brisbane.",
+      "suggested": "Lower `cilantro.temp.maxC` to 20 or 21 C (in line with arugula and spinach) so the summer bolting guard creates a realistic midsummer gap in hot summer climates.",
+      "basis": "Penn State Extension, University of Illinois Extension, and the plant's own `notes.care`: cilantro is notorious for bolting rapidly when temperatures rise above 21 C (70 F) under long summer days.",
+      "confidence": 0.95
+    },
+    {
+      "id": 9,
+      "severity": "medium",
+      "plant": "turnip",
+      "field": "temp.maxC / schedule-canton-oh.txt & schedule-brisbane.txt: turnip",
+      "current": "temp.maxC: 24; canton-oh rounds Jun 11, Jul 09, Aug 06 (spring through fall); brisbane all year",
+      "problem": "Turnip has `temp.maxC: 24` (compared to radish at 22 C and bok-choy at 21 C), which prevents the summer bolting/heat guard from firing in Canton (July mean 22.9 C) or Brisbane (Jan mean 24.9 C). The schedule recommends sowing turnips in June and July in Ohio (`spring through fall`) and year-round in Brisbane, contradicting the note that 'the fall crop... is often the better one' and extension advice to avoid midsummer sowing because heat makes turnip roots woody and pithy.",
+      "suggested": "Lower `turnip.temp.maxC` to 21 or 22 C (matching radish) so midsummer sowings are paused in hot summer climates.",
+      "basis": "Utah State University Extension and RHS: turnips are a cool-season crop (optimal mean 10-20 C); roots maturing in midsummer heat become woody, fibrous, and bitter.",
+      "confidence": 0.9
+    },
+    {
+      "id": 10,
+      "severity": "medium",
+      "plant": "rhubarb",
+      "field": "schedule-phoenix.txt: phoenix rhubarb perennial plant",
+      "current": "phoenix rhubarb perennial plant: plant Dec 12 2026 to Jan 09, pick Jan 09 2028 to Mar 05 2028, yearly from 2028",
+      "problem": "In Phoenix, rhubarb is scheduled as a viable multi-year perennial (`yearly from 2028`), even though rhubarb's own care note says 'Rhubarb needs a cold winter rest and does poorly where winters stay mild' and Phoenix summers (mean 34.7 C, max 40.9 C) kill rhubarb crowns. This happens because Frost Mode perennials (Section 9) do not check summer survival (`temp.maxC`) or winter chill.",
+      "suggested": "In Section 9 (Perennials), apply a summer heat survival and winter chill check in Frost Mode (just as in Temperature Mode), marking rhubarb `not viable (too-hot)` when summer monthly means exceed `temp.maxC + 4` or winter means stay above ~10 C.",
+      "basis": "University of Illinois Extension ('To rhubarb or not to rhubarb?') and University of Arizona Extension: rhubarb requires winter chilling below 4 C to break dormancy and cannot survive desert summers where mean temperatures exceed 32 C (90 F); in low-desert Arizona it can only be grown as a winter annual from crowns, if at all.",
+      "confidence": 0.95
+    },
+    {
+      "id": 11,
+      "severity": "medium",
+      "plant": "chives",
+      "field": "perennial / harvest.windowDays",
+      "current": "lifecycle: 'perennial', perennial: undefined, harvest.windowDays: 150",
+      "problem": "Chives, mint, oregano, rosemary, sage, and thyme have `lifecycle: 'perennial'`, but unlike asparagus, rhubarb, strawberry, raspberry, and blueberry, they lack a `perennial` block in their JSON records. Consequently, the schedule maths treats them as annuals in every golden file (no `perennial` window kind, no `yearly from YYYY`, and in Phoenix/Canton they are scheduled to be replanted and pulled out after 150-180 days).",
+      "suggested": "Either add a `perennial` block (`firstHarvestYear: 1`, `harvestWeeks: [0, 22]`) to perennial herbs (`chives`, `mint`, `oregano`, `rosemary`, `sage`, `thyme`), or document in `schema.ts` why culinary perennial herbs are scheduled as single-season annual plantings.",
+      "basis": "Internal consistency with `schema.ts` (`lifecycle: 'perennial'`) and `SCHEDULE_SPEC.md` Section 9 (Perennials: 'Occupancy is open-ended').",
+      "confidence": 0.9
+    },
+    {
+      "id": 12,
+      "severity": "medium",
+      "plant": "calendula",
+      "field": "methods.indoor.ageWeeks / maturity.days",
+      "current": "maturity: {days: 55, from: 'sow'}, methods.indoor: {ageWeeks: [6, 8]}",
+      "problem": "Calendula has `maturity.days: 55` (from sow) and `indoor.ageWeeks: [6, 8]`. By the formula in Section 3 for `sow` crops transplanted (`M(d) = d + days - 7 * ageMin + 7`), a transplant goes into the bed at `d` and starts flowering at `d + 55 - 42 + 7 = d + 20` days (less than 3 weeks after transplanting, e.g., Canton `out Apr 16, pick May 06`), and an 8-week-old seedling (56 days) would already be past its 55-day maturity before it is even transplanted.",
+      "suggested": "Change `calendula.methods.indoor.ageWeeks` to `[4, 6]` (matching Johnny's Selected Seeds and standard extension guidance of starting calendula indoors 4 to 6 weeks before transplanting, and update `notes.sowing` to match).",
+      "basis": "Johnny's Selected Seeds (cited in sources) and University of Wisconsin Extension: calendula seeds germinate in 5-10 days and are transplanted after 4-6 weeks indoors, not 6-8 weeks.",
+      "confidence": 0.92
+    },
+    {
+      "id": 13,
+      "severity": "medium",
+      "plant": "companions",
+      "field": "companions.json: nasturtium + zucchini / winter-squash / pumpkin",
+      "current": "evidence: 'tested', reason: 'Research supports nasturtium for reducing squash bug numbers, an old practice that has held up.'",
+      "problem": "These three entries are marked `evidence: 'tested'` and claim research supports nasturtiums reducing squash bug (`Anasa tristis`) numbers, citing UMN Extension. However, controlled university field trials (e.g., Iowa State University / Clemson / organic squash bug trap-crop studies) have found that interplanting nasturtiums does NOT significantly reduce squash bug populations on squash, and UMN's table only mentions nasturtium in a brief bullet without citing a squash bug trial.",
+      "suggested": "Change `evidence` from `'tested'` to `'traditional'`, or qualify the reason to note that field trials have shown mixed or negligible reductions in squash bug numbers.",
+      "basis": "Extension entomology trials (e.g., Iowa State University / SARE companion planting trials on cucurbits) show nasturtiums fail to reliably repel or reduce `Anasa tristis` (squash bug) in field conditions.",
+      "confidence": 0.85
+    },
+    {
+      "id": 14,
+      "severity": "low",
+      "plant": "borage",
+      "field": "category",
+      "current": "category: 'flower'",
+      "problem": "Borage is categorized as `'flower'`, yet all three of its cited sources in `sources` are herb guides (`rhs.org.uk/plants/borage`, `johnnyseeds.com/growers-library/herbs/borage/`, `johnnyseeds.com/herbs/borage/`), and borage is traditionally classified as a culinary/pollinator herb alongside chamomile and mint.",
+      "suggested": "Consider changing `category` to `'herb'` (or keep `'flower'` if intentional for UI grouping, as `purpose` includes `'food'` and `'pollinators'`).",
+      "basis": "Johnny's Selected Seeds and standard horticultural classification list borage under culinary herbs.",
+      "confidence": 0.75
+    },
+    {
+      "id": 15,
+      "severity": "low",
+      "plant": "sunflower",
+      "field": "notes.sowing vs methods.direct.weeks",
+      "current": "methods.direct.weeks: [1, 4], notes.sowing: 'Sow directly 1 to 3 weeks after your last frost'",
+      "problem": "There is a minor internal discrepancy between `methods.direct.weeks` (`[1, 4]`, i.e., 1 to 4 weeks after last frost) and `notes.sowing` ('Sow directly 1 to 3 weeks after your last frost').",
+      "suggested": "Update `notes.sowing` to say '1 to 4 weeks after your last frost' (or change `methods.direct.weeks` to `[1, 3]`) so the note matches the computed schedule.",
+      "basis": "Internal consistency between `methods.direct.weeks` and `notes.sowing`.",
+      "confidence": 0.99
+    },
+    {
+      "id": 16,
+      "severity": "low",
+      "plant": "zinnia",
+      "field": "soilMinC vs notes.sowing, and methods.indoor.ageWeeks vs notes.sowing",
+      "current": "soilMinC: 18, indoor.ageWeeks: [4, 6]; notes.sowing: 'once the soil is about {c:21}... start indoors 4 weeks before planting out'",
+      "problem": "`notes.sowing` says to direct sow once the soil is `{c:21}` and start indoors '4 weeks before planting out', whereas the record fields specify `soilMinC: 18` and `indoor.ageWeeks: [4, 6]`.",
+      "suggested": "Align `notes.sowing` with the data fields: 'once the soil is at least {c:18}... start indoors 4 to 6 weeks before planting out'.",
+      "basis": "Internal consistency between `soilMinC` / `methods.indoor.ageWeeks` and `notes.sowing`.",
+      "confidence": 0.98
+    }
+  ],
+  "overall": "The plant library and companion dataset are exceptionally well-researched, with almost every botanical name, family, spacing, and frost hardiness value aligning cleanly with extension guidance and internal notes. The biggest systemic issue lies in how `temp.maxC` (daily mean) and `soilMinC` interact with Temperature Mode and perennial/overwinter rules in warm and tropical climates (Brisbane and Singapore), where generous `temp.maxC` values (24 C for brassicas, 27 C for blueberry, 29 C for alliums) and the lack of a winter-chill check for perennials or a `soilMinC` check in Temperature Mode produce year-round 365-day planting windows for cool-season crops in Brisbane and viable schedules for highbush blueberries, bulb onions, and leeks in equatorial Singapore. A secondary schedule-maths issue in Frost Mode allows tender crops with `fall` or `succession` blocks (such as tomatoes and sweet corn in Edinburgh) to generate mid-to-late summer transplant windows that cannot mature before autumn cold arrives."
+}

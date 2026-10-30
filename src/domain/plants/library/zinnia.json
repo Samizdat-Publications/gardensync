@@ -26,7 +26,7 @@
   "yield": { "amount": 15, "unit": "count", "per": "plant" },
   "glyph": { "form": "flower", "color": "#e0457b" },
   "notes": {
-    "sowing": "Sow directly after your last frost, once the soil is about {c:21}, {cm:0.6} deep; seed comes up in 3 to 5 days in warm soil. For earlier flowers, start indoors 4 weeks before planting out and transplant without disturbing the roots.",
+    "sowing": "Sow directly after your last frost, once the soil is at least {c:18}, {cm:0.6} deep; seed comes up in 3 to 5 days in warm soil. For earlier flowers, start indoors 4 to 6 weeks before planting out and transplant without disturbing the roots.",
     "care": "Full sun and fertile soil. Space plants {cm:25} or more apart and water at the base to limit powdery mildew and leaf spots. Pinch out the first bud for more branching. Zinnias are very sensitive to frost and to cold nights.",
     "harvest": "Flowers open 8 to 12 weeks from sowing and continue until frost if you deadhead. Cut for the vase when the stem is firm right up to the bloom; vase life is about a week."
   },

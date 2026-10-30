@@ -172,6 +172,8 @@ export const PlantSchema = v.object({
       harvestWeeks: WeekRange,
       /** Years the planting stays productive before replanting is usual. */
       lifespanYears: v.optional(PositiveInt),
+      /** Needs a cold winter rest; not viable where the coolest month averages above 10 C. */
+      needsChill: v.optional(v.boolean()),
     }),
   ),
   glyph: v.object({

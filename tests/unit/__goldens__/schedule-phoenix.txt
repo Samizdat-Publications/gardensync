@@ -1,11 +1,11 @@
 phoenix arugula spring direct: sow Dec 12 2026 to Mar 06, pick Jan 16 to Feb 15, rounds Dec 12 2026, Dec 26 2026, Jan 09, Jan 23, Feb 06, Feb 20, Mar 06
 phoenix arugula fall direct: sow Oct 02 to Nov 27, pick Nov 20 to Dec 20, rounds Oct 02, Oct 16, Oct 30, Nov 13, Nov 27
 phoenix asparagus perennial plant: plant Dec 12 2026 to Jan 23, pick Dec 26 2028 to Feb 20 2029, yearly from 2029
-phoenix basil spring transplant: indoor Jan 01 to Feb 21, out Feb 12 to Mar 21, pick Mar 31 to Jun 29, warn frost-possible
+phoenix basil spring transplant: indoor Jan 01 to Feb 21, out Feb 12 to Mar 21, pick Mar 31 to Jul 07, warn frost-possible
 phoenix basil spring direct: sow Feb 12 to Mar 21, pick Apr 21 to Jul 07, warn frost-possible
 phoenix beet spring direct: sow Dec 19 2026 to Mar 13, pick Feb 12 to Mar 14, rounds Dec 19 2026, Jan 09, Jan 30, Feb 20, Mar 13
 phoenix beet fall direct: sow Sep 18 to Nov 07, pick Nov 26 to Dec 26, rounds Sep 18, Oct 09, Oct 30
-phoenix blueberry perennial plant: plant Dec 12 2026 to Jan 09, pick Mar 06 2029 to Apr 24 2029, yearly from 2029
+phoenix blueberry perennial plant: not viable (no-chill)
 phoenix bok-choy spring transplant: indoor Dec 05 2026 to Jan 02, out Jan 09 to Jan 23, pick Feb 14 to Feb 28
 phoenix bok-choy spring direct: sow Jan 09 to Feb 20, pick Feb 28 to Mar 14, rounds Jan 09, Jan 23, Feb 06, Feb 20
 phoenix bok-choy fall transplant: indoor Sep 24 to Nov 05, out Oct 29 to Nov 26, pick Dec 18 to Jan 01 2028
@@ -18,12 +18,12 @@ phoenix broccoli fall direct: sow Sep 07 to Sep 28, pick Dec 25 to Jan 21 2028
 phoenix brussels-sprouts spring transplant: indoor Nov 14 2026 to Dec 26 2026, out Dec 26 2026 to Jan 23, pick Mar 26 to May 23
 phoenix brussels-sprouts fall transplant: indoor Aug 01 to Sep 05, out Sep 12 to Oct 03, pick Dec 25 to Jan 21 2028
 phoenix bush-bean spring direct: sow Mar 07 to Mar 21, pick May 01 to May 22, rounds Mar 07, Mar 21, warn frost-possible
-phoenix bush-bean fall direct: sow Jul 25 to Sep 01, pick Nov 09 to Nov 30, rounds Jul 25, Aug 08, Aug 22, warn frost-possible
+phoenix bush-bean fall direct: sow Jul 25 to Aug 22, pick Nov 09 to Nov 30, rounds Jul 25, Aug 08, Aug 22, warn frost-possible
 phoenix cabbage spring transplant: indoor Oct 31 2026 to Nov 28 2026, out Dec 19 2026 to Jan 02, pick Mar 04 to Mar 25
 phoenix cabbage spring direct: sow Dec 19 2026 to Jan 02, pick Apr 08 to Apr 29
 phoenix cabbage fall transplant: indoor Aug 09 to Sep 13, out Sep 27 to Oct 18, pick Dec 25 to Jan 15 2028
 phoenix cabbage fall direct: sow Aug 23 to Sep 13, pick Dec 25 to Jan 15 2028
-phoenix calendula spring transplant: indoor Nov 14 2026 to Dec 12 2026, out Jan 09 to Jan 23, pick Jan 29 to May 09
+phoenix calendula spring transplant: indoor Nov 14 2026 to Dec 12 2026, out Jan 09 to Jan 23, pick Jan 29 to May 23
 phoenix calendula spring direct: sow Dec 26 2026 to Jan 29, pick Feb 19 to May 23
 phoenix carrot spring direct: sow Dec 19 2026 to Feb 20, pick Mar 04 to Apr 03, rounds Dec 19 2026, Jan 09, Jan 30, Feb 20
 phoenix carrot fall direct: sow Aug 28 to Oct 18, pick Nov 25 to Dec 25, rounds Aug 28, Sep 18, Oct 09
@@ -33,7 +33,7 @@ phoenix chili-pepper spring transplant: indoor Dec 04 2026 to Jan 08, out Feb 12
 phoenix chives spring transplant: indoor Oct 31 2026 to Dec 12 2026, out Dec 26 2026 to Jan 23, pick Feb 09 to May 23
 phoenix chives spring direct: sow Jan 15 to Feb 06, pick Apr 05 to May 23
 phoenix chives spring plant: plant Dec 12 2026 to Jan 09, pick Mar 02 to May 23
-phoenix cilantro spring direct: sow Dec 26 2026 to Mar 20, pick Feb 14 to Mar 07, rounds Dec 26 2026, Jan 16, Feb 06, Feb 27, Mar 20
+phoenix cilantro spring direct: sow Dec 26 2026 to Feb 27, pick Feb 14 to Mar 07, rounds Dec 26 2026, Jan 16, Feb 06, Feb 27
 phoenix cilantro fall direct: sow Sep 25 to Nov 12, pick Nov 28 to Dec 19, rounds Sep 25, Oct 16, Nov 06
 phoenix collards spring transplant: indoor Oct 31 2026 to Dec 05 2026, out Dec 12 2026 to Jan 02, pick Jan 30 to May 23
 phoenix collards spring direct: sow Dec 12 2026 to Jan 02, pick Feb 20 to May 23
@@ -59,7 +59,7 @@ phoenix kohlrabi spring transplant: indoor Nov 14 2026 to Dec 12 2026, out Dec 2
 phoenix kohlrabi spring direct: sow Dec 19 2026 to Jan 02, pick Feb 02 to Feb 16
 phoenix kohlrabi fall transplant: indoor Oct 06 to Nov 10, out Nov 17 to Dec 08, pick Dec 25 to Jan 08 2028
 phoenix kohlrabi fall direct: sow Oct 27 to Nov 17, pick Dec 25 to Jan 08 2028
-phoenix leek spring transplant: indoor Oct 03 2026 to Nov 21 2026, out Dec 26 2026 to Jan 16, pick Apr 05 to Jul 04
+phoenix leek spring transplant: indoor Oct 03 2026 to Nov 21 2026, out Dec 26 2026 to Jan 16, pick Apr 05 to May 23
 phoenix lettuce spring transplant: indoor Nov 14 2026 to Dec 12 2026, out Dec 26 2026 to Jan 09, pick Jan 24 to Feb 21
 phoenix lettuce spring direct: sow Dec 12 2026 to Mar 06, pick Jan 31 to Feb 28, rounds Dec 12 2026, Dec 26 2026, Jan 09, Jan 23, Feb 06, Feb 20, Mar 06
 phoenix lettuce fall transplant: indoor Sep 24 to Nov 05, out Nov 05 to Dec 03, pick Dec 18 to Jan 15 2028
@@ -79,20 +79,20 @@ phoenix parsley spring transplant: indoor Oct 31 2026 to Dec 12 2026, out Dec 26
 phoenix parsley spring direct: sow Dec 26 2026 to Feb 06, pick Mar 11 to May 23
 phoenix parsley fall transplant: indoor Aug 30 to Oct 11, out Oct 25 to Nov 22, pick Dec 18 to Jan 21 2028
 phoenix parsley fall direct: sow Sep 20 to Oct 18, pick Dec 18 to Jan 21 2028
-phoenix parsnip spring direct: sow Dec 26 2026 to Jan 23, pick Apr 15 to Jul 14
+phoenix parsnip spring direct: sow Dec 26 2026 to Jan 23, pick Apr 15 to May 23
 phoenix pea spring direct: sow Nov 28 2026 to Dec 26 2026, pick Jan 27 to Feb 17
 phoenix pea fall direct: sow Sep 21 to Oct 12, pick Dec 04 to Dec 25
 phoenix pole-bean spring direct: sow Feb 12 to Mar 15, pick Apr 18 to May 25, warn frost-possible
 phoenix potato spring plant: plant Dec 12 2026 to Jan 09, pick Mar 12 to Apr 09
-phoenix pumpkin spring transplant: indoor Feb 22 to Mar 07, out Mar 22 to Mar 28, pick Jun 16 to Jul 07, warn frost-possible
-phoenix pumpkin spring direct: not viable (too-hot)
+phoenix pumpkin spring transplant: indoor Jan 15 to Feb 18, out Feb 12 to Mar 11, pick May 09 to Jun 11, warn frost-possible
+phoenix pumpkin spring direct: sow Feb 12 to Feb 25, pick May 23 to Jun 11, warn frost-possible
 phoenix radish spring direct: sow Dec 05 2026 to Mar 25, pick Jan 02 to Jan 09, rounds Dec 05 2026, Dec 15 2026, Dec 25 2026, Jan 04, Jan 14, Jan 24, Feb 03, Feb 13, Feb 23, Mar 05, Mar 15, Mar 25
 phoenix radish fall direct: sow Oct 01 to Dec 04, pick Nov 12 to Nov 19, rounds Oct 01, Oct 11, Oct 21, Oct 31, Nov 10, Nov 20, Nov 30
-phoenix raspberry perennial plant: plant Dec 12 2026 to Jan 09, pick Feb 20 2028 to Apr 02 2028, yearly from 2028
-phoenix rhubarb perennial plant: plant Dec 12 2026 to Jan 09, pick Jan 09 2028 to Mar 05 2028, yearly from 2028
+phoenix raspberry perennial plant: not viable (no-chill)
+phoenix rhubarb perennial plant: not viable (no-chill)
 phoenix rosemary spring plant: plant Jan 09 to Feb 06, pick Mar 10 to Jul 07
 phoenix sage spring transplant: indoor Nov 07 2026 to Dec 19 2026, out Jan 02 to Jan 30, pick Mar 03 to Jun 09
-phoenix scallion spring direct: sow Dec 12 2026 to Apr 03, pick Feb 10 to Mar 12, rounds Dec 12 2026, Dec 26 2026, Jan 09, Jan 23, Feb 06, Feb 20, Mar 06, Mar 20, Apr 03
+phoenix scallion spring direct: sow Dec 12 2026 to Mar 20, pick Feb 10 to Mar 12, rounds Dec 12 2026, Dec 26 2026, Jan 09, Jan 23, Feb 06, Feb 20, Mar 06, Mar 20
 phoenix scallion fall direct: sow Aug 21 to Nov 02, pick Nov 03 to Dec 03, rounds Aug 21, Sep 04, Sep 18, Oct 02, Oct 16, Oct 30
 phoenix spinach spring direct: sow Nov 28 2026 to Feb 26, pick Jan 12 to Feb 02, rounds Nov 28 2026, Dec 08 2026, Dec 18 2026, Dec 28 2026, Jan 07, Jan 17, Jan 27, Feb 06, Feb 16, Feb 26
 phoenix spinach fall direct: sow Oct 04 to Nov 17, pick Dec 02 to Dec 23, rounds Oct 04, Oct 14, Oct 24, Nov 03, Nov 13
@@ -105,7 +105,7 @@ phoenix sweet-corn spring transplant: indoor Feb 07 to Feb 28, out Mar 07 to Mar
 phoenix sweet-corn spring direct: sow Mar 07 to Mar 21, pick May 26 to Jun 05, rounds Mar 07, Mar 21, warn frost-possible
 phoenix sweet-corn fall direct: sow Jul 25 to Sep 05, pick Nov 04 to Nov 14, rounds Jul 25, Aug 08, Aug 22, Sep 05, warn frost-possible
 phoenix pepper spring transplant: indoor Dec 04 2026 to Jan 13, out Feb 12 to Mar 10, pick Apr 23 to May 25, warn frost-possible
-phoenix sweet-potato spring plant: not viable (too-hot)
+phoenix sweet-potato spring plant: plant Mar 22 to Apr 05, pick Jun 30 to Dec 24, warn frost-possible
 phoenix swiss-chard spring transplant: indoor Nov 28 2026 to Dec 26 2026, out Jan 09 to Jan 23, pick Feb 12 to May 23
 phoenix swiss-chard spring direct: sow Dec 26 2026 to Jan 16, pick Feb 19 to May 23
 phoenix swiss-chard fall transplant: indoor Sep 26 to Oct 31, out Nov 07 to Nov 28, pick Dec 25 to Jan 21 2028
@@ -118,8 +118,8 @@ phoenix turnip spring direct: sow Dec 12 2026 to Mar 06, pick Jan 31 to Feb 21, 
 phoenix turnip fall direct: sow Sep 18 to Nov 12, pick Nov 21 to Dec 12, rounds Sep 18, Oct 16
 phoenix watermelon spring transplant: indoor Jan 08 to Mar 05, out Feb 12 to Mar 26, pick Apr 24 to May 15, warn frost-possible cool-summer
 phoenix watermelon spring direct: sow Feb 12 to Mar 12, pick May 08 to May 29, warn frost-possible cool-summer
-phoenix winter-squash spring transplant: indoor Feb 22 to Mar 10, out Mar 22 to Mar 31, pick Jun 11 to Jul 02, warn frost-possible
-phoenix winter-squash spring direct: sow Mar 22 to Mar 23, pick Jun 25 to Jul 16, warn frost-possible
+phoenix winter-squash spring transplant: indoor Jan 15 to Feb 23, out Feb 12 to Mar 16, pick May 04 to Jun 11, warn frost-possible
+phoenix winter-squash spring direct: sow Feb 12 to Mar 02, pick May 18 to Jun 11, warn frost-possible
 phoenix zinnia spring transplant: indoor Jan 01 to Mar 08, out Feb 12 to Apr 05, pick Apr 02 to Jul 07, warn frost-possible cool-summer
 phoenix zinnia spring direct: sow Feb 12 to Apr 05, pick Apr 23 to Jul 07, warn frost-possible
 phoenix zucchini spring transplant: indoor Jan 15 to Mar 15, out Feb 12 to Apr 05, pick Mar 20 to May 19, warn frost-possible

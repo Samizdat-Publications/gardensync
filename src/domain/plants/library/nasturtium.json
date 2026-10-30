@@ -21,7 +21,7 @@
     "transplant": { "weeks": [1, 3] },
     "direct": { "weeks": [1, 3] }
   },
-  "harvest": { "type": "continuous", "windowDays": 90 },
+  "harvest": { "type": "continuous", "windowDays": 90, "untilFrost": true },
   "purpose": ["food", "pollinators", "display"],
   "yield": { "amount": 30, "unit": "count", "per": "plant" },
   "glyph": { "form": "flower", "color": "#e8542a" },

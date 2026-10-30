@@ -19,8 +19,8 @@
   "maturity": { "days": 85, "from": "sow" },
   "methods": {
     "indoor": { "ageWeeks": [3, 5] },
-    "transplant": { "weeks": [2, 4] },
-    "direct": { "weeks": [2, 4] }
+    "transplant": { "weeks": [2, 6] },
+    "direct": { "weeks": [2, 8] }
   },
   "harvest": { "type": "continuous", "windowDays": 21 },
   "yield": { "amount": 2, "unit": "count", "per": "plant" },
@@ -35,6 +35,7 @@
     { "title": "Clemson Cooperative Extension Home & Garden Information Center: Watermelons", "url": "https://hgic.clemson.edu/factsheet/Watermelons/" },
     { "title": "University of Minnesota Extension: Growing melons in the home garden", "url": "https://extension.umn.edu/fruit/growing-melons-home-garden" },
     { "title": "Iowa State University Extension Yard and Garden: Growing Watermelon in the Home Garden", "url": "https://yardandgarden.extension.iastate.edu/how-to/growing-watermelon-home-garden" },
-    { "title": "Johnny's Selected Seeds: Sugar Baby Watermelon Seed", "url": "https://www.johnnyseeds.com/fruits/watermelons/diploid-watermelons/sugar-baby-watermelon-seed-476.html" }
+    { "title": "Johnny's Selected Seeds: Sugar Baby Watermelon Seed", "url": "https://www.johnnyseeds.com/fruits/watermelons/diploid-watermelons/sugar-baby-watermelon-seed-476.html" },
+    { "title": "University of Illinois Extension: When to plant vegetables", "url": "https://extension.illinois.edu/gardening/when-plant" }
   ]
 }

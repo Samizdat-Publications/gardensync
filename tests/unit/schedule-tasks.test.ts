@@ -139,8 +139,8 @@ describe('tasksFor in Canton', () => {
     for (let i = 1; i < ts.length; i++) expect(ts[i]!.date).toBeGreaterThanOrEqual(ts[i - 1]!.date);
     expect(new Set(ts.map((t) => t.id)).size).toBe(ts.length);
     const frost = ts.filter((t) => t.kind === 'frost-possible');
-    expect(frost.map((t) => t.plantId).sort()).toEqual([]);
-    // Tomato and pepper are pulled by Sep 24, before FF10 (Oct 26): no reminder. A later pepper gets one.
+    expect(frost.map((t) => t.plantId).sort()).toEqual(['pepper', 'tomato']);
+    // Tomatoes and peppers pick until the first frost, so they get the reminder at FF10 (Oct 26).
     const late = garden(canton(), [auto('pep2', 'pepper', 'indoor', 'spring', 2027, {}, 45)]);
     const lateTasks = tasksFor(late, PLANTS_BY_ID, d('2027-01-01'), d('2027-12-31'));
     expect(lateTasks.find((t) => t.kind === 'frost-possible')?.id).toBe('pep2:frost-possible:2027');

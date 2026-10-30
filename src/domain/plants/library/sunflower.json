@@ -26,7 +26,7 @@
   "yield": { "amount": 1, "unit": "count", "per": "plant" },
   "glyph": { "form": "flower", "color": "#f2c418" },
   "notes": {
-    "sowing": "Sow directly 1 to 3 weeks after your last frost, once the soil is at least {c:16}, {cm:2} to {cm:5} deep. Thin to {cm:30} to {cm:40} apart, wider for giant types. Sow again every 2 weeks for a longer show.",
+    "sowing": "Sow directly 1 to 4 weeks after your last frost, once the soil is at least {c:16}, {cm:2} to {cm:5} deep. Thin to {cm:30} to {cm:40} apart, wider for giant types. Sow again every 2 weeks for a longer show.",
     "care": "Full sun. Stake tall varieties with a strong cane at planting and tie the stem in as it grows; dwarf types need no support and suit large pots. Water deeply as flower buds form. The flowers feed bees and other pollinators.",
     "harvest": "Single-stem types flower once, about 9 to 11 weeks from sowing. Cut for the vase as the petals open. For seed, cut heads with some stem once they droop and dry, and cure them in a warm, airy place for several weeks."
   },

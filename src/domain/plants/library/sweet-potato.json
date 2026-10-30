@@ -6,7 +6,7 @@
   "family": "Convolvulaceae",
   "lifecycle": "annual",
   "frost": "tender",
-  "temp": { "minC": 20, "maxC": 29 },
+  "temp": { "minC": 20, "maxC": 35 },
   "soilMinC": 18,
   "sun": "full",
   "water": "medium",
@@ -17,9 +17,9 @@
   "shadeTolerant": false,
   "maturity": { "days": 100, "from": "transplant" },
   "methods": {
-    "plant": { "weeks": [2, 5], "what": "rooted slips" }
+    "plant": { "weeks": [2, 7], "what": "rooted slips" }
   },
-  "harvest": { "type": "once", "windowDays": 14 },
+  "harvest": { "type": "once", "windowDays": 14, "untilFrost": true },
   "yield": { "amount": 800, "unit": "g", "per": "plant" },
   "glyph": { "form": "tuber", "color": "#c4622d" },
   "notes": {
@@ -29,6 +29,7 @@
   },
   "sources": [
     { "title": "Clemson Cooperative Extension Home & Garden Information Center: Sweetpotato", "url": "https://hgic.clemson.edu/factsheet/sweet-potato/" },
-    { "title": "Royal Horticultural Society: How to grow sweet potatoes", "url": "https://www.rhs.org.uk/vegetables/sweet-potatoes/grow-your-own" }
+    { "title": "Royal Horticultural Society: How to grow sweet potatoes", "url": "https://www.rhs.org.uk/vegetables/sweet-potatoes/grow-your-own" },
+    { "title": "University of Illinois Extension: When to plant vegetables", "url": "https://extension.illinois.edu/gardening/when-plant" }
   ]
 }

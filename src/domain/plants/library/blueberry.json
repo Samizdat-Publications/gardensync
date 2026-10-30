@@ -21,15 +21,16 @@
   "harvest": { "type": "continuous", "windowDays": 35 },
   "winterMinC": -29,
   "yield": { "amount": 2500, "unit": "g", "per": "plant" },
-  "perennial": { "firstHarvestYear": 3, "harvestWeeks": [8, 15], "lifespanYears": 20 },
+  "perennial": { "firstHarvestYear": 3, "harvestWeeks": [8, 15], "lifespanYears": 20, "needsChill": true },
   "glyph": { "form": "cane", "color": "#4b5ea8" },
   "notes": {
     "sowing": "Plant 2- or 3-year-old bushes in early spring, as soon as the soil can be worked, at the depth they grew in the pot. Blueberries need acidic soil, pH 4.5 to 5.5: test first, lower the pH with sulfur well ahead of planting, or grow them in a raised bed or pot of acidic, ericaceous mix.",
-    "care": "Mulch {cm:10} deep with bark or sawdust and keep the soil evenly moist, as roots are shallow. Water pots with rainwater where tap water is hard. Plant two or more varieties for bigger crops and remove flowers for the first two years. Most varieties need a long cold winter to fruit; in mild climates choose low-chill types.",
+    "care": "Mulch {cm:10} deep with bark or sawdust and keep the soil evenly moist, as roots are shallow. Water pots with rainwater where tap water is hard. Plant two or more varieties for bigger crops and remove flowers for the first two years. Most varieties need a long cold winter to fruit; in mild climates choose low-chill southern highbush types.",
     "harvest": "Expect a small crop in the third year, rising to full crops at 6 to 8 years. Berries ripen over 4 to 6 weeks: pick when fully blue and they come away easily, a few days after they color."
   },
   "sources": [
     { "title": "Royal Horticultural Society: How to grow blueberries", "url": "https://www.rhs.org.uk/fruit/blueberries/grow-your-own" },
-    { "title": "Ontario Ministry of Agriculture, Food and Agribusiness: Growing blueberries for home gardens and small scale production", "url": "https://www.ontario.ca/page/growing-blueberries-home-gardens-and-small-scale-production" }
+    { "title": "Ontario Ministry of Agriculture, Food and Agribusiness: Growing blueberries for home gardens and small scale production", "url": "https://www.ontario.ca/page/growing-blueberries-home-gardens-and-small-scale-production" },
+    { "title": "Clemson Cooperative Extension Home and Garden Information Center: Blueberry", "url": "https://hgic.clemson.edu/factsheet/blueberry/" }
   ]
 }

@@ -8,7 +8,7 @@
   "frost": "hardy",
   "temp": {
     "minC": 7,
-    "maxC": 29
+    "maxC": 24
   },
   "soilMinC": 4,
   "sun": "full",
@@ -46,7 +46,8 @@
   },
   "harvest": {
     "type": "once",
-    "windowDays": 90
+    "windowDays": 90,
+    "untilFrost": true
   },
   "yield": {
     "amount": 200,

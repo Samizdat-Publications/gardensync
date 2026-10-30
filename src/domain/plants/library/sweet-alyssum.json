@@ -21,7 +21,7 @@
     "transplant": { "weeks": [-2, 1] },
     "direct": { "weeks": [-4, 0] }
   },
-  "harvest": { "type": "continuous", "windowDays": 120 },
+  "harvest": { "type": "continuous", "windowDays": 120, "untilFrost": true },
   "purpose": ["pollinators", "pest-control", "display"],
   "yield": { "amount": 20, "unit": "count", "per": "plant" },
   "glyph": { "form": "flower", "color": "#efeaf7" },

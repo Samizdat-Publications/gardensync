@@ -314,6 +314,25 @@ checked them against published guidance, and the comparisons are in
 - Plantings grown a way the plant has no block for, or whose actual dates are out of order, have no
   dates and no tasks (ops.ts refuses both).
 
+**Plant data review (8.3)**
+A second review of the plant data, with a Gemini critique of the whole library and its goldens,
+found places where the maths let through dates an experienced gardener would reject:
+- Section 4: crops left standing for the frost (`untilFrost` with harvest type `once`: parsnip, leek)
+  also take the bolting-heat cap, so Phoenix leeks come out before the summer heat.
+- Section 5.5: a spring window that runs on into cooling weather ends at the first day a tender
+  crop would grow mostly below its range (more than half the days to harvest under `temp.minC - 1`).
+  Where even the first day fails that test (Edinburgh), the window stays, with the cool-summer warning.
+- Section 6: a tender crop gets a fall window only where summer heat cut its spring harvest short or
+  ruled it out (Phoenix tomatoes). Elsewhere a later planting is a late spring one. Fall windows and
+  succession rounds of tender crops that fail the cool test above are dropped, so no sweet corn is
+  sown in an Edinburgh July and no tomato is planted out for a cool autumn.
+- Section 9: a perennial with `needsChill` (rhubarb, highbush blueberry, raspberry) is not viable
+  where the coolest month averages above 10 C (`no-chill`), in either mode.
+- Section 10: temperature mode applies the bolting guard of section 5.5 to annual crops without a
+  fruit-set limit, so broccoli, cilantro and turnips are not sown into a Brisbane summer. A soil
+  warmth test at sowing was tried and dropped: it put Melbourne tomatoes after early November and
+  zucchini into December, later than local guidance.
+
 Known limits, not fixed here:
 - Growth speed does not depend on temperature beyond the fixed fall factor. Edinburgh fall spinach
   "matures" in December.

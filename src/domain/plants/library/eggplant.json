@@ -19,9 +19,9 @@
   "maturity": { "days": 75, "from": "transplant" },
   "methods": {
     "indoor": { "ageWeeks": [8, 10] },
-    "transplant": { "weeks": [2, 4] }
+    "transplant": { "weeks": [2, 8] }
   },
-  "harvest": { "type": "continuous", "windowDays": 60 },
+  "harvest": { "type": "continuous", "windowDays": 60, "untilFrost": true },
   "support": "stake",
   "yield": { "amount": 1200, "unit": "g", "per": "plant" },
   "glyph": { "form": "fruiting", "color": "#5b2d6e" },
@@ -34,6 +34,7 @@
     { "title": "University of Minnesota Extension: Growing eggplant in home gardens", "url": "https://extension.umn.edu/vegetables/growing-eggplant" },
     { "title": "Royal Horticultural Society: How to grow aubergines", "url": "https://www.rhs.org.uk/vegetables/aubergines/grow-your-own" },
     { "title": "Colorado State University Extension: Vegetable Planting Guide", "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/" },
-    { "title": "Johnny's Selected Seeds: Rosa Bianca Eggplant Seed", "url": "https://johnnyseeds.com/vegetables/eggplant/italian-eggplants/rosa-bianca-organic-eggplant-seed-2605G.html" }
+    { "title": "Johnny's Selected Seeds: Rosa Bianca Eggplant Seed", "url": "https://johnnyseeds.com/vegetables/eggplant/italian-eggplants/rosa-bianca-organic-eggplant-seed-2605G.html" },
+    { "title": "University of Illinois Extension: When to plant vegetables", "url": "https://extension.illinois.edu/gardening/when-plant" }
   ]
 }

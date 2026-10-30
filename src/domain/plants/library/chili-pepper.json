@@ -19,9 +19,9 @@
   "maturity": { "days": 75, "from": "transplant" },
   "methods": {
     "indoor": { "ageWeeks": [8, 10] },
-    "transplant": { "weeks": [2, 4] }
+    "transplant": { "weeks": [2, 8] }
   },
-  "harvest": { "type": "continuous", "windowDays": 75 },
+  "harvest": { "type": "continuous", "windowDays": 75, "untilFrost": true },
   "yield": { "amount": 400, "unit": "g", "per": "plant" },
   "glyph": { "form": "pepper", "color": "#e0622a" },
   "notes": {
@@ -32,6 +32,7 @@
   "sources": [
     { "title": "Royal Horticultural Society: How to grow chilli peppers", "url": "https://www.rhs.org.uk/vegetables/chilli-pepper/grow-your-own" },
     { "title": "New Mexico State University Extension: Growing Chile Peppers in New Mexico Gardens (Guide H-240)", "url": "https://pubs.nmsu.edu/_h/H240/" },
-    { "title": "University of Minnesota Extension: Growing peppers in home gardens", "url": "https://extension.umn.edu/vegetables/growing-peppers" }
+    { "title": "University of Minnesota Extension: Growing peppers in home gardens", "url": "https://extension.umn.edu/vegetables/growing-peppers" },
+    { "title": "University of Illinois Extension: When to plant vegetables", "url": "https://extension.illinois.edu/gardening/when-plant" }
   ]
 }
