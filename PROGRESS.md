@@ -15,14 +15,16 @@ showcase.json already points at the hub cut.
 
 **8.1 released (2026-10-30): planting, rethought.** Live on `master` (tag v8.1.0).
 
-**8.2 polish (2026-10-30), waiting for Stewart:** branch `polish-8.1` (also pushed as
-`feature/polish-8.1` for CI), preview https://polish.gardensync-e4e.pages.dev. Patch resize
-handles, one shared "when can this go in" answer everywhere, shared gardens in a fresh browser,
-leap-year calendars, and every finding from two blind critics and two usability passes fixed or
-ledgered (review/LEDGER.md 94 to 129). `npm run check` ALL GREEN. Not merged or released.
+**8.2 released (2026-10-30): polish.** Live on `master` (tag v8.2.0, GitHub release, landing page
+says 8.2). Resize handles, one shared "when can this go in" answer, shared gardens in a fresh
+browser, leap-year calendars, critic and usability fixes (ledger 94 to 129).
+
+**Next:** plant data review (ledger 129): every record checked again, plus a Gemini 4 Argon
+critique of the whole dataset.
 
 ## Done
 
+- 2026-10-30: 8.2 released: merged, tagged v8.2.0, production and landing deployed; ALL GREEN.
 - 2026-10-30: 8.2 polish on `polish-8.1` (ledger 94 to 129): resize handles, plantStatus, share
   link fix, leap-year fix, critic and usability fixes across every screen; ALL GREEN; preview.
 
