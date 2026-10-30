@@ -8,6 +8,33 @@ Its sibling edition, *A Quiet Almanac*, now lives in its own repository:
 
 ---
 
+## v8.1 - 2026-10-30
+
+**Planting, rethought.** Putting a plant in a bed is now drag and drop, and a clash is a choice
+instead of a dead end.
+
+- **Drop a plant on a square and it is planted.** Drag it straight from the plant list, or tap a
+  plant and then a square. Press and drag across squares to plant a bigger patch; painting next to
+  a patch of the same plant makes that patch bigger. Undo takes any of it back.
+- **The plan shows the bed when it matters.** While a plant is chosen, the plan jumps to the day
+  it would go in, so the crops it would share the bed with are drawn and named. Crops planned for
+  later show as dashed patches ("Tomato from May 4"), so a bed planned in the fall no longer looks
+  empty.
+- **A clash card with ways out.** Dropping on taken squares says what is there and when, and
+  offers to plant after it, find the nearest free squares, replace it, or grow alongside when the
+  pair gets on. Find room only ever offers squares with nothing in them.
+- **Move anything by dragging it.** Any planting, in the ground or planned, keeps its dates and
+  the spot you grabbed. A drag that starts on a plant moves the plant, never its bed.
+- **Touch works the same way.** On a phone, a long press starts a drag from the list or picks up
+  a planting; dragging a finger while placing paints a patch.
+- **Clearer dates.** Toasts say where and when a planting goes in; years appear whenever a date is
+  not this year; late plantings (garlic at the end of October) say they are late but still have
+  time to crop.
+- **Small things.** Hover a patch for its name, count and dates; Delete pulls out the selected
+  planting; Escape stops placing; a first-time hint in the plant list.
+
+---
+
 ## v8.0 - 2026-10-28
 
 **A ground-up rebuild for home gardeners anywhere.**
