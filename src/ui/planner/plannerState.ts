@@ -4,10 +4,15 @@
 import { computed, signal } from '@preact/signals';
 import type { DispatchOptions, DispatchResult } from '../store';
 import type { Op } from '../../domain/doc/ops';
-import { garden, store } from '../appState';
-import { placingPlantId, selection } from '../uiState';
+import type { Cells } from '../../domain/doc/schema';
+import { toDay, type DayNum } from '../../domain/dates';
+import { resolvePlant } from '../../domain/plants/resolve';
+import type { Plant } from '../../domain/plants/schema';
+import { garden, store, today } from '../appState';
+import { placingPlantId, selection, viewDay } from '../uiState';
 import type { Cell, Size, View } from './geometry';
-import type { PlaceMethod } from './placement';
+import { defaultMethod, nextWindow, type PlaceMethod } from './placement';
+import type { DropRequest, Proposal, Resolutions } from './resolve';
 
 export const view = signal<View | null>(null);
 export const viewport = signal<Size>({ w: 0, h: 0 });
@@ -28,12 +33,12 @@ export interface Draft {
   containerId: string | null;
   start: Cell | null;
   end: Cell | null;
-  /** 'started' after the first square, 'done' after the second. */
+  /** 'started' while a mouse/pen drag is in progress. */
   phase: 'none' | 'started' | 'done';
   method: PlaceMethod | null;
   /** The count the gardener typed, when it differs from the default. */
   count: number | null;
-  /** The gardener chose "Interplant anyway" (or "Plant anyway" for a crowded pot). */
+  /** The gardener chose "Grow alongside anyway". */
   allowClash: boolean;
 }
 
@@ -48,6 +53,54 @@ export const canvasFocused = signal(false);
 export const dragPreview = signal<{ id: string; dx: number; dy: number } | null>(null);
 
 export const paletteOpen = signal(false);
+
+// ---- Clash card ---------------------------------------------------------------------------------
+
+/** Data for the clash card shown when a drop lands on occupied squares. */
+export interface ClashCardData {
+  req: DropRequest;
+  proposal: Proposal;
+  reso: Resolutions;
+  /** Screen coordinates to anchor the card near (clientX / clientY). */
+  screenX: number;
+  screenY: number;
+}
+export const clashCard = signal<ClashCardData | null>(null);
+
+// ---- Palette drag -------------------------------------------------------------------------------
+
+/** An in-progress drag from the plant palette. */
+export interface PaletteDragState {
+  plant: Plant;
+  /** Current pointer position in screen coords. */
+  screenX: number;
+  screenY: number;
+  /** Snap proposal when the ghost is over a bed cell, null otherwise. */
+  snap: { containerId: string; cells: Cells; proposal: Proposal } | null;
+}
+export const paletteDrag = signal<PaletteDragState | null>(null);
+
+// ---- Planting move ------------------------------------------------------------------------------
+
+/** An in-progress drag-move of an existing planting to new squares. */
+export interface PlantingMoveState {
+  plantingId: string;
+  sourceContainerId: string;
+  sourceCells: Cells;
+  targetContainerId: string;
+  targetCells: Cells;
+  proposal: Proposal | null;
+}
+export const plantingMove = signal<PlantingMoveState | null>(null);
+
+// ---- View-day while placing ---------------------------------------------------------------------
+
+/** The bedIn day we switched viewDay to when placing started (null = did not switch). */
+export const placingPreviewDay = signal<DayNum | null>(null);
+/** The viewDay value before placing started; restored when placing stops. */
+export const prePlacingViewDay = signal<DayNum | null>(null);
+
+// ---- Toast --------------------------------------------------------------------------------------
 
 export interface Toast {
   id: number;
@@ -78,16 +131,47 @@ export function act(op: Op, label: string, done?: string, opts: Omit<DispatchOpt
   return res;
 }
 
+// ---- Placement actions --------------------------------------------------------------------------
+
 export function startPlacing(plantId: string): void {
   placingPlantId.value = plantId;
   const d = draft.value;
-  // Keep a chosen pot or bed so choosing another plant does not lose the squares.
-  draft.value = { ...emptyDraft(), containerId: d.containerId, start: d.start, end: d.end, phase: d.phase };
+  // Keep an existing containerId so choosing another plant in the same bed does not lose context.
+  draft.value = { ...emptyDraft(), containerId: d.containerId };
+  clashCard.value = null;
+
+  // Switch the plan to the day this plant would go in, so occupied squares are visible.
+  const g = garden.value;
+  if (g?.climate) {
+    const resolved = resolvePlant(plantId, g.customPlants ?? []);
+    if (resolved) {
+      const method = defaultMethod(resolved.plant);
+      const from = toDay(today.value);
+      const choice = nextWindow(resolved.plant, g.climate, method, from);
+      if (choice) {
+        const currentShown = viewDay.value ?? from;
+        if (choice.bedIn !== currentShown) {
+          prePlacingViewDay.value = viewDay.value;
+          placingPreviewDay.value = choice.bedIn;
+          viewDay.value = choice.bedIn;
+        }
+      }
+    }
+  }
 }
 
 export function stopPlacing(): void {
   placingPlantId.value = null;
   draft.value = emptyDraft();
+  clashCard.value = null;
+  paletteDrag.value = null;
+  plantingMove.value = null;
+  // Restore the view day that was set before placing started.
+  if (placingPreviewDay.value !== null) {
+    viewDay.value = prePlacingViewDay.value;
+    placingPreviewDay.value = null;
+    prePlacingViewDay.value = null;
+  }
 }
 
 export function selectPlanting(id: string): void {

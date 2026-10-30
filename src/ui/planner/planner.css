@@ -95,6 +95,120 @@
   color: var(--c-muted);
 }
 
+/* ---- Clash card ------------------------------------------------------------------------------- */
+.clash-card {
+  padding: var(--sp-3);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-control);
+  background: var(--c-panel);
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--c-ink) 18%, transparent);
+  outline: none;
+}
+.clash-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-2);
+}
+.clash-title {
+  font-size: var(--fs-md);
+  font-weight: 700;
+}
+.clash-x {
+  flex: 0 0 auto;
+  color: var(--c-muted);
+}
+.clash-desc {
+  font-size: var(--fs-sm);
+  margin-bottom: var(--sp-1);
+}
+.clash-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+}
+.clash-no-options {
+  margin-top: var(--sp-1);
+}
+
+/* ---- Palette ghost (drag from list) ----------------------------------------------------------- */
+.palette-ghost {
+  position: fixed;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 8px 6px;
+  border-radius: var(--r-control);
+  background: var(--c-panel);
+  border: 1px solid var(--c-line);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--c-ink) 20%, transparent);
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.palette-ghost-name {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--c-ink);
+  white-space: nowrap;
+}
+
+/* Snap preview labels on the canvas. */
+.lbl-snap {
+  transform: translateY(-100%);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.lbl-snap-free {
+  background: var(--c-accent-soft);
+  color: var(--c-ink);
+  border: 1px solid var(--c-accent);
+}
+.lbl-snap-clash {
+  background: var(--c-caution-soft);
+  color: var(--c-caution);
+  border: 1px solid var(--c-caution);
+}
+
+/* ---- Hover tooltip on patches ----------------------------------------------------------------- */
+.patch-tooltip {
+  z-index: 100;
+  padding: 5px 10px;
+  border-radius: var(--r-control);
+  background: var(--c-ink);
+  color: var(--c-panel);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* ---- First-time palette hint ------------------------------------------------------------------ */
+.palette-hint-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--r-control);
+  background: var(--c-accent-soft);
+  font-size: var(--fs-sm);
+  border: 1px solid var(--c-accent);
+}
+.palette-hint-dismiss {
+  flex: 0 0 auto;
+  font-size: var(--fs-xs);
+}
+
 /* Disabled primary button: lift opacity so the text stays at least 3:1 against the background. */
 .planner .btn-primary[disabled] {
   opacity: 0.8;

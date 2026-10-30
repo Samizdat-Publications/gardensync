@@ -2,7 +2,7 @@ name: check
 
 on:
   push:
-    branches: [master, v8]
+    branches: [master, 'feature/**']
   pull_request:
 
 jobs:

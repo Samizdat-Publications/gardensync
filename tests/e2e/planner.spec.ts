@@ -39,7 +39,11 @@ const savedPlantings = (page: Page) =>
 
 /** Choose a plant in the palette (on a phone, the palette is a sheet behind "Add plants"). */
 async function choosePlant(page: Page, name: string) {
-  // On a phone, a details sheet can cover "Add plants": close it first.
+  // On a phone, bottom sheets (inspector or placement panel) cover "Add plants": dismiss them.
+  // Dismiss placement panel first (may reveal a selection inspector underneath).
+  const stop = page.getByRole('button', { name: 'Stop placing', exact: true }).first();
+  if (await stop.isVisible()) await stop.click();
+  // Then dismiss any selection inspector.
   const close = page.getByRole('button', { name: 'Close', exact: true });
   if (await close.isVisible()) await close.click();
   const open = page.getByRole('button', { name: 'Add plants' });
@@ -79,27 +83,22 @@ test('the starter bed shows its plantings, with no accessibility violations', as
   expect(axe.violations).toEqual([]);
 });
 
-test('placing lettuce by clicking two free squares, then undo and redo', async ({ page }) => {
+test('tapping a free square plants immediately, then undo and redo', async ({ page }) => {
   await startGarden(page, 'empty');
   await expect(page.getByRole('heading', { name: 'Draw your first bed' })).toBeVisible();
   await addFirstBed(page);
   await choosePlant(page, 'Lettuce');
+  // The plan switches to the next lettuce window; just tap a square to plant.
   const a = await square(page, 'Bed 1', 0, 0, 8, 4);
-  const b = await square(page, 'Bed 1', 1, 1, 8, 4);
   await page.mouse.click(a.x, a.y);
-  await page.mouse.click(b.x, b.y);
-  await expect(page.getByText('Bed 1, A1 to B2: 4 squares.')).toBeVisible();
-  const plant = page.getByRole('button', { name: 'Plant 16 lettuce' });
-  await expect(plant).toBeEnabled();
-  await expect(page.getByText(/^Sow [A-Z][a-z]{2} \d+, spring window/)).toBeVisible();
+
+  // A toast appears and the patch is visible.
+  await expect(page.locator('[data-container="Bed 1"] [data-plant="lettuce"]')).toHaveCount(1);
+  await expect(page.getByRole('status').filter({ hasText: /Planted \d+ lettuce/ })).toBeVisible();
+  await expect.poll(() => savedPlantings(page)).toBe(1);
 
   const axe = await new AxeBuilder({ page }).withTags(AXE_TAGS).analyze();
   expect(axe.violations).toEqual([]);
-
-  await plant.click();
-  await expect(page.locator('[data-container="Bed 1"] [data-plant="lettuce"]')).toHaveCount(1);
-  await expect(page.getByRole('status').filter({ hasText: 'Planted 16 lettuce plants.' })).toBeVisible();
-  await expect.poll(() => savedPlantings(page)).toBe(1);
 
   const edit = page.getByRole('group', { name: 'Edit' });
   await edit.getByRole('button', { name: 'Undo' }).click();
@@ -135,22 +134,18 @@ test('placing with the keyboard alone', async ({ page }) => {
   await page.keyboard.press('Enter');
   await expect(page.getByRole('heading', { name: 'Placing lettuce' })).toBeVisible();
 
+  // Focus the canvas and press Enter to plant at the cursor square (immediate, no second click).
   await page.getByRole('application', { name: /Plan of/ }).focus();
-  await page.keyboard.press('Space');
-  await page.keyboard.press('ArrowRight');
-  await page.keyboard.press('ArrowRight');
-  await page.keyboard.press('Space');
-  await expect(page.getByText('Bed 1, A1 to C1: 3 squares.')).toBeVisible();
-  const plant = page.getByRole('button', { name: 'Plant 12 lettuce' });
-  await plant.focus();
   await page.keyboard.press('Enter');
   await expect(page.locator('[data-plant="lettuce"]')).toHaveCount(1);
   await expect.poll(() => savedPlantings(page)).toBe(1);
 
-  // Escape stops placing without planting.
+  const axe = await new AxeBuilder({ page }).withTags(AXE_TAGS).analyze();
+  expect(axe.violations).toEqual([]);
+
+  // Escape stops placing.
   await choosePlant(page, 'Radish');
   await page.getByRole('application', { name: /Plan of/ }).focus();
-  await page.keyboard.press('Escape');
   await page.keyboard.press('Escape');
   await expect(page.getByRole('heading', { name: 'Placing radish' })).toHaveCount(0);
 });

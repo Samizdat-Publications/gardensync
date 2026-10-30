@@ -1,25 +1,38 @@
 // What a tap, a click, a key or a button does in the planner. The canvas (pointer and keyboard),
 // the placement panel and the inspector all go through these, so every input does the same thing.
-import type { Container, Planting } from '../../domain/doc/schema';
+import type { Cells, Container, Planting } from '../../domain/doc/schema';
+import { minCells } from '../../domain/layout/patch';
 import { fmtDay, inSentence } from '../format';
 import { garden, newId } from '../appState';
 import { selection, shownDay, viewDay } from '../uiState';
 import { candidate } from './candidate';
-import { footprints, present } from './derived';
-import { boundsOf, fitView, type Cell } from './geometry';
-import { act, draft, emptyDraft, showToast, stopPlacing, view, viewport } from './plannerState';
+import { footprints, present, plantLookup } from './derived';
+import { boundsOf, cellsBetween, fitView, type Cell } from './geometry';
+import { act, clashCard, draft, emptyDraft, showToast, stopPlacing, view, viewport } from './plannerState';
+import { defaultMethod } from './placement';
+import { propose, resolutions, type DropRequest } from './resolve';
+import { placingPlantId } from '../uiState';
 
-/** A square tapped (or marked with the keyboard) while placing: the first is the start, the second the end. */
-export function placeAtCell(containerId: string, cell: Cell): void {
-  const d = draft.value;
-  if (d.phase === 'started' && d.containerId === containerId) {
-    draft.value = { ...d, end: cell, phase: 'done', count: null, allowClash: false };
-  } else {
-    draft.value = { ...d, containerId, start: cell, end: cell, phase: 'started', count: null, allowClash: false };
-  }
+// ---- Tap and paint ------------------------------------------------------------------------------
+
+/**
+ * Attempt to plant at a grid cell using the plant's minimum footprint. Called for taps (mouse,
+ * touch, keyboard Enter) and for single-cell mouse clicks. Plants immediately on success; shows
+ * the clash card on a clash; shows a toast on a structural problem.
+ */
+export function placeAtCell(containerId: string, cell: Cell, screenX = 0, screenY = 0): void {
+  const plantId = placingPlantId.value;
+  if (!plantId) return;
+  const g = garden.value;
+  if (!g) return;
+  const plant = plantLookup.value(plantId);
+  if (!plant) return;
+  const min = minCells(plant);
+  const cells: Cells = { col: cell.col, row: cell.row, w: min.w, h: min.h };
+  attemptPlant(containerId, cells, screenX, screenY);
 }
 
-/** A mouse or pen drag across squares: the end follows the pointer. */
+/** A mouse or pen drag across squares: the end follows the pointer (for visual feedback). */
 export function paintTo(containerId: string, cell: Cell): void {
   const d = draft.value;
   if (d.containerId !== containerId || !d.start) return;
@@ -27,43 +40,123 @@ export function paintTo(containerId: string, cell: Cell): void {
   draft.value = { ...d, end: cell, count: null, allowClash: false };
 }
 
-export function finishPaint(): void {
+/**
+ * Finish a paint gesture (mouse/pen drag release). If the drag crossed cells, attempts to plant
+ * the full region. Passes screen coords for clash-card positioning.
+ */
+export function finishPaint(screenX = 0, screenY = 0): void {
   const d = draft.value;
-  if (d.start && d.end && (d.start.col !== d.end.col || d.start.row !== d.end.row)) draft.value = { ...d, phase: 'done' };
+  if (!d.start || !d.containerId) {
+    draft.value = emptyDraft();
+    return;
+  }
+  const cells = cellsBetween(d.start, d.end ?? d.start);
+  draft.value = emptyDraft();
+  attemptPlant(d.containerId, cells, screenX, screenY);
 }
 
+/**
+ * Tap on a vessel while placing: immediately plants or shows a toast on a problem.
+ * Uses the existing candidate signal which handles vessel-specific logic.
+ */
 export function placeInVessel(containerId: string): void {
   draft.value = { ...draft.value, containerId, start: null, end: null, phase: 'done', count: null, allowClash: false };
-}
-
-/** Clear the squares chosen so far but keep placing the same plant. */
-export function clearSquares(): void {
-  const d = draft.value;
-  draft.value = { ...emptyDraft(), method: d.method };
-}
-
-/** Add the planting being placed: one dispatch, one undo step. */
-export function commitPlacement(): { ok: boolean; error?: string } {
   const c = candidate.value;
+  if (!c) return;
+  if (c.planting) {
+    commitCandidate(c);
+  } else if (c.problems.length > 0) {
+    showToast(c.problems[0]!);
+    draft.value = emptyDraft();
+  }
+}
+
+// ---- Core placement logic -----------------------------------------------------------------------
+
+/**
+ * Attempt to plant a specific set of cells in a grid bed. On success, commits immediately and
+ * the plant stays chosen. On a clash, opens the clash card. On a structural problem, shows a
+ * toast. Exported so ClashCard and palette drag can call it directly.
+ */
+export function attemptPlant(containerId: string, cells: Cells, screenX = 0, screenY = 0): void {
   const g = garden.value;
-  if (!c || !g || !c.planting) return { ok: false, error: 'Choose where it goes first.' };
+  const plantId = placingPlantId.value;
+  if (!g || !plantId) return;
+  const plant = plantLookup.value(plantId);
+  if (!plant) return;
+  const container = g.containers.find((c) => c.id === containerId);
+  if (!container || container.form !== 'grid') return;
+
+  const method = draft.value.method ?? defaultMethod(plant);
+  const req: DropRequest = { plant, method, bed: container, cells, from: shownDay.value };
+  const proposal = propose(req, g, plantLookup.value);
+
+  if (proposal.problem) {
+    showToast(proposal.problem);
+    return;
+  }
+
+  if (proposal.clashes.length > 0) {
+    const reso = resolutions(req, proposal, g, plantLookup.value);
+    clashCard.value = { req, proposal, reso, screenX, screenY };
+    return;
+  }
+
+  if (proposal.planting) {
+    commitPlanting(proposal.planting, plant.name, g.id);
+  }
+}
+
+/** Commit a planting derived from a proposal. The plant stays chosen so more can be dropped. */
+export function commitPlanting(planting: Omit<Planting, 'id'>, plantName: string, gardenId: string): void {
+  const id = newId();
+  const full: Planting = { ...planting, id };
+  const name = inSentence(plantName);
+  const res = act(
+    { type: 'addPlanting', gardenId, planting: full },
+    `plant ${full.count} ${name}`,
+    `Planted ${full.count} ${name} ${full.count === 1 ? 'plant' : 'plants'}.`,
+  );
+  if (res.ok) {
+    selection.value = { kind: 'planting', id };
+    draft.value = emptyDraft();
+  }
+  // If not ok, the toast/error was already shown.
+}
+
+/** Commit the current candidate (vessel placing). */
+function commitCandidate(c: NonNullable<typeof candidate.value>): void {
+  const g = garden.value;
+  if (!g || !c.planting) return;
   const id = newId();
   const planting: Planting = { ...c.planting, id };
   const name = inSentence(c.plant.name);
-  const res = act({ type: 'addPlanting', gardenId: g.id, planting }, `plant ${planting.count} ${name}`, `Planted ${planting.count} ${name} ${planting.count === 1 ? 'plant' : 'plants'}.`);
-  if (!res.ok) return { ok: false, error: res.error };
-  // If it does not go in until later, show the day it goes in, so the new planting is visible.
-  const bedIn = c.phases?.bedIn;
-  const day = shownDay.value;
-  const out = c.phases?.bedOut ?? null;
-  if (bedIn !== undefined && (bedIn > day || (out !== null && out <= day))) {
-    showToast(`Planted ${planting.count} ${name} ${planting.count === 1 ? 'plant' : 'plants'}. It goes in on ${fmtDay(bedIn)}, so the garden now shows that day.`, true);
-    viewDay.value = bedIn;
+  const res = act(
+    { type: 'addPlanting', gardenId: g.id, planting },
+    `plant ${planting.count} ${name}`,
+    `Planted ${planting.count} ${name} ${planting.count === 1 ? 'plant' : 'plants'}.`,
+  );
+  if (res.ok) {
+    selection.value = { kind: 'planting', id };
+    draft.value = emptyDraft();
+    // If it goes in on a different day, show that day.
+    const bedIn = c.phases?.bedIn;
+    const day = shownDay.value;
+    const out = c.phases?.bedOut ?? null;
+    if (bedIn !== undefined && (bedIn > day || (out !== null && out <= day))) {
+      showToast(`Planted ${planting.count} ${name}. It goes in on ${fmtDay(bedIn)}, so the garden now shows that day.`, true);
+      viewDay.value = bedIn;
+    }
   }
-  stopPlacing();
-  selection.value = { kind: 'planting', id };
-  return { ok: true };
 }
+
+/** Legacy: kept for PlacementPanel's "Plant" fallback. Clear the paint region. */
+export function clearSquares(): void {
+  const d = draft.value;
+  draft.value = { ...emptyDraft(), method: d.method, containerId: d.containerId };
+}
+
+// ---- Selection and navigation -------------------------------------------------------------------
 
 /** What a tap does when not placing: pick the planting under it, or its bed or pot. */
 export function selectAt(c: Container, cell: Cell | null): void {

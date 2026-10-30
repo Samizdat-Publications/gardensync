@@ -7,10 +7,12 @@ import { useEffect, useRef } from 'preact/hooks';
 import { toDay } from '../../domain/dates';
 import { formatLength } from '../../domain/units';
 import { garden, newId, store, today, units } from '../appState';
+import { Glyph } from '../components/Glyph';
 import { fmtDay } from '../format';
 import { placingPlantId, selection, shownDay, viewDay } from '../uiState';
 import { AddDialog } from './AddDialog';
 import { Canvas } from './Canvas';
+import { ClashCard } from './ClashCard';
 import { svgToPng, saveBlob } from '../../platform/png';
 import { busiestAhead, containers, phasesOfP, plantLookup, present, selectedContainer, selectedPlanting } from './derived';
 import { PlanPoster } from './Poster';
@@ -19,7 +21,7 @@ import { ContainerInspector, PlantingInspector } from './Inspector';
 import { Palette } from './Palette';
 import { PlacementPanel } from './PlacementPanel';
 import { fitAll } from './interactions';
-import { act, paletteOpen, showToast, stopPlacing } from './plannerState';
+import { act, paletteDrag, paletteOpen, placingPreviewDay, showToast, stopPlacing } from './plannerState';
 import { SeasonRibbon } from './SeasonRibbon';
 import { Toast } from './Toast';
 import type { Container } from '../../domain/doc/schema';
@@ -138,6 +140,8 @@ export function Planner() {
   // Disable undo when the only step would bring us back to the empty-doc state created at first run.
   const canUndoNow = store.canUndo.value && store.undoLabel.value !== 'start the garden';
   const placing = placingPlantId.value !== null;
+  const previewDay = placingPreviewDay.value;
+  const placingPlant = placing ? plantLookup.value(placingPlantId.value!) : null;
   const selP = selectedPlanting.value;
   const selC = selection.value?.kind === 'container' ? selectedContainer.value : null;
   const has = g.containers.length > 0;
@@ -198,7 +202,14 @@ export function Planner() {
           <h1 tabIndex={-1}>
             {g.name} on {fmtDay(day)}
           </h1>
-          {day !== todayDay ? (
+          {placing && previewDay !== null && placingPlant ? (
+            <span class="ahead">
+              Showing {fmtDay(previewDay)}, when {placingPlant.name.toLowerCase()} would go in
+              <button type="button" class="btn ahead-btn" onClick={stopPlacing}>
+                Stop placing
+              </button>
+            </span>
+          ) : day !== todayDay ? (
             <span class="ahead">
               {day > todayDay ? 'Looking ahead' : 'Looking back'}: today is {fmtDay(todayDay)}
               <button type="button" class="btn ahead-btn" onClick={() => (viewDay.value = null)}>
@@ -257,6 +268,18 @@ export function Planner() {
               </svg>
               Add plants
             </button>
+            {/* Palette drag ghost: follows the pointer while dragging from the plant list. */}
+            {paletteDrag.value ? (
+              <div
+                class="palette-ghost"
+                aria-hidden="true"
+                style={{ left: `${paletteDrag.value.screenX + 12}px`, top: `${paletteDrag.value.screenY - 24}px` }}
+              >
+                <Glyph form={paletteDrag.value.plant.glyph.form} color={paletteDrag.value.plant.glyph.color} size={36} />
+                <span class="palette-ghost-name">{paletteDrag.value.plant.name}</span>
+              </div>
+            ) : null}
+            <ClashCard />
           </div>
         ) : (
           <section class="empty panel" aria-labelledby="empty-title">
