@@ -297,6 +297,8 @@ export function Planner() {
               </div>
             ) : null}
             <ClashCard />
+            {/* On wider screens toasts sit at the foot of the plan, clear of the season strip. */}
+            <Toast />
           </div>
         ) : (
           <section class="empty panel" aria-labelledby="empty-title">
@@ -361,7 +363,7 @@ export function Planner() {
       </aside>
 
       <AddDialog open={addOpen.value} kind={addKind.value} onClose={closeAdd} />
-      <Toast />
+      {has ? null : <Toast />}
       <div class="print-poster" aria-hidden="true">
         <PlanPoster id="plan-poster" garden={g} day={day} units={units.value} plantOf={plantLookup.value} phasesOf={phasesOfP.value} present={present.value} />
       </div>

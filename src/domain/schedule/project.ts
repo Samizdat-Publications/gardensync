@@ -120,6 +120,8 @@ export function findWindow(schedule: PlantSchedule, window: AnchorWindow, method
     const list = sameMethod.length > 0 ? sameMethod : temps;
     return (window === 'fall' ? list[1] : undefined) ?? list[0] ?? null;
   }
+  // Herbs saved before they became perennials were anchored to their spring window.
+  if (window === 'spring' || window === 'fall') return pick('perennial');
   return null;
 }
 

@@ -27,9 +27,9 @@ canton-oh carrot spring direct: sow Mar 26 to Aug 08, pick Jun 09 to Jul 09, rou
 canton-oh cauliflower spring transplant: indoor Feb 12 to Mar 12, out Apr 02 to Apr 16, pick Jun 01 to Jun 08
 canton-oh cauliflower fall transplant: indoor Jun 28 to Jul 19, out Aug 16 to Aug 23, pick Oct 29 to Nov 05
 canton-oh chili-pepper spring transplant: indoor Mar 08 to Apr 16, out May 17 to Jun 11, pick Jul 31 to Nov 03, warn frost-possible
-canton-oh chives spring transplant: indoor Feb 05 to Mar 19, out Apr 02 to Apr 30, pick May 17 to Nov 30
-canton-oh chives spring direct: sow Apr 16 to May 14, pick Jul 05 to Nov 30
-canton-oh chives spring plant: plant Mar 19 to Apr 16, pick Jun 07 to Nov 30
+canton-oh chives perennial transplant: indoor Feb 05 to Mar 19, out Apr 02 to Apr 30, pick May 17 to Oct 15, yearly from 2027
+canton-oh chives perennial direct: sow Apr 16 to May 14, pick Jul 05 to Oct 15, yearly from 2027
+canton-oh chives perennial plant: plant Mar 19 to Apr 16, pick Jun 07 to Oct 15, yearly from 2027
 canton-oh cilantro spring direct: sow Apr 02 to Apr 30, pick May 22 to Jun 12, rounds Apr 02, Apr 23
 canton-oh cilantro fall direct: sow Aug 06 to Sep 02, pick Oct 09 to Oct 30, rounds Aug 06, Aug 27
 canton-oh collards spring transplant: indoor Feb 05 to Mar 12, out Mar 19 to Apr 09, pick May 07 to Nov 30
@@ -62,7 +62,7 @@ canton-oh lettuce fall transplant: indoor Jul 22 to Aug 26, out Sep 02 to Sep 23
 canton-oh lettuce fall direct: sow Jul 23 to Sep 02, pick Sep 25 to Oct 23, rounds Jul 23, Aug 06, Aug 20
 canton-oh melon spring transplant: indoor May 02 to May 23, out May 30 to Jun 13, pick Aug 14 to Sep 04, warn frost-possible
 canton-oh melon spring direct: sow May 30 to Jun 11, pick Aug 28 to Sep 18, warn frost-possible
-canton-oh mint spring plant: plant Apr 02 to May 14, pick May 02 to Sep 29
+canton-oh mint perennial plant: plant Apr 02 to May 14, pick May 02 to Oct 15, yearly from 2027
 canton-oh nasturtium spring transplant: indoor Apr 19 to May 10, out May 17 to May 31, pick Jul 02 to Nov 03, warn frost-possible
 canton-oh nasturtium spring direct: sow May 17 to May 31, pick Jul 16 to Nov 03, warn frost-possible
 canton-oh okra spring transplant: indoor Apr 18 to May 16, out May 30 to Jun 13, pick Jul 08 to Nov 03, warn frost-possible
@@ -70,7 +70,7 @@ canton-oh okra spring direct: sow May 30 to Jun 13, pick Jul 29 to Nov 03, warn 
 canton-oh onion spring transplant: indoor Dec 25 2026 to Feb 05, out Mar 19 to Apr 02, pick Jun 27 to Jul 11
 canton-oh onion spring direct: sow Mar 19 to Apr 02, pick Aug 22 to Sep 05
 canton-oh onion spring plant: plant Mar 19 to Apr 02, pick Jun 27 to Jul 11
-canton-oh oregano spring transplant: indoor Feb 19 to Mar 26, out Apr 16 to May 07, pick Jun 15 to Nov 12
+canton-oh oregano perennial transplant: indoor Feb 19 to Mar 26, out Apr 16 to May 07, pick Jun 15 to Oct 15, yearly from 2027
 canton-oh parsley spring transplant: indoor Feb 05 to Mar 19, out Apr 02 to Apr 30, pick May 12 to Nov 30
 canton-oh parsley spring direct: sow Apr 16 to May 14, pick Jun 30 to Nov 30
 canton-oh parsley fall transplant: indoor Jul 16 to Aug 20, out Sep 10 to Oct 01, pick Nov 03 to Nov 30
@@ -86,8 +86,8 @@ canton-oh radish spring direct: sow Mar 12 to Jun 10, pick Apr 09 to Apr 16, rou
 canton-oh radish fall direct: sow Jul 30 to Oct 13, pick Sep 10 to Sep 17, rounds Jul 30, Aug 09, Aug 19, Aug 29, Sep 08, Sep 18, Sep 28, Oct 08
 canton-oh raspberry perennial plant: plant Mar 19 to Apr 16, pick May 28 2028 to Jul 09 2028, yearly from 2028
 canton-oh rhubarb perennial plant: plant Mar 19 to Apr 16, pick Apr 16 2028 to Jun 11 2028, yearly from 2028
-canton-oh rosemary spring plant: plant Apr 16 to May 14, pick Jun 15 to Nov 30
-canton-oh sage spring transplant: indoor Feb 12 to Mar 26, out Apr 09 to May 07, pick Jun 08 to Nov 30
+canton-oh rosemary perennial plant: plant Apr 16 to May 14, pick Jun 15 to Nov 12, yearly from 2027, warn winter-too-cold
+canton-oh sage perennial transplant: indoor Feb 12 to Mar 26, out Apr 09 to May 07, pick Jun 08 to Oct 15, yearly from 2027
 canton-oh scallion spring direct: sow Mar 19 to Sep 11, pick May 18 to Jun 17, rounds Mar 19, Apr 02, Apr 16, Apr 30, May 14, May 28, Jun 11, Jun 25, Jul 09, Jul 23, Aug 06, Aug 20, Sep 03, spring through fall
 canton-oh spinach spring direct: sow Mar 05 to May 04, pick Apr 19 to May 10, rounds Mar 05, Mar 15, Mar 25, Apr 04, Apr 14, Apr 24, May 04
 canton-oh spinach fall direct: sow Aug 02 to Sep 26, pick Sep 30 to Oct 21, rounds Aug 02, Aug 12, Aug 22, Sep 01, Sep 11, Sep 21
@@ -103,7 +103,7 @@ canton-oh swiss-chard spring transplant: indoor Mar 05 to Apr 02, out Apr 16 to 
 canton-oh swiss-chard spring direct: sow Apr 02 to Apr 23, pick May 27 to Nov 11
 canton-oh swiss-chard fall transplant: indoor Jul 24 to Aug 21, out Sep 04 to Sep 18, pick Oct 22 to Nov 11
 canton-oh swiss-chard fall direct: sow Aug 14 to Aug 28, pick Oct 22 to Nov 11
-canton-oh thyme spring transplant: indoor Feb 05 to Mar 19, out Apr 02 to Apr 30, pick Jun 01 to Nov 28
+canton-oh thyme perennial transplant: indoor Feb 05 to Mar 19, out Apr 02 to Apr 30, pick Jun 01 to Oct 15, yearly from 2027
 canton-oh tomatillo spring transplant: indoor Apr 05 to May 03, out May 17 to May 31, pick Jul 16 to Nov 03, warn frost-possible
 canton-oh tomato spring transplant: indoor Mar 22 to Apr 23, out May 17 to Jun 04, pick Jul 26 to Nov 03, warn frost-possible
 canton-oh turnip spring direct: sow Mar 19 to May 14, pick May 08 to May 29, rounds Mar 19, Apr 16, May 14

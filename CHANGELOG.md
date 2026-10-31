@@ -8,6 +8,23 @@ Its sibling edition, *A Quiet Almanac*, now lives in its own repository:
 
 ---
 
+## v8.4 - 2026-10-31
+
+**Herbs that come back, and a planner that fits a laptop.**
+
+- **Perennial herbs are perennials.** Chives, mint, oregano, rosemary, sage and thyme keep their
+  squares from year to year with a picking time every season, raised from seed, sown or divided.
+  Herbs already in your garden keep their dates. Only rosemary warns about hard winters now.
+- **Companion claims, rechecked.** Nasturtium against squash bugs is now marked as tradition: no
+  trial backs it.
+- **The day shown is never cut off.** On a laptop the plan's title splits into two lines and the
+  buttons use short labels, so "on May 20" always shows.
+- **Toasts stay off the season strip.** On wider screens they appear at the foot of the plan.
+- **A fresh landing page.** New clips of drag and drop and the season, new stills, a proper social
+  card, and videos that play in Safari again.
+
+---
+
 ## v8.3 - 2026-10-30
 
 **Dates you can trust in every climate.** A second review of the plant library and the schedules

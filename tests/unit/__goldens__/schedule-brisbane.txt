@@ -32,9 +32,9 @@ brisbane carrot temperature direct: sow Feb 16 2028 to Jul 16 2028, pick May 01 
 brisbane cauliflower temperature transplant: indoor May 30 to Aug 13, out Jul 18 to Sep 17, pick Sep 16 to Sep 23, warn hot-weather-shade
 brisbane cauliflower temperature transplant: indoor Feb 01 2028 to Jun 11 2028, out Mar 21 2028 to Jul 16 2028, pick May 20 2028 to May 27 2028, warn hot-weather-shade
 brisbane chili-pepper temperature transplant: indoor Jun 06 to Dec 31, out Aug 15 to Feb 25 2028, pick Oct 29 to Jan 12 2028
-brisbane chives temperature transplant: indoor May 23 to Jun 04 2028, out Jul 18 to Jul 16 2028, pick Sep 01 to Jan 29 2028, warn hot-weather-shade
-brisbane chives temperature direct: sow Jul 18 to Jul 16 2028, pick Oct 06 to Mar 04 2028, warn hot-weather-shade
-brisbane chives temperature plant: plant Jul 18 to Jul 16 2028, pick Oct 06 to Mar 04 2028, warn hot-weather-shade
+brisbane chives perennial transplant: indoor May 23 to Jul 04, out Jul 18 to Aug 15, pick Sep 29 to Apr 12 2028, yearly from 2027
+brisbane chives perennial direct: sow Jul 18 to Aug 15, pick Oct 06 to Apr 12 2028, yearly from 2027
+brisbane chives perennial plant: plant Jul 18 to Aug 15, pick Oct 06 to Apr 12 2028, yearly from 2027
 brisbane cilantro temperature direct: sow Jul 18 to Sep 08, pick Sep 06 to Sep 27, warn hot-weather-shade
 brisbane cilantro temperature direct: sow Apr 04 2028 to Jul 16 2028, pick May 24 2028 to Jun 14 2028, warn hot-weather-shade
 brisbane collards temperature transplant: indoor Jun 06 to Oct 08, out Jul 18 to Nov 05, pick Sep 05 to Jan 03 2028, warn hot-weather-shade
@@ -67,7 +67,7 @@ brisbane lettuce temperature direct: sow Jul 18 to Sep 26, pick Sep 06 to Oct 04
 brisbane lettuce temperature direct: sow Mar 24 2028 to Jul 16 2028, pick May 13 2028 to Jun 10 2028, warn hot-weather-shade
 brisbane melon temperature transplant: indoor Aug 10 to Jan 10 2028, out Sep 07 to Jan 31 2028, pick Nov 22 to Dec 13
 brisbane melon temperature direct: sow Sep 05 to Jan 17 2028, pick Dec 04 to Dec 25
-brisbane mint temperature plant: plant Jul 18 to Jul 16 2028, pick Aug 17 to Jan 14 2028
+brisbane mint perennial plant: plant Jul 18 to Aug 29, pick Oct 27 to Apr 12 2028, yearly from 2027
 brisbane nasturtium temperature transplant: indoor Jun 20 to Jun 25 2028, out Jul 18 to Jul 16 2028, pick Sep 02 to Dec 01, warn hot-weather-shade
 brisbane nasturtium temperature direct: sow Jul 18 to Jul 16 2028, pick Sep 16 to Dec 15, warn hot-weather-shade
 brisbane okra temperature transplant: indoor Aug 16 to Jan 30 2028, out Sep 27 to Feb 27 2028, pick Nov 05 to Jan 24 2028
@@ -78,7 +78,7 @@ brisbane onion temperature direct: sow Jul 18 to Aug 17, pick Dec 21 to Jan 04 2
 brisbane onion temperature direct: sow Jan 27 2028 to Jul 16 2028, pick Jul 01 2028 to Jul 15 2028
 brisbane onion temperature plant: plant Jul 18 to Sep 28, pick Oct 26 to Nov 09, warn hot-weather-shade
 brisbane onion temperature plant: plant Feb 10 2028 to Jul 16 2028, pick May 20 2028 to Jun 03 2028, warn hot-weather-shade
-brisbane oregano temperature transplant: indoor May 23 to Jun 04 2028, out Jul 18 to Jul 16 2028, pick Sep 16 to Feb 13 2028
+brisbane oregano perennial transplant: indoor May 23 to Jun 27, out Jul 18 to Aug 08, pick Nov 03 to Apr 12 2028, yearly from 2027
 brisbane parsley temperature transplant: indoor May 23 to Oct 01, out Jul 18 to Nov 12, pick Aug 27 to Dec 25, warn hot-weather-shade
 brisbane parsley temperature transplant: indoor Dec 31 to Jun 04 2028, out Feb 25 2028 to Jul 16 2028, pick Apr 05 2028 to Aug 03 2028, warn hot-weather-shade
 brisbane parsley temperature direct: sow Jul 18 to Oct 17, pick Oct 01 to Jan 29 2028, warn hot-weather-shade
@@ -96,8 +96,8 @@ brisbane radish temperature direct: sow Jul 18 to Oct 13, pick Aug 15 to Aug 22,
 brisbane radish temperature direct: sow Mar 29 2028 to Jul 16 2028, pick Apr 26 2028 to May 03 2028, warn hot-weather-shade
 brisbane raspberry perennial plant: not viable (no-chill)
 brisbane rhubarb perennial plant: not viable (no-chill)
-brisbane rosemary temperature plant: plant Jul 18 to Jul 16 2028, pick Sep 16 to Mar 14 2028
-brisbane sage temperature transplant: indoor May 23 to Jun 04 2028, out Jul 18 to Jul 16 2028, pick Sep 16 to Mar 14 2028
+brisbane rosemary perennial plant: plant Jul 18 to Aug 15, pick Oct 13 to May 10 2028, yearly from 2027
+brisbane sage perennial transplant: indoor May 23 to Jul 04, out Jul 18 to Aug 15, pick Oct 13 to Apr 12 2028, yearly from 2027
 brisbane scallion temperature direct: sow Jul 18 to Jul 16 2028, pick Sep 16 to Oct 16, warn hot-weather-shade
 brisbane spinach temperature direct: sow Jul 18 to Aug 27, pick Sep 01 to Sep 22, warn hot-weather-shade
 brisbane spinach temperature direct: sow Apr 16 2028 to Jul 16 2028, pick May 31 2028 to Jun 21 2028, warn hot-weather-shade
@@ -115,7 +115,7 @@ brisbane swiss-chard temperature transplant: indoor Jun 06 to Oct 19, out Jul 18
 brisbane swiss-chard temperature transplant: indoor Jan 16 2028 to Jun 18 2028, out Feb 27 2028 to Jul 16 2028, pick Apr 01 2028 to Jul 30 2028, warn hot-weather-shade
 brisbane swiss-chard temperature direct: sow Jul 18 to Nov 01, pick Sep 11 to Jan 09 2028, warn hot-weather-shade
 brisbane swiss-chard temperature direct: sow Feb 21 2028 to Jul 16 2028, pick Apr 16 2028 to Aug 14 2028, warn hot-weather-shade
-brisbane thyme temperature transplant: indoor May 23 to Jun 04 2028, out Jul 18 to Jul 16 2028, pick Sep 16 to Mar 14 2028
+brisbane thyme perennial transplant: indoor May 23 to Jul 04, out Jul 18 to Aug 15, pick Oct 13 to Apr 12 2028, yearly from 2027
 brisbane tomatillo temperature transplant: indoor Jun 06 to Jun 18 2028, out Jul 18 to Jul 16 2028, pick Sep 16 to Nov 15
 brisbane tomato temperature transplant: indoor May 23 to Jun 04 2028, out Jul 18 to Jul 16 2028, pick Sep 26 to Nov 25
 brisbane turnip temperature direct: sow Jul 18 to Sep 26, pick Sep 06 to Sep 27, warn hot-weather-shade

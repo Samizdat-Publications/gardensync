@@ -761,22 +761,14 @@ function overwinterWindow(ctx: Ctx, out: Built): ScheduleWindow | null {
 
 const MAX_YEARLY = 10;
 
-function perennialMethod(plant: Plant): Method | null {
-  if (plant.methods.plant) return 'plant';
-  if (plant.methods.transplant) return 'transplant';
-  if (plant.methods.direct) return 'direct';
-  return null;
-}
-
 function inRange(plant: Plant, t: number): boolean {
   return t >= plant.temp.minC - 1 && t <= plant.temp.maxC + 1;
 }
 
-function perennialWindow(ctx: Ctx, out: Built): ScheduleWindow | null {
+/** A perennial's window for one way into the ground: crowns, divisions, or seedlings raised first. */
+function perennialWindow(ctx: Ctx, method: Method, out: Built): ScheduleWindow | null {
   const { plant, profile, temps } = ctx;
   const per = plant.perennial!;
-  const method = perennialMethod(plant);
-  if (!method) return null;
   const weeks = plant.methods[method]!.weeks;
   const reasons: Reason[] = [];
   const warnings: Reason[] = [];
@@ -828,7 +820,17 @@ function perennialWindow(ctx: Ctx, out: Built): ScheduleWindow | null {
     }
     for (let y = firstSeason; y < ctx.season + lifespan; y++) {
       const lf = seasonRefs(profile, y).LF50!;
-      yearly.push({ season: y, harvest: { start: lf + 7 * per.harvestWeeks[0], end: lf + 7 * per.harvestWeeks[1] } });
+      const h = { start: lf + 7 * per.harvestWeeks[0], end: lf + 7 * per.harvestWeeks[1] };
+      // Leafy perennials stop in the same heat that ends a leafy annual's picking (Phoenix chives in June).
+      if (temps && plant.fruitSetMaxC === undefined) {
+        for (let x = h.start; x <= h.end; x++) {
+          if (tMean(temps, x) > plant.temp.maxC + HEAT_CAP_MARGIN_C) {
+            h.end = x - 1;
+            break;
+          }
+        }
+      }
+      if (h.end - h.start + 1 >= MIN_HARVEST_DAYS) yearly.push({ season: y, harvest: h });
     }
     reasons.push({ code: 'perennial-harvest', firstSeason, weeks: null });
     if (plant.winterMinC !== undefined && profile.extremeMinC !== null && profile.extremeMinC < plant.winterMinC) {
@@ -836,12 +838,19 @@ function perennialWindow(ctx: Ctx, out: Built): ScheduleWindow | null {
     }
     if (ctx.mode === 'frost-only') warnings.push({ code: 'frost-only' });
   }
+  // A first-year harvest waits until the plant has grown (herbs picked lightly from seed); a year
+  // that would end before then is skipped.
+  const ready = bedIn.start + daysToHarvest(plant, method);
+  while (yearly.length > 0 && yearly[0]!.harvest.end < ready) yearly.shift();
+  if (yearly[0] && yearly[0].harvest.start < ready) yearly[0] = { ...yearly[0], harvest: { start: ready, end: yearly[0].harvest.end } };
   const first = yearly[0];
   if (!first) {
     out.notViable.push({ kind: 'perennial', method, reason: temps ? rangeFailure(plant, temps, ctx.refs) : { code: 'too-cool', tempC: plant.temp.minC } });
     return null;
   }
-  return { kind: 'perennial', method, bedIn, harvest: first.harvest, yearly, reasons, warnings };
+  const ind = indoorFor(plant, method, bedIn);
+  if (ind.indoor) reasons.push({ code: 'indoor-start', weeks: plant.methods.indoor!.ageWeeks }, { code: 'harden-off' });
+  return { kind: 'perennial', method, bedIn, ...ind, harvest: first.harvest, yearly, reasons, warnings };
 }
 
 // ---- Section 10: temperature mode -----------------------------------------------------------------
@@ -969,8 +978,10 @@ function compute(plant: Plant, profile: ClimateProfile, season: number): PlantSc
   }
 
   if (plant.perennial) {
-    const w = perennialWindow(ctx, built);
-    if (w) built.windows.push(w);
+    for (const m of outdoorMethods(plant)) {
+      const w = perennialWindow(ctx, m, built);
+      if (w) built.windows.push(w);
+    }
   } else if (ctx.mode === 'temperature') {
     if (plant.overwinter) {
       const w = overwinterWindow(ctx, built);

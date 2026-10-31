@@ -35,7 +35,7 @@
 
 <section class="hero" id="top" aria-labelledby="hero-title">
   <div class="hero-text">
-    <p class="pill"><span class="pill-dot"></span>Version 8.3: free and open source</p>
+    <p class="pill"><span class="pill-dot"></span>Version 8.4: free and open source</p>
     <h1 id="hero-title">Plan the bed.<br>Know the dates.</h1>
     <p class="lede">Draw your beds, drop plants into the squares, and GardenSync tells you when to start, sow, plant out and pick, using frost dates worked out from 30 years of weather for your own town.</p>
     <div class="cta">
@@ -79,11 +79,11 @@
   <div class="feature-text">
     <p class="label">02 · The planner</p>
     <h2 id="f2">Drop plants into the squares</h2>
-    <p>Beds, planters, window boxes, pots and grow bags are drawn to scale in feet or meters. Pick a plant and tap two squares: it takes its real square-foot footprint, sixteen carrots to a square or one squash to four, and goes in at the next window that suits it.</p>
-    <p>Friends and foes show in the bed, a taken square says when it frees up, and every change can be undone. Mouse, touch, pen and keyboard all work.</p>
+    <p>Beds, planters, window boxes, pots and grow bags are drawn to scale in feet or meters. Drag a plant from the list onto a square, or press and drag across squares for a bigger patch: it takes its real square-foot footprint, sixteen carrots to a square or one squash to four, and goes in at the next window that suits it.</p>
+    <p>Pick up any planting to move it, or drag a corner to resize it. Friends and foes show in the bed, a taken square says when it frees up and offers a way out, and every change can be undone. Mouse, touch, pen and keyboard all work.</p>
   </div>
   <figure class="frame">
-    <video data-inview muted loop playsinline preload="none" poster="media/plan.jpg" aria-label="A new bed is added, then lettuce, carrots and bush beans are placed into its squares with the keyboard, each getting its planting dates.">
+    <video data-inview muted loop playsinline preload="none" poster="media/plan.jpg" aria-label="A new bed is added. Lettuce is dragged from the plant list onto a square, a row of carrots is painted across four squares, bush beans are dropped in and then moved, and each gets its planting dates.">
       <source src="media/plan.mp4" type="video/mp4">
     </video>
   </figure>
@@ -94,7 +94,7 @@
     <p class="label">03 · The season</p>
     <h2 id="f3">Dates it can explain</h2>
     <p>Every planting knows when to start indoors, plant out, start picking and pull out, and says why: "6 to 8 weeks before your last frost, Apr 16". Tender crops wait for the frost risk to pass and the soil to warm. In hot places, summer crops skip the weeks too hot to set fruit. Fall crops are counted back from your first frost.</p>
-    <p>Drag the season slider to see the bed on any day, so lettuce in spring, beans in the same squares in summer and garlic over winter all fit.</p>
+    <p>Drag the season slider to see the bed on any day, so lettuce in spring, beans in the same squares in summer and garlic over winter all fit. Herbs, asparagus and fruit keep their squares from year to year, with a picking time every season.</p>
   </div>
   <figure class="frame">
     <video data-inview muted loop playsinline preload="none" poster="media/schedule.jpg" aria-label="A tomato planting is selected and its dates and reasons appear; the season slider moves the bed through the year.">
@@ -168,11 +168,15 @@
     </article>
     <article>
       <h3>The maths, tested</h3>
-      <p>The climate and schedule code is pure TypeScript with about 750 unit tests, run in two time zones to catch date bugs. Planting windows for six places, from Ohio to Melbourne, Phoenix and Singapore, were checked against extension guidance and then frozen as readable goldens.</p>
+      <p>The climate and schedule code is pure TypeScript with over 850 unit tests, run in two time zones to catch date bugs. Planting windows for six places, from Ohio to Melbourne, Phoenix and Singapore, were checked against extension guidance and then frozen as readable goldens.</p>
     </article>
     <article>
       <h3>Every number sourced</h3>
       <p>Each plant's spacing, timing, temperatures and yield were checked against university extension services and the RHS. A lint test refuses a plant without sources, and companion claims must say whether they are tested or traditional.</p>
+    </article>
+    <article>
+      <h3>A second opinion on the data</h3>
+      <p>The whole plant library and the dates it produces for six places were read by a second model, Gemini, looking for numbers that disagree. Each finding was checked against extension sources before anything changed: tomatoes now crop until frost, Brisbane's broccoli waits out the summer, and Phoenix gets its sweet potatoes.</p>
     </article>
     <article>
       <h3>Checked the way people use it</h3>

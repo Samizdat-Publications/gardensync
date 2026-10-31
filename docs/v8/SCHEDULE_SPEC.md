@@ -333,6 +333,15 @@ found places where the maths let through dates an experienced gardener would rej
   warmth test at sowing was tried and dropped: it put Melbourne tomatoes after early November and
   zucchini into December, later than local guidance.
 
+**Perennial herbs (8.4)**
+- Section 9: a perennial gets a window for every way into the ground it has (seedlings raised
+  indoors, direct sowing, divisions), with indoor dates for transplants. The first season's harvest
+  starts once the planting has had its days to harvest; a season that would end before then is
+  skipped. In frost mode each yearly harvest of a perennial without a fruit-set limit ends at the
+  same bolting heat that ends a leafy annual's picking (Phoenix chives in late May).
+- An auto anchor on `spring` or `fall` for a plant whose schedule now has only perennial windows
+  maps to the perennial window, so herbs saved before 8.4 keep their dates.
+
 Known limits, not fixed here:
 - Growth speed does not depend on temperature beyond the fixed fall factor. Edinburgh fall spinach
   "matures" in December.

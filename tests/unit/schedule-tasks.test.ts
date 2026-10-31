@@ -105,6 +105,33 @@ describe('plantingPhases', () => {
   });
 });
 
+describe('perennial herbs', () => {
+  it('chives come back every year: open-ended in the bed, picked each season', () => {
+    const chives = auto('chv', 'chives', 'transplant', 'perennial', 2027);
+    const ph = plantingPhases(chives, plant('chives'), canton())!;
+    expect(ph.bedOut).toBeNull();
+    const picks = tasksFor(garden(canton(), [chives]), PLANTS_BY_ID, d('2027-01-01'), d('2029-12-31')).filter((t) => t.kind === 'start-picking');
+    expect(picks.map((t) => t.season)).toEqual([2027, 2028, 2029]);
+    // The first year waits for the seedlings to grow; later years start in early spring.
+    expect(picks[0]!.date).toBeGreaterThan(ph.bedIn);
+    expect(toIso(picks[1]!.date).slice(5)).toMatch(/^04-0/);
+  });
+
+  it('a herb saved against its old spring window keeps its dates', () => {
+    const old = auto('thy', 'thyme', 'transplant', 'spring', 2027);
+    const ph = plantingPhases(old, plant('thyme'), canton())!;
+    expect(ph.kind).toBe('perennial');
+    expect(ph.bedOut).toBeNull();
+  });
+
+  it('herbs hardy in a zone 6 winter carry no winter warning; rosemary does', () => {
+    for (const id of ['chives', 'oregano', 'sage', 'thyme']) {
+      for (const w of plantSchedule(plant(id), canton(), 2027).windows) expect(w.warnings.map((x) => x.code)).not.toContain('winter-too-cold');
+    }
+    expect(plantSchedule(plant('rosemary'), canton(), 2027).windows[0]!.warnings.map((x) => x.code)).toContain('winter-too-cold');
+  });
+});
+
 describe('tasksFor in Canton', () => {
   it('Mar 1 2027: start peppers and tomatoes indoors soon', () => {
     const g = garden(canton(), cantonPlantings());

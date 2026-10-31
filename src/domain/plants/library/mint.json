@@ -22,6 +22,7 @@
   "spreads": true,
   "purpose": ["food"],
   "yield": { "amount": 200, "unit": "g", "per": "plant" },
+  "perennial": { "firstHarvestYear": 1, "harvestWeeks": [2, 26], "lifespanYears": 4 },
   "glyph": { "form": "sprig", "color": "#3fbf8f" },
   "notes": {
     "sowing": "Plant nursery plants or rooted pieces of runner in spring, or in early fall. Mint spreads fast by underground runners, so grow it in a container, or in a large bottomless pot sunk into the bed with its rim above the soil.",

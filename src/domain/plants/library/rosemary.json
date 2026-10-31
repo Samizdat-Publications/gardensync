@@ -22,6 +22,7 @@
   "winterMinC": -8,
   "purpose": ["food"],
   "yield": { "amount": 100, "unit": "g", "per": "plant" },
+  "perennial": { "firstHarvestYear": 1, "harvestWeeks": [0, 30] },
   "glyph": { "form": "sprig", "color": "#5a7a6a" },
   "notes": {
     "sowing": "Plant nursery plants or rooted cuttings in spring once the soil has warmed, at least {cm:45} apart. Seed is very slow and takes years to give a usable plant.",

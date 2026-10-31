@@ -20,9 +20,10 @@
     "transplant": { "weeks": [-2, 2] }
   },
   "harvest": { "type": "cut-and-come-again", "windowDays": 180 },
-  "winterMinC": -15,
+  "winterMinC": -29,
   "purpose": ["food"],
   "yield": { "amount": 50, "unit": "g", "per": "plant" },
+  "perennial": { "firstHarvestYear": 1, "harvestWeeks": [0, 26] },
   "glyph": { "form": "sprig", "color": "#8a9a6b" },
   "notes": {
     "sowing": "Start seed indoors in spring at {c:15} to {c:20}, 6 to 8 weeks before planting out, or buy plants; divisions and cuttings are easier than seed. Plant out from 2 weeks before to 2 weeks after your last frost, {cm:20} to {cm:30} apart.",
@@ -32,6 +33,7 @@
   "sources": [
     { "title": "Royal Horticultural Society: How to grow thyme", "url": "https://www.rhs.org.uk/herbs/thyme/grow-your-own" },
     { "title": "University of Illinois Extension: Thyme", "url": "https://extension.illinois.edu/herbs/thyme" },
-    { "title": "Royal Horticultural Society: Thymus vulgaris, common thyme (plant profile)", "url": "https://www.rhs.org.uk/plants/18213/thymus-vulgaris/details" }
+    { "title": "Royal Horticultural Society: Thymus vulgaris, common thyme (plant profile)", "url": "https://www.rhs.org.uk/plants/18213/thymus-vulgaris/details" },
+    { "title": "Missouri Botanical Garden Plant Finder: Thymus vulgaris", "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=281450" }
   ]
 }

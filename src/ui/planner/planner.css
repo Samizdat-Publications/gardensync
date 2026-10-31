@@ -255,7 +255,17 @@
   min-width: 0;
   overflow: hidden;
   white-space: nowrap;
+  /* When space runs out the garden's name gives way, never the day it shows. */
+  display: flex;
+  gap: 0.28em;
+}
+.planner-bar .h1-garden {
+  min-width: 0;
+  overflow: hidden;
   text-overflow: ellipsis;
+}
+.planner-bar .h1-day {
+  flex-shrink: 0;
 }
 .ahead {
   display: inline-flex;
@@ -1017,6 +1027,12 @@
   width: max-content;
   max-width: calc(100% - 32px);
 }
+@media (min-width: 761px) {
+  .canvas-area > .toast-region {
+    position: absolute;
+    bottom: var(--sp-3);
+  }
+}
 .toast {
   display: flex;
   align-items: center;
@@ -1060,11 +1076,14 @@
   }
 }
 
-@media (max-width: 960px) {
-  /* Narrow plans (tablets and phones): two short lines for the title, so the day is never cut
-     off (the garden's name, then the day), and short button labels that never wrap. */
+@media (max-width: 1365px) {
+  /* Plans narrower than a wide desktop (laptops with both side panels, tablets and phones): two
+     short lines for the title, so the day is never cut off (the garden's name, then the day), and
+     short button labels that never wrap. */
   .planner-bar h1 {
     line-height: 1.15;
+    flex-direction: column;
+    gap: 0;
   }
   .planner-bar .h1-garden {
     display: block;

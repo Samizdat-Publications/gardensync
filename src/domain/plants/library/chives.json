@@ -23,9 +23,10 @@
     "plant": { "weeks": [-4, 0], "what": "divisions of 4 to 6 bulbs" }
   },
   "harvest": { "type": "cut-and-come-again", "windowDays": 150, "untilFrost": true },
-  "winterMinC": -20,
+  "winterMinC": -34,
   "purpose": ["food", "pollinators"],
   "yield": { "amount": 100, "unit": "g", "per": "plant" },
+  "perennial": { "firstHarvestYear": 1, "harvestWeeks": [-2, 26], "lifespanYears": 4 },
   "glyph": { "form": "sprig", "color": "#a77bc4" },
   "notes": {
     "sowing": "Plant divisions of 4 to 6 bulbs in early spring, {cm:15} to {cm:20} apart. From seed, sow several seeds per cell indoors 6 to 8 weeks before your last frost, or sow outdoors {cm:0.6} deep once the soil warms. Seed is slow to make a usable clump.",
@@ -36,6 +37,7 @@
     { "title": "Royal Horticultural Society: How to grow chives", "url": "https://www.rhs.org.uk/herbs/chives/grow-your-own" },
     { "title": "University of Illinois Extension: Chives", "url": "https://extension.illinois.edu/herbs/chives" },
     { "title": "Johnny's Selected Seeds: Nelly Chive Seed", "url": "https://johnnyseeds.com/herbs/chives/standard-chives/nelly-chive-seed-4963.html" },
-    { "title": "Royal Horticultural Society: Allium schoenoprasum, chives (plant profile)", "url": "https://www.rhs.org.uk/plants/859/allium-schoenoprasum/details" }
+    { "title": "Royal Horticultural Society: Allium schoenoprasum, chives (plant profile)", "url": "https://www.rhs.org.uk/plants/859/allium-schoenoprasum/details" },
+    { "title": "Missouri Botanical Garden Plant Finder: Allium schoenoprasum", "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=282062" }
   ]
 }

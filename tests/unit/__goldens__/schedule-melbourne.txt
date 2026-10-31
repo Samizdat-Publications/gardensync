@@ -18,9 +18,9 @@ melbourne calendula temperature direct: sow Jul 18 to Jul 16 2028, pick Sep 11 t
 melbourne carrot temperature direct: sow Jul 18 to Jul 16 2028, pick Oct 01 to Oct 31
 melbourne cauliflower temperature transplant: indoor May 30 to Jun 11 2028, out Jul 18 to Jul 16 2028, pick Sep 16 to Sep 23, warn hot-weather-shade
 melbourne chili-pepper temperature transplant: indoor Sep 06 to Oct 31, out Nov 15 to Dec 26, pick Jan 29 2028 to Mar 30 2028
-melbourne chives temperature transplant: indoor May 23 to Jun 04 2028, out Jul 18 to Jul 16 2028, pick Sep 01 to Jan 29 2028
-melbourne chives temperature direct: sow Jul 18 to Jul 16 2028, pick Oct 06 to Mar 04 2028
-melbourne chives temperature plant: plant Jul 18 to Jul 16 2028, pick Oct 06 to Mar 04 2028
+melbourne chives perennial transplant: indoor May 23 to Jul 04, out Jul 18 to Aug 15, pick Sep 29 to Apr 12 2028, yearly from 2027
+melbourne chives perennial direct: sow Jul 18 to Aug 15, pick Oct 06 to Apr 12 2028, yearly from 2027
+melbourne chives perennial plant: plant Jul 18 to Aug 15, pick Oct 06 to Apr 12 2028, yearly from 2027
 melbourne cilantro temperature direct: sow Jul 18 to Jul 16 2028, pick Sep 06 to Sep 27, warn hot-weather-shade
 melbourne collards temperature transplant: indoor Jun 06 to Jun 18 2028, out Jul 18 to Jul 16 2028, pick Sep 05 to Jan 03 2028
 melbourne collards temperature direct: sow Jul 18 to Jul 16 2028, pick Sep 26 to Jan 24 2028
@@ -42,7 +42,7 @@ melbourne lettuce temperature transplant: indoor Jun 06 to Jun 18 2028, out Jul 
 melbourne lettuce temperature direct: sow Jul 18 to Jul 16 2028, pick Sep 06 to Oct 04, warn hot-weather-shade
 melbourne melon temperature transplant: not viable (too-cool)
 melbourne melon temperature direct: not viable (too-cool)
-melbourne mint temperature plant: plant Jul 18 to Jul 16 2028, pick Aug 17 to Jan 14 2028
+melbourne mint perennial plant: plant Jul 18 to Aug 29, pick Oct 27 to Apr 12 2028, yearly from 2027
 melbourne nasturtium temperature transplant: indoor Aug 07 to Feb 26 2028, out Sep 04 to Mar 18 2028, pick Oct 20 to Jan 18 2028
 melbourne nasturtium temperature direct: sow Sep 02 to Mar 04 2028, pick Nov 01 to Jan 30 2028
 melbourne okra temperature transplant: not viable (too-cool)
@@ -50,7 +50,7 @@ melbourne okra temperature direct: not viable (too-cool)
 melbourne onion temperature transplant: indoor Apr 25 to May 21 2028, out Jul 18 to Jul 16 2028, pick Oct 26 to Nov 09
 melbourne onion temperature direct: sow Jul 18 to Jul 16 2028, pick Dec 21 to Jan 04 2028
 melbourne onion temperature plant: plant Jul 18 to Jul 16 2028, pick Oct 26 to Nov 09
-melbourne oregano temperature transplant: indoor Jul 08 to Feb 05 2028, out Sep 02 to Mar 18 2028, pick Nov 01 to Mar 30 2028
+melbourne oregano perennial transplant: indoor Jul 09 to Aug 13, out Sep 03 to Sep 24, pick Nov 03 to Apr 12 2028, yearly from 2027
 melbourne parsley temperature transplant: indoor May 23 to Jun 04 2028, out Jul 18 to Jul 16 2028, pick Aug 27 to Dec 25
 melbourne parsley temperature direct: sow Jul 18 to Jul 16 2028, pick Oct 01 to Jan 29 2028
 melbourne parsnip temperature direct: sow Jul 18 to Jul 16 2028, pick Nov 05 to Feb 03 2028
@@ -62,8 +62,8 @@ melbourne pumpkin temperature direct: sow Oct 14 to Dec 20, pick Jan 22 2028 to 
 melbourne radish temperature direct: sow Jul 18 to Jul 16 2028, pick Aug 15 to Aug 22, warn hot-weather-shade
 melbourne raspberry perennial plant: plant Jul 18 to Aug 15, pick Nov 24 2028 to Jan 05 2029, yearly from 2028
 melbourne rhubarb perennial plant: plant Jul 18 to Aug 15, pick Oct 13 2028 to Dec 08 2028, yearly from 2028
-melbourne rosemary temperature plant: plant Sep 02 to Mar 18 2028, pick Nov 01 to Apr 29 2028
-melbourne sage temperature transplant: indoor May 23 to Jun 04 2028, out Jul 18 to Jul 16 2028, pick Sep 16 to Mar 14 2028
+melbourne rosemary perennial plant: plant Sep 03 to Oct 01, pick Nov 02 to May 10 2028, yearly from 2027
+melbourne sage perennial transplant: indoor May 23 to Jul 04, out Jul 18 to Aug 15, pick Oct 13 to Apr 12 2028, yearly from 2027
 melbourne scallion temperature direct: sow Jul 18 to Jul 16 2028, pick Sep 16 to Oct 16
 melbourne spinach temperature direct: sow Jul 18 to Dec 07, pick Sep 01 to Sep 22, warn hot-weather-shade
 melbourne spinach temperature direct: sow Feb 08 2028 to Jul 16 2028, pick Mar 24 2028 to Apr 14 2028, warn hot-weather-shade
@@ -77,7 +77,7 @@ melbourne pepper temperature transplant: indoor Sep 07 to Nov 05, out Nov 16 to 
 melbourne sweet-potato temperature plant: not viable (too-cool)
 melbourne swiss-chard temperature transplant: indoor Jun 06 to Jun 18 2028, out Jul 18 to Jul 16 2028, pick Aug 21 to Dec 19
 melbourne swiss-chard temperature direct: sow Jul 18 to Jul 16 2028, pick Sep 11 to Jan 09 2028
-melbourne thyme temperature transplant: indoor May 23 to Jun 04 2028, out Jul 18 to Jul 16 2028, pick Sep 16 to Mar 14 2028
+melbourne thyme perennial transplant: indoor May 23 to Jul 04, out Jul 18 to Aug 15, pick Oct 13 to Apr 12 2028, yearly from 2027
 melbourne tomatillo temperature transplant: indoor Sep 08 to Jan 01 2028, out Oct 20 to Jan 29 2028, pick Dec 19 to Feb 17 2028
 melbourne tomato temperature transplant: indoor Aug 24 to Dec 08, out Oct 19 to Jan 19 2028, pick Dec 28 to Feb 26 2028
 melbourne turnip temperature direct: sow Jul 18 to Jul 16 2028, pick Sep 06 to Sep 27, warn hot-weather-shade

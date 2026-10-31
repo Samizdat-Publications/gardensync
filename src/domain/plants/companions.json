@@ -300,8 +300,8 @@
     "a": "nasturtium",
     "b": "zucchini",
     "kind": "good",
-    "reason": "Research supports nasturtium for reducing squash bug numbers, an old practice that has held up.",
-    "evidence": "tested",
+    "reason": "Traditional pairing said to keep squash bugs off zucchini. Extension guides repeat it, but no field trial was found; nasturtium cut cucumber beetles on melons in one study.",
+    "evidence": "traditional",
     "source": {
       "title": "University of Minnesota Extension: Companion planting in home gardens",
       "url": "https://extension.umn.edu/planting-and-growing-guides/companion-planting-home-gardens"
@@ -311,8 +311,8 @@
     "a": "nasturtium",
     "b": "winter-squash",
     "kind": "good",
-    "reason": "Research supports nasturtium for reducing squash bug numbers on squash, an old practice that has held up.",
-    "evidence": "tested",
+    "reason": "Traditional pairing said to keep squash bugs off squash. Extension guides repeat it, but no field trial was found; nasturtium cut cucumber beetles on melons in one study.",
+    "evidence": "traditional",
     "source": {
       "title": "University of Minnesota Extension: Companion planting in home gardens",
       "url": "https://extension.umn.edu/planting-and-growing-guides/companion-planting-home-gardens"
@@ -322,8 +322,8 @@
     "a": "nasturtium",
     "b": "pumpkin",
     "kind": "good",
-    "reason": "Research supports nasturtium for reducing squash bug numbers on squash and pumpkins, an old practice that has held up.",
-    "evidence": "tested",
+    "reason": "Traditional pairing said to keep squash bugs off pumpkins. Extension guides repeat it, but no field trial was found; nasturtium cut cucumber beetles on melons in one study.",
+    "evidence": "traditional",
     "source": {
       "title": "University of Minnesota Extension: Companion planting in home gardens",
       "url": "https://extension.umn.edu/planting-and-growing-guides/companion-planting-home-gardens"
