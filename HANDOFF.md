@@ -4,7 +4,15 @@ Newest first. Read this, then [PROGRESS.md](PROGRESS.md), then [docs/v8/PLAN.md]
 then [docs/STEWART_FEEDBACK.md](docs/STEWART_FEEDBACK.md) (Stewart's notes outrank any critic), then
 [review/LEDGER.md](review/LEDGER.md).
 
-## 8.2 released (2026-10-30): start here
+## 8.3 released (2026-10-30): start here
+
+**State:** 8.3 (plant data review) is on `master`, tagged v8.3.0, released on GitHub, live at
+https://gardensync-e4e.pages.dev; the landing page says 8.3. Branch `plant-data-review` is merged.
+Wrangler deploys here sometimes fail with "fetch failed" on the first try; a rerun works.
+
+**Next:** ledger 118, 136 and 140 are the open items.
+
+## 8.2 released (2026-10-30)
 
 **State:** 8.2 is on `master`, tagged v8.2.0, released on GitHub, live at
 https://gardensync-e4e.pages.dev; the landing page says 8.2. The `polish-8.1` branch is merged.

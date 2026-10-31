@@ -19,16 +19,15 @@ showcase.json already points at the hub cut.
 says 8.2). Resize handles, one shared "when can this go in" answer, shared gardens in a fresh
 browser, leap-year calendars, critic and usability fixes (ledger 94 to 129).
 
-**Plant data review (2026-10-30), waiting for Stewart:** branch `plant-data-review`. My read of the
-goldens plus a Gemini 4 Argon critique, every finding checked against extension sources (ledger 129
-to 140, D-A15, spec "Plant data review (8.3)"). Crops that crop until frost now pick until frost;
-warm-season planting windows run as late as the Illinois table allows; a cool guard for late tender
-plantings; tender fall windows only where heat ends spring; bolting guard in temperature mode; a
-winter-chill rule for rhubarb, blueberry and raspberry; heat limits for alliums, cilantro, turnip and
-sweet potato. Not merged or released.
+**8.3 released (2026-10-30): plant data review.** Live on `master` (tag v8.3.0, GitHub release,
+landing page says 8.3). Ledger 129 to 140, D-A15, spec "Plant data review (8.3)".
+
+**Next:** open items are ledger 118 (desktop toast over the strip), 136 (perennial herbs as
+multi-year plantings) and 140 (find the nasturtium trial or move it to traditional).
 
 ## Done
 
+- 2026-10-30: 8.3 released: merged, tagged v8.3.0, production and landing deployed; ALL GREEN, CI green.
 - 2026-10-30: plant data review on `plant-data-review` (ledger 129 to 140).
 - 2026-10-30: 8.2 released: merged, tagged v8.2.0, production and landing deployed; ALL GREEN.
 - 2026-10-30: 8.2 polish on `polish-8.1` (ledger 94 to 129): resize handles, plantStatus, share
