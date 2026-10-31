@@ -1,6 +1,6 @@
 {
   "name": "gardensync",
-  "version": "8.2.0",
+  "version": "8.3.0",
   "private": true,
   "type": "module",
   "description": "Plan your beds square by square and get a sowing, planting and harvest schedule worked out for your own town.",

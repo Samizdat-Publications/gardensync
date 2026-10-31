@@ -8,6 +8,28 @@ Its sibling edition, *A Quiet Almanac*, now lives in its own repository:
 
 ---
 
+## v8.3 - 2026-10-30
+
+**Dates you can trust in every climate.** A second review of the plant library and the schedules
+it produces, checked against university extension guidance.
+
+- **Picking runs until frost** for crops that keep cropping: tomatoes, peppers, eggplant,
+  tomatillos, pumpkins, squash, sweet potatoes, basil and annual flowers. Parsnips, leeks, chives
+  and parsley run to the hard frost.
+- **Later planting for summer crops.** Cucumbers and zucchini can be sown into late June in a
+  mid-April-frost garden; tomatoes, peppers, eggplant and melons can go out into June.
+- **No planting that cannot ripen.** Late, fall and repeat plantings of tender crops that would grow
+  mostly in cool weather are no longer offered, and a separate fall planting of a summer crop
+  appears only where summer heat ends the first one.
+- **Frost-free places get seasons.** Broccoli, cabbage, carrots, cilantro and other cool-season
+  crops now pause over a hot summer instead of being offered all year.
+- **Winter chill.** Rhubarb, northern highbush blueberries and raspberries say when winters are
+  too mild for them.
+- **Heat limits corrected** for onions, garlic, leeks, cilantro, turnips and sweet potatoes, which
+  now thrive in a desert summer.
+
+---
+
 ## v8.2 - 2026-10-30
 
 **Polish.** Four rounds of fixes from blind design reviews and new-gardener usability tests.
