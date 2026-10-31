@@ -4,7 +4,23 @@ Newest first. Read this, then [PROGRESS.md](PROGRESS.md), then [docs/v8/PLAN.md]
 then [docs/STEWART_FEEDBACK.md](docs/STEWART_FEEDBACK.md) (Stewart's notes outrank any critic), then
 [review/LEDGER.md](review/LEDGER.md).
 
-## 8.3 released (2026-10-30): start here
+## 8.4 released (2026-10-31): start here
+
+**State:** 8.4 is on `master`, tagged v8.4.0, released, live at https://gardensync-e4e.pages.dev, and
+the landing page at https://gardensync-landing.pages.dev shows it (new clips, stills and social card).
+
+**Landing page, step by step** (deploying from inside `site-dist` drops the media function and
+Safari stops playing the videos):
+1. `npm run build`, serve `dist` (`npx vite preview --port 4190`), then
+   `node tools/showcase/film.mjs http://localhost:4190` (needs ffmpeg) to refilm `site/media` and `docs/media`.
+2. Copy `site` to `site-dist`, then
+   `node "C:\Users\stewa\Documents\Claude\Github Hub\kit\tools\finish-site.mjs" site-dist --root .`.
+3. From the repo root: `npx wrangler pages deploy site-dist --project-name=gardensync-landing --branch=main`.
+   Check that a ranged request (`curl -H "Range: bytes=0-99"`) for `/media/hero.mp4` returns 206.
+
+**Next:** no open ledger items.
+
+## 8.3 released (2026-10-30)
 
 **State:** 8.3 (plant data review) is on `master`, tagged v8.3.0, released on GitHub, live at
 https://gardensync-e4e.pages.dev; the landing page says 8.3. Branch `plant-data-review` is merged.

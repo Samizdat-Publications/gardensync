@@ -19,14 +19,16 @@ showcase.json already points at the hub cut.
 says 8.2). Resize handles, one shared "when can this go in" answer, shared gardens in a fresh
 browser, leap-year calendars, critic and usability fixes (ledger 94 to 129).
 
-**8.3 released (2026-10-30): plant data review.** Live on `master` (tag v8.3.0, GitHub release,
-landing page says 8.3). Ledger 129 to 140, D-A15, spec "Plant data review (8.3)".
+**8.4 released (2026-10-31): herbs and landing page.** Live on `master` (tag v8.4.0). Perennial
+herbs, nasturtium relabelled, planner title and toasts fixed for laptops, landing page refilmed with
+a composed social card, and landing videos play in Safari again (ledger 118, 136, 140 to 144).
 
-**Next:** open items are ledger 118 (desktop toast over the strip), 136 (perennial herbs as
-multi-year plantings) and 140 (find the nasturtium trial or move it to traditional).
+**Next:** no open ledger items. Possible next: low-chill blueberry and raspberry varieties for mild
+winters; latest planting dates for basil and annual flowers if a source turns up.
 
 ## Done
 
+- 2026-10-31: 8.4 released: herbs as perennials, laptop title and toasts, landing refilmed; ALL GREEN, CI green.
 - 2026-10-30: 8.3 released: merged, tagged v8.3.0, production and landing deployed; ALL GREEN, CI green.
 - 2026-10-30: plant data review on `plant-data-review` (ledger 129 to 140).
 - 2026-10-30: 8.2 released: merged, tagged v8.2.0, production and landing deployed; ALL GREEN.
