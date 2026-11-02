@@ -6,7 +6,7 @@
   "version": "8.4.0",
   "kind": "tool",
   "started": "2026-02-16",
-  "updated": "2026-10-28",
+  "updated": "2026-11-02",
   "tech": [
     "TypeScript",
     "Preact",
