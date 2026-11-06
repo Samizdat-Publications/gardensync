@@ -35,6 +35,8 @@ dist/
 !site/media/*.jpg
 # README pictures
 !docs/media/*.jpg
+# making-of stills, one per release (docs/making-of/README.md)
+!docs/making-of/stills/*.jpg
 site-dist/
 
 # 8.0 build and test output
